@@ -14,7 +14,9 @@ function UF:Construct_FocusFrame(frame)
 	frame.Name = self:Construct_NameText(frame)
 	
 	frame.Buffs = self:Construct_Buffs(frame)
-	
+
+	frame.GPS = self:Construct_GPS(frame, 'focus')
+
 	frame.Castbar = self:Construct_Castbar(frame, 'LEFT')
 	frame.Castbar.SafeZone = nil
 	frame.Castbar.LatencyTexture:Hide()
@@ -171,7 +173,26 @@ function UF:Update_FocusFrame(frame, db)
 			power.value:Hide()
 		end
 	end
+
+	--GPS
+	do
+		local gps = frame.GPS
 	
+		if db.gps then
+			if not frame:IsElementEnabled('GPS') then
+				frame:EnableElement('GPS')
+			end
+			
+			gps:ClearAllPoints()
+			gps:Point("BOTTOMRIGHT", frame.Health, "BOTTOMRIGHT", -1, 1)
+			gps:SetFrameStrata("MEDIUM")
+			gps:Show()
+		elseif frame:IsElementEnabled('GPS') then
+			frame:DisableElement('GPS')
+			gps:Hide()
+		end
+	end
+
 	--Auras Disable/Enable
 	--Only do if both debuffs and buffs aren't being used.
 	do

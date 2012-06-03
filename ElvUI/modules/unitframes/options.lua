@@ -1383,7 +1383,13 @@ E.Options.args.unitframe.args.target = {
 			name = L['Heal Prediction'],
 			desc = L['Show a incomming heal prediction bar on the unitframe. Also display a slightly different colored bar for incoming overheals.'],
 			type = 'toggle',
-		},		
+		},
+		gps = {
+			order = 7,
+			name = L['GPS'],
+			desc = L['Show the range and distance to the selected party or raid member.'],
+			type = 'toggle',
+		},
 		health = {
 			order = 100,
 			type = 'group',
@@ -2319,6 +2325,12 @@ E.Options.args.unitframe.args.focus = {
 			order = 6,
 			name = L['Heal Prediction'],
 			desc = L['Show a incomming heal prediction bar on the unitframe. Also display a slightly different colored bar for incoming overheals.'],
+			type = 'toggle',
+		},
+		gps = {
+			order = 7,
+			name = L['GPS'],
+			desc = L['Show the range and distance to the selected party or raid member.'],
 			type = 'toggle',
 		},
 		health = {
