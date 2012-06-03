@@ -193,11 +193,24 @@ E.Options.args.general = {
 					get = function(info) return E.db.general.tinyWorldMap end,
 					set = function(info, value) E.db.general.tinyWorldMap = value; E:GetModule('WorldMap'):ToggleTinyWorldMapSetting() end					
 				},
+				pvpautorelease = {
+					order = 15,
+					type = "toggle",
+					name = L["PvP Autorelease"],
+					desc = L['Automatically release body when killed inside a battleground.'],
+					get = function(info) return E.private.general.pvpautorelease end,
+					set = function(info, value) E.private.general.pvpautorelease = value; StaticPopup_Show("PRIVATE_RL") end					
+				},
 				spacer = {
 					order = 99,
 					type = "description",
 					name = "",
-				},						
+				},
+				spacer = {
+					order = 99,
+					type = "description",
+					name = "",
+				},
 				panelWidth = {
 					order = 100,
 					type = 'range',

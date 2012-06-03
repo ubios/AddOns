@@ -28,7 +28,7 @@ if select(2, UnitClass('player')) ~= "SHAMAN" then return end
 
 local _, pClass = UnitClass("player")
 local total = 0
-local delay = 0.01
+local delay = 0.1
 
 -- In the order, fire, earth, water, air
 local colors = {

@@ -317,6 +317,27 @@ function UF:Construct_ShamanTotemBar(frame)
 	return totems
 end
 
+function UF:Construct_DruidMushroomBar(frame)
+	local mushrooms = CreateFrame("Frame", nil, frame)
+	mushrooms:CreateBackdrop('Default')
+	mushrooms.Destroy = true
+	
+	for i = 1, 3 do
+		mushrooms[i] = CreateFrame("StatusBar", nil, mushrooms)
+		UF['statusbars'][mushrooms[i]] = true
+
+		mushrooms[i]:SetFrameStrata(frame:GetFrameStrata())
+		mushrooms[i]:SetFrameLevel(frame:GetFrameLevel())
+		
+		mushrooms[i]:CreateBackdrop('Default')
+		mushrooms[i]:SetStatusBarTexture(E['media'].blankTex)
+		mushrooms[i]:GetStatusBarTexture():SetHorizTile(false)
+		mushrooms[i]:SetMinMaxValues(0, 300)
+	end
+	
+	return mushrooms
+end
+
 function UF:Construct_DruidResourceBar(frame)
 	local eclipseBar = CreateFrame('Frame', nil, frame)
 	eclipseBar:CreateBackdrop('Default')

@@ -1,0 +1,8 @@
+## Interface: 30300
+## Author: Omega1970
+## Version: r2
+## Title: oUF MushroomBar
+## Notes: Mushroom bars support for oUF layouts.
+## Dependencies: oUF
+
+oUF_MushroomBar.lua

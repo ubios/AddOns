@@ -39,6 +39,7 @@ function UF:Construct_PlayerFrame(frame)
 	elseif E.myclass == "DRUID" then
 		frame.EclipseBar = self:Construct_DruidResourceBar(frame)
 		frame.DruidAltMana = self:Construct_DruidAltManaBar(frame)
+		frame.MushroomBar = self:Construct_DruidMushroomBar(frame)
 	end
 	frame.RaidIcon = UF:Construct_RaidIcon(frame)
 	frame.Resting = self:Construct_RestingIndicator(frame)
@@ -726,7 +727,60 @@ function UF:Update_PlayerFrame(frame, db)
 			elseif not USE_CLASSBAR and frame:IsElementEnabled('EclipseBar') then
 				frame:DisableElement('EclipseBar')	
 				eclipseBar:Hide()
-			end					
+			end
+
+			-- mushroom bar
+			local mushrooms = frame.MushroomBar
+		
+			mushrooms:ClearAllPoints()
+			if not USE_MINI_CLASSBAR then
+				mushrooms:Point("BOTTOMLEFT", frame.Health.backdrop, "TOPLEFT", - SPACING - BORDER, - CLASSBAR_HEIGHT)
+				mushrooms:SetFrameStrata("LOW")
+			else
+				CLASSBAR_WIDTH = CLASSBAR_WIDTH * 3/2 --Multiply by reciprocal to reset previous setting
+				CLASSBAR_WIDTH = CLASSBAR_WIDTH * 4/5
+				mushrooms:Point("CENTER", frame.Health.backdrop, "TOP", (BORDER * 3 + 8), - CLASSBAR_HEIGHT )
+				mushrooms:SetFrameStrata("MEDIUM")			
+			end
+
+			mushrooms:Width(CLASSBAR_WIDTH)
+			mushrooms:Height(CLASSBAR_HEIGHT - (BORDER*2) - 2)	
+			
+			for i = 1, 3 do
+				mushrooms[i]:SetHeight(mushrooms:GetHeight())
+				mushrooms[i]:SetWidth(E:Scale(mushrooms:GetWidth() - 3) / 4)	
+
+				if USE_MINI_CLASSBAR then
+					mushrooms[i].backdrop:Show()
+				else
+					mushrooms[i].backdrop:Hide()
+				end	
+
+				mushrooms[i]:ClearAllPoints()
+				if (i == 1) then
+					mushrooms[i]:SetPoint("LEFT", mushrooms)
+				else
+					if USE_MINI_CLASSBAR then
+						mushrooms[i]:Point("LEFT", mushrooms[i-1], "RIGHT", SPACING+(BORDER*2)+4, 0)
+					else
+						mushrooms[i]:Point("LEFT", mushrooms[i-1], "RIGHT", SPACING, 0)
+					end
+				end
+			end
+
+			if not USE_MINI_CLASSBAR then
+				mushrooms.backdrop:Show()
+			else
+				mushrooms.backdrop:Hide()
+			end		
+
+			if USE_CLASSBAR and not frame:IsElementEnabled('MushroomBar') then
+				frame:EnableElement('MushroomBar')
+				mushrooms:Show()
+			elseif not USE_CLASSBAR and frame:IsElementEnabled('MushroomBar') then
+				frame:DisableElement('MushroomBar')	
+				mushrooms:Hide()
+			end		
 		end
 	end
 	
