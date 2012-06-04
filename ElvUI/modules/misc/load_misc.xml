@@ -10,4 +10,5 @@
 	<Script file='raidutility.lua'/>
 	<Script file='raidbuffreminder.lua'/>
 	<Script file='autorelease.lua'/>
+	<Script file='questreward.lua'/>	
 </Ui>
