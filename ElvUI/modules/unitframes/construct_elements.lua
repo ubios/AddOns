@@ -221,7 +221,7 @@ function UF:Construct_Castbar(self, direction)
 	castbar.PostChannelStart = UF.PostCastStart		
 	castbar.PostCastInterruptible = UF.PostCastInterruptible
 	castbar.PostCastNotInterruptible = UF.PostCastNotInterruptible
-	
+	castbar:SetClampedToScreen(true)
 	castbar:CreateBackdrop('Default')
 	
 	castbar.Time = castbar:CreateFontString(nil, 'OVERLAY')	
