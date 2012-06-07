@@ -5,13 +5,15 @@ local DT = E:GetModule('DataTexts')
 local displayString, lastPanel
 local format = string.format
 local targetlv, playerlv
-local basemisschance, leveldifference, dodge, parry, block, avoidance, unhittable
+local basemisschance, dodge, parry, block, unhittable
 local chanceString = "%.2f%%"
 local modifierString = string.join("", "%d (+", chanceString, ")")
 
 local function OnEvent(self, event, unit)
-	if event == "UNIT_AURA" and unit ~= 'player' then return end
+	if (event == "UNIT_AURA" or event == "UNIT_STATS") and unit ~= 'player' then return end
 	targetlv, playerlv = UnitLevel("target"), UnitLevel("player")
+			
+	local avoidance, leveldifference
 			
 	-- the 5 is for base miss chance
 	if targetlv == -1 then
@@ -53,7 +55,7 @@ local function OnEvent(self, event, unit)
 	avoidance = (dodge+parry+block+basemisschance)
 	unhittable = avoidance - 102.4
 	
-	self.text:SetFormattedText(displayString, L['AVD: '], avoidance)
+	self.text:SetFormattedText(displayString, avoidance)
 
 	
 	lastPanel = self
@@ -87,7 +89,7 @@ end
 
 
 local function ValueColorUpdate(hex, r, g, b)
-	displayString = string.join("", "%s", hex, "%.2f%%|r")
+	displayString = string.join("", L['AVD: '], hex, "%.2f%%|r")
 	
 	if lastPanel ~= nil then
 		OnEvent(lastPanel)

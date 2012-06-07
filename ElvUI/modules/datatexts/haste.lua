@@ -1,13 +1,13 @@
 local E, L, V, P, G = unpack(select(2, ...)); --Inport: Engine, Locales, PrivateDB, ProfileDB, GlobalDB
 local DT = E:GetModule('DataTexts')
 
-local displayNumberString = ''
+local displayString = ''
 local lastPanel;
 
 local function OnEvent(self, event, unit)
-	if event == "UNIT_AURA" and unit ~= 'player' then return end
+	if (event == "UNIT_AURA" or event == "UNIT_STATS") and unit ~= 'player' then return end
 	lastPanel = self
-	
+
 	local hasteRating
 	if E.role == "Caster" then
 		hasteRating = UnitSpellHaste("player")
@@ -16,11 +16,11 @@ local function OnEvent(self, event, unit)
 	else
 		hasteRating = GetMeleeHaste()
 	end
-	self.text:SetFormattedText(displayNumberString, STAT_HASTE, hasteRating)
+	self.text:SetFormattedText(displayString, hasteRating)
 end
 
 local function ValueColorUpdate(hex, r, g, b)
-	displayNumberString = string.join("", "%s: ", hex, "%.2f%%|r")
+	displayString = string.join("", STAT_HASTE, ": ", hex, "%.2f%%|r")
 	
 	if lastPanel ~= nil then
 		OnEvent(lastPanel)

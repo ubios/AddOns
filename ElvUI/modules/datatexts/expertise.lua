@@ -3,21 +3,21 @@ local DT = E:GetModule('DataTexts')
 
 local format = string.format
 local lastPanel
-local displayString = '';
+local displayString = ''
 
 local function OnEvent(self, event, unit)
-	if event == "UNIT_AURA" and unit ~= 'player' then return end
+	if (event == "UNIT_AURA" or event == "UNIT_STATS") and unit ~= 'player' then return end
 	lastPanel = self
 
-	local expertise, offhandExpertise = GetExpertise();
-	local speed, offhandSpeed = UnitAttackSpeed("player");
-	local text;
+	local expertise, offhandExpertise = GetExpertise()
+	local speed, offhandSpeed = UnitAttackSpeed("player")
+	local text
 	if( offhandSpeed ) then
-		text = expertise.." / "..offhandExpertise;
+		text = expertise.." / "..offhandExpertise
 	else
-		text = expertise;
+		text = expertise
 	end
-	self.text:SetFormattedText(displayString, STAT_EXPERTISE..": ", text)
+	self.text:SetFormattedText(displayString, text)
 end
 
 local function OnEnter(self)
@@ -81,7 +81,7 @@ local function OnEnter(self)
 end
 
 local function ValueColorUpdate(hex, r, g, b)
-	displayString = string.join("", "%s", hex, "%s|r")
+	displayString = string.join("", STAT_EXPERTISE, ": ", hex, "%s|r")
 
 	if lastPanel ~= nil then
 		OnEvent(lastPanel, 2000)

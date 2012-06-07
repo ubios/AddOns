@@ -1,28 +1,27 @@
 local E, L, V, P, G = unpack(select(2, ...)); --Inport: Engine, Locales, PrivateDB, ProfileDB, GlobalDB
 local DT = E:GetModule('DataTexts')
 
-local base, posBuff, negBuff, effective, Rbase, RposBuff, RnegBuff, Reffective, pwr
-local displayModifierString = ''
+local pwr
+local displayString = ''
 local lastPanel;
 
 local function OnEvent(self, event, unit)	
-	if event == "UNIT_AURA" and unit ~= 'player' then return end
+	if (event == "UNIT_AURA" or event == "UNIT_STATS") and unit ~= 'player' then return end
+
 	if E.myclass == "HUNTER" then
-		Rbase, RposBuff, RnegBuff = UnitRangedAttackPower("player");
-		Reffective = Rbase + RposBuff + RnegBuff;
-		pwr = Reffective
+		local Rbase, RposBuff, RnegBuff = UnitRangedAttackPower("player");
+		pwr = Rbase + RposBuff + RnegBuff;
 	else
-		base, posBuff, negBuff = UnitAttackPower("player");
-		effective = base + posBuff + negBuff;	
-		pwr = effective
+		local base, posBuff, negBuff = UnitAttackPower("player");
+		pwr = base + posBuff + negBuff;	
 	end
 	
-	self.text:SetFormattedText(displayNumberString, L['AP'], pwr) 	
+	self.text:SetFormattedText(displayString, pwr) 	
 	lastPanel = self
 end
 
 local function ValueColorUpdate(hex, r, g, b)
-	displayNumberString = string.join("", "%s: ", hex, "%d|r")
+	displayString = string.join("", L['AP'], ": ", hex, "%d|r")
 	
 	if lastPanel ~= nil then
 		OnEvent(lastPanel)

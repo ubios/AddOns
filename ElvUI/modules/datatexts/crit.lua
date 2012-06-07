@@ -2,11 +2,12 @@ local E, L, V, P, G = unpack(select(2, ...)); --Inport: Engine, Locales, Private
 local DT = E:GetModule('DataTexts')
 
 local critRating
-local displayModifierString = ''
-local lastPanel;
+local displayString = ''
+local lastPanel
 
 local function OnEvent(self, event, unit)
-	if event == "UNIT_AURA" and unit ~= 'player' then return end
+	if (event == "UNIT_AURA" or event == "UNIT_STATS") and unit ~= 'player' then return end
+
 	if E.role == "Caster" then
 		critRating = GetSpellCritChance(1)
 	else
@@ -16,13 +17,13 @@ local function OnEvent(self, event, unit)
 			critRating = GetCritChance()
 		end
 	end
-	self.text:SetFormattedText(displayModifierString, CRIT_ABBR, critRating)
+	self.text:SetFormattedText(displayString, critRating)
 
 	lastPanel = self
 end
 
 local function ValueColorUpdate(hex, r, g, b)
-	displayModifierString = string.join("", "%s: ", hex, "%.2f%%|r")
+	displayString = string.join("", CRIT_ABBR, ": ", hex, "%.2f%%|r")
 	
 	if lastPanel ~= nil then
 		OnEvent(lastPanel)

@@ -3,12 +3,12 @@ local DT = E:GetModule('DataTexts')
 
 local lastPanel
 local displayString = '';
-local hitRating, hitRatingBonus;
 
 local function OnEvent(self, event, unit)
-	if event == "UNIT_AURA" and unit ~= 'player' then return end
+	if (event == "UNIT_AURA" or event == "UNIT_STATS") and unit ~= 'player' then return end
 	lastPanel = self
 
+	local hitRating, hitRatingBonus
 	if E.role == "Caster" then
 		hitRating = GetCombatRating(CR_HIT_SPELL)
 		hitRatingBonus = GetCombatRatingBonus(CR_HIT_SPELL)
@@ -22,7 +22,7 @@ local function OnEvent(self, event, unit)
 		end
 	end
 
-	self.text:SetFormattedText(displayString, L['Hit']..': ', hitRatingBonus)
+	self.text:SetFormattedText(displayString, hitRatingBonus)
 end
 
 local function OnEnter(self)
@@ -90,7 +90,7 @@ local function OnEnter(self)
 end
 
 local function ValueColorUpdate(hex, r, g, b)
-	displayString = string.join("", "%s", hex, "%.2f%%|r")
+	displayString = string.join("", L['Hit'], ': ', hex, "%.2f%%|r")
 
 	if lastPanel ~= nil then
 		OnEvent(lastPanel)

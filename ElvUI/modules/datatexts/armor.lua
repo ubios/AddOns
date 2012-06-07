@@ -2,17 +2,16 @@ local E, L, V, P, G = unpack(select(2, ...)); --Inport: Engine, Locales, Private
 local DT = E:GetModule('DataTexts')
 
 local lastPanel
-local armorString = ARMOR..": "
-local chanceString = "%.2f%%";
+local chanceString = "%.2f%%"
 local format = string.format
-local displayString = ''; 
-local baseArmor, effectiveArmor, armor, posBuff, negBuff
+local displayString = ''
+local effectiveArmor
 	
 local function CalculateMitigation(level, effective)
 	local mitigation
 	
 	if not effective then
-		_, effective, _, _, _ = UnitArmor("player")
+		effective = select(2, UnitArmor("player"))
 	end
 	
 	if level < 60 then
@@ -27,14 +26,12 @@ local function CalculateMitigation(level, effective)
 end
 
 local function OnEvent(self, event, unit)
-	if event == "UNIT_RESISTANCES" and unit ~= 'player' then return end
+	if (event == "UNIT_RESISTANCES" or event == "UNIT_STATS") and unit ~= 'player' then return end
 	lastPanel = self
 	
-	baseArmor, effectiveArmor, armor, posBuff, negBuff = UnitArmor("player");
+	effectiveArmor = select(2, UnitArmor("player"))
 
-	self.text:SetFormattedText(displayString, armorString, effectiveArmor)
-	
-	int = 2
+	self.text:SetFormattedText(displayString, effectiveArmor)
 end
 
 
@@ -58,7 +55,7 @@ local function OnEnter(self)
 end
 
 local function ValueColorUpdate(hex, r, g, b)
-	displayString = string.join("", "%s", hex, "%d|r")
+	displayString = string.join("", ARMOR, ": ", hex, "%d|r")
 	
 	if lastPanel ~= nil then
 		OnEvent(lastPanel)

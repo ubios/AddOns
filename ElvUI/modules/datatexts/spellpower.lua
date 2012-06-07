@@ -1,27 +1,25 @@
 local E, L, V, P, G = unpack(select(2, ...)); --Inport: Engine, Locales, PrivateDB, ProfileDB, GlobalDB
 local DT = E:GetModule('DataTexts')
 
-local spellpwr, healpwr
-local displayModifierString = ''
+local displayString = ''
 local lastPanel;
 
 local function OnEvent(self, event, unit)
-	if event == "UNIT_AURA" and unit ~= 'player' then return end
-	spellpwr = GetSpellBonusDamage(7)
-	healpwr = GetSpellBonusHealing()
+	if (event == "UNIT_AURA" or event == "UNIT_STATS") and unit ~= 'player' then return end
+	
+	local spellpwr, healpwr = GetSpellBonusDamage(7), GetSpellBonusHealing()
 	
 	if healpwr > spellpwr then
-		self.text:SetFormattedText(displayNumberString, L['HP'], healpwr)
+		self.text:SetFormattedText(displayString, L['HP'], healpwr)
 	else
-		self.text:SetFormattedText(displayNumberString, L['SP'], spellpwr)
+		self.text:SetFormattedText(displayString, L['SP'], spellpwr)
 	end
 
-	int = 2
 	lastPanel = self
 end
 
 local function ValueColorUpdate(hex, r, g, b)
-	displayNumberString = string.join("", "%s: ", hex, "%d|r")
+	displayString = string.join("", "%s: ", hex, "%d|r")
 	
 	if lastPanel ~= nil then
 		OnEvent(lastPanel)
