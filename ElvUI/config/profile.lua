@@ -1138,6 +1138,7 @@ P["actionbar"] = {
 	['fontsize'] = 11,
 	["enablecd"] = true,
 	["treshold"] = 3,
+	['useMaxPaging'] = false,
 	["expiringcolor"] = { r = 1, g = 0, b = 0 },
 	["secondscolor"] = { r = 1, g = 1, b = 0 },
 	["minutescolor"] = { r = 1, g = 1, b = 1 },
