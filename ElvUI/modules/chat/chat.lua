@@ -38,6 +38,8 @@ local tabTexs = {
 	'Highlight'
 }
 
+CH.Keywords = {};
+
 function CH:GetGroupDistribution()
 	local inInstance, kind = IsInInstance()
 	if inInstance and (kind == "pvp") then
@@ -363,7 +365,11 @@ function CH:PrintURL(url)
 end
 
 function CH:FindURL(event, msg, ...)
-	if not CH.db.url then return false, msg, ... end
+	if not CH.db.url then 
+		msg = CH:CheckKeyword(msg)
+		return false, msg, ... 
+	end
+	
 	local newMsg, found = gsub(msg, "(%a+)://(%S+)%s?", CH:PrintURL("%1://%2"))
 	if found > 0 then return false, newMsg, ... end
 	
@@ -372,6 +378,10 @@ function CH:FindURL(event, msg, ...)
 
 	newMsg, found = gsub(msg, "([_A-Za-z0-9-%.]+)@([_A-Za-z0-9-]+)(%.+)([_A-Za-z0-9-%.]+)%s?", CH:PrintURL("%1@%2%3%4"))
 	if found > 0 then return false, newMsg, ... end
+	
+	msg = CH:CheckKeyword(msg)
+	
+	return false, msg, ...
 end
 
 local OldChatFrame_OnHyperlinkShow
@@ -565,20 +575,19 @@ function CH:ChatThrottleHandler(event, ...)
 end
 
 local locale = GetLocale()
-function CH:CHAT_MSG_CHANNEL(...)
+function CH:CHAT_MSG_CHANNEL(event, message, author, ...)
 	local isSpam = nil
 	if locale == 'enUS' or locale == 'enGB' then
-		isSpam = CH.SpamFilter(self, ...)
+		isSpam = CH.SpamFilter(self, event, message, author, ...)
 	end
 	
 	if isSpam then
 		return true;
 	else
-		local event, message, author = ...
 		local blockFlag = false
 		local msg = PrepareMessage(author, message)
 		
-		if msg == nil then return CH.FindURL(self, ...) end	
+
 		-- ignore player messages
 		if author == UnitName("player") then return CH.FindURL(self, ...) end
 		if msgList[msg] and CH.db.throttleInterval ~= 0 then
@@ -594,26 +603,25 @@ function CH:CHAT_MSG_CHANNEL(...)
 				msgTime[msg] = time()
 			end
 			
-			return CH.FindURL(self, ...)
+			return CH.FindURL(self, event, message, author, ...)
 		end
 	end
 end
 
-function CH:CHAT_MSG_YELL(...)
+function CH:CHAT_MSG_YELL(event, message, author, ...)
 	local isSpam = nil
 	if locale == 'enUS' or locale == 'enGB' then
-		isSpam = CH.SpamFilter(self, ...)
+		isSpam = CH.SpamFilter(self, event, message, author, ...)
 	end
 	
 	if isSpam then
 		return true;
 	else
-		local event, message, author = ...
 		local blockFlag = false
 		local msg = PrepareMessage(author, message)
 		
 		if msg == nil then return CH.FindURL(self, ...) end	
-		
+
 		-- ignore player messages
 		if author == UnitName("player") then return CH.FindURL(self, ...) end
 		if msgList[msg] and msgCount[msg] > 1 and CH.db.throttleInterval ~= 0 then
@@ -629,22 +637,39 @@ function CH:CHAT_MSG_YELL(...)
 				msgTime[msg] = time()
 			end
 			
-			return CH.FindURL(self, ...)
+			return CH.FindURL(self, event, message, author, ...)
 		end
 	end
 end
 
-function CH:CHAT_MSG_SAY(...)
+function CH:CHAT_MSG_SAY(event, message, author, ...)
 	local isSpam = nil
 	if locale == 'enUS' or locale == 'enGB' then
-		isSpam = CH.SpamFilter(self, ...)
+		isSpam = CH.SpamFilter(self, event, message, author, ...)
 	end
 	
 	if isSpam then
 		return true;
 	else
-		return CH.FindURL(self, ...)
+		return CH.FindURL(self, event, message, author, ...)
 	end
+end
+
+function CH:CheckKeyword(message)
+	local replaceWords = {};
+	for word in string.gmatch(message, "%a+") do
+		for keyword, _ in pairs(CH.Keywords) do
+			if word:lower() == keyword:lower() then
+				replaceWords[word] = E.media.hexvaluecolor..word..'|r'
+			end	
+		end
+	end
+	
+	for word, replaceWord in pairs(replaceWords) do
+		message = message:gsub(word, replaceWord)
+	end
+	
+	return message
 end
 
 function CH:AddLines(lines, ...)
@@ -739,12 +764,29 @@ function CH:ChatEdit_AddHistory(editBox, line)
 	end
 end
 
+function CH:UpdateChatKeywords()
+	table.wipe(CH.Keywords)
+	local keywords = self.db.keywords
+	keywords = keywords:gsub(',%s', ',')
+	
+	for i=1, #{string.split(',', keywords)} do
+		local stringValue = select(i, string.split(',', keywords));
+		if stringValue == '%MYNAME%' then
+			stringValue = E.myname;
+		end
+		
+		CH.Keywords[stringValue] = true;
+	end
+end
+
 function CH:Initialize()
 	self.db = E.db.chat
 	if E.private.chat.enable ~= true then return end
 	if not ElvCharacterData.ChatEditHistory then
 		ElvCharacterData.ChatEditHistory = {};
 	end
+	
+	self:UpdateChatKeywords()
 	
     UnitPopupButtons["COPYCHAT"] = { 
 		text =L["Copy Text"], 
