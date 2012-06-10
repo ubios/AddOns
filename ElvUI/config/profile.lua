@@ -141,9 +141,15 @@ P['datatexts'] = {
 		},
 		['LeftMiniPanel'] = 'Guild',
 		['RightMiniPanel'] = 'Friends',
+		['ExtraDataTextBar'] = {
+			['left'] = '',
+			['middle'] = '',
+			['right'] = '',		
+		}
 	},
 	['localtime'] = true,
 	['time24'] = false,
+	['topbar'] = true,
 }
 
 --Tooltip

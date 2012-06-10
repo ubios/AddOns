@@ -180,6 +180,11 @@ function DT:AssignPanelToDataText(panel, data)
 	end	
 end
 
+function DT:ToggleTopBar()
+  E:GetModule('Misc'):UpdateExpRepBarAnchor()
+	DT:LoadDataTexts()
+end
+
 function DT:LoadDataTexts()
 	if not self.db then self.db = E.db.datatexts end
 	for name, obj in LDB:DataObjectIterator() do

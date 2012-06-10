@@ -67,6 +67,13 @@ E.Options.args.datatexts = {
 			name = L['Local Time'],
 			desc = L['If not set to true then the server time will be displayed instead.'],
 		},
+		topbar = {
+			order = 4,
+			type = 'toggle',
+			name = L['Show Top Bar'],
+			desc = L['Toggle the visibility of the datatext bar on the top of the screen.'],
+			set = function(info, value) E.db.datatexts[ info[#info] ] = value; DT:ToggleTopBar() end,
+		},
 		panels = {
 			type = 'group',
 			name = L['Panels'],

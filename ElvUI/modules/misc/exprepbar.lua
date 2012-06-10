@@ -1,5 +1,5 @@
-local E, L, V, P, G = unpack(select(2, ...)); --Inport: Engine, Locales, PrivateDB, ProfileDB, GlobalDB
-local M = E:GetModule('Misc');
+﻿local E, L, V, P, G = unpack(select(2, ...)); --Inport: Engine, Locales, PrivateDB, ProfileDB, GlobalDB
+local M = E:GetModule('Misc')
 
 local BAR_WIDTH --Set post load so we can set it to a percent of your screen width.
 local BAR_HEIGHT = 9
@@ -248,15 +248,23 @@ end
 function M:UpdateExpRepBarAnchor()
 	UpperRepExpBarHolder:ClearAllPoints()
 	if E.db.general.expRepPos == 'TOP_SCREEN' then
-		BAR_WIDTH = E.eyefinity or E.UIParent:GetWidth(); BAR_WIDTH = BAR_WIDTH / 5
-		UpperRepExpBarHolder:Point('TOP', E.UIParent, 'TOP', 0, 2)  
-		UpperRepExpBarHolder:SetParent(E.UIParent)
+		BAR_WIDTH = (E.eyefinity or E.UIParent:GetWidth()) / 5
+		
+		if (E.db.datatexts.topbar) then
+			ExtraDataTextBar:Point('TOP', E.UIParent, 'TOP', 0, -2)
+		else
+			ExtraDataTextBar:Point('TOP', E.UIParent, 'TOP', 0, 27)			
+		end
+		
+		UpperRepExpBarHolder:Point('TOP', ExtraDataTextBar, 'BOTTOM', 0, 2)  
+		UpperRepExpBarHolder:SetParent(ExtraDataTextBar)
 	else
 		BAR_WIDTH = E.MinimapSize
 		UpperRepExpBarHolder:Point('TOP', MMHolder, 'BOTTOM', 0, 2)  
 		UpperRepExpBarHolder:SetParent(Minimap)
 	end
 	
+	UpperRepExpBarHolder:Show()
 	UpperRepExpBarHolder:SetFrameLevel(0)
 	UpperRepExpBarHolder:Size(BAR_WIDTH - 30 + E.RBRWidth, TOPBAR_HEIGHT)
 
@@ -273,7 +281,7 @@ end
 
 function M:LoadExpRepBar()
 	local holder = CreateFrame('Button', 'UpperRepExpBarHolder', E.UIParent)
-	holder:Point('TOP', E.UIParent, 'TOP', 0, 2)  
+	holder:Point('TOP', E.UIParent, 'BOTTOM', 0, 2)  
 	holder:SetScript('OnEnter', OnEnter)
 	holder:SetScript('OnLeave', OnLeave)	
 	holder:SetScript('OnClick', OnClick)	

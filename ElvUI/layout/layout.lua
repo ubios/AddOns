@@ -9,8 +9,8 @@ E.Layout = LO;
 function LO:Initialize()
 	self:CreateChatPanels()
 	self:CreateMinimapPanels()
+	self:CreateExtraDataTextBar()
 end
-
 
 local function ChatPanelLeft_OnFade(self)
 	LeftChatPanel:Hide()
@@ -274,6 +274,15 @@ function LO:CreateMinimapPanels()
 	configtoggle.text:SetPoint('CENTER')
 	configtoggle.text:SetJustifyH('CENTER')
 	configtoggle:SetScript('OnClick', function() E:ToggleConfig() end)
+end
+
+function LO:CreateExtraDataTextBar()
+	local edtb = CreateFrame('Frame', 'ExtraDataTextBar', E.UIParent)
+	edtb:Point('TOP', E.UIParent, 'TOP', 0, -2)
+	edtb:Size((E.eyefinity or E.UIParent:GetWidth()) * .3, PANEL_HEIGHT + 5 )
+	edtb:SetTemplate('Default', true)
+	
+	E:GetModule('DataTexts'):RegisterPanel(edtb, 3, 'ANCHOR_BOTTOM', 0, -4)
 end
 
 E:RegisterModule(LO:GetName())
