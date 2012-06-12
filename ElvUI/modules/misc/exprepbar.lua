@@ -252,11 +252,12 @@ function M:UpdateExpRepBarAnchor()
 		
 		if (E.db.datatexts.topbar) then
 			ExtraDataTextBar:Point('TOP', E.UIParent, 'TOP', 0, -2)
+			UpperRepExpBarHolder:Point('TOP', ExtraDataTextBar, 'BOTTOM', 0, 0)
 		else
 			ExtraDataTextBar:Point('TOP', E.UIParent, 'TOP', 0, 27)			
+			UpperRepExpBarHolder:Point('TOP', ExtraDataTextBar, 'BOTTOM', 0, 2)  
 		end
 		
-		UpperRepExpBarHolder:Point('TOP', ExtraDataTextBar, 'BOTTOM', 0, 2)  
 		UpperRepExpBarHolder:SetParent(ExtraDataTextBar)
 	else
 		BAR_WIDTH = E.MinimapSize
