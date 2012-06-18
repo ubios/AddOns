@@ -21,6 +21,7 @@
 	<Script file='specswitch.lua'/>
 	<Script file='attackpower.lua'/>
 	<Script file='spellpower.lua'/>
-	<Script file='range.lua'/>	
+	<Script file='battleground.lua'/>
+	<Script file='range.lua'/>
 	<Script file='options.lua'/>
 </Ui>

@@ -38,6 +38,7 @@ P['general'] = {
 	['raidReminder'] = true,
 	['minimapPanels'] = true,
 	['tinyWorldMap'] = true,
+	['minimapLocationText'] = 'MOUSEOVER',
 };
 
 --Bags
@@ -68,7 +69,7 @@ P["nameplate"] = {
 	["enhancethreat"] = true,
 	["combat"] = false,
 	["showhealth"] = false,
-	["trackauras"] = false,
+	["trackauras"] = true,
 	["trackfilter"] = 'CCDebuffs',
 	['goodscale'] = 1,
 	['badscale'] = 1,
@@ -150,6 +151,7 @@ P['datatexts'] = {
 	['localtime'] = true,
 	['time24'] = false,
 	['topbar'] = true,
+	['battleground'] = true,
 }
 
 --Tooltip
@@ -853,6 +855,10 @@ P['unitframe'] = {
 				['enable'] = true,
 				['position'] = 'CENTER',
 			},			
+			['raidRoleIcons'] = {
+				['enable'] = true,
+				['position'] = 'TOPLEFT',
+			},					
 			['petsGroup'] = {
 				['enable'] = false,
 				['width'] = 100,
@@ -955,6 +961,10 @@ P['unitframe'] = {
 				['enable'] = true,
 				['position'] = 'BOTTOMRIGHT',
 			},					
+			['raidRoleIcons'] = {
+				['enable'] = true,
+				['position'] = 'TOPLEFT',
+		},			
 		},			
 		['raid25'] = {
 			['enable'] = true,
@@ -1039,6 +1049,10 @@ P['unitframe'] = {
 				['enable'] = true,
 				['position'] = 'BOTTOMRIGHT',
 			},					
+			['raidRoleIcons'] = {
+				['enable'] = true,
+				['position'] = 'TOPLEFT',
+		},					
 		},					
 		['raid40'] = {
 			['enable'] = true,
@@ -1057,9 +1071,9 @@ P['unitframe'] = {
 			['healPrediction'] = false,
 			['columnAnchorPoint'] = "TOP",
 			['width'] = 80,
-			['height'] = 36,
+			['height'] = 26,
 			['health'] = {
-				['text'] = true,
+				['text'] = false,
 				['text_format'] = 'deficit',
 				['position'] = 'BOTTOM',
 				['orientation'] = 'HORIZONTAL',
@@ -1077,7 +1091,7 @@ P['unitframe'] = {
 			},			
 			['name'] = {
 				['enable'] = true,
-				['position'] = 'TOP',
+				['position'] = 'CENTER',
 				['length'] = 'SHORT',
 			},
 			['buffs'] = {
@@ -1114,8 +1128,12 @@ P['unitframe'] = {
 				['size'] = 22,
 			},
 			['roleIcon'] = {
-				['enable'] = true,
+				['enable'] = false,
 				['position'] = 'BOTTOMRIGHT',
+			},				
+			['raidRoleIcons'] = {
+				['enable'] = true,
+				['position'] = 'TOPLEFT',
 			},				
 			['buffIndicator'] = {
 				['enable'] = true,

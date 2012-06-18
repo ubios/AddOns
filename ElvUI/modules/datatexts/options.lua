@@ -74,12 +74,18 @@ E.Options.args.datatexts = {
 			desc = L['Toggle the visibility of the datatext bar on the top of the screen.'],
 			set = function(info, value) E.db.datatexts[ info[#info] ] = value; DT:ToggleTopBar() end,
 		},
+		battleground = {
+			order = 5,
+			type = 'toggle',
+			name = L['Battleground Texts'],
+			desc = L['When inside a battleground display personal scoreboard information on the main datatext bars.'],
+		},
 		panels = {
 			type = 'group',
 			name = L['Panels'],
 			order = 100,	
 			args = {},
 			guiInline = true,
-		},		
+		},
 	},
 }
