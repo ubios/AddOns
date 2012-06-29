@@ -764,6 +764,14 @@ E.Options.args.unitframe.args.player = {
 			desc = L['Display the rested icon on the unitframe.'],
 			type = 'toggle',
 		},
+		hideonnpc = {
+			type = 'toggle',
+			order = 10,
+			name = L['Text Toggle On NPC'],
+			desc = L['Power text will be hidden on NPC targets, in addition the name text will be repositioned to the power texts anchor point.'],
+			get = function(info) return E.db.unitframe.units['player']['power'].hideonnpc end,
+			set = function(info, value) E.db.unitframe.units['player']['power'].hideonnpc = value; UF:CreateAndUpdateUF('player') end,
+		},		
 		health = {
 			order = 100,
 			type = 'group',
@@ -831,12 +839,6 @@ E.Options.args.unitframe.args.player = {
 					desc = L['Offset of the powerbar to the healthbar, set to 0 to disable.'],
 					order = 6,
 					min = 0, max = 20, step = 1,
-				},
-				hideonnpc = {
-					type = 'toggle',
-					order = 7,
-					name = L['Text Toggle On NPC'],
-					desc = L['Power text will be hidden on NPC targets, in addition the name text will be repositioned to the power texts anchor point.'],
 				},
 				position = {
 					type = 'select',
@@ -1378,6 +1380,14 @@ E.Options.args.unitframe.args.target = {
 			desc = L['Show the range and distance to the selected party or raid member.'],
 			type = 'toggle',
 		},
+		hideonnpc = {
+			type = 'toggle',
+			order = 10,
+			name = L['Text Toggle On NPC'],
+			desc = L['Power text will be hidden on NPC targets, in addition the name text will be repositioned to the power texts anchor point.'],
+			get = function(info) return E.db.unitframe.units['target']['power'].hideonnpc end,
+			set = function(info, value) E.db.unitframe.units['target']['power'].hideonnpc = value; UF:CreateAndUpdateUF('target') end,
+		},			
 		health = {
 			order = 100,
 			type = 'group',
@@ -1445,12 +1455,6 @@ E.Options.args.unitframe.args.target = {
 					desc = L['Offset of the powerbar to the healthbar, set to 0 to disable.'],
 					order = 6,
 					min = 0, max = 20, step = 1,
-				},
-				hideonnpc = {
-					type = 'toggle',
-					order = 7,
-					name = L['Text Toggle On NPC'],
-					desc = L['Power text will be hidden on NPC targets, in addition the name text will be repositioned to the power texts anchor point.'],
 				},
 				position = {
 					type = 'select',
@@ -1929,8 +1933,16 @@ E.Options.args.unitframe.args.targettarget = {
 			type = 'range',
 			min = 10, max = 250, step = 1,
 		},	
-		health = {
+		hideonnpc = {
+			type = 'toggle',
 			order = 6,
+			name = L['Text Toggle On NPC'],
+			desc = L['Power text will be hidden on NPC targets, in addition the name text will be repositioned to the power texts anchor point.'],
+			get = function(info) return E.db.unitframe.units['targettarget']['power'].hideonnpc end,
+			set = function(info, value) E.db.unitframe.units['targettarget']['power'].hideonnpc = value; UF:CreateAndUpdateUF('targettarget') end,
+		},			
+		health = {
+			order = 7,
 			type = 'group',
 			name = L['Health'],
 			get = function(info) return E.db.unitframe.units['targettarget']['health'][ info[#info] ] end,
@@ -1956,7 +1968,7 @@ E.Options.args.unitframe.args.targettarget = {
 			},
 		},
 		power = {
-			order = 7,
+			order = 8,
 			type = 'group',
 			name = L['Power'],
 			get = function(info) return E.db.unitframe.units['targettarget']['power'][ info[#info] ] end,
@@ -1996,12 +2008,6 @@ E.Options.args.unitframe.args.targettarget = {
 					desc = L['Offset of the powerbar to the healthbar, set to 0 to disable.'],
 					order = 6,
 					min = 0, max = 20, step = 1,
-				},
-				hideonnpc = {
-					type = 'toggle',
-					order = 7,
-					name = L['Text Toggle On NPC'],
-					desc = L['Power text will be hidden on NPC targets, in addition the name text will be repositioned to the power texts anchor point.'],
 				},
 				position = {
 					type = 'select',
@@ -2321,6 +2327,14 @@ E.Options.args.unitframe.args.focus = {
 			desc = L['Show the range and distance to the selected party or raid member.'],
 			type = 'toggle',
 		},
+		hideonnpc = {
+			type = 'toggle',
+			order = 10,
+			name = L['Text Toggle On NPC'],
+			desc = L['Power text will be hidden on NPC targets, in addition the name text will be repositioned to the power texts anchor point.'],
+			get = function(info) return E.db.unitframe.units['focus']['power'].hideonnpc end,
+			set = function(info, value) E.db.unitframe.units['focus']['power'].hideonnpc = value; UF:CreateAndUpdateUF('focus') end,
+		},
 		health = {
 			order = 100,
 			type = 'group',
@@ -2388,12 +2402,6 @@ E.Options.args.unitframe.args.focus = {
 					desc = L['Offset of the powerbar to the healthbar, set to 0 to disable.'],
 					order = 6,
 					min = 0, max = 20, step = 1,
-				},
-				hideonnpc = {
-					type = 'toggle',
-					order = 7,
-					name = L['Text Toggle On NPC'],
-					desc = L['Power text will be hidden on NPC targets, in addition the name text will be repositioned to the power texts anchor point.'],
 				},
 				position = {
 					type = 'select',
@@ -2813,8 +2821,16 @@ E.Options.args.unitframe.args.focustarget = {
 			type = 'range',
 			min = 10, max = 250, step = 1,
 		},	
-		health = {
+		hideonnpc = {
+			type = 'toggle',
 			order = 6,
+			name = L['Text Toggle On NPC'],
+			desc = L['Power text will be hidden on NPC targets, in addition the name text will be repositioned to the power texts anchor point.'],
+			get = function(info) return E.db.unitframe.units['focustarget']['power'].hideonnpc end,
+			set = function(info, value) E.db.unitframe.units['focustarget']['power'].hideonnpc = value; UF:CreateAndUpdateUF('focustarget') end,
+		},			
+		health = {
+			order = 7,
 			type = 'group',
 			name = L['Health'],
 			get = function(info) return E.db.unitframe.units['focustarget']['health'][ info[#info] ] end,
@@ -2840,7 +2856,7 @@ E.Options.args.unitframe.args.focustarget = {
 			},
 		},
 		power = {
-			order = 7,
+			order = 8,
 			type = 'group',
 			name = L['Power'],
 			get = function(info) return E.db.unitframe.units['focustarget']['power'][ info[#info] ] end,
@@ -2880,12 +2896,6 @@ E.Options.args.unitframe.args.focustarget = {
 					desc = L['Offset of the powerbar to the healthbar, set to 0 to disable.'],
 					order = 6,
 					min = 0, max = 20, step = 1,
-				},
-				hideonnpc = {
-					type = 'toggle',
-					order = 7,
-					name = L['Text Toggle On NPC'],
-					desc = L['Power text will be hidden on NPC targets, in addition the name text will be repositioned to the power texts anchor point.'],
 				},
 				position = {
 					type = 'select',
@@ -3199,6 +3209,14 @@ E.Options.args.unitframe.args.pet = {
 			desc = L['Show a incomming heal prediction bar on the unitframe. Also display a slightly different colored bar for incoming overheals.'],
 			type = 'toggle',
 		},		
+		hideonnpc = {
+			type = 'toggle',
+			order = 10,
+			name = L['Text Toggle On NPC'],
+			desc = L['Power text will be hidden on NPC targets, in addition the name text will be repositioned to the power texts anchor point.'],
+			get = function(info) return E.db.unitframe.units['pet']['power'].hideonnpc end,
+			set = function(info, value) E.db.unitframe.units['pet']['power'].hideonnpc = value; UF:CreateAndUpdateUF('pet') end,
+		},			
 		health = {
 			order = 100,
 			type = 'group',
@@ -3266,12 +3284,6 @@ E.Options.args.unitframe.args.pet = {
 					desc = L['Offset of the powerbar to the healthbar, set to 0 to disable.'],
 					order = 6,
 					min = 0, max = 20, step = 1,
-				},
-				hideonnpc = {
-					type = 'toggle',
-					order = 7,
-					name = L['Text Toggle On NPC'],
-					desc = L['Power text will be hidden on NPC targets, in addition the name text will be repositioned to the power texts anchor point.'],
 				},
 				position = {
 					type = 'select',
@@ -3579,8 +3591,16 @@ E.Options.args.unitframe.args.pettarget = {
 			type = 'range',
 			min = 10, max = 250, step = 1,
 		},	
-		health = {
+		hideonnpc = {
+			type = 'toggle',
 			order = 6,
+			name = L['Text Toggle On NPC'],
+			desc = L['Power text will be hidden on NPC targets, in addition the name text will be repositioned to the power texts anchor point.'],
+			get = function(info) return E.db.unitframe.units['pettarget']['power'].hideonnpc end,
+			set = function(info, value) E.db.unitframe.units['pettarget']['power'].hideonnpc = value; UF:CreateAndUpdateUF('pettarget') end,
+		},				
+		health = {
+			order = 7,
 			type = 'group',
 			name = L['Health'],
 			get = function(info) return E.db.unitframe.units['pettarget']['health'][ info[#info] ] end,
@@ -3606,7 +3626,7 @@ E.Options.args.unitframe.args.pettarget = {
 			},
 		},
 		power = {
-			order = 7,
+			order = 8,
 			type = 'group',
 			name = L['Power'],
 			get = function(info) return E.db.unitframe.units['pettarget']['power'][ info[#info] ] end,
@@ -3646,12 +3666,6 @@ E.Options.args.unitframe.args.pettarget = {
 					desc = L['Offset of the powerbar to the healthbar, set to 0 to disable.'],
 					order = 6,
 					min = 0, max = 20, step = 1,
-				},
-				hideonnpc = {
-					type = 'toggle',
-					order = 7,
-					name = L['Text Toggle On NPC'],
-					desc = L['Power text will be hidden on NPC targets, in addition the name text will be repositioned to the power texts anchor point.'],
 				},
 				position = {
 					type = 'select',
@@ -3971,8 +3985,16 @@ E.Options.args.unitframe.args.boss = {
 				['DOWN'] = L['Down'],
 			},
 		},
-		health = {
+		hideonnpc = {
+			type = 'toggle',
 			order = 7,
+			name = L['Text Toggle On NPC'],
+			desc = L['Power text will be hidden on NPC targets, in addition the name text will be repositioned to the power texts anchor point.'],
+			get = function(info) return E.db.unitframe.units['boss']['power'].hideonnpc end,
+			set = function(info, value) E.db.unitframe.units['boss']['power'].hideonnpc = value; UF:CreateAndUpdateUFGroup('boss', MAX_BOSS_FRAMES) end,
+		},				
+		health = {
+			order = 8,
 			type = 'group',
 			name = L['Health'],
 			get = function(info) return E.db.unitframe.units['boss']['health'][ info[#info] ] end,
@@ -3998,7 +4020,7 @@ E.Options.args.unitframe.args.boss = {
 			},
 		},
 		power = {
-			order = 8,
+			order = 9,
 			type = 'group',
 			name = L['Power'],
 			get = function(info) return E.db.unitframe.units['boss']['power'][ info[#info] ] end,
@@ -4038,12 +4060,6 @@ E.Options.args.unitframe.args.boss = {
 					desc = L['Offset of the powerbar to the healthbar, set to 0 to disable.'],
 					order = 6,
 					min = 0, max = 20, step = 1,
-				},
-				hideonnpc = {
-					type = 'toggle',
-					order = 7,
-					name = L['Text Toggle On NPC'],
-					desc = L['Power text will be hidden on NPC targets, in addition the name text will be repositioned to the power texts anchor point.'],
 				},
 				position = {
 					type = 'select',
@@ -4479,8 +4495,16 @@ E.Options.args.unitframe.args.arena = {
 				['DOWN'] = L['Down'],
 			},
 		},
-		health = {
+		hideonnpc = {
+			type = 'toggle',
 			order = 7,
+			name = L['Text Toggle On NPC'],
+			desc = L['Power text will be hidden on NPC targets, in addition the name text will be repositioned to the power texts anchor point.'],
+			get = function(info) return E.db.unitframe.units['arena']['power'].hideonnpc end,
+			set = function(info, value) E.db.unitframe.units['arena']['power'].hideonnpc = value; UF:CreateAndUpdateUFGroup('arena', 5) end,
+		},				
+		health = {
+			order = 8,
 			type = 'group',
 			name = L['Health'],
 			get = function(info) return E.db.unitframe.units['arena']['health'][ info[#info] ] end,
@@ -4506,7 +4530,7 @@ E.Options.args.unitframe.args.arena = {
 			},
 		},
 		power = {
-			order = 8,
+			order = 9,
 			type = 'group',
 			name = L['Power'],
 			get = function(info) return E.db.unitframe.units['arena']['power'][ info[#info] ] end,
@@ -4546,12 +4570,6 @@ E.Options.args.unitframe.args.arena = {
 					desc = L['Offset of the powerbar to the healthbar, set to 0 to disable.'],
 					order = 6,
 					min = 0, max = 20, step = 1,
-				},
-				hideonnpc = {
-					type = 'toggle',
-					order = 7,
-					name = L['Text Toggle On NPC'],
-					desc = L['Power text will be hidden on NPC targets, in addition the name text will be repositioned to the power texts anchor point.'],
 				},
 				position = {
 					type = 'select',
@@ -5031,6 +5049,14 @@ E.Options.args.unitframe.args.party = {
 						['GROUP'] = GROUP,
 					},
 				},
+				hideonnpc = {
+					type = 'toggle',
+					order = 17,
+					name = L['Text Toggle On NPC'],
+					desc = L['Power text will be hidden on NPC targets, in addition the name text will be repositioned to the power texts anchor point.'],
+					get = function(info) return E.db.unitframe.units['party']['power'].hideonnpc end,
+					set = function(info, value) E.db.unitframe.units['party']['power'].hideonnpc = value; UF:CreateAndUpdateHeaderGroup('party'); end,
+				},					
 				visibility = {
 					order = 200,
 					type = 'input',
@@ -5039,7 +5065,7 @@ E.Options.args.unitframe.args.party = {
 					width = 'full',
 				},				
 			},
-		},
+		},		
 		health = {
 			order = 100,
 			type = 'group',
@@ -5123,12 +5149,6 @@ E.Options.args.unitframe.args.party = {
 					desc = L['Offset of the powerbar to the healthbar, set to 0 to disable.'],
 					order = 6,
 					min = 0, max = 20, step = 1,
-				},
-				hideonnpc = {
-					type = 'toggle',
-					order = 7,
-					name = L['Text Toggle On NPC'],
-					desc = L['Power text will be hidden on NPC targets, in addition the name text will be repositioned to the power texts anchor point.'],
 				},
 				position = {
 					type = 'select',
@@ -5707,6 +5727,14 @@ for i=10, 40, 15 do
 							['GROUP'] = GROUP,
 						},
 					},		
+					hideonnpc = {
+						type = 'toggle',
+						order = 17,
+						name = L['Text Toggle On NPC'],
+						desc = L['Power text will be hidden on NPC targets, in addition the name text will be repositioned to the power texts anchor point.'],
+						get = function(info) return E.db.unitframe.units['raid'..i]['power'].hideonnpc end,
+						set = function(info, value) E.db.unitframe.units['raid'..i]['power'].hideonnpc = value; UF:CreateAndUpdateHeaderGroup('raid'..i); end,
+					},							
 					visibility = {
 						order = 200,
 						type = 'input',
@@ -5799,12 +5827,6 @@ for i=10, 40, 15 do
 						desc = L['Offset of the powerbar to the healthbar, set to 0 to disable.'],
 						order = 6,
 						min = 0, max = 20, step = 1,
-					},
-					hideonnpc = {
-						type = 'toggle',
-						order = 7,
-						name = L['Text Toggle On NPC'],
-						desc = L['Power text will be hidden on NPC targets, in addition the name text will be repositioned to the power texts anchor point.'],
 					},
 					position = {
 						type = 'select',

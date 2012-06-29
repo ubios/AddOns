@@ -465,8 +465,8 @@ function CH:AddMessage(text, ...)
 			text = '|cffB3B3B3['..timestamp..'] |r'..text
 		end
 			
-		text = text:gsub('|Hplayer:Elv:', '|TInterface\\ChatFrame\\UI-ChatIcon-Blizz:12:20:0:0:32:16:4:28:0:16|t|Hplayer:Elv:')
-		text = text:gsub('|Hplayer:Elv%-', '|TInterface\\ChatFrame\\UI-ChatIcon-Blizz:12:20:0:0:32:16:4:28:0:16|t|Hplayer:Elv%-')
+		text = text:gsub('|Hplayer:Elvz:', '|TInterface\\ChatFrame\\UI-ChatIcon-Blizz:12:20:0:0:32:16:4:28:0:16|t|Hplayer:Elvz:')
+		text = text:gsub('|Hplayer:Elvz%-', '|TInterface\\ChatFrame\\UI-ChatIcon-Blizz:12:20:0:0:32:16:4:28:0:16|t|Hplayer:Elvz%-')
 	end
 
 	self.OldAddMessage(self, text, ...)
@@ -641,7 +641,7 @@ function CH:CHAT_MSG_YELL(event, message, author, ...)
 		if msg == nil then return CH.FindURL(self, event, message, author, ...) end	
 
 		-- ignore player messages
-		if author == UnitName("player") then return CH.FindURL(self, ...) end
+		if author == UnitName("player") then return CH.FindURL(self, event, message, author, ...) end
 		if msgList[msg] and msgCount[msg] > 1 and CH.db.throttleInterval ~= 0 then
 			if difftime(time(), msgTime[msg]) <= CH.db.throttleInterval then
 				blockFlag = true
@@ -796,14 +796,16 @@ function CH:UpdateChatKeywords()
 	table.wipe(CH.Keywords)
 	local keywords = self.db.keywords
 	keywords = keywords:gsub(',%s', ',')
-	
+
 	for i=1, #{string.split(',', keywords)} do
 		local stringValue = select(i, string.split(',', keywords));
 		if stringValue == '%MYNAME%' then
 			stringValue = E.myname;
 		end
 		
-		CH.Keywords[stringValue] = true;
+		if stringValue ~= '' then
+			CH.Keywords[stringValue] = true;
+		end
 	end
 end
 

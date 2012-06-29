@@ -56,7 +56,10 @@ function E:UpdateMedia()
 	self["media"].glossTex = LSM:Fetch("statusbar", self.private['general'].glossTex)
 
 	--Border Color
-	local border = self.db['general'].bordercolor
+	local border = E.db['general'].bordercolor
+	if E.db.theme == 'class' then
+		border = RAID_CLASS_COLORS[E.myclass]
+	end
 	self["media"].bordercolor = {border.r, border.g, border.b}
 
 	--Backdrop Color
@@ -69,6 +72,9 @@ function E:UpdateMedia()
 	
 	--Value Color
 	local value = self.db['general'].valuecolor
+	if E.db.theme == 'class' then
+		value = RAID_CLASS_COLORS[E.myclass]
+	end	
 	self["media"].hexvaluecolor = self:RGBToHex(value.r, value.g, value.b)
 	self["media"].rgbvaluecolor = {value.r, value.g, value.b}
 	
@@ -79,6 +85,12 @@ function E:UpdateMedia()
 		RightChatPanel.tex:SetTexture(E.db.general.panelBackdropNameRight)
 		RightChatPanel.tex:SetAlpha(E.db.general.backdropfadecolor.a - 0.55 > 0 and E.db.general.backdropfadecolor.a - 0.55 or 0.5)		
 	end
+
+	if E.db.theme == 'class' then
+		local classColor = RAID_CLASS_COLORS[E.myclass]
+		E.db.classtimer.player.buffcolor = E:GetColor(classColor.r, classColor.b, classColor.g)
+		E.db.classtimer.target.buffcolor = E:GetColor(classColor.r, classColor.b, classColor.g)		
+	end				
 	
 	self:ValueFuncCall()
 	self:UpdateBlizzardFonts()
@@ -170,7 +182,7 @@ function E:CheckRole()
 	local tree = GetPrimaryTalentTree();
 	local resilience;
 	local resilperc = GetCombatRatingBonus(COMBAT_RATING_RESILIENCE_PLAYER_DAMAGE_TAKEN)
-	if resilperc > GetDodgeChance() and resilperc > GetParryChance() then
+	if resilperc > GetDodgeChance() and resilperc > GetParryChance() and UnitLevel('player') == MAX_PLAYER_LEVEL then
 		resilience = true;
 	else
 		resilience = false;
@@ -298,113 +310,6 @@ function E:Grid_Create()
 	end
 end
 
-function E:CreateMoverPopup()
-	local f = CreateFrame("Frame", "ElvUIMoverPopupWindow", UIParent)
-	f:SetFrameStrata("DIALOG")
-	f:SetToplevel(true)
-	f:EnableMouse(true)
-	f:SetClampedToScreen(true)
-	f:SetWidth(360)
-	f:SetHeight(110)
-	f:SetTemplate('Transparent')
-	f:SetPoint("TOP", 0, -50)
-	f:Hide()
-	f:SetScript("OnShow", function() PlaySound("igMainMenuOption"); E:Grid_Show() end)
-	f:SetScript("OnHide", function() PlaySound("gsTitleOptionExit"); E:Grid_Hide() end)
-
-	local S = self:GetModule('Skins')
-
-	local header = CreateFrame('Frame', nil, f)
-	header:SetTemplate('Default', true)
-	header:SetWidth(100); header:SetHeight(25)
-	header:SetPoint("CENTER", f, 'TOP')
-	header:SetFrameLevel(header:GetFrameLevel() + 2)
-
-	local title = header:CreateFontString("OVERLAY")
-	title:FontTemplate()
-	title:SetPoint("CENTER", header, "CENTER")
-	title:SetText('ElvUI')
-		
-	local desc = f:CreateFontString("ARTWORK")
-	desc:SetFontObject("GameFontHighlight")
-	desc:SetJustifyV("TOP")
-	desc:SetJustifyH("LEFT")
-	desc:SetPoint("TOPLEFT", 18, -32)
-	desc:SetPoint("BOTTOMRIGHT", -18, 48)
-	desc:SetText(L["Movers unlocked. Move them now and click Lock when you are done."])
-
-	local snapping = CreateFrame("CheckButton", "ElvUISnapping", f, "OptionsCheckButtonTemplate")
-	_G[snapping:GetName() .. "Text"]:SetText(L["Sticky Frames"])
-
-	snapping:SetScript("OnShow", function(self)
-		self:SetChecked(E.db.general.stickyFrames)
-	end)
-
-	snapping:SetScript("OnClick", function(self)
-		E.db.general.stickyFrames = self:GetChecked()
-	end)
-
-	local lock = CreateFrame("Button", "ElvUILock", f, "OptionsButtonTemplate")
-	_G[lock:GetName() .. "Text"]:SetText(L["Lock"])
-
-	lock:SetScript("OnClick", function(self)
-		E:MoveUI(false)
-		self:GetParent():Hide()
-		ACD['Open'](ACD, 'ElvUI') 
-	end)
-	
-	local align = CreateFrame('EditBox', 'AlignBox', f, 'InputBoxTemplate')
-	align:Width(24)
-	align:Height(17)
-	align:SetAutoFocus(false)
-	align:SetScript("OnEscapePressed", function(self)
-		self:SetText(E.db.gridSize)
-		EditBox_ClearFocus(self)
-	end)
-	align:SetScript("OnEnterPressed", function(self)
-		local text = self:GetText()
-		if tonumber(text) then
-			if tonumber(text) <= 256 and tonumber(text) >= 4 then
-				E.db.gridSize = tonumber(text)
-			else
-				self:SetText(E.db.gridSize)
-			end
-		else
-			self:SetText(E.db.gridSize)
-		end
-		E:Grid_Show()
-		EditBox_ClearFocus(self)
-	end)
-	align:SetScript("OnEditFocusLost", function(self)
-		self:SetText(E.db.gridSize)
-	end)
-	align:SetScript("OnEditFocusGained", align.HighlightText)
-	align:SetScript('OnShow', function(self)
-		EditBox_ClearFocus(self)
-		self:SetText(E.db.gridSize)
-	end)
-	
-	align.text = align:CreateFontString(nil, 'OVERLAY', 'GameFontNormal')
-	align.text:SetPoint('RIGHT', align, 'LEFT', -4, 0)
-	align.text:SetText(L['Grid Size:'])
-
-	--position buttons
-	snapping:SetPoint("BOTTOMLEFT", 14, 10)
-	lock:SetPoint("BOTTOMRIGHT", -14, 14)
-	align:SetPoint('TOPRIGHT', lock, 'TOPLEFT', -4, -2)
-	
-	S:HandleCheckBox(snapping)
-	S:HandleButton(lock)
-	S:HandleEditBox(align)
-	
-	f:RegisterEvent('PLAYER_REGEN_DISABLED')
-	f:SetScript('OnEvent', function(self)
-		if self:IsShown() then
-			self:Hide()
-		end
-	end)
-end
-
 function E:CheckIncompatible()
 	if IsAddOnLoaded('Prat-3.0') and E.private.chat.enable then
 		E:Print(format(L['INCOMPATIBLE_ADDON'], 'Prat', 'Chat'))
@@ -484,14 +389,12 @@ local function SendRecieve(self, event, prefix, message, channel, sender)
 	if event == "CHAT_MSG_ADDON" then
 		if sender == E.myname then return end
 
-		if prefix == "ElvUIVC" and sender ~= 'Elv' and not string.find(sender, 'Elv%-') then
+		if prefix == "ElvUIVC" and sender ~= 'Elvz' and not string.find(sender, 'Elvz%-') and not E.recievedOutOfDateMessage then
 			if tonumber(message) > tonumber(E.version) then
 				E:Print(L["Your version of ElvUI is out of date. You can download the latest version from www.tukui.org"])
-				E:UnregisterEvent("CHAT_MSG_ADDON")
-				E:UnregisterEvent("PARTY_MEMBERS_CHANGED")
-				E:UnregisterEvent("RAID_ROSTER_UPDATE")
+				E.recievedOutOfDateMessage = true
 			end
-		elseif prefix == 'ElvSays' and (sender == 'Elv' or string.find(sender, 'Elv-')) then ---HAHHAHAHAHHA
+		elseif prefix == 'ElvSays' and (sender == 'Elvz' or string.find(sender, 'Elvz-')) then ---HAHHAHAHAHHA
 			local user, channel, msg, sendTo = string.split(',', message)
 			
 			if (user ~= 'ALL' and user == E.myname) or user == 'ALL' then
@@ -504,16 +407,14 @@ local function SendRecieve(self, event, prefix, message, channel, sender)
 end
 
 
-function E:UpdateAll()
+function E:UpdateAll(ignoreInstall)
 	self.data = LibStub("AceDB-3.0"):New("ElvData", self.DF);
 	self.data.RegisterCallback(self, "OnProfileChanged", "UpdateAll")
 	self.data.RegisterCallback(self, "OnProfileCopied", "UpdateAll")
 	self.data.RegisterCallback(self, "OnProfileReset", "OnProfileReset")
 	self.db = self.data.profile;
 	self.global = self.data.global;
-
-	self:UpdateMedia()
-	self:UpdateFrameTemplates()
+	
 	self:SetMoversPositions()
 	
 	local CH = self:GetModule('Chat')
@@ -537,6 +438,7 @@ function E:UpdateAll()
 	CT.db = self.db.classtimer
 	CT:PositionTimers()
 	CT:ToggleTimers()
+	CT:UpdateFiltersAndColors() 
 	
 	local DT = self:GetModule('DataTexts')
 	DT.db = self.db.datatexts
@@ -553,13 +455,18 @@ function E:UpdateAll()
 	self:GetModule('Auras').db = self.db.auras
 	self:GetModule('Tooltip').db = self.db.tooltip
 
-	if self.db.install_complete == nil or (self.db.install_complete and type(self.db.install_complete) == 'boolean') or (self.db.install_complete and type(tonumber(self.db.install_complete)) == 'number' and tonumber(self.db.install_complete) <= 3.05) then
-		self:Install()
+	if self.db.install_complete == nil or (self.db.install_complete and type(self.db.install_complete) == 'boolean') or (self.db.install_complete and type(tonumber(self.db.install_complete)) == 'number' and tonumber(self.db.install_complete) <= 3.83) then
+		if not ignoreInstall then
+			self:Install()
+		end
 	end
 	
 	self:GetModule('Minimap'):UpdateSettings()
 	
-	--self:LoadKeybinds()
+	self:UpdateMedia()
+	self:UpdateBorderColors()
+	self:UpdateBackdropColors()
+	self:UpdateFrameTemplates()
 	
 	collectgarbage('collect');
 end
@@ -625,7 +532,7 @@ function E:Initialize()
 
 	self.initialized = true
 	
-	if self.db.install_complete == nil or (self.db.install_complete and type(self.db.install_complete) == 'boolean') or (self.db.install_complete and type(tonumber(self.db.install_complete)) == 'number' and tonumber(self.db.install_complete) <= 3.05) then
+	if self.db.install_complete == nil or (self.db.install_complete and type(self.db.install_complete) == 'boolean') or (self.db.install_complete and type(tonumber(self.db.install_complete)) == 'number' and tonumber(self.db.install_complete) <= 3.83) then
 		self:Install()
 	end
 	
@@ -647,7 +554,6 @@ function E:Initialize()
 	
 	self:UpdateMedia()
 	self:UpdateFrameTemplates()
-	self:CreateMoverPopup()
 	self:RegisterEvent("ACTIVE_TALENT_GROUP_CHANGED", "CheckRole");
 	self:RegisterEvent("PLAYER_TALENT_UPDATE", "CheckRole");
 	self:RegisterEvent("CHARACTER_POINTS_CHANGED", "CheckRole");
