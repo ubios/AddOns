@@ -246,23 +246,27 @@ function M:SetWatchedFactionOnReputationBar(event, msg)
 end
 
 function M:UpdateExpRepBarAnchor()
+	ExtraDataTextBar:ClearAllPoints()
 	UpperRepExpBarHolder:ClearAllPoints()
+
+	if (E.db.datatexts.topbar) then
+		ExtraDataTextBar:Point('TOP', E.UIParent, 'TOP', 0, -2)
+	else
+		ExtraDataTextBar:Point('TOP', E.UIParent, 'TOP', 0, 27)			
+	end	
+	
 	if E.db.general.expRepPos == 'TOP_SCREEN' then
 		BAR_WIDTH = (E.eyefinity or E.UIParent:GetWidth()) / 5
-		
 		if (E.db.datatexts.topbar) then
-			ExtraDataTextBar:Point('TOP', E.UIParent, 'TOP', 0, -2)
 			UpperRepExpBarHolder:Point('TOP', ExtraDataTextBar, 'BOTTOM', 0, 0)
 		else
-			ExtraDataTextBar:Point('TOP', E.UIParent, 'TOP', 0, 27)			
 			UpperRepExpBarHolder:Point('TOP', ExtraDataTextBar, 'BOTTOM', 0, 2)  
-		end
-		
+		end	
 		UpperRepExpBarHolder:SetParent(ExtraDataTextBar)
 	else
 		BAR_WIDTH = E.MinimapSize
 		UpperRepExpBarHolder:Point('TOP', MMHolder, 'BOTTOM', 0, 2)  
-		UpperRepExpBarHolder:SetParent(Minimap)
+		UpperRepExpBarHolder:SetParent(Minimap)		
 	end
 	
 	UpperRepExpBarHolder:Show()
