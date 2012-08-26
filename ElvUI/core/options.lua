@@ -472,6 +472,7 @@ local DONATORS = {
 	"Cosmo",
 	"Adorno",
 	"domoaligato",
+	"Smorg"
 }
 E.DONATORS = DONATORS
 
