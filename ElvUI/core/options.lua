@@ -134,7 +134,6 @@ E.Options.args.general = {
 					type = "toggle",	
 					set = function(info, value) E.db.general[ info[#info] ] = value; E:StaticPopup_Show("CONFIG_RL") end
 				},	
-
 				bubbles = {
 					order = 12,
 					type = "toggle",
@@ -157,6 +156,14 @@ E.Options.args.general = {
 					get = function(info) return E.db.general.tinyWorldMap end,
 					set = function(info, value) E.db.general.tinyWorldMap = value; E:GetModule('WorldMap'):ToggleTinyWorldMapSetting() end					
 				},				
+				pvpautorelease = {
+					order = 15,
+					type = "toggle",
+					name = L['PvP Autorelease'],
+					desc = L['Automatically release body when killed inside a battleground.'],
+					get = function(info) return E.private.general.pvpautorelease end,
+					set = function(info, value) E.private.general.pvpautorelease = value; E:StaticPopup_Show("PRIVATE_RL") end
+				},	
 			},
 		},	
 		minimap = {

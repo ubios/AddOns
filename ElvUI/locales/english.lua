@@ -414,6 +414,8 @@ L['Right'] = true;
 L["Send ADDON_ACTION_BLOCKED errors to the Lua Error frame. These errors are less important in most cases and will not effect your game performance. Also a lot of these errors cannot be fixed. Please only report these errors if you notice a Defect in gameplay."] = true;
 L["Skin the blizzard chat bubbles."] = true;
 L["Tiny Map"] = true;
+L['PvP Autorelease'] = true;
+L['Automatically release body when killed inside a battleground.'] = true;
 L['Toggle Tutorials'] = true;
 L["Welcome to ElvUI version %s!"] = true;
 
