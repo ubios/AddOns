@@ -13,7 +13,7 @@ E.Options.args = {
 		name = L['Login Message'],
 		get = function(info) return E.db.general.loginmessage end,
 		set = function(info, value) E.db.general.loginmessage = value end,
-	},	
+	},
 	ToggleTutorial = {
 		order = 3,
 		type = 'execute',
@@ -26,7 +26,7 @@ E.Options.args = {
 		name = L['Install'],
 		desc = L['Run the installation process.'],
 		func = function() E:Install(); E:ToggleConfig() end,
-	},	
+	},
 	ToggleAnchors = {
 		order = 5,
 		type = "execute",
@@ -40,7 +40,7 @@ E.Options.args = {
 		name = L["Reset Anchors"],
 		desc = L["Reset all frames to their original positions."],
 		func = function() E:ResetUI() end,
-	},	
+	},
 }
 
 E.Options.args.general = {
@@ -54,7 +54,7 @@ E.Options.args.general = {
 			order = 1,
 			type = "description",
 			name = L["ELVUI_DESC"],
-		},			
+		},
 		general = {
 			order = 2,
 			type = "group",
@@ -82,7 +82,7 @@ E.Options.args.general = {
 						['NONE'] = NONE,
 						['GUILD'] = GUILD,
 						['PLAYER'] = PLAYER,
-					},				
+					},
 				},
 				mapAlpha = {
 					order = 3,
@@ -91,7 +91,7 @@ E.Options.args.general = {
 					type = 'range',
 					isPercent = true,
 					min = 0, max = 1, step = 0.01,
-				},		
+				},
 				autoAcceptInvite = {
 					order = 5,
 					name = L['Accept Invites'],
@@ -103,7 +103,7 @@ E.Options.args.general = {
 					name = L['Vendor Grays'],
 					desc = L['Automatically vendor gray items when visiting a vendor.'],
 					type = 'toggle',				
-				},			
+				},
 				autoRoll = {
 					order = 8,
 					name = L['Auto Greed/DE'],
@@ -133,7 +133,7 @@ E.Options.args.general = {
 					desc = L["Automatically scale the User Interface based on your screen resolution"],
 					type = "toggle",	
 					set = function(info, value) E.db.general[ info[#info] ] = value; E:StaticPopup_Show("CONFIG_RL") end
-				},	
+				},
 				bubbles = {
 					order = 12,
 					type = "toggle",
@@ -141,7 +141,7 @@ E.Options.args.general = {
 					desc = L['Skin the blizzard chat bubbles.'],
 					get = function(info) return E.private.general.bubbles end,
 					set = function(info, value) E.private.general.bubbles = value; E:StaticPopup_Show("PRIVATE_RL") end
-				},	
+				},
 				taintLog = {
 					order = 13,
 					type = "toggle",
@@ -155,7 +155,7 @@ E.Options.args.general = {
 					desc = L["Don't scale the large world map to block out sides of the screen."],
 					get = function(info) return E.db.general.tinyWorldMap end,
 					set = function(info, value) E.db.general.tinyWorldMap = value; E:GetModule('WorldMap'):ToggleTinyWorldMapSetting() end					
-				},				
+				},
 				pvpautorelease = {
 					order = 15,
 					type = "toggle",
@@ -163,9 +163,9 @@ E.Options.args.general = {
 					desc = L['Automatically release body when killed inside a battleground.'],
 					get = function(info) return E.private.general.pvpautorelease end,
 					set = function(info, value) E.private.general.pvpautorelease = value; E:StaticPopup_Show("PRIVATE_RL") end
-				},	
+				},
 			},
-		},	
+		},
 		minimap = {
 			order = 2,
 			get = function(info) return E.db.general.minimap[ info[#info] ] end,	
@@ -189,7 +189,7 @@ E.Options.args.general = {
 					min = 120, max = 250, step = 1,
 					set = function(info, value) E.db.general.minimap[ info[#info] ] = value; E:GetModule('Minimap'):UpdateSettings() end,	
 					disabled = function() return not E.private.general.minimap.enable end,
-				},	
+				},
 				locationText = {
 					order = 3,
 					type = 'select',
@@ -203,8 +203,8 @@ E.Options.args.general = {
 						['HIDE'] = L['Hide'],
 					},
 					disabled = function() return not E.private.general.minimap.enable end,
-				},				
-			},		
+				},
+			},	
 		},
 		experience = {
 			order = 3,
@@ -243,13 +243,13 @@ E.Options.args.general = {
 						CURPERC = L["Current - Percent"],
 					},
 					set = function(info, value) E.db.general.experience[ info[#info] ] = value; E:GetModule('Misc'):UpdateExperience() end,
-				},		
+				},
 				textSize = {
 					order = 5,
 					name = L["Font Size"],
 					type = "range",
 					min = 6, max = 22, step = 1,		
-				},				
+				},
 			},
 		},
 		reputation = {
@@ -289,7 +289,7 @@ E.Options.args.general = {
 						CURPERC = L["Current - Percent"],
 					},
 					set = function(info, value) E.db.general.reputation[ info[#info] ] = value; E:GetModule('Misc'):UpdateReputation() end,
-				},		
+				},
 				textSize = {
 					order = 5,
 					name = L["Font Size"],
@@ -328,9 +328,9 @@ E.Options.args.general = {
 					type = "range",
 					min = 6, max = 22, step = 1,	
 					set = function(info, value) E.db.general.threat[ info[#info] ] = value; E:GetModule('Threat'):UpdatePosition() end,	
-				},		
+				},
 			},
-		},	
+		},
 		totems = {
 			order = 5,
 			type = "group",

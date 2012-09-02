@@ -24,4 +24,5 @@
 	<Script file='battleground.lua'/>
 	<Script file='vengeance.lua'/>
 	<Script file='options.lua'/>
+	<Script file='range.lua'/>
 </Ui>

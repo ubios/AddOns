@@ -113,7 +113,7 @@ function M:LoadAutoRelease()
 				RepopMe()
 			end
 		end
-		
+
 		-- auto resurrection for world PvP area...when active
 		for index = 1, GetNumWorldPVPAreas() do
 			local pvpID, localizedName, isActive, canQueue, startTime, canEnter = GetWorldPVPAreaInfo(index)
@@ -133,12 +133,12 @@ function M:AutoInvite(event, leaderName)
 		if QueueStatusMinimapButton:IsShown() then return end -- Prevent losing que inside LFD if someone invites you to group
 		if IsInGroup() then return end
 		hideStatic = true
-	
+
 		-- Update Guild and Friendlist
 		if GetNumFriends() > 0 then ShowFriends() end
 		if IsInGuild() then GuildRoster() end
 		local inGroup = false;
-		
+
 		for friendIndex = 1, GetNumFriends() do
 			local friendName = GetFriendInfo(friendIndex)
 			if friendName == leaderName then
@@ -147,7 +147,7 @@ function M:AutoInvite(event, leaderName)
 				break
 			end
 		end
-		
+
 		if not inGroup then
 			for guildIndex = 1, GetNumGuildMembers(true) do
 				local guildMemberName = GetGuildRosterInfo(guildIndex)
@@ -158,7 +158,7 @@ function M:AutoInvite(event, leaderName)
 				end
 			end
 		end
-		
+
 		if not inGroup then
 			for bnIndex = 1, BNGetNumFriends() do
 				local _, _, _, name = BNGetFriendInfo(bnIndex)
