@@ -192,6 +192,7 @@ function E:RequestBGInfo()
 end
 
 function E:PLAYER_ENTERING_WORLD()
+	self:CheckRole()
 	if not self.MediaUpdated then
 		self:UpdateMedia()
 		self.MediaUpdated = true;
@@ -339,8 +340,8 @@ function E:CheckRole()
 			self.role = "Caster";
 		end		
 	end
-	
-	if self.HealingClasses[self.myclass] and not self.myclass == 'PRIEST' then
+
+	if self.HealingClasses[self.myclass] ~= nil and self.myclass ~= 'PRIEST' then
 		if self:CheckTalentTree(self.HealingClasses[self.myclass]) then
 			self.DispelClasses[self.myclass].Magic = true;
 		else
@@ -606,22 +607,7 @@ local invalidValues = {
 	['blank'] = true,
 }
 
-function E:Initialize()
-	table.wipe(self.db)
-	table.wipe(self.global)
-	table.wipe(self.private)
-	
-	self.data = LibStub("AceDB-3.0"):New("ElvData", self.DF);
-	self.data.RegisterCallback(self, "OnProfileChanged", "UpdateAll")
-	self.data.RegisterCallback(self, "OnProfileCopied", "UpdateAll")
-	self.data.RegisterCallback(self, "OnProfileReset", "OnProfileReset")
-	
-	self.charSettings = LibStub("AceDB-3.0"):New("ElvPrivateData", self.privateVars);	
-	self.private = self.charSettings.profile
-	self.db = self.data.profile;
-	self.global = self.data.global;
-	self:CheckIncompatible()
-	
+function E:DBConversions()
 	--DATABASE CONVERSIONS
 	if type(self.db.unitframe.units.arena.pvpTrinket) == 'boolean' then
 		self.db.unitframe.units.arena.pvpTrinket = table.copy(self.DF["profile"].unitframe.units.arena.pvpTrinket, true)
@@ -661,6 +647,28 @@ function E:Initialize()
 	if self.db.unitframe.units.target.aurabar.anchorPoint ~= P.unitframe.units.target.aurabar.anchorPoint then
 		E.db.unitframe.units.target.smartAuraDisplay = 'DISABLED'
 	end		
+	
+	if type(self.db.tooltip.ufhide) == 'boolean' then
+		self.db.tooltip.ufhide = 'ALL';
+	end
+end
+
+function E:Initialize()
+	table.wipe(self.db)
+	table.wipe(self.global)
+	table.wipe(self.private)
+	
+	self.data = LibStub("AceDB-3.0"):New("ElvData", self.DF);
+	self.data.RegisterCallback(self, "OnProfileChanged", "UpdateAll")
+	self.data.RegisterCallback(self, "OnProfileCopied", "UpdateAll")
+	self.data.RegisterCallback(self, "OnProfileReset", "OnProfileReset")
+	
+	self.charSettings = LibStub("AceDB-3.0"):New("ElvPrivateData", self.privateVars);	
+	self.private = self.charSettings.profile
+	self.db = self.data.profile;
+	self.global = self.data.global;
+	self:CheckIncompatible()
+	self:DBConversions()
 	
 	self:CheckRole()
 	self:UIScale('PLAYER_LOGIN');

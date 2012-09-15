@@ -1418,6 +1418,12 @@ E.Options.args.unitframe.args.player = {
 					type = "range",
 					min = 6, max = 22, step = 1,
 				},	
+				clickThrough = {
+					order = 15,
+					name = L['Click Through'],
+					desc = L['Ignore mouse events.'],
+					type = 'toggle',
+				},
 				filters = {
 					name = L["Filters"],
 					guiInline = true,
@@ -1451,6 +1457,13 @@ E.Options.args.unitframe.args.player = {
 							name = L['Filter Auras with No Duration'],
 							desc = L['Allow displaying of auras that do not have a duration.'],
 							values = auraFilterTypes					
+						},
+						onlyDispellable = {
+							order = 13,
+							type = 'select',
+							name = L['Filter Auras Not Dispellable By Me'],
+							desc = L['Allow displaying of auras that can be dispelled by me.'],
+							values = auraFilterTypes
 						},
 						noConsolidated = {
 							order = 14,
@@ -1543,6 +1556,12 @@ E.Options.args.unitframe.args.player = {
 					type = "range",
 					min = 6, max = 22, step = 1,
 				},
+				clickThrough = {
+					order = 15,
+					name = L['Click Through'],
+					desc = L['Ignore mouse events.'],
+					type = 'toggle',
+				},
 				filters = {
 					name = L["Filters"],
 					guiInline = true,
@@ -1576,6 +1595,13 @@ E.Options.args.unitframe.args.player = {
 							name = L['Filter Auras with No Duration'],
 							desc = L['Allow displaying of auras that do not have a duration.'],
 							values = auraFilterTypes					
+						},
+						onlyDispellable = {
+							order = 13,
+							type = 'select',
+							name = L['Filter Auras Not Dispellable By Me'],
+							desc = L['Allow displaying of auras that can be dispelled by me.'],
+							values = auraFilterTypes
 						},
 						useFilter = {
 							order = 15,
@@ -1804,6 +1830,13 @@ E.Options.args.unitframe.args.player = {
 							name = L['Filter Auras with No Duration'],
 							desc = L['Allow displaying of auras that do not have a duration.'],
 							values = auraFilterTypes					
+						},
+						onlyDispellable = {
+							order = 13,
+							type = 'select',
+							name = L['Filter Auras Not Dispellable By Me'],
+							desc = L['Allow displaying of auras that can be dispelled by me.'],
+							values = auraFilterTypes
 						},
 						noConsolidated = {
 							order = 14,
@@ -2175,6 +2208,12 @@ E.Options.args.unitframe.args.target = {
 					type = "range",
 					min = 6, max = 22, step = 1,
 				},	
+				clickThrough = {
+					order = 15,
+					name = L['Click Through'],
+					desc = L['Ignore mouse events.'],
+					type = 'toggle',
+				},
 				filters = {
 					name = L["Filters"],
 					guiInline = true,
@@ -2208,6 +2247,13 @@ E.Options.args.unitframe.args.target = {
 							name = L['Filter Auras with No Duration'],
 							desc = L['Allow displaying of auras that do not have a duration.'],
 							values = auraFilterTypes					
+						},
+						onlyDispellable = {
+							order = 13,
+							type = 'select',
+							name = L['Filter Auras Not Dispellable By Me'],
+							desc = L['Allow displaying of auras that can be dispelled by me.'],
+							values = auraFilterTypes
 						},
 						noConsolidated = {
 							order = 14,
@@ -2301,6 +2347,12 @@ E.Options.args.unitframe.args.target = {
 					type = "range",
 					min = 6, max = 22, step = 1,
 				},	
+				clickThrough = {
+					order = 15,
+					name = L['Click Through'],
+					desc = L['Ignore mouse events.'],
+					type = 'toggle',
+				},
 				filters = {
 					name = L["Filters"],
 					guiInline = true,
@@ -2334,6 +2386,13 @@ E.Options.args.unitframe.args.target = {
 							name = L['Filter Auras with No Duration'],
 							desc = L['Allow displaying of auras that do not have a duration.'],
 							values = auraFilterTypes					
+						},
+						onlyDispellable = {
+							order = 13,
+							type = 'select',
+							name = L['Filter Auras Not Dispellable By Me'],
+							desc = L['Allow displaying of auras that can be dispelled by me.'],
+							values = auraFilterTypes
 						},
 						useFilter = {
 							order = 15,
@@ -2512,6 +2571,7 @@ E.Options.args.unitframe.args.target = {
 						['FRAME'] = L['Frame'],
 						['DEBUFFS'] = L['Debuffs'],
 						['BUFFS'] = L['Buffs'],
+						['PLAYER_AURABARS'] = L['Player Frame Aura Bars'],
 					},					
 				},
 				filters = {
@@ -2547,6 +2607,13 @@ E.Options.args.unitframe.args.target = {
 							name = L['Filter Auras with No Duration'],
 							desc = L['Allow displaying of auras that do not have a duration.'],
 							values = auraFilterTypes					
+						},
+						onlyDispellable = {
+							order = 13,
+							type = 'select',
+							name = L['Filter Auras Not Dispellable By Me'],
+							desc = L['Allow displaying of auras that can be dispelled by me.'],
+							values = auraFilterTypes
 						},
 						noConsolidated = {
 							order = 14,
@@ -2854,6 +2921,12 @@ E.Options.args.unitframe.args.targettarget = {
 					type = "range",
 					min = 6, max = 22, step = 1,
 				},
+				clickThrough = {
+					order = 15,
+					name = L['Click Through'],
+					desc = L['Ignore mouse events.'],
+					type = 'toggle',
+				},
 				filters = {
 					name = L["Filters"],
 					guiInline = true,
@@ -2887,6 +2960,13 @@ E.Options.args.unitframe.args.targettarget = {
 							name = L['Filter Auras with No Duration'],
 							desc = L['Allow displaying of auras that do not have a duration.'],
 							values = auraFilterTypes					
+						},
+						onlyDispellable = {
+							order = 13,
+							type = 'select',
+							name = L['Filter Auras Not Dispellable By Me'],
+							desc = L['Allow displaying of auras that can be dispelled by me.'],
+							values = auraFilterTypes
 						},
 						noConsolidated = {
 							order = 14,
@@ -2980,6 +3060,12 @@ E.Options.args.unitframe.args.targettarget = {
 					type = "range",
 					min = 6, max = 22, step = 1,
 				},	
+				clickThrough = {
+					order = 15,
+					name = L['Click Through'],
+					desc = L['Ignore mouse events.'],
+					type = 'toggle',
+				},
 				filters = {
 					name = L["Filters"],
 					guiInline = true,
@@ -3013,6 +3099,13 @@ E.Options.args.unitframe.args.targettarget = {
 							name = L['Filter Auras with No Duration'],
 							desc = L['Allow displaying of auras that do not have a duration.'],
 							values = auraFilterTypes					
+						},
+						onlyDispellable = {
+							order = 13,
+							type = 'select',
+							name = L['Filter Auras Not Dispellable By Me'],
+							desc = L['Allow displaying of auras that can be dispelled by me.'],
+							values = auraFilterTypes
 						},
 						useFilter = {
 							order = 15,
@@ -3310,6 +3403,12 @@ E.Options.args.unitframe.args.focus = {
 					type = "range",
 					min = 6, max = 22, step = 1,
 				},	
+				clickThrough = {
+					order = 15,
+					name = L['Click Through'],
+					desc = L['Ignore mouse events.'],
+					type = 'toggle',
+				},
 				filters = {
 					name = L["Filters"],
 					guiInline = true,
@@ -3343,6 +3442,13 @@ E.Options.args.unitframe.args.focus = {
 							name = L['Filter Auras with No Duration'],
 							desc = L['Allow displaying of auras that do not have a duration.'],
 							values = auraFilterTypes					
+						},
+						onlyDispellable = {
+							order = 13,
+							type = 'select',
+							name = L['Filter Auras Not Dispellable By Me'],
+							desc = L['Allow displaying of auras that can be dispelled by me.'],
+							values = auraFilterTypes
 						},
 						noConsolidated = {
 							order = 14,
@@ -3435,6 +3541,12 @@ E.Options.args.unitframe.args.focus = {
 					type = "range",
 					min = 6, max = 22, step = 1,
 				},
+				clickThrough = {
+					order = 15,
+					name = L['Click Through'],
+					desc = L['Ignore mouse events.'],
+					type = 'toggle',
+				},
 				filters = {
 					name = L["Filters"],
 					guiInline = true,
@@ -3468,6 +3580,13 @@ E.Options.args.unitframe.args.focus = {
 							name = L['Filter Auras with No Duration'],
 							desc = L['Allow displaying of auras that do not have a duration.'],
 							values = auraFilterTypes					
+						},
+						onlyDispellable = {
+							order = 13,
+							type = 'select',
+							name = L['Filter Auras Not Dispellable By Me'],
+							desc = L['Allow displaying of auras that can be dispelled by me.'],
+							values = auraFilterTypes
 						},
 						useFilter = {
 							order = 15,
@@ -3627,14 +3746,6 @@ E.Options.args.unitframe.args.focus = {
 					type = 'group',
 					order = 500,
 					args = {
-					},
-				},
-				filters = {
-					name = L["Filters"],
-					guiInline = true,
-					type = 'group',
-					order = 500,
-					args = {
 						playerOnly = {
 							order = 10,
 							type = 'select',
@@ -3662,6 +3773,13 @@ E.Options.args.unitframe.args.focus = {
 							name = L['Filter Auras with No Duration'],
 							desc = L['Allow displaying of auras that do not have a duration.'],
 							values = auraFilterTypes					
+						},
+						onlyDispellable = {
+							order = 13,
+							type = 'select',
+							name = L['Filter Auras Not Dispellable By Me'],
+							desc = L['Allow displaying of auras that can be dispelled by me.'],
+							values = auraFilterTypes
 						},
 						noConsolidated = {
 							order = 14,
@@ -3970,6 +4088,12 @@ E.Options.args.unitframe.args.focustarget = {
 					type = "range",
 					min = 6, max = 22, step = 1,
 				},
+				clickThrough = {
+					order = 15,
+					name = L['Click Through'],
+					desc = L['Ignore mouse events.'],
+					type = 'toggle',
+				},
 				filters = {
 					name = L["Filters"],
 					guiInline = true,
@@ -4003,6 +4127,13 @@ E.Options.args.unitframe.args.focustarget = {
 							name = L['Filter Auras with No Duration'],
 							desc = L['Allow displaying of auras that do not have a duration.'],
 							values = auraFilterTypes					
+						},
+						onlyDispellable = {
+							order = 13,
+							type = 'select',
+							name = L['Filter Auras Not Dispellable By Me'],
+							desc = L['Allow displaying of auras that can be dispelled by me.'],
+							values = auraFilterTypes
 						},
 						noConsolidated = {
 							order = 14,
@@ -4096,6 +4227,12 @@ E.Options.args.unitframe.args.focustarget = {
 					type = "range",
 					min = 6, max = 22, step = 1,
 				},
+				clickThrough = {
+					order = 15,
+					name = L['Click Through'],
+					desc = L['Ignore mouse events.'],
+					type = 'toggle',
+				},
 				filters = {
 					name = L["Filters"],
 					guiInline = true,
@@ -4129,6 +4266,13 @@ E.Options.args.unitframe.args.focustarget = {
 							name = L['Filter Auras with No Duration'],
 							desc = L['Allow displaying of auras that do not have a duration.'],
 							values = auraFilterTypes					
+						},
+						onlyDispellable = {
+							order = 13,
+							type = 'select',
+							name = L['Filter Auras Not Dispellable By Me'],
+							desc = L['Allow displaying of auras that can be dispelled by me.'],
+							values = auraFilterTypes
 						},
 						useFilter = {
 							order = 15,
@@ -4416,6 +4560,12 @@ E.Options.args.unitframe.args.pet = {
 					type = "range",
 					min = 6, max = 22, step = 1,
 				},
+				clickThrough = {
+					order = 15,
+					name = L['Click Through'],
+					desc = L['Ignore mouse events.'],
+					type = 'toggle',
+				},
 				filters = {
 					name = L["Filters"],
 					guiInline = true,
@@ -4449,6 +4599,13 @@ E.Options.args.unitframe.args.pet = {
 							name = L['Filter Auras with No Duration'],
 							desc = L['Allow displaying of auras that do not have a duration.'],
 							values = auraFilterTypes					
+						},
+						onlyDispellable = {
+							order = 13,
+							type = 'select',
+							name = L['Filter Auras Not Dispellable By Me'],
+							desc = L['Allow displaying of auras that can be dispelled by me.'],
+							values = auraFilterTypes
 						},
 						noConsolidated = {
 							order = 14,
@@ -4542,6 +4699,12 @@ E.Options.args.unitframe.args.pet = {
 					type = "range",
 					min = 6, max = 22, step = 1,
 				},
+				clickThrough = {
+					order = 15,
+					name = L['Click Through'],
+					desc = L['Ignore mouse events.'],
+					type = 'toggle',
+				},
 				filters = {
 					name = L["Filters"],
 					guiInline = true,
@@ -4575,6 +4738,13 @@ E.Options.args.unitframe.args.pet = {
 							name = L['Filter Auras with No Duration'],
 							desc = L['Allow displaying of auras that do not have a duration.'],
 							values = auraFilterTypes					
+						},
+						onlyDispellable = {
+							order = 13,
+							type = 'select',
+							name = L['Filter Auras Not Dispellable By Me'],
+							desc = L['Allow displaying of auras that can be dispelled by me.'],
+							values = auraFilterTypes
 						},
 						useFilter = {
 							order = 15,
@@ -4889,6 +5059,12 @@ E.Options.args.unitframe.args.pettarget = {
 					type = "range",
 					min = 6, max = 22, step = 1,
 				},
+				clickThrough = {
+					order = 15,
+					name = L['Click Through'],
+					desc = L['Ignore mouse events.'],
+					type = 'toggle',
+				},
 				filters = {
 					name = L["Filters"],
 					guiInline = true,
@@ -4922,6 +5098,13 @@ E.Options.args.unitframe.args.pettarget = {
 							name = L['Filter Auras with No Duration'],
 							desc = L['Allow displaying of auras that do not have a duration.'],
 							values = auraFilterTypes					
+						},
+						onlyDispellable = {
+							order = 13,
+							type = 'select',
+							name = L['Filter Auras Not Dispellable By Me'],
+							desc = L['Allow displaying of auras that can be dispelled by me.'],
+							values = auraFilterTypes
 						},
 						noConsolidated = {
 							order = 14,
@@ -5015,6 +5198,12 @@ E.Options.args.unitframe.args.pettarget = {
 					type = "range",
 					min = 6, max = 22, step = 1,
 				},
+				clickThrough = {
+					order = 15,
+					name = L['Click Through'],
+					desc = L['Ignore mouse events.'],
+					type = 'toggle',
+				},
 				filters = {
 					name = L["Filters"],
 					guiInline = true,
@@ -5048,6 +5237,13 @@ E.Options.args.unitframe.args.pettarget = {
 							name = L['Filter Auras with No Duration'],
 							desc = L['Allow displaying of auras that do not have a duration.'],
 							values = auraFilterTypes					
+						},
+						onlyDispellable = {
+							order = 13,
+							type = 'select',
+							name = L['Filter Auras Not Dispellable By Me'],
+							desc = L['Allow displaying of auras that can be dispelled by me.'],
+							values = auraFilterTypes
 						},
 						useFilter = {
 							order = 15,
@@ -5380,6 +5576,12 @@ E.Options.args.unitframe.args.boss = {
 					type = "range",
 					min = 6, max = 22, step = 1,
 				},
+				clickThrough = {
+					order = 15,
+					name = L['Click Through'],
+					desc = L['Ignore mouse events.'],
+					type = 'toggle',
+				},
 				filters = {
 					name = L["Filters"],
 					guiInline = true,
@@ -5413,6 +5615,13 @@ E.Options.args.unitframe.args.boss = {
 							name = L['Filter Auras with No Duration'],
 							desc = L['Allow displaying of auras that do not have a duration.'],
 							values = auraFilterTypes					
+						},
+						onlyDispellable = {
+							order = 13,
+							type = 'select',
+							name = L['Filter Auras Not Dispellable By Me'],
+							desc = L['Allow displaying of auras that can be dispelled by me.'],
+							values = auraFilterTypes
 						},
 						noConsolidated = {
 							order = 14,
@@ -5506,6 +5715,12 @@ E.Options.args.unitframe.args.boss = {
 					type = "range",
 					min = 6, max = 22, step = 1,
 				},
+				clickThrough = {
+					order = 15,
+					name = L['Click Through'],
+					desc = L['Ignore mouse events.'],
+					type = 'toggle',
+				},
 				filters = {
 					name = L["Filters"],
 					guiInline = true,
@@ -5539,6 +5754,13 @@ E.Options.args.unitframe.args.boss = {
 							name = L['Filter Auras with No Duration'],
 							desc = L['Allow displaying of auras that do not have a duration.'],
 							values = auraFilterTypes					
+						},
+						onlyDispellable = {
+							order = 13,
+							type = 'select',
+							name = L['Filter Auras Not Dispellable By Me'],
+							desc = L['Allow displaying of auras that can be dispelled by me.'],
+							values = auraFilterTypes
 						},
 						useFilter = {
 							order = 15,
@@ -5921,6 +6143,12 @@ E.Options.args.unitframe.args.arena = {
 					type = "range",
 					min = 6, max = 22, step = 1,
 				},
+				clickThrough = {
+					order = 15,
+					name = L['Click Through'],
+					desc = L['Ignore mouse events.'],
+					type = 'toggle',
+				},
 				filters = {
 					name = L["Filters"],
 					guiInline = true,
@@ -5954,6 +6182,13 @@ E.Options.args.unitframe.args.arena = {
 							name = L['Filter Auras with No Duration'],
 							desc = L['Allow displaying of auras that do not have a duration.'],
 							values = auraFilterTypes					
+						},
+						onlyDispellable = {
+							order = 13,
+							type = 'select',
+							name = L['Filter Auras Not Dispellable By Me'],
+							desc = L['Allow displaying of auras that can be dispelled by me.'],
+							values = auraFilterTypes
 						},
 						noConsolidated = {
 							order = 14,
@@ -6047,6 +6282,12 @@ E.Options.args.unitframe.args.arena = {
 					type = "range",
 					min = 6, max = 22, step = 1,
 				},
+				clickThrough = {
+					order = 15,
+					name = L['Click Through'],
+					desc = L['Ignore mouse events.'],
+					type = 'toggle',
+				},
 				filters = {
 					name = L["Filters"],
 					guiInline = true,
@@ -6080,6 +6321,13 @@ E.Options.args.unitframe.args.arena = {
 							name = L['Filter Auras with No Duration'],
 							desc = L['Allow displaying of auras that do not have a duration.'],
 							values = auraFilterTypes					
+						},
+						onlyDispellable = {
+							order = 13,
+							type = 'select',
+							name = L['Filter Auras Not Dispellable By Me'],
+							desc = L['Allow displaying of auras that can be dispelled by me.'],
+							values = auraFilterTypes
 						},
 						useFilter = {
 							order = 15,
@@ -6600,6 +6848,12 @@ E.Options.args.unitframe.args.party = {
 					type = "range",
 					min = 6, max = 22, step = 1,
 				},
+				clickThrough = {
+					order = 15,
+					name = L['Click Through'],
+					desc = L['Ignore mouse events.'],
+					type = 'toggle',
+				},
 				filters = {
 					name = L["Filters"],
 					guiInline = true,
@@ -6633,6 +6887,13 @@ E.Options.args.unitframe.args.party = {
 							name = L['Filter Auras with No Duration'],
 							desc = L['Allow displaying of auras that do not have a duration.'],
 							values = auraFilterTypes					
+						},
+						onlyDispellable = {
+							order = 13,
+							type = 'select',
+							name = L['Filter Auras Not Dispellable By Me'],
+							desc = L['Allow displaying of auras that can be dispelled by me.'],
+							values = auraFilterTypes
 						},
 						noConsolidated = {
 							order = 14,
@@ -6726,6 +6987,12 @@ E.Options.args.unitframe.args.party = {
 					type = "range",
 					min = 6, max = 22, step = 1,
 				},
+				clickThrough = {
+					order = 15,
+					name = L['Click Through'],
+					desc = L['Ignore mouse events.'],
+					type = 'toggle',
+				},
 				filters = {
 					name = L["Filters"],
 					guiInline = true,
@@ -6759,6 +7026,13 @@ E.Options.args.unitframe.args.party = {
 							name = L['Filter Auras with No Duration'],
 							desc = L['Allow displaying of auras that do not have a duration.'],
 							values = auraFilterTypes					
+						},
+						onlyDispellable = {
+							order = 13,
+							type = 'select',
+							name = L['Filter Auras Not Dispellable By Me'],
+							desc = L['Allow displaying of auras that can be dispelled by me.'],
+							values = auraFilterTypes
 						},
 						useFilter = {
 							order = 15,
@@ -7319,6 +7593,12 @@ for i=10, 40, 15 do
 					type = "range",
 					min = 6, max = 22, step = 1,
 				},
+				clickThrough = {
+					order = 15,
+					name = L['Click Through'],
+					desc = L['Ignore mouse events.'],
+					type = 'toggle',
+				},
 				filters = {
 					name = L["Filters"],
 					guiInline = true,
@@ -7352,6 +7632,13 @@ for i=10, 40, 15 do
 							name = L['Filter Auras with No Duration'],
 							desc = L['Allow displaying of auras that do not have a duration.'],
 							values = auraFilterTypes					
+						},
+						onlyDispellable = {
+							order = 13,
+							type = 'select',
+							name = L['Filter Auras Not Dispellable By Me'],
+							desc = L['Allow displaying of auras that can be dispelled by me.'],
+							values = auraFilterTypes
 						},
 						noConsolidated = {
 							order = 14,
@@ -7445,6 +7732,12 @@ for i=10, 40, 15 do
 					type = "range",
 					min = 6, max = 22, step = 1,
 				},
+				clickThrough = {
+					order = 15,
+					name = L['Click Through'],
+					desc = L['Ignore mouse events.'],
+					type = 'toggle',
+				},
 				filters = {
 					name = L["Filters"],
 					guiInline = true,
@@ -7478,6 +7771,13 @@ for i=10, 40, 15 do
 							name = L['Filter Auras with No Duration'],
 							desc = L['Allow displaying of auras that do not have a duration.'],
 							values = auraFilterTypes					
+						},
+						onlyDispellable = {
+							order = 13,
+							type = 'select',
+							name = L['Filter Auras Not Dispellable By Me'],
+							desc = L['Allow displaying of auras that can be dispelled by me.'],
+							values = auraFilterTypes
 						},
 						useFilter = {
 							order = 15,
