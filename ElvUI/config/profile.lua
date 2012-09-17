@@ -68,7 +68,6 @@ P['bags'] = {
 	['yOffset'] = 0,
 	['size'] = 30,
 	['bagBar'] = {
-		['enable'] = false,
 		['growthDirection'] = 'VERTICAL',
 		['sortDirection'] = 'ASCENDING',
 		['size'] = 30,
@@ -114,8 +113,12 @@ P['auras'] = {
 	['fontSize'] = 10,
 	['fontOutline'] = 'MONOCHROMEOUTLINE',
 	
-	['consolidedBuffs'] = true;
-	['filterConsolidated'] = true;
+	--Redo this next major elvui release so this setting is in a table
+	--dont feel like resetting the option
+	--also, spell consolidated right next time
+	['consolidedBuffs'] = true,
+	['filterConsolidated'] = true,
+	['consolidatedDurations'] = true,
 	
 	['wrapAfter'] = 12,
 	['fadeThreshold'] = 5,

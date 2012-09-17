@@ -10,7 +10,6 @@ V['general'] = {
 	["dmgfont"] = "ElvUI Combat",
 	["namefont"] = "ElvUI Font",
 	['bubbles'] = true,
-	['bags'] = true,
 	['pvpautorelease'] = true,
 	
 	['minimap'] = {
@@ -20,6 +19,7 @@ V['general'] = {
 
 V['bags'] = {
 	['enable'] = true,
+	['bagBar'] = false,
 }
 
 V["nameplate"] = {
