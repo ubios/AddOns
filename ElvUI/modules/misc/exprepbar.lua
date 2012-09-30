@@ -108,9 +108,7 @@ function M:UpdateReputation(event)
 				ID = standingID
 			end
 		end
-		
-		
-		
+
 		if textFormat == 'PERCENT' then
 			text = string.format('%s: %d%% [%s]', name, value / max * 100, _G['FACTION_STANDING_LABEL'..ID])
 		elseif textFormat == 'CURMAX' then
@@ -245,10 +243,12 @@ end
 function M:EnableDisable_ReputationBar()
 	if E.db.general.reputation.enable then
 		self:RegisterEvent('UPDATE_FACTION', 'UpdateReputation')
+		self:RegisterEvent('GUILD_ROSTER_UPDATE', 'UpdateReputation')
 		self:RegisterEvent("CHAT_MSG_COMBAT_FACTION_CHANGE", 'SetWatchedFactionOnReputationBar')
-		self:UpdateReputation()
+		GuildRoster();
 	else
 		self:UnregisterEvent('UPDATE_FACTION')
+		self:UnregisterEvent('GUILD_ROSTER_UPDATE')
 		self:UnregisterEvent("CHAT_MSG_COMBAT_FACTION_CHANGE")
 		self.repBar:Hide()
 	end
