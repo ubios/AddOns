@@ -82,15 +82,9 @@ function M:UpdateExperience(event)
 	self:UpdateExpRepAnchors()
 end
 
-function M:UpdateReputation(event)
-	local bar = self.repBar
-	
+function M:GetWatchedFactionInformation()
 	local faction = GetWatchedFactionInfo()
-	if not faction then
-		bar:Hide()
-	else
-		bar:Show()
-
+	if faction then
 		if faction == GUILD then
 			faction = GetGuildInfo("player")
 		end
@@ -98,26 +92,40 @@ function M:UpdateReputation(event)
 		for factionIndex = 1, GetNumFactions() do
 			local name, _, standingID, barMin, barMax, barValue = GetFactionInfo(factionIndex)
 			if name == faction then
-				local color = FACTION_BAR_COLORS[standingID]			
-				bar.statusBar:SetStatusBarColor(color.r, color.g, color.b)	
-		
-				bar.statusBar:SetMinMaxValues(barMin, barMax)
-				bar.statusBar:SetValue(barValue)
-		
-				local text = ''
-				local textFormat = E.db.general.reputation.textFormat		
-				if textFormat == 'PERCENT' then
-					text = string.format('%s: %d%% [%s]', name, barValue / barMax * 100, _G['FACTION_STANDING_LABEL'..standingID])
-				elseif textFormat == 'CURMAX' then
-					text = string.format('%s: %s - %s [%s]', name, E:ShortValue(barValue), E:ShortValue(barMax), _G['FACTION_STANDING_LABEL'..standingID])
-				elseif textFormat == 'CURPERC' then
-					text = string.format('%s: %s - %d%% [%s]', name, E:ShortValue(barValue), barValue / barMax * 100, _G['FACTION_STANDING_LABEL'..standingID])
-				end					
-				
-				bar.text:SetText(text)
-				break
+				return true, name, standingID, barMin, barMax, barValue
 			end
 		end
+	end
+	
+	return false 
+end
+
+function M:UpdateReputation(event)
+	local bar = self.repBar
+	
+	local isWatched, name, standingID, barMin, barMax, barValue = self.GetWatchedFactionInformation()
+	if not isWatched then
+		bar:Hide()
+	else
+		bar:Show()
+
+		local color = FACTION_BAR_COLORS[standingID]			
+		bar.statusBar:SetStatusBarColor(color.r, color.g, color.b)	
+
+		bar.statusBar:SetMinMaxValues(barMin, barMax)
+		bar.statusBar:SetValue(barValue)
+
+		local text = ''
+		local textFormat = E.db.general.reputation.textFormat		
+		if textFormat == 'PERCENT' then
+			text = string.format('%s: %d%% [%s]', name, barValue / barMax * 100, _G['FACTION_STANDING_LABEL'..standingID])
+		elseif textFormat == 'CURMAX' then
+			text = string.format('%s: %s - %s [%s]', name, E:ShortValue(barValue), E:ShortValue(barMax), _G['FACTION_STANDING_LABEL'..standingID])
+		elseif textFormat == 'CURPERC' then
+			text = string.format('%s: %s - %d%% [%s]', name, E:ShortValue(barValue), barValue / barMax * 100, _G['FACTION_STANDING_LABEL'..standingID])
+		end					
+		
+		bar.text:SetText(text)
 	end
 	
 	self:UpdateExpRepAnchors()
@@ -146,13 +154,13 @@ local function ReputationBar_OnEnter(self)
 	GameTooltip:ClearLines()
 	GameTooltip:SetOwner(self, 'ANCHOR_BOTTOM', 0, -4)
 	
-	local name, reaction, min, max, value = GetWatchedFactionInfo()
-	if name then
+	local isWatched, name, standingID, barMin, barMax, barValue = M:GetWatchedFactionInformation()
+	if isWatched then
 		GameTooltip:AddLine(name)
 		GameTooltip:AddLine(' ')
 		
-		GameTooltip:AddDoubleLine(STANDING..':', _G['FACTION_STANDING_LABEL'..reaction], 1, 1, 1)
-		GameTooltip:AddDoubleLine(REPUTATION..':', format('%d / %d (%d%%)', value - min, max - min, (value - min) / (max - min) * 100), 1, 1, 1)
+		GameTooltip:AddDoubleLine(STANDING..':', _G['FACTION_STANDING_LABEL'..standingID], 1, 1, 1)
+		GameTooltip:AddDoubleLine(REPUTATION..':', format('%d / %d (%d%%)', barValue - barMin, barMax - barMin, (barValue - barMin) / (barMax - barMin) * 100), 1, 1, 1)
 	end
 	GameTooltip:Show()
 end
