@@ -85,39 +85,39 @@ end
 function M:UpdateReputation(event)
 	local bar = self.repBar
 	
-	local ID = 100
-	local name, reaction, min, max, value = GetWatchedFactionInfo()
-	local numFactions = GetNumFactions();
-
-	if not name then
+	local faction = GetWatchedFactionInfo()
+	if not faction then
 		bar:Hide()
 	else
 		bar:Show()
 
-		local text = ''
-		local textFormat = E.db.general.reputation.textFormat		
-		local color = FACTION_BAR_COLORS[reaction]
-		bar.statusBar:SetStatusBarColor(color.r, color.g, color.b)	
-
-		bar.statusBar:SetMinMaxValues(min, max)
-		bar.statusBar:SetValue(value)
+		if faction == GUILD then
+			faction = GetGuildInfo("player")
+		end
 		
-		for i=1, numFactions do
-			local factionName, _, standingID = GetFactionInfo(i);
-			if factionName == name then
-				ID = standingID
+		for factionIndex = 1, GetNumFactions() do
+			local name, _, standingID, barMin, barMax, barValue = GetFactionInfo(factionIndex)
+			if name == faction then
+				local color = FACTION_BAR_COLORS[standingID]			
+				bar.statusBar:SetStatusBarColor(color.r, color.g, color.b)	
+		
+				bar.statusBar:SetMinMaxValues(barMin, barMax)
+				bar.statusBar:SetValue(barValue)
+		
+				local text = ''
+				local textFormat = E.db.general.reputation.textFormat		
+				if textFormat == 'PERCENT' then
+					text = string.format('%s: %d%% [%s]', name, barValue / barMax * 100, _G['FACTION_STANDING_LABEL'..standingID])
+				elseif textFormat == 'CURMAX' then
+					text = string.format('%s: %s - %s [%s]', name, E:ShortValue(barValue), E:ShortValue(barMax), _G['FACTION_STANDING_LABEL'..standingID])
+				elseif textFormat == 'CURPERC' then
+					text = string.format('%s: %s - %d%% [%s]', name, E:ShortValue(barValue), barValue / barMax * 100, _G['FACTION_STANDING_LABEL'..standingID])
+				end					
+				
+				bar.text:SetText(text)
+				break
 			end
 		end
-
-		if textFormat == 'PERCENT' then
-			text = string.format('%s: %d%% [%s]', name, value / max * 100, _G['FACTION_STANDING_LABEL'..ID])
-		elseif textFormat == 'CURMAX' then
-			text = string.format('%s: %s - %s [%s]', name, E:ShortValue(value), E:ShortValue(max), _G['FACTION_STANDING_LABEL'..ID])
-		elseif textFormat == 'CURPERC' then
-			text = string.format('%s: %s - %d%% [%s]', name, E:ShortValue(value), value / max * 100, _G['FACTION_STANDING_LABEL'..ID])
-		end					
-		
-		bar.text:SetText(text)		
 	end
 	
 	self:UpdateExpRepAnchors()
@@ -191,9 +191,6 @@ function M:SetWatchedFactionOnReputationBar(event, msg)
 			faction = GetGuildInfo("player")
 		end
 
-		-- required for the GetNumFactions() function to return all factions in the game
-		ExpandAllFactionHeaders()
-	
 		local active = GetWatchedFactionInfo()
 		for factionIndex = 1, GetNumFactions() do
 			local name = GetFactionInfo(factionIndex)
@@ -203,7 +200,7 @@ function M:SetWatchedFactionOnReputationBar(event, msg)
 				if inactive == nil then
 					SetWatchedFactionIndex(factionIndex)
 				end
-				return
+				break
 			end
 		end
 	end
@@ -242,13 +239,14 @@ end
 
 function M:EnableDisable_ReputationBar()
 	if E.db.general.reputation.enable then
-		self:RegisterEvent('UPDATE_FACTION', 'UpdateReputation')
-		self:RegisterEvent('GUILD_ROSTER_UPDATE', 'UpdateReputation')
+		-- required for the GetNumFactions() function to return all factions in the game
+		ExpandAllFactionHeaders()
+
 		self:RegisterEvent("CHAT_MSG_COMBAT_FACTION_CHANGE", 'SetWatchedFactionOnReputationBar')
-		GuildRoster();
+		self:RegisterEvent('UPDATE_FACTION', 'UpdateReputation')
+		self:UpdateReputation()
 	else
 		self:UnregisterEvent('UPDATE_FACTION')
-		self:UnregisterEvent('GUILD_ROSTER_UPDATE')
 		self:UnregisterEvent("CHAT_MSG_COMBAT_FACTION_CHANGE")
 		self.repBar:Hide()
 	end
