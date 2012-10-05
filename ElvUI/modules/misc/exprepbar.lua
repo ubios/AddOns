@@ -118,11 +118,11 @@ function M:UpdateReputation(event)
 		local text = ''
 		local textFormat = E.db.general.reputation.textFormat		
 		if textFormat == 'PERCENT' then
-			text = string.format('%s: %d%% [%s]', name, barValue / barMax * 100, _G['FACTION_STANDING_LABEL'..standingID])
+			text = string.format('%s: %d%% [%s]', name, ((barValue - barMin) / (barMax - barMin) * 100), _G['FACTION_STANDING_LABEL'..standingID])
 		elseif textFormat == 'CURMAX' then
-			text = string.format('%s: %s - %s [%s]', name, E:ShortValue(barValue), E:ShortValue(barMax), _G['FACTION_STANDING_LABEL'..standingID])
+			text = string.format('%s: %s - %s [%s]', name, E:ShortValue(barValue - barMin), E:ShortValue(barMax - barMin), _G['FACTION_STANDING_LABEL'..standingID])
 		elseif textFormat == 'CURPERC' then
-			text = string.format('%s: %s - %d%% [%s]', name, E:ShortValue(barValue), barValue / barMax * 100, _G['FACTION_STANDING_LABEL'..standingID])
+			text = string.format('%s: %s - %d%% [%s]', name, E:ShortValue(barValue - barMin), ((barValue - barMin) / (barMax - barMin) * 100), _G['FACTION_STANDING_LABEL'..standingID])
 		end					
 		
 		bar.text:SetText(text)
@@ -135,16 +135,16 @@ local function ExperienceBar_OnEnter(self)
 	GameTooltip:ClearLines()
 	GameTooltip:SetOwner(self, 'ANCHOR_BOTTOM', 0, -4)
 	
-	local cur, max = M:GetXP('player')
+	local curValue, maxValue = M:GetXP('player')
 	local rested = GetXPExhaustion()
 	GameTooltip:AddLine(L['Experience'])
 	GameTooltip:AddLine(' ')
 	
-	GameTooltip:AddDoubleLine(L['XP:'], string.format(' %d / %d (%d%%)', cur, max, cur/max * 100), 1, 1, 1)
-	GameTooltip:AddDoubleLine(L['Remaining:'], string.format(' %d (%d%% - %d '..L['Bars']..')', max - cur, (max - cur) / max * 100, 20 * (max - cur) / max), 1, 1, 1)	
+	GameTooltip:AddDoubleLine(L['XP:'], string.format(' %d / %d (%d%%)', curValue, maxValue, curValue/maxValue * 100), 1, 1, 1)
+	GameTooltip:AddDoubleLine(L['Remaining:'], string.format(' %d (%d%% - %d '..L['Bars']..')', maxValue - curValue, (maxValue - curValue) / maxValue * 100, 20 * (maxValue - curValue) / maxValue), 1, 1, 1)	
 	
 	if rested then
-		GameTooltip:AddDoubleLine(L['Rested:'], string.format('+%d (%d%%)', rested, rested / max * 100), 1, 1, 1)	
+		GameTooltip:AddDoubleLine(L['Rested:'], string.format('+%d (%d%%)', rested, rested / maxValue * 100), 1, 1, 1)	
 	end
 	
 	GameTooltip:Show()
