@@ -252,7 +252,7 @@ local function OnEnter(self)
 	end
 
 	local totalfriends = numberOfFriends + totalBNet
-	local zonec, classc, levelc, realmc, info
+	local zonec, classc, levelc, realmc, info, grouped
 	GameTooltip:AddDoubleLine(L['Friends List'], format(totalOnlineString, totalonline, totalfriends),tthead.r,tthead.g,tthead.b,tthead.r,tthead.g,tthead.b)
 	if onlineFriends > 0 then
 		GameTooltip:AddLine(' ')

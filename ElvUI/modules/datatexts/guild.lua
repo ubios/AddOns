@@ -11,13 +11,14 @@ local ceil			= math.ceil
 
 local tthead, ttsubh, ttoff = {r=0.4, g=0.78, b=1}, {r=0.75, g=0.9, b=1}, {r=.3,g=1,b=.3}
 local activezone, inactivezone = {r=0.3, g=1.0, b=0.3}, {r=0.65, g=0.65, b=0.65}
+local groupedTable = { "|cffaaaaaa*|r", "" } 
 local displayString = ""
 local noGuildString = ""
 local guildInfoString = "%s [%d]"
 local guildInfoString2 = join("", GUILD, ": %d/%d")
 local guildMotDString = "%s |cffaaaaaa- |cffffffff%s"
 local levelNameString = "|cff%02x%02x%02x%d|r |cff%02x%02x%02x%s|r %s"
-local levelNameStatusString = "|cff%02x%02x%02x%d|r %s %s"
+local levelNameStatusString = "|cff%02x%02x%02x%d|r %s%s %s"
 local nameRankString = "%s |cff999999-|cffffffff %s"
 local guildXpCurrentString = gsub(join("", E:RGBToHex(ttsubh.r, ttsubh.g, ttsubh.b), GUILD_EXPERIENCE_CURRENT), ": ", ":|r |cffffffff", 1)
 local guildXpDailyString = gsub(join("", E:RGBToHex(ttsubh.r, ttsubh.g, ttsubh.b), GUILD_EXPERIENCE_DAILY), ": ", ":|r |cffffffff", 1)
@@ -227,7 +228,7 @@ local function OnEnter(self)
 		GameTooltip:AddLine(format(standingString, COMBAT_FACTION_CHANGE, E:ShortValue(barValue), E:ShortValue(barMax), ceil((barValue / barMax) * 100)))
 	end
 	
-	local zonec, classc, levelc, info
+	local zonec, classc, levelc, info, grouped
 	local shown = 0
 	
 	GameTooltip:AddLine(' ')
@@ -242,12 +243,14 @@ local function OnEnter(self)
 		if GetRealZoneText() == info[4] then zonec = activezone else zonec = inactivezone end
 		classc, levelc = (CUSTOM_CLASS_COLORS or RAID_CLASS_COLORS)[info[9]], GetQuestDifficultyColor(info[3])
 		
+		if (UnitInParty(info[1]) or UnitInRaid(info[1])) then grouped = 1 else grouped = 2 end
+
 		if IsShiftKeyDown() then
 			GameTooltip:AddDoubleLine(format(nameRankString, info[1], info[2]), info[4], classc.r, classc.g, classc.b, zonec.r, zonec.g, zonec.b)
 			if info[5] ~= "" then GameTooltip:AddLine(format(noteString, info[5]), ttsubh.r, ttsubh.g, ttsubh.b, 1) end
 			if info[6] ~= "" then GameTooltip:AddLine(format(officerNoteString, info[6]), ttoff.r, ttoff.g, ttoff.b, 1) end
 		else
-			GameTooltip:AddDoubleLine(format(levelNameStatusString, levelc.r*255, levelc.g*255, levelc.b*255, info[3], info[1], info[8]), info[4], classc.r,classc.g,classc.b, zonec.r,zonec.g,zonec.b)
+			GameTooltip:AddDoubleLine(format(levelNameStatusString, levelc.r*255, levelc.g*255, levelc.b*255, info[3], info[1], groupedTable[grouped], info[8]), info[4], classc.r,classc.g,classc.b, zonec.r,zonec.g,zonec.b)
 		end
 		shown = shown + 1
 	end	
