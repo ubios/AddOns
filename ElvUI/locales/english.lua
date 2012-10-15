@@ -13,6 +13,7 @@ if not L then return; end
 L["A taint has occured that is preventing you from using your talents/glyphs, this can happen if you've inspected someone. Unfortionatly theres nothing we can do to fix it, please reload your ui and try again."] = true;
 
 --ActionBars
+L['Alpha'] = true;
 L[" |cff00ff00bound to |r"] = true;
 L["Action Paging"] = true;
 L["ActionBars"] = true;
@@ -627,6 +628,10 @@ L["You have changed your UIScale, however you still have the AutoScale option en
 L["You must purchase a bank slot first!"] = true;
 
 --Tooltip
+L['Spell/Item IDs'] = true;
+L['Display the spell or item ID when mousing over a spell or item tooltip.'] = true;
+L['Item Count'] = true;
+L['Display how many of a certain item you have in your possession.'] = true;
 L['Always Hide'] = true;
 L["Anchor Mode"] = true;
 L["Anchor"] = true;
