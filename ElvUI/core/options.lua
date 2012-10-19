@@ -164,8 +164,24 @@ E.Options.args.general = {
 					get = function(info) return E.private.general.pvpautorelease end,
 					set = function(info, value) E.private.general.pvpautorelease = value; E:StaticPopup_Show("PRIVATE_RL") end
 				},
+				bottomPanel = {
+					order = 16,
+					type = 'toggle',
+					name = L['Bottom Panel'],
+					desc = L['Display a panel across the bottom of the screen. This is for cosmetic only.'],
+					get = function(info) return E.db.general.bottomPanel end,
+					set = function(info, value) E.db.general.bottomPanel = value; E:GetModule('Layout'):BottomPanelVisibility() end						
+				},
+				topPanel = {
+					order = 17,
+					type = 'toggle',
+					name = L['Top Panel'],
+					desc = L['Display a panel across the top of the screen. This is for cosmetic only.'],
+					get = function(info) return E.db.general.topPanel end,
+					set = function(info, value) E.db.general.topPanel = value; E:GetModule('Layout'):TopPanelVisibility() end						
+				},				
 			},
-		},
+		},	
 		minimap = {
 			order = 2,
 			get = function(info) return E.db.general.minimap[ info[#info] ] end,	
