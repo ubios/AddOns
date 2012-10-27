@@ -8,7 +8,7 @@ function D:ModifyErrorFrame()
 	ScriptErrorsFrameScrollFrameText.cursorHeight = 0
 	ScriptErrorsFrameScrollFrameText:SetScript("OnEditFocusGained", nil)
 	
-	local Orig_ScriptErrorsFrame_Update = ScriptErrorsFrame_Update
+	--[[local Orig_ScriptErrorsFrame_Update = ScriptErrorsFrame_Update
 	ScriptErrorsFrame_Update = function(...)
 		if GetCVarBool('scriptErrors') ~= 1 then
 			Orig_ScriptErrorsFrame_Update(...)
@@ -30,7 +30,10 @@ function D:ModifyErrorFrame()
 		
 		-- Stop text highlighting again
 		ScriptErrorsFrameScrollFrameText:HighlightText(0, 0)
-	end	
+	end]]
+	hooksecurefunc('ScriptErrorsFrame_Update', function()
+		ScriptErrorsFrameScrollFrameText:HighlightText(0, 0)
+	end)
 	
 	-- Unhighlight text when focus is hit
 	ScriptErrorsFrameScrollFrameText:HookScript("OnEscapePressed", function(self)
@@ -128,7 +131,7 @@ function D:TaintError(event, addonName, addonFunc)
 			end
 		end
 		
-		--E:StaticPopup_Show('TALENT_TAINT')
+		E:StaticPopup_Show('TALENT_TAINT')
 	end
 
 	if GetCVarBool('scriptErrors') ~= 1 or E.db.general.taintLog ~= true then return end
