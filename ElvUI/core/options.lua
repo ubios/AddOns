@@ -606,7 +606,7 @@ local DONATORS = {
 	"Paavi",
 	"Giorgio",
 	"Bearscantank",
-	"Erdrick",
+	"Eidolic",
 	"Cosmo",
 	"Adorno",
 	"Domoaligato",

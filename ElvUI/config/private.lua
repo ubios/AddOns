@@ -11,7 +11,7 @@ V['general'] = {
 	["namefont"] = "ElvUI Font",
 	['bubbles'] = true,
 	['pvpautorelease'] = true,
-	['pixelPerfect'] = false, --USE AT YOUR OWN RISK!! NOT EVEN CLOSE TO DONE!
+	['pixelPerfect'] = true,
 	["raidIconStyle"] = "classic",
 	
 	['minimap'] = {
