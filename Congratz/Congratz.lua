@@ -68,6 +68,22 @@ local options = {
 			get = false,
 			set = "BothMessage",
 		},
+		biggratz = {
+			type = "input",
+			name = L["BigGratz"],
+			desc = L["Pattern for big gratz message for achievements with 50 to 70 points."],
+			pattern = "%w+",
+			get = false,
+			set = "BigGratzPattern",
+		},
+		awesome = {
+			type = "input",
+			name = L["Awesome"],
+			desc = L["Pattern for awesome message for achievements with over 70 points."],
+			pattern = "%w+",
+			get = false,
+			set = "AwesomePattern",
+		},
 		-- Changes the random delay time value.
 		delay = {
 			type = "input",
@@ -84,17 +100,19 @@ local options = {
 
 local defaults = {
 	profile =  {
-	gratzmsg = {
-		L["Congratulations"],
-		L["Gratz"],
-		L["Congratz"],
-		L["Gz"],
-		L["Gz m8"],
-		L["Gratz #S"],
-	},
-	groupmsg = L["Gratz All !!"],
-	bothmsg = L["Gratz both."],
-	randomtime = 12,
+		gratzmsg = {
+			L["Congratulations"],
+			L["Gratz"],
+			L["Congratz"],
+			L["Gz"],
+			L["Gz m8"],
+			L["Gratz #S"],
+		},
+		groupmsg = L["Gratz All !!"],
+		bothmsg = L["Gratz both."],
+		biggratzpattern = L["Big gratz #N!"],
+		awesomepattern = L["Awesome, gratz #N!!"],
+		randomtime = 12,
 	},
 };
 
@@ -177,25 +195,35 @@ function Congratz:CHAT_MSG_GUILD_ACHIEVEMENT(event, msg, player)
 		local id, name, points, completed, month, day, year, description, flags, icon, rewardText, isGuildAch = GetAchievementInfo(Id)
 		
 		local criteria = GetAchievementNumCriteria(id)
+		local totalPoints = points
+		
+		local previousId = GetPreviousAchievement(id)
+		while previousId do
+			id, name, points, completed, month, day, year, description, flags, icon, rewardText, isGuildAch = GetAchievementInfo(previousId)
+			Congratz:PrintDebug(format("Previous Achievement for player %s with id %d with name %s and points value of %d (%d criteria).", player, id, name, points, criteria));		
+			
+			totalPoints = totalPoints + points
+			previousId = GetPreviousAchievement(id)
+		end
 
-		Congratz:PrintDebug(format("Achievement for player %s with id %d with name %s and points value of %d (%d criteria).", player, id, name, points, criteria));
+		Congratz:PrintDebug(format("Achievement for player %s with id %d with name %s and points value of %d (%d criteria).", player, id, name, totalPoints, criteria));
 
 		if (player == playerName) then
 			Congratz:PrintDebug("Achievement by player, no message!!")
 			return
 		end
 
-		if (points > 10 or criteria > 2) then
+		if (totalPoints > 10 or criteria > 2) then
 			local found = Congratz:PlayerExists(player)
 			if found == -1 then
 				-- add player to list
 				Congratz:PrintDebug(format("Adding %s to cached achievements at position %d.", player, gratznumber))
-				cachedAchievements[gratznumber] = { player, points }
+				cachedAchievements[gratznumber] = { player, totalPoints }
 				gratznumber = gratznumber + 1
-			elseif (cachedAchievements[found][2] < points) then
-				-- update player points if second achievement has higher value
-				Congratz:PrintDebug(format("Updating %s cached achievements to %d points at position %d", player, points, found))
-				cachedAchievements[found][2] = points
+			elseif (cachedAchievements[found][2] < totalPoints) then
+				-- update player totalPoints if second achievement has higher value
+				Congratz:PrintDebug(format("Updating %s cached achievements to %d points at position %d", player, totalPoints, found))
+				cachedAchievements[found][2] = totalPoints
 			end
 			
 			Congratz:PrintDebug(format("There are now %d players in the list.", gratznumber))
@@ -250,6 +278,8 @@ function Congratz:ShowMessage()
 	end
 	Congratz:Print(format(L["The group message is: %q"],Congratz.db.profile.groupmsg));
 	Congratz:Print(format(L["The 2 person message is: %q"],Congratz.db.profile.bothmsg));
+	Congratz:Print(format(L["The big gratz pattern is: %q"],Congratz.db.profile.biggratzpattern));
+	Congratz:Print(format(L["The awesome pattern is: %q"],Congratz.db.profile.awesomepattern));
 	Congratz:Print(format(L["The random time delay range is 8 to %d seconds."],Congratz.db.profile.randomtime + 8));
 end
 
@@ -257,8 +287,8 @@ function Congratz:ToggleDebug()
 	if not debug then
 		Congratz:Print("Debug enabled.");
 		debug = true;
-		-- Congratz:CHAT_MSG_GUILD_ACHIEVEMENT(event, "%s has earned the achievement |cffffff00|Hachievement:0618:0500000004ACF96C:1:11:4:12:4294967295:4294967295:4294967295:4294967295|h[Don't Know!]|h|r!", "Pinokkio")
-		-- Congratz:CHAT_MSG_GUILD_ACHIEVEMENT(event, "%s has earned the achievement |cffffff00|Hachievement:0623:0500000004ACF96C:1:11:4:12:4294967295:4294967295:4294967295:4294967295|h[Don't Know!]|h|r!", "Pinokkio")
+		--Congratz:CHAT_MSG_GUILD_ACHIEVEMENT(event, "%s has earned the achievement |cffffff00|Hachievement:1181:0500000004ACF96C:1:11:4:12:4294967295:4294967295:4294967295:4294967295|h[Don't Know!]|h|r!", "Pinokkio")
+		--Congratz:CHAT_MSG_GUILD_ACHIEVEMENT(event, "%s has earned the achievement |cffffff00|Hachievement:0869:0500000004ACF96C:1:11:4:12:4294967295:4294967295:4294967295:4294967295|h[Don't Know!]|h|r!", "Pinokkio")
 	else
 		Congratz:Print("Debug disabled.");
 		debug = false;
@@ -311,6 +341,16 @@ end
 function Congratz:BothMessage(info,arg)
 	Congratz.db.profile.bothmsg = arg;
 	Congratz:Print(format(L["%q is now the new 2 person message."],arg));
+end
+
+function Congratz:BigGratzPattern(info,arg)
+	Congratz.db.profile.biggratzpattern = arg;
+	Congratz:Print(format(L["%q is now the big gratz pattern."],arg));
+end
+
+function Congratz:AwesomePattern(info,arg)
+	Congratz.db.profile.awesomepattern = arg;
+	Congratz:Print(format(L["%q is now the awesome pattern."],arg));
 end
 	
 ---- Functions ----
@@ -365,10 +405,10 @@ function Congratz:GratzMessage()
 			msg = Congratz.db.profile.gratzmsg[i];
 		
 			if (points >= 50 and points<70) then
-				msg = format("Big %s!", msg)
+				msg = Congratz.db.profile.biggratzpattern
 			end
 			if (points >= 70) then
-				msg = format("Awesome, %s!!", msg)
+				msg = Congratz.db.profile.awesomepattern
 			end
 			
 			-- Replace variables in message string.

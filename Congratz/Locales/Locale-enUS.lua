@@ -11,6 +11,9 @@ L["Gratz #S"] = true;
 L["Gratz All !!"] = true;
 L["Gratz both."] = true;
 
+L["Big gratz #N!"] = true;
+L["Awesome, gratz #N!!"] = true;
+
 ---- Slash Commands ----
 L["congratz"] = true;
 
@@ -19,6 +22,8 @@ L["Shows the current Congratz settings."] = true;
 L["The message table contains the following entries:"] = true;
 L["The group message is: %q"] = true;
 L["The 2 person message is: %q"] = true;
+L["The big gratz pattern is: %q"] = true;
+L["The awesome pattern is: %q"] = true;
 L["The random time delay range is 8 to %d seconds."] = true;
 
 L["Debug"] = true;
@@ -44,6 +49,12 @@ L["%q is now the new group message."] = true;
 L["Both"] = true;
 L["Sets a message for when 2 people earn a gratz."] = true;
 L["%q is now the new 2 person message."] = true;
+
+L["BigGratz"] = true;
+L["Pattern for big gratz message for achievements with 50 to 70 points."] = true;
+
+L["Awesome"] = true;
+L["Pattern for awesome message for achievements with over 70 points."] = true;
 
 L["Delay"] = true;
 L["Sets the range for the random delay (8 seconds is added to this)"] = true;
