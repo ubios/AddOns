@@ -1,0 +1,23 @@
+## Interface: 50001
+## Version: v0.7.1
+## Title: Congratz
+## Author: Omega1970
+## Notes: Automatically congratulates guildies on their ingame achievements.
+## X-Category: Chat/Communication
+## OptionalDeps: Ace3
+## SavedVariables: CongratzDB
+
+#@no-lib-strip@
+Libs\LibStub\LibStub.lua
+Libs\CallbackHandler-1.0\CallbackHandler-1.0.xml
+Libs\AceAddon-3.0\AceAddon-3.0.xml
+Libs\AceConfig-3.0\AceConfig-3.0.xml
+Libs\AceConsole-3.0\AceConsole-3.0.xml
+Libs\AceDB-3.0\AceDB-3.0.xml
+Libs\AceEvent-3.0\AceEvent-3.0.xml
+Libs\AceLocale-3.0\AceLocale-3.0.xml
+Libs\AceTimer-3.0\AceTimer-3.0.xml
+#@end-no-lib-strip@
+
+Locales\Locale-enUS.lua
+Congratz.lua
