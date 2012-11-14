@@ -497,7 +497,8 @@ E.Options.args.media = {
 						t.r, t.g, t.b = r, g, b
 						E:UpdateMedia()
 						E:UpdateBorderColors()
-					end,					
+					end,		
+					disabled = function() return E.PixelMode end,
 				},
 				backdropcolor = {
 					type = "color",
