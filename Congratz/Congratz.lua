@@ -205,15 +205,36 @@ function Congratz:CHAT_MSG_GUILD_ACHIEVEMENT(event, msg, player)
 			totalPoints = totalPoints + points
 			previousId = GetPreviousAchievement(id)
 		end
+		
+		local minimumPoints = 10
+		local achievementCategoryId = GetAchievementCategory(id)
+		local categoryName, parentId = GetCategoryInfo(achievementCategoryId)
+		
+		while not parentId == -1 do
+			achievementCategoryId = parentId
+			categoryName, parentId = GetCategoryInfo(achievementCategoryId)
+		end
 
-		Congratz:PrintDebug(format("Achievement for player %s with id %d with name %s and points value of %d (%d criteria).", player, id, name, totalPoints, criteria));
+		if achievementCategoryId == 96 then -- exploration
+			minimumPoints = 20		
+		end
+		
+		if achievementCategoryId == 155 then -- world events
+			minimumPoints = 40		
+		end
+		
+		if achievementCategoryId == 169 then	-- professions
+			minimumPoints = 60
+		end
+
+		Congratz:PrintDebug(format("Achievement for player %s with id %d with name %s [%s] and points value of %d (%d criteria).", player, id, name, categoryName, totalPoints, criteria));
 
 		if (player == playerName) then
 			Congratz:PrintDebug("Achievement by player, no message!!")
 			return
 		end
 
-		if (totalPoints > 10 or criteria > 2) then
+		if (totalPoints > minimumPoints or criteria > 2) then
 			local found = Congratz:PlayerExists(player)
 			if found == -1 then
 				-- add player to list
@@ -236,7 +257,7 @@ function Congratz:CHAT_MSG_GUILD_ACHIEVEMENT(event, msg, player)
 				self:ScheduleTimer(function() Congratz:GratzMessage() end, delay)
 			end
 		else
-			Congratz:Print("Low ranked achievement with minimal criteria, no gratz message!!")
+			Congratz:Print(format("Low ranked achievement with %d points in category %s and minimal criteria, no gratz message!!", totalPoints, categoryName))
 		end
 		Congratz:PrintDebug("-----")
 	else
@@ -287,6 +308,7 @@ function Congratz:ToggleDebug()
 	if not debug then
 		Congratz:Print("Debug enabled.");
 		debug = true;
+			
 		--Congratz:CHAT_MSG_GUILD_ACHIEVEMENT(event, "%s has earned the achievement |cffffff00|Hachievement:1181:0500000004ACF96C:1:11:4:12:4294967295:4294967295:4294967295:4294967295|h[Don't Know!]|h|r!", "Pinokkio")
 		--Congratz:CHAT_MSG_GUILD_ACHIEVEMENT(event, "%s has earned the achievement |cffffff00|Hachievement:0869:0500000004ACF96C:1:11:4:12:4294967295:4294967295:4294967295:4294967295|h[Don't Know!]|h|r!", "Pinokkio")
 	else
