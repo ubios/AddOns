@@ -12,8 +12,7 @@ V['general'] = {
 	['bubbles'] = true,
 	['pvpautorelease'] = true,
 	['pixelPerfect'] = true,
-	["raidIconStyle"] = "classic",
-	
+
 	['minimap'] = {
 		['enable'] = true,
 	},
@@ -30,7 +29,7 @@ V["nameplate"] = {
 
 V['auras'] = {
 	['enable'] = true,
-	['size'] = 26,
+	['size'] = 30,
 }
 
 V['chat'] = {
@@ -95,6 +94,7 @@ V['skins'] = {
 		["bgmap"] = true,
 		['mounts'] = true,
 		['petbattleui'] = true,
+		['losscontrol'] = true,
 	},
 }
 
