@@ -1,4 +1,4 @@
-## Interface: 50001
+## Interface: 50100
 ## Version: v0.7.1
 ## Title: Congratz
 ## Author: Omega1970
@@ -15,6 +15,7 @@ Libs\AceConfig-3.0\AceConfig-3.0.xml
 Libs\AceConsole-3.0\AceConsole-3.0.xml
 Libs\AceDB-3.0\AceDB-3.0.xml
 Libs\AceEvent-3.0\AceEvent-3.0.xml
+Libs\AceGUI-3.0\AceGUI-3.0.xml
 Libs\AceLocale-3.0\AceLocale-3.0.xml
 Libs\AceTimer-3.0\AceTimer-3.0.xml
 #@end-no-lib-strip@
