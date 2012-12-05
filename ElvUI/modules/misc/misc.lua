@@ -3,6 +3,8 @@ local M = E:NewModule('Misc', 'AceEvent-3.0', 'AceTimer-3.0');
 
 E.Misc = M;
 local UIErrorsFrame = UIErrorsFrame;
+local InterrupMessage = INTERRUPTED.." %s's \124cff71d5ff\124Hspell: %d\124h[%s]\124h\124r!"
+
 
 function M:ErrorFrameToggle(event)
 	if event == 'PLAYER_REGEN_DISABLED' then
@@ -13,19 +15,19 @@ function M:ErrorFrameToggle(event)
 end
 
 function M:COMBAT_LOG_EVENT_UNFILTERED(_, _, event, _, sourceGUID, _, _, _, _, destName, _, _, _, _, _, spellID, spellName)
+	if E.db.general.interruptAnnounce == "NONE" then return end
 	if not (event == "SPELL_INTERRUPT" and sourceGUID == UnitGUID('player')) then return end
 	
-	local inGroup, inRaid = IsInGroup(), IsInRaid()
-	if E.db.general.interruptAnnounce == "PARTY" and inGroup then
-		SendChatMessage(INTERRUPTED.." "..destName.."'s \124cff71d5ff\124Hspell:"..spellID.."\124h["..spellName.."]\124h\124r!", "PARTY", nil, nil)
-	elseif E.db.general.interruptAnnounce == "RAID" and inGroup then
-		if inRaid then
-			SendChatMessage(INTERRUPTED.." "..destName.."'s \124cff71d5ff\124Hspell:"..spellID.."\124h["..spellName.."]\124h\124r!", "RAID", nil, nil)		
+	local inGroup, inRaid, inInstance, instanceType = IsInGroup(), IsInRaid(), IsInInstance()
+	local message = string.format(InterrupMessage, destName, spellID, spellName)
+	
+	if inGroup then
+		if (not inRaid and E.db.general.interruptAnnounce == RAID)
+			or (not inInstance and E.db.general.interruptAnnounce == INSTANCE_CHAT) then
+			SendChatMessage(INTERRUPTED.." "..destName.."'s \124cff71d5ff\124Hspell:"..spellID.."\124h["..spellName.."]\124h\124r!", PARTY, nil, nil)		
 		else
-			SendChatMessage(INTERRUPTED.." "..destName.."'s \124cff71d5ff\124Hspell:"..spellID.."\124h["..spellName.."]\124h\124r!", "PARTY", nil, nil)
-		end	
-	elseif E.db.general.interruptAnnounce == "SAY" and inGroup then
-		SendChatMessage(INTERRUPTED.." "..destName.."'s \124cff71d5ff\124Hspell:"..spellID.."\124h["..spellName.."]\124h\124r!", "SAY", nil, nil)	
+			SendChatMessage(INTERRUPTED.." "..destName.."'s \124cff71d5ff\124Hspell:"..spellID.."\124h["..spellName.."]\124h\124r!", E.db.general.interruptAnnounce, nil, nil)
+		end
 	end
 end
 
