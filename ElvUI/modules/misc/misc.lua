@@ -18,15 +18,27 @@ function M:COMBAT_LOG_EVENT_UNFILTERED(_, _, event, _, sourceGUID, _, _, _, _, d
 	if not (event == "SPELL_INTERRUPT" and sourceGUID == UnitGUID('player')) then return end
 	
 	local inGroup, inRaid, inInstance, instanceType = IsInGroup(), IsInRaid(), IsInInstance()
-	local chatMsg = format(InterrupMessage, destName, spellID, spellName)
 	
-	if inGroup then
-		if (not inRaid and E.db.general.interruptAnnounce == RAID)
-			or (not inInstance and E.db.general.interruptAnnounce == INSTANCE_CHAT) then
-			SendChatMessage(chatMsg, PARTY, nil, nil)		
+	if not inGroup then return end
+	
+	if E.db.general.interruptAnnounce == PARTY then
+		SendChatMessage(format(InterrupMessage, destName, spellID, spellName), "PARTY", nil, nil)
+	elseif E.db.general.interruptAnnounce == RAID then
+		if inRaid then
+			SendChatMessage(format(InterrupMessage, destName, spellID, spellName), "RAID", nil, nil)		
+		elseif inInstance then
+			SendChatMessage(format(InterrupMessage, destName, spellID, spellName), "INSTANCE_CHAT", nil, nil)
 		else
-			SendChatMessage(chatMsg, E.db.general.interruptAnnounce, nil, nil)
+			SendChatMessage(format(InterrupMessage, destName, spellID, spellName), "PARTY", nil, nil)		
 		end
+	elseif E.db.general.interruptAnnounce == INSTANCE_CHAT then
+		if inInstance then
+			SendChatMessage(format(InterrupMessage, destName, spellID, spellName), "INSTANCE_CHAT", nil, nil)
+		else
+			SendChatMessage(format(InterrupMessage, destName, spellID, spellName), "PARTY", nil, nil)		
+		end
+	elseif E.db.general.interruptAnnounce == SAY then
+		SendChatMessage(chatMsg, SAY, nil, nil)	
 	end
 end
 
