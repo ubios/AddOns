@@ -3,7 +3,7 @@ local M = E:NewModule('Misc', 'AceEvent-3.0', 'AceTimer-3.0');
 
 E.Misc = M;
 local UIErrorsFrame = UIErrorsFrame;
-local InterrupMessage = INTERRUPTED.." %s's \124cff71d5ff\124Hspell: %d\124h[%s]\124h\124r!"
+local interruptMsg = INTERRUPTED.." %s's \124cff71d5ff\124Hspell:%d\124h[%s]\124h\124r!"
 
 function M:ErrorFrameToggle(event)
 	if event == 'PLAYER_REGEN_DISABLED' then
@@ -14,31 +14,22 @@ function M:ErrorFrameToggle(event)
 end
 
 function M:COMBAT_LOG_EVENT_UNFILTERED(_, _, event, _, sourceGUID, _, _, _, _, destName, _, _, _, _, _, spellID, spellName)
-	if E.db.general.interruptAnnounce == "NONE" then return end
-	if not (event == "SPELL_INTERRUPT" and sourceGUID == UnitGUID('player')) then return end
+	if E.db.general.interruptAnnounce == "NONE" then return end -- No Announcement configured, exit.
+	if not (event == "SPELL_INTERRUPT" and sourceGUID == UnitGUID('player')) then return end -- No annoucable interrupt from player, exit.
 	
-	local inGroup, inRaid, inInstance, instanceType = IsInGroup(), IsInRaid(), IsInInstance()
+	local inGroup, inRaid, inPartyLFG = IsInGroup(), IsInRaid(), IsPartyLFG()
+	if not inGroup then return end -- not in group, exit.
 	
-	if not inGroup then return end
-	
-	if E.db.general.interruptAnnounce == PARTY then
-		SendChatMessage(format(InterrupMessage, destName, spellID, spellName), "PARTY", nil, nil)
-	elseif E.db.general.interruptAnnounce == RAID then
+	if E.db.general.interruptAnnounce == "PARTY" then
+		SendChatMessage(format(interruptMsg, destName, spellID, spellName), inPartyLFG and "INSTANCE_CHAT" or "PARTY")
+	elseif E.db.general.interruptAnnounce == "RAID" then
 		if inRaid then
-			SendChatMessage(format(InterrupMessage, destName, spellID, spellName), "RAID", nil, nil)		
-		elseif inInstance then
-			SendChatMessage(format(InterrupMessage, destName, spellID, spellName), "INSTANCE_CHAT", nil, nil)
+			SendChatMessage(format(interruptMsg, destName, spellID, spellName), inPartyLFG and "INSTANCE_CHAT" or "RAID")		
 		else
-			SendChatMessage(format(InterrupMessage, destName, spellID, spellName), "PARTY", nil, nil)		
-		end
-	elseif E.db.general.interruptAnnounce == INSTANCE_CHAT then
-		if inInstance then
-			SendChatMessage(format(InterrupMessage, destName, spellID, spellName), "INSTANCE_CHAT", nil, nil)
-		else
-			SendChatMessage(format(InterrupMessage, destName, spellID, spellName), "PARTY", nil, nil)		
-		end
-	elseif E.db.general.interruptAnnounce == SAY then
-		SendChatMessage(chatMsg, SAY, nil, nil)	
+			SendChatMessage(format(interruptMsg, destName, spellID, spellName), inPartyLFG and "INSTANCE_CHAT" or "PARTY")
+		end	
+	elseif E.db.general.interruptAnnounce == "SAY" then
+		SendChatMessage(format(interruptMsg, destName, spellID, spellName), "SAY")	
 	end
 end
 
@@ -146,12 +137,12 @@ function M:AutoInvite(event, leaderName)
 		if QueueStatusMinimapButton:IsShown() then return end -- Prevent losing que inside LFD if someone invites you to group
 		if IsInGroup() then return end
 		hideStatic = true
-
+	
 		-- Update Guild and Friendlist
 		if GetNumFriends() > 0 then ShowFriends() end
 		if IsInGuild() then GuildRoster() end
 		local inGroup = false;
-
+		
 		for friendIndex = 1, GetNumFriends() do
 			local friendName = GetFriendInfo(friendIndex)
 			if friendName == leaderName then
@@ -160,7 +151,7 @@ function M:AutoInvite(event, leaderName)
 				break
 			end
 		end
-
+		
 		if not inGroup then
 			for guildIndex = 1, GetNumGuildMembers(true) do
 				local guildMemberName = GetGuildRosterInfo(guildIndex)
@@ -171,7 +162,7 @@ function M:AutoInvite(event, leaderName)
 				end
 			end
 		end
-
+		
 		if not inGroup then
 			for bnIndex = 1, BNGetNumFriends() do
 				local _, _, _, name = BNGetFriendInfo(bnIndex)

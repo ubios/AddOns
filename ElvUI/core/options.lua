@@ -79,7 +79,6 @@ E.Options.args.general = {
 						['SAY'] = SAY,
 						['PARTY'] = PARTY,
 						['RAID'] = RAID,
-						['INSTANCE'] = INSTANCE_CHAT,
 					},
 				},
 				autoRepair = {
