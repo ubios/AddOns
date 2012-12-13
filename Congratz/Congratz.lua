@@ -224,7 +224,7 @@ function Congratz:CHAT_MSG_GUILD_ACHIEVEMENT(event, msg, player)
 		end
 		
 		if achievementCategoryId == 169 then	-- professions
-			minimumPoints = 60
+			minimumPoints = 70
 		end
 
 		Congratz:PrintDebug(format("Achievement for player %s with id %d with name %s [%s] and points value of %d (%d criteria).", player, id, name, categoryName, totalPoints, criteria));
