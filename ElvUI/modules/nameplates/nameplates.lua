@@ -68,7 +68,7 @@ function NP:QueueObject(frame, object)
 end
 
 function NP:CreateVirtualFrame(parent, point)
-	if point == nil then point = parent end
+	point = point or parent
 	local noscalemult = E.mult * UIParent:GetScale()
 	
 	if point.backdrop then return end

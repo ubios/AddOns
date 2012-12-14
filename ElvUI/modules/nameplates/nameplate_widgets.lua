@@ -192,11 +192,7 @@ end
 
 function NP:UpdateAuraTime(frame, expiration)
 	local timeleft = ceil(expiration-GetTime())
-	if timeleft > 60 then 
-		frame.TimeLeft:SetText(ceil(timeleft/60).."m")
-	else
-		frame.TimeLeft:SetText(ceil(timeleft))
-	end
+	frame.TimeLeft:SetText(timeleft > 60 and ceil(timeleft/60).."m" or ceil(timeleft))
 end
 
 function NP:ClearAuraContext(frame)
@@ -224,7 +220,6 @@ function NP:UpdateAuraContext(frame)
 		raidicon = parent.raidIconType
 		if guid and raidicon then ByRaidIcon[raidicon] = guid end
 	end
-	
 	
 	local frame = NP:SearchForFrame(guid, raidicon, parent.hp.name:GetText())
 	if frame then
@@ -311,10 +306,11 @@ function NP:SetAuraInstance(guid, spellid, expiration, stacks, caster, duration,
 		filter = true;
 	end
 
-	if self.db.trackfilter and #self.db.trackfilter > 1 and E.global['unitframe']['aurafilters'][self.db.trackfilter] then
+	local trackFilter = E.global['unitframe']['aurafilters'][self.db.trackfilter]
+	if self.db.trackfilter and #self.db.trackfilter > 1 and trackFilter then
 		local name = GetSpellInfo(spellid)
-		local spellList = E.global['unitframe']['aurafilters'][self.db.trackfilter].spells
-		local type = E.global['unitframe']['aurafilters'][self.db.trackfilter].type
+		local spellList = trackFilter.spells
+		local type = trackFilter.type
 		if type == 'Blacklist' then
 			if spellList[name] and spellList[name].enable then
 				filter = false;

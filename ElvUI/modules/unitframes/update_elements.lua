@@ -3,6 +3,9 @@ local UF = E:GetModule('UnitFrames');
 local LSM = LibStub("LibSharedMedia-3.0");
 
 local abs = math.abs
+local random = math.random
+local ceil = math.ceil
+local format = string.format
 local _, ns = ...
 local ElvUF = ns.oUF
 assert(ElvUF, "ElvUI was unable to locate oUF.")
@@ -28,7 +31,7 @@ end
 
 function UF:PostUpdateHealth(unit, min, max)
 	if self:GetParent().isForced then
-		min = math.random(1, max)
+		min = random(1, max)
 		self:SetValue(min)
 	end
 
@@ -39,7 +42,8 @@ function UF:PostUpdateHealth(unit, min, max)
 	end
 	
 	local r, g, b = self:GetStatusBarColor()
-	if (E.db['unitframe']['colors'].healthclass == true and E.db['unitframe']['colors'].colorhealthbyvalue == true) or (E.db['unitframe']['colors'].colorhealthbyvalue and self:GetParent().isForced) and not (UnitIsTapped(unit) and not UnitIsTappedByPlayer(unit)) then
+	local colors = E.db['unitframe']['colors'];
+	if (colors.healthclass == true and colors.colorhealthbyvalue == true) or (colors.colorhealthbyvalue and self:GetParent().isForced) and not (UnitIsTapped(unit) and not UnitIsTappedByPlayer(unit)) then
 		local newr, newg, newb = ElvUF.ColorGradient(min, max, 1, 0, 0, 1, 1, 0, r, g, b)
 
 		self:SetStatusBarColor(newr, newg, newb)
@@ -49,14 +53,14 @@ function UF:PostUpdateHealth(unit, min, max)
 		end
 	end
 
-	if E.db['unitframe']['colors'].classbackdrop then
+	if colors.classbackdrop then
 		local t
-			if UnitIsPlayer(unit) then
-				local _, class = UnitClass(unit)
-				t = self:GetParent().colors.class[class]
-			elseif UnitReaction(unit, 'player') then
-				t = self:GetParent().colors.reaction[UnitReaction(unit, "player")]
-			end
+		if UnitIsPlayer(unit) then
+			local _, class = UnitClass(unit)
+			t = self:GetParent().colors.class[class]
+		elseif UnitReaction(unit, 'player') then
+			t = self:GetParent().colors.reaction[UnitReaction(unit, "player")]
+		end
 
 		if t then
 			self.bg:SetVertexColor(t[1], t[2], t[3])
@@ -64,14 +68,16 @@ function UF:PostUpdateHealth(unit, min, max)
 	end
 	
 	--Backdrop
-	if E.db['unitframe']['colors'].customhealthbackdrop then
-		local backdrop = E.db['unitframe']['colors'].health_backdrop
+	if colors.customhealthbackdrop then
+		local backdrop = colors.health_backdrop
 		self.bg:SetVertexColor(backdrop.r, backdrop.g, backdrop.b)		
 	end	
 end
 
 function UF:PostNamePosition(frame, unit)
-	if --[[frame.Power.value:GetText() and]] UnitIsPlayer(unit) and frame.Power.value:IsShown() then
+	if not frame.Power.value:IsShown() then return end;
+
+	if --[[frame.Power.value:GetText() and]] UnitIsPlayer(unit) then
 		local db = frame.db
 		
 		local position = db.name.position
@@ -80,7 +86,7 @@ function UF:PostNamePosition(frame, unit)
 		
 		frame.Name:ClearAllPoints()
 		frame.Name:Point(position, frame.Health, position, x, y)	
-	elseif frame.Power.value:IsShown() then
+	else
 		frame.Power.value:SetAlpha(0)
 		
 		frame.Name:ClearAllPoints()
@@ -88,37 +94,31 @@ function UF:PostNamePosition(frame, unit)
 	end
 end
 
+local tokens = { [0] = "MANA", "RAGE", "FOCUS", "ENERGY", "RUNIC_POWER" }
 function UF:PostUpdatePower(unit, min, max)
-	local pType, pToken, altR, altG, altB = UnitPowerType(unit)
+	local pType, _, altR, altG, altB = UnitPowerType(unit)
 	local color
 	
 	if self:GetParent().isForced then
-		min = math.random(1, max)
-		pType = math.random(0, 4)
-		pToken = pType == 0 and "MANA" or pType == 1 and "RAGE" or pType == 2 and "FOCUS" or pType == 3 and "ENERGY" or pType == 4 and "RUNIC_POWER"
+		min = random(1, max)
+		pType = random(0, 4)
 		self:SetValue(min)
-		color = ElvUF['colors'].power[pToken]
+		color = ElvUF['colors'].power[tokens[pType]]
 		
 		if not self.colorClass then
 			self:SetStatusBarColor(color[1], color[2], color[3])
 			local mu = self.bg.multiplier or 1
 			self.bg:SetVertexColor(color[1] * mu, color[2] * mu, color[3] * mu)
 		end
-	elseif pToken then
-		color = ElvUF['colors'].power[pToken]
+	elseif pType then
+		color = ElvUF['colors'].power[tokens[pType]]
 	end	
 	
-	local perc
-	if max == 0 then
-		perc = 0
-	else
-		perc = floor(min / max * 100)
-	end
-
 	local db = self:GetParent().db
 	if self.LowManaText and db then
-		if pToken == 'MANA' then
-			if perc <= db.lowmana and not dead and not ghost then
+		if pType == 0 then
+			local perc = max == 0 and 0 or floor(min / max * 100)
+			if perc <= db.lowmana and not UnitIsDead(unit) and not UnitIsGhost(unit) then
 				self.LowManaText:SetText(LOW..' '..MANA)
 				E:Flash(self.LowManaText, 0.6)
 			else
@@ -141,7 +141,8 @@ function UF:PortraitUpdate(unit)
 	
 	if not db then return end
 	
-	if db['portrait'].enable and db['portrait'].overlay then
+	local portrait = db['portrait']
+	if portrait.enable and portrait.overlay then
 		self:SetAlpha(0); 
 		self:SetAlpha(0.35);
 	else
@@ -153,8 +154,8 @@ function UF:PortraitUpdate(unit)
 			self:SetCamera(1)
 		end	
 
-		self:SetCamDistanceScale(db['portrait'].camDistanceScale - 0.01 >= 0.01 and db['portrait'].camDistanceScale - 0.01 or 0.01) --Blizzard bug fix
-		self:SetCamDistanceScale(db['portrait'].camDistanceScale)
+		self:SetCamDistanceScale(portrait.camDistanceScale - 0.01 >= 0.01 and portrait.camDistanceScale - 0.01 or 0.01) --Blizzard bug fix
+		self:SetCamDistanceScale(portrait.camDistanceScale)
 	end
 end
 
@@ -178,31 +179,30 @@ function UF:FormatTime(s, reverse)
 end
 
 function UF:UpdateAuraTimer(elapsed)	
-	if self.timeLeft then
-		self.elapsed = (self.elapsed or 0) + elapsed
-		if self.elapsed >= 0.1 then
-			if not self.first then
-				self.timeLeft = self.timeLeft - self.elapsed
-			else
-				self.timeLeft = self.timeLeft - GetTime()
-				self.first = false
-			end
-			if self.timeLeft > 0 then
-				local time = UF:FormatTime(self.timeLeft)
-				if self.reverse then time = UF:FormatTime(abs(self.timeLeft - self.duration), true) end
-				self.text:SetText(time)
-				if self.timeLeft <= 5 then
-					self.text:SetTextColor(0.99, 0.31, 0.31)
-				else
-					self.text:SetTextColor(1, 1, 1)
-				end
-			else
-				self.text:Hide()
-				self:SetScript("OnUpdate", nil)
-			end
-			self.elapsed = 0
-		end
+	if not self.timeLeft then return end
+	
+	self.elapsed = (self.elapsed or 0) + elapsed
+	
+	if self.elapsed < 0.1 then return end
+	
+	if not self.first then
+		self.timeLeft = self.timeLeft - self.elapsed
+	else
+		self.timeLeft = self.timeLeft - GetTime()
+		self.first = false
 	end
+	if self.timeLeft > 0 then
+		self.text:SetText(not self.reverse and UF:FormatTime(self.timeLeft) or UF:FormatTime(abs(self.timeLeft - self.duration), true))
+		if self.timeLeft <= 5 then
+			self.text:SetTextColor(0.99, 0.31, 0.31)
+		else
+			self.text:SetTextColor(1, 1, 1)
+		end
+	else
+		self.text:Hide()
+		self:SetScript("OnUpdate", nil)
+	end
+	self.elapsed = 0
 end
 
 function UF:PostUpdateAura(unit, button, index, offset, filter, isDebuff, duration, timeLeft)
@@ -222,8 +222,9 @@ function UF:PostUpdateAura(unit, button, index, offset, filter, isDebuff, durati
 		end
 	end	
 	
+	local isFriend = UnitIsFriend("player", unit)
 	if button.isDebuff then
-		if(not UnitIsFriend("player", unit) and button.owner ~= "player" and button.owner ~= "vehicle") --[[and (not E.isDebuffWhiteList[name])]] then
+		if(not isFriend and button.owner ~= "player" and button.owner ~= "vehicle") --[[and (not E.isDebuffWhiteList[name])]] then
 			button:SetBackdropBorderColor(0.9, 0.1, 0.1)
 			if unit and not unit:find('arena%d') then
 				button.icon:SetDesaturated(true)
@@ -240,7 +241,7 @@ function UF:PostUpdateAura(unit, button, index, offset, filter, isDebuff, durati
 			button.icon:SetDesaturated(false)
 		end
 	else
-		if (isStealable) and not UnitIsFriend("player", unit) then
+		if (isStealable) and not isFriend then
 			button:SetBackdropBorderColor(237/255, 234/255, 142/255)
 		else
 			button:SetBackdropBorderColor(unpack(E["media"].bordercolor))		
@@ -273,7 +274,7 @@ function UF:CustomCastDelayText(duration)
 		local text		
 		if self.channeling then
 			if db.castbar.format == 'CURRENT' then
-				self.Time:SetText(("%.1f |cffaf5050%.1f|r"):format(math.abs(duration - self.max), self.delay))
+				self.Time:SetText(("%.1f |cffaf5050%.1f|r"):format(abs(duration - self.max), self.delay))
 			elseif db.castbar.format == 'CURRENTMAX' then
 				self.Time:SetText(("%.1f / %.1f |cffaf5050%.1f|r"):format(duration, self.max, self.delay))
 			elseif db.castbar.format == 'REMAINING' then
@@ -285,7 +286,7 @@ function UF:CustomCastDelayText(duration)
 			elseif db.castbar.format == 'CURRENTMAX' then
 				self.Time:SetText(("%.1f / %.1f |cffaf5050%s %.1f|r"):format(duration, self.max, "+", self.delay))
 			elseif db.castbar.format == 'REMAINING' then
-				self.Time:SetText(("%.1f |cffaf5050%s %.1f|r"):format(math.abs(duration - self.max), "+", self.delay))
+				self.Time:SetText(("%.1f |cffaf5050%s %.1f|r"):format(abs(duration - self.max), "+", self.delay))
 			end		
 		end
 	end
@@ -298,10 +299,10 @@ function UF:CustomTimeText(duration)
 	local text
 	if self.channeling then
 		if db.castbar.format == 'CURRENT' then
-			self.Time:SetText(("%.1f"):format(math.abs(duration - self.max)))
+			self.Time:SetText(("%.1f"):format(abs(duration - self.max)))
 		elseif db.castbar.format == 'CURRENTMAX' then
 			self.Time:SetText(("%.1f / %.1f"):format(duration, self.max))
-			self.Time:SetText(("%.1f / %.1f"):format(math.abs(duration - self.max), self.max))
+			self.Time:SetText(("%.1f / %.1f"):format(abs(duration - self.max), self.max))
 		elseif db.castbar.format == 'REMAINING' then
 			self.Time:SetText(("%.1f"):format(duration))
 		end				
@@ -311,7 +312,7 @@ function UF:CustomTimeText(duration)
 		elseif db.castbar.format == 'CURRENTMAX' then
 			self.Time:SetText(("%.1f / %.1f"):format(duration, self.max))
 		elseif db.castbar.format == 'REMAINING' then
-			self.Time:SetText(("%.1f"):format(math.abs(duration - self.max)))
+			self.Time:SetText(("%.1f"):format(abs(duration - self.max)))
 		end		
 	end
 end
@@ -326,20 +327,20 @@ end
 function UF:SetCastTicks(frame, numTicks, extraTickRatio)
 	extraTickRatio = extraTickRatio or 0
 	UF:HideTicks()
-	if numTicks and numTicks > 0 then
-		local d = frame:GetWidth() / (numTicks + extraTickRatio)
-		for i = 1, numTicks do
-			if not ticks[i] then
-				ticks[i] = frame:CreateTexture(nil, 'OVERLAY')
-				ticks[i]:SetTexture(E["media"].normTex)
-				ticks[i]:SetVertexColor(0, 0, 0)
-				ticks[i]:SetWidth(1)
-				ticks[i]:SetHeight(frame:GetHeight())
-			end
-			ticks[i]:ClearAllPoints()
-			ticks[i]:SetPoint("CENTER", frame, "LEFT", d * i, 0)
-			ticks[i]:Show()
+	if numTicks and numTicks <= 0 then return end;
+	
+	local d = frame:GetWidth() / (numTicks + extraTickRatio)
+	for i = 1, numTicks do
+		if not ticks[i] then
+			ticks[i] = frame:CreateTexture(nil, 'OVERLAY')
+			ticks[i]:SetTexture(E["media"].normTex)
+			ticks[i]:SetVertexColor(0, 0, 0)
+			ticks[i]:SetWidth(1)
+			ticks[i]:SetHeight(frame:GetHeight())
 		end
+		ticks[i]:ClearAllPoints()
+		ticks[i]:SetPoint("CENTER", frame, "LEFT", d * i, 0)
+		ticks[i]:Show()
 	end
 end
 
@@ -347,6 +348,7 @@ function UF:PostCastStart(unit, name, rank, castid)
 	if unit == "vehicle" then unit = "player" end
 	local db = self:GetParent().db
 	if not db then return; end
+	
 	if db.castbar.displayTarget and self.curTarget then
 		self.Text:SetText(string.sub(name..' --> '..self.curTarget, 0, math.floor((((32/245) * self:GetWidth()) / E.db['unitframe'].fontSize) * 12)))
 	else
@@ -480,13 +482,12 @@ function UF:PostChannelUpdate(unit, name)
 end
 
 function UF:PostCastInterruptible(unit)
-	if unit == "vehicle" then unit = "player" end
-	if unit ~= "player" then
-		if UnitCanAttack("player", unit) then
-			self:SetStatusBarColor(unpack(ElvUF.colors.castNoInterrupt))	
-		else
-			self:SetStatusBarColor(unpack(ElvUF.colors.castColor))
-		end
+	if unit == "vehicle" or unit == "player" then return end
+	
+	if UnitCanAttack("player", unit) then
+		self:SetStatusBarColor(unpack(ElvUF.colors.castNoInterrupt))	
+	else
+		self:SetStatusBarColor(unpack(ElvUF.colors.castColor))
 	end
 end
 
@@ -658,8 +659,8 @@ end
 
 function UF:UpdateShardBar(spec)
 	local maxBars = self.number
-	local db = self:GetParent().db
 	local frame = self:GetParent()
+	local db = frame.db
 	if not db then return; end
 	
 	for i=1, UF['classMaxResourceBar'][E.myclass] do
@@ -678,11 +679,7 @@ function UF:UpdateShardBar(spec)
 		self:Point("CENTER", frame.Health.backdrop, "TOP", -12, -2)
 	end
 	
-	local SPACING = 1
-	if db.classbar.fill == 'spaced' then
-		SPACING = 11
-	end
-	
+	local SPACING = db.classbar.fill == 'spaced' and 1 or 11
 	for i = 1, maxBars do
 		self[i]:SetHeight(self:GetHeight())	
 		self[i]:SetWidth((self:GetWidth() - (maxBars - 1)) / maxBars)
@@ -697,17 +694,21 @@ function UF:UpdateShardBar(spec)
 	UF:UpdatePlayerFrameAnchors(frame, self:IsShown())
 end
 
-function UF:EclipseDirection()
-	local direction = GetEclipseDirection()
-	if direction == "sun" then
-		self.Text:SetText(">")
-		self.Text:SetTextColor(.2,.2,1,1)
-	elseif direction == "moon" then
-		self.Text:SetText("<")
-		self.Text:SetTextColor(1,1,.3, 1)
-	else
-		self.Text:SetText("")
+local eclipsedirection = {
+  ["sun"] = function (x, c) x.Text:SetText(c and "#>" or ">") x.Text:SetTextColor(.4,.4,1,1) end,
+  ["moon"] = function (x, c) x.Text:SetText(c and "<#" or "<") x.Text:SetTextColor(1,1,.4, 1) end,
+  ["none"] = function (x, c) x.Text:SetText("") end,
+}
+
+function UF:PredictEclipse(self, energy, direction, virtual_energy, virtual_direction, virtual_eclipse)
+	if self and self:IsShown() then
+		eclipsedirection[virtual_direction](self, direction ~= virtual_direction)
 	end
+end
+
+function UF:EclipseDirection()
+	energy, direction, virtual_energy, virtual_direction, virtual_eclipse = LibBalancePowerTracker:GetEclipseEnergyInfo()
+	eclipsedirection[virtual_direction](self, direction ~= virtual_direction)
 end
 
 function UF:DruidResourceBarVisibilityUpdate(unit)
@@ -1180,7 +1181,7 @@ function UF:UpdateRoleIcon()
 	local role = UnitGroupRolesAssigned(self.unit)
 
 	if self.isForced then
-		local rnd = math.random(1, 3)
+		local rnd = random(1, 3)
 		role = rnd == 1 and "TANK" or (rnd == 2 and "HEALER" or (rnd == 3 and "DAMAGER"))
 	end
 	

@@ -48,7 +48,15 @@ local UPDATE_VISIBILITY = function(self, event)
 
 	if(showBar) then
 		eb:Show()
+		eb.callbackid = LibBalancePowerTracker:RegisterCallback(function(energy, direction, virtual_energy, virtual_direction, virtual_eclipse)
+			if (eb.EclipseUpdate) then
+				return eb:EclipseUpdate(eb, energy, direction, virtual_energy, virtual_direction, virtual_eclipse)
+			end		 
+		 end)
 	else
+		if (eb.callbackid) then
+			LibBalancePowerTracker:UnregisterCallback(eb.callbackid)
+		end
 		eb:Hide()
 	end
 
@@ -90,6 +98,14 @@ local ECLIPSE_DIRECTION_CHANGE = function(self, event, isLunar)
 
 	if(eb.PostDirectionChange) then
 		return eb:PostDirectionChange(self.unit)
+	end
+end
+
+local ECLIPSE_EVALUATION = function(self, event, unit, spellname)
+	local eb = self.EclipseBar
+	
+	if (eb.EclipseEvaluation) then
+		return eb:EclipseEvaluation(unit, spellname)
 	end
 end
 

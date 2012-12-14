@@ -12,7 +12,7 @@ function E:ShortValue(v)
 end
 
 function E:IsEvenNumber(num)
-	if math.fmod(num, 2) == 0 then
+	if num%2 == 0 then
 		return true;
 	else
 		return false;

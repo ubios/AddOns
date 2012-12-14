@@ -29,11 +29,11 @@ end
 
 local function OnEvent(self, event, ...)
 	if not IsLoggedIn() then return end
-	local NewMoney = GetMoney()
-	if (ElvDB == nil) then ElvDB = {}; end
-	if (ElvDB['gold'] == nil) then ElvDB['gold'] = {}; end
-	if (ElvDB['gold'][E.myrealm] == nil) then ElvDB['gold'][E.myrealm] = {} end
-	if (ElvDB['gold'][E.myrealm][E.myname] == nil) then ElvDB['gold'][E.myrealm][E.myname] = NewMoney end
+	local NewMoney = GetMoney();
+	ElvDB = ElvDB or { };
+	ElvDB['gold'] = ElvDB['gold'] or {};
+	ElvDB['gold'][E.myrealm] = ElvDB['gold'][E.myrealm] or {};
+	ElvDB['gold'][E.myrealm][E.myname] = ElvDB['gold'][E.myrealm][E.myname] or NewMoney;
 
 	local OldMoney = ElvDB['gold'][E.myrealm][E.myname] or NewMoney
 

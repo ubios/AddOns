@@ -146,9 +146,7 @@ function CH:GetSmileyReplacementText(msg)
 		startpos = endpos + 1;
 		if(pos ~= nil) then
 			endpos = string.find(msg,"|h]|r",startpos,-1) or string.find(msg,"|h",startpos,-1);
-			if(endpos == nil) then
-				endpos = origlen;
-			end
+			endpos = endpos or origlen;
 			if(startpos < endpos) then
 				outstr = outstr .. string.sub(msg,startpos,endpos); --don't run replacement on this bit
 				startpos = endpos + 1;
@@ -418,9 +416,7 @@ function CH:PositionChat(override)
 		isDocked = chat.isDocked
 		
 		if id > NUM_CHAT_WINDOWS then
-			if point == nil then
-				point = select(1, chat:GetPoint())
-			end
+			point = point or select(1, chat:GetPoint());
 			if select(2, tab:GetPoint()):GetName() ~= bg then
 				isDocked = true
 			else

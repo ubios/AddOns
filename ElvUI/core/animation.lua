@@ -193,6 +193,7 @@ function E:tDeleteItem(table, item)
 	while table[index] do
 		if ( item == table[index] ) then
 			tremove(table, index);
+			break;
 		else
 			index = index + 1;
 		end

@@ -396,6 +396,7 @@ end
 function UF:Construct_DruidResourceBar(frame)
 	local eclipseBar = CreateFrame('Frame', nil, frame)
 	eclipseBar:CreateBackdrop('Default')
+	eclipseBar.EclipseUpdate = UF.PredictEclipse
 	eclipseBar.PostUpdatePower = UF.EclipseDirection
 	eclipseBar.PostUpdateVisibility = UF.DruidResourceBarVisibilityUpdate
 	

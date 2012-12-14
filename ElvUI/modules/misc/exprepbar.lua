@@ -204,10 +204,7 @@ function M:SetWatchedFactionOnReputationBar(event, msg)
 			local name = GetFactionInfo(factionIndex)
 			if name == faction and name ~= active then
 				-- check if watch has been disabled by user
-				local inactive = IsFactionInactive(factionIndex)
-				if inactive == nil then
-					SetWatchedFactionIndex(factionIndex)
-				end
+				local inactive = IsFactionInactive(factionIndex) or SetWatchedFactionIndex(factionIndex)
 				break
 			end
 		end
