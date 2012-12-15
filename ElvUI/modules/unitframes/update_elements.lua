@@ -6,9 +6,18 @@ local abs = math.abs
 local random = math.random
 local ceil = math.ceil
 local format = string.format
+local floor = math.floor
 local _, ns = ...
 local ElvUF = ns.oUF
 assert(ElvUF, "ElvUI was unable to locate oUF.")
+
+-- Localize colors (since unpack is very slow)
+local castNoInterruptColors
+local castColors
+local borderColors
+
+-- Localize unit frame font
+local unitframeFont
 
 local function CheckFilter(filterType, isFriend)
 	local FRIENDLY_CHECK, ENEMY_CHECK = false, false
@@ -94,7 +103,9 @@ function UF:PostNamePosition(frame, unit)
 	end
 end
 
+-- Power Tokens (language independant)
 local tokens = { [0] = "MANA", "RAGE", "FOCUS", "ENERGY", "RUNIC_POWER" }
+
 function UF:PostUpdatePower(unit, min, max)
 	local pType, _, altR, altG, altB = UnitPowerType(unit)
 	local color
@@ -209,11 +220,12 @@ function UF:PostUpdateAura(unit, button, index, offset, filter, isDebuff, durati
 	local name, _, _, _, dtype, duration, expirationTime, unitCaster, isStealable, _, spellID = UnitAura(unit, index, button.filter)
 
 	local db = self:GetParent().db
+	unitframeFont = unitframeFont or LSM:Fetch("font", E.db['unitframe'].font)
 	
 	button.text:Show()
 	if db and db[self.type] then
-		button.text:FontTemplate(LSM:Fetch("font", E.db['unitframe'].font), db[self.type].fontSize, 'OUTLINE')
-		button.count:FontTemplate(LSM:Fetch("font", E.db['unitframe'].font), db[self.type].fontSize, 'OUTLINE')
+		button.text:FontTemplate(unitframeFont, db[self.type].fontSize, 'OUTLINE')
+		button.count:FontTemplate(unitframeFont, db[self.type].fontSize, 'OUTLINE')
 		
 		if db[self.type].clickThrough and button:IsMouseEnabled() then
 			button:EnableMouse(false)
@@ -244,7 +256,8 @@ function UF:PostUpdateAura(unit, button, index, offset, filter, isDebuff, durati
 		if (isStealable) and not isFriend then
 			button:SetBackdropBorderColor(237/255, 234/255, 142/255)
 		else
-			button:SetBackdropBorderColor(unpack(E["media"].bordercolor))		
+			borderColors = borderColors or unpack(E["media"].bordercolor)
+			button:SetBackdropBorderColor(borderColors)		
 		end	
 	end
 	
@@ -349,10 +362,13 @@ function UF:PostCastStart(unit, name, rank, castid)
 	local db = self:GetParent().db
 	if not db then return; end
 	
+	castNoInterruptColors = castNoInterruptColors or unpack(ElvUF.colors.castNoInterrupt)
+	castColors = castColors or unpack(ElvUF.colors.castColor)
+	
 	if db.castbar.displayTarget and self.curTarget then
-		self.Text:SetText(string.sub(name..' --> '..self.curTarget, 0, math.floor((((32/245) * self:GetWidth()) / E.db['unitframe'].fontSize) * 12)))
+		self.Text:SetText(string.sub(name..' --> '..self.curTarget, 0, floor((((32/245) * self:GetWidth()) / E.db['unitframe'].fontSize) * 12)))
 	else
-		self.Text:SetText(string.sub(name, 0, math.floor((((32/245) * self:GetWidth()) / E.db['unitframe'].fontSize) * 12)))
+		self.Text:SetText(string.sub(name, 0, floor((((32/245) * self:GetWidth()) / E.db['unitframe'].fontSize) * 12)))
 	end
 
 	self.Spark:Height(self:GetHeight() * 2)
@@ -412,12 +428,12 @@ function UF:PostCastStart(unit, name, rank, castid)
 	
 	if self.interrupt and unit ~= "player" then
 		if UnitCanAttack("player", unit) then
-			self:SetStatusBarColor(unpack(ElvUF.colors.castNoInterrupt))
+			self:SetStatusBarColor(castNoInterruptColors)
 		else
-			self:SetStatusBarColor(unpack(ElvUF.colors.castColor))			
+			self:SetStatusBarColor(castColors)			
 		end
 	else
-		self:SetStatusBarColor(unpack(ElvUF.colors.castColor))
+		self:SetStatusBarColor(castColors)
 	end
 end
 
@@ -483,16 +499,20 @@ end
 
 function UF:PostCastInterruptible(unit)
 	if unit == "vehicle" or unit == "player" then return end
+
+	castNoInterruptColors = castNoInterruptColors or unpack(ElvUF.colors.castNoInterrupt)
+	castColors = castColors or unpack(ElvUF.colors.castColor)
 	
 	if UnitCanAttack("player", unit) then
-		self:SetStatusBarColor(unpack(ElvUF.colors.castNoInterrupt))	
+		self:SetStatusBarColor(castNoInterruptColors)	
 	else
-		self:SetStatusBarColor(unpack(ElvUF.colors.castColor))
+		self:SetStatusBarColor(castColors)
 	end
 end
 
 function UF:PostCastNotInterruptible(unit)
-	self:SetStatusBarColor(unpack(ElvUF.colors.castNoInterrupt))
+	castNoInterruptColors = castNoInterruptColors or unpack(ElvUF.colors.castNoInterrupt)
+	self:SetStatusBarColor(castNoInterruptColors)
 end
 
 function UF:UpdateHoly(event, unit, powerType)
@@ -800,7 +820,7 @@ function UF:UpdateTargetGlow(event)
 end
 
 function UF:AltPowerBarPostUpdate(min, cur, max)
-	local perc = math.floor((cur/max)*100)
+	local perc = floor((cur/max)*100)
 	
 	if perc < 35 then
 		self:SetStatusBarColor(0, 1, 0)
@@ -968,7 +988,8 @@ function UF:AuraFilter(unit, icon, name, rank, texture, count, dtype, duration, 
 	end
 	
 	if CheckFilter(db.useBlacklist, isFriend) then
-		if E.global['unitframe']['aurafilters']['Blacklist'].spells[name] and E.global['unitframe']['aurafilters']['Blacklist'].spells[name].enable then
+		local blackList = E.global['unitframe']['aurafilters']['Blacklist'].spells[name]
+		if blackList and blackList.enable then
 			returnValue = false;
 		elseif not returnValueChanged then
 			returnValue = true;
@@ -978,7 +999,8 @@ function UF:AuraFilter(unit, icon, name, rank, texture, count, dtype, duration, 
 	end
 	
 	if CheckFilter(db.useWhitelist, isFriend) then
-		if E.global['unitframe']['aurafilters']['Whitelist'].spells[name] and E.global['unitframe']['aurafilters']['Whitelist'].spells[name].enable then
+		local whiteList = E.global['unitframe']['aurafilters']['Whitelist'].spells[name]
+		if whiteList and whiteList.enable then
 			returnValue = true;
 		elseif not returnValueChanged then
 			returnValue = false;
@@ -1029,14 +1051,13 @@ function UF:UpdateAuraWatch(frame)
 		auras:Show()
 	end
 	
-	if not E.global['unitframe'].buffwatch[E.myclass] then E.global['unitframe'].buffwatch[E.myclass] = {} end
-
+	local buffwatchClass = E.global['unitframe'].buffwatch[E.myclass] or {}
 	if frame.unit == 'pet' and E.global['unitframe'].buffwatch.PET then
 		for _, value in pairs(E.global['unitframe'].buffwatch.PET) do
 			tinsert(buffs, value);
 		end	
 	else
-		for _, value in pairs(E.global['unitframe'].buffwatch[E.myclass]) do
+		for _, value in pairs(buffwatchClass) do
 			tinsert(buffs, value);
 		end	
 	end
@@ -1059,6 +1080,8 @@ function UF:UpdateAuraWatch(frame)
 			end
 		end
 	end
+	
+	unitframeFont = unitframeFont or LSM:Fetch("font", E.db['unitframe'].font)
 	
 	for _, spell in pairs(buffs) do
 		local icon;
@@ -1144,8 +1167,8 @@ function UF:UpdateAuraWatch(frame)
 					icon.count:SetPoint("CENTER", unpack(counterOffsets[spell["point"]]));
 				end
 				
-				icon.count:FontTemplate(LSM:Fetch("font", E.db['unitframe'].font), db.fontSize, 'OUTLINE');
-				icon.text:FontTemplate(LSM:Fetch("font", E.db['unitframe'].font), db.fontSize, 'OUTLINE');
+				icon.count:FontTemplate(unitframeFont, db.fontSize, 'OUTLINE');
+				icon.text:FontTemplate(unitframeFont, db.fontSize, 'OUTLINE');
 				icon.text:ClearAllPoints()
 				icon.text:SetPoint(spell["point"])
 				
@@ -1301,7 +1324,8 @@ function UF:AuraBarFilter(unit, name, rank, icon, count, debuffType, duration, e
 	end
 	
 	if CheckFilter(db.useBlacklist, isFriend) then
-		if E.global['unitframe']['aurafilters']['Blacklist'].spells[name] and E.global['unitframe']['aurafilters']['Blacklist'].spells[name].enable then
+		local blackList = E.global['unitframe']['aurafilters']['Blacklist'].spells[name]
+		if blackList and blackList.enable then
 			returnValue = false;
 		elseif not returnValueChanged then
 			returnValue = true;
@@ -1311,7 +1335,8 @@ function UF:AuraBarFilter(unit, name, rank, icon, count, debuffType, duration, e
 	end
 	
 	if CheckFilter(db.useWhitelist, isFriend) then
-		if E.global['unitframe']['aurafilters']['Whitelist'].spells[name] and E.global['unitframe']['aurafilters']['Whitelist'].spells[name].enable then
+		local whiteList = E.global['unitframe']['aurafilters']['Whitelist'].spells[name]
+		if whiteList and whiteList.enable then
 			returnValue = true;
 		elseif not returnValueChanged then
 			returnValue = false;
@@ -1320,9 +1345,10 @@ function UF:AuraBarFilter(unit, name, rank, icon, count, debuffType, duration, e
 		returnValueChanged = true;
 	end	
 
-	if db.useFilter and E.global['unitframe']['aurafilters'][db.useFilter] then
-		local type = E.global['unitframe']['aurafilters'][db.useFilter].type
-		local spellList = E.global['unitframe']['aurafilters'][db.useFilter].spells
+	local useFilter = E.global['unitframe']['aurafilters'][db.useFilter]
+	if db.useFilter and useFilter then
+		local type = useFilter.type
+		local spellList = useFilter.spells
 
 		if type == 'Whitelist' then
 			if spellList[name] and spellList[name].enable then
@@ -1362,9 +1388,7 @@ function UF:SmartAuraDisplay()
 	local buffs = self.Buffs
 	local debuffs = self.Debuffs
 	local auraBars = self.AuraBars
-	local isFriend
-	
-	if UnitIsFriend('player', unit) then isFriend = true end
+	local isFriend = UnitIsFriend('player', unit) == 1 and true or false
 	
 	if isFriend then
 		if db.smartAuraDisplay == 'SHOW_DEBUFFS_ON_FRIENDLIES' then
