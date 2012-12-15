@@ -1079,4 +1079,4 @@ function UF:Update_PlayerFrame(frame, db)
 	frame:UpdateAllElements()
 end
 
-tinsert(UF['unitstoload'], 'player')
+UF['unitstoload'][#UF['unitstoload'] + 1] = 'player'

@@ -280,4 +280,4 @@ function UF:Update_FocusTargetFrame(frame, db)
 	frame:UpdateAllElements()
 end
 
-tinsert(UF['unitstoload'], 'focustarget')
+UF['unitstoload'][#UF['unitstoload'] + 1] = 'focustarget'

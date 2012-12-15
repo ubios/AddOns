@@ -283,7 +283,7 @@ function M:LoadLoot()
 	
 	-- Fuzz
 	LootFrame:UnregisterAllEvents()
-	table.insert(UISpecialFrames, 'ElvLootFrame')
+	UISpecialFrames[#UISpecialFrames + 1] = 'ElvLootFrame'
 
 	function _G.GroupLootDropDown_GiveLoot(self)
 		if ( sq >= MASTER_LOOT_THREHOLD ) then

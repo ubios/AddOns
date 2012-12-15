@@ -76,7 +76,7 @@ local function CreateMover(parent, name, text, overlay, snapOffset, postdrag)
 	f.snapOffset = snapOffset or -2
 	E.CreatedMovers[name].mover = f
 	
-	tinsert(E['snapBars'], f)
+	E['snapBars'][#E['snapBars'] + 1] = f
 	
 	if overlay == true then
 		f:SetFrameStrata("DIALOG")

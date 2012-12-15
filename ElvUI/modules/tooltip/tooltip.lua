@@ -646,7 +646,7 @@ function TT:INSPECT_READY(event, GUID)
 			['TalentSpec'] = talentSpec,
 			['LastUpdate'] = math.floor(curTime)
 		}	
-		table.insert(self.InspectCache, GUIDInfo)
+		self.InspectCache[#self.InspectCache + 1] = GUIDInfo
 	end
 	
 	if #self.InspectCache > 30 then

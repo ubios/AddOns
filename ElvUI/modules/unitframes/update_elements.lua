@@ -930,8 +930,6 @@ function UF:AuraFilter(unit, icon, name, rank, texture, count, dtype, duration, 
 		return false;
 	end
 
-	local isPlayer, isFriend
-
 	local db = self:GetParent().db
 	if not db or not db[self.type] then return true; end
 	
@@ -939,8 +937,8 @@ function UF:AuraFilter(unit, icon, name, rank, texture, count, dtype, duration, 
 
 	local returnValue = true;
 	local returnValueChanged = false;
-	if caster == 'player' or caster == 'vehicle' then isPlayer = true end
-	if UnitIsFriend('player', unit) then isFriend = true end
+	local isPlayer = caster == 'player' or caster == 'vehicle'
+	local isFriend = UnitIsFriend('player', unit) == 1 and true or false
 	
 	icon.isPlayer = isPlayer
 	icon.owner = caster
@@ -1051,14 +1049,13 @@ function UF:UpdateAuraWatch(frame)
 		auras:Show()
 	end
 	
-	local buffwatchClass = E.global['unitframe'].buffwatch[E.myclass] or {}
-	if frame.unit == 'pet' and E.global['unitframe'].buffwatch.PET then
-		for _, value in pairs(E.global['unitframe'].buffwatch.PET) do
-			tinsert(buffs, value);
+	if frame.unit == 'pet' then
+		for _, value in pairs(E.global['unitframe'].buffwatch.PET or {}) do
+			buffs[#buffs + 1] = value
 		end	
 	else
-		for _, value in pairs(buffwatchClass) do
-			tinsert(buffs, value);
+		for _, value in pairs(E.global['unitframe'].buffwatch[E.myclass] or {}) do
+			buffs[#buffs + 1] = value
 		end	
 	end
 	
@@ -1067,10 +1064,9 @@ function UF:UpdateAuraWatch(frame)
 		for spell in pairs(auras.icons) do
 			local matchFound = false;
 			for _, spell2 in pairs(buffs) do
-				if spell2["id"] then
-					if spell2["id"] == spell then
+				if spell2["id"] and spell2["id"] == spell then
 						matchFound = true;
-					end
+						break;
 				end
 			end
 			
@@ -1099,13 +1095,8 @@ function UF:UpdateAuraWatch(frame)
 				icon.anyUnit = spell["anyUnit"];
 				icon.style = spell['style'];
 				icon.onlyShowMissing = spell["onlyShowMissing"];
-				if spell["onlyShowMissing"] then
-					icon.presentAlpha = 0;
-					icon.missingAlpha = 1;
-				else
-					icon.presentAlpha = 1;
-					icon.missingAlpha = 0;		
-				end		
+				icon.presentAlpha = spell["onlyShowMissing"] and 0 or 1;
+				icon.missingAlpha = spell["onlyShowMissing"] and 1 or 0;
 				icon:Width(db.size);
 				icon:Height(db.size);
 				icon:ClearAllPoints()
@@ -1115,12 +1106,19 @@ function UF:UpdateAuraWatch(frame)
 					icon.icon = icon:CreateTexture(nil, "BORDER");
 					icon.icon:SetAllPoints(icon);
 				end
-				
+
 				if not icon.text then
 					icon.text = icon:CreateFontString(nil, 'BORDER');
 				end
-				
-				
+
+				if not icon.border then
+					icon.border = icon:CreateTexture(nil, "BACKGROUND");
+					icon.border:Point("TOPLEFT", -E.mult, E.mult);
+					icon.border:Point("BOTTOMRIGHT", E.mult, -E.mult);
+					icon.border:SetTexture(E["media"].blankTex);
+					icon.border:SetVertexColor(0, 0, 0);
+				end
+
 				if icon.style == 'coloredIcon' then
 					icon.icon:SetTexture(E["media"].blankTex);
 					
@@ -1130,15 +1128,18 @@ function UF:UpdateAuraWatch(frame)
 						icon.icon:SetVertexColor(0.8, 0.8, 0.8);
 					end		
 					icon.text:Hide()
+					icon.border:Show()
 				elseif icon.style == 'texturedIcon' then
 					icon.icon:SetVertexColor(1, 1, 1)
 					icon.icon:SetTexCoord(.18, .82, .18, .82);
 					icon.icon:SetTexture(icon.image);
 					icon.text:Hide()
+					icon.border:Show()
 				else
 					icon.icon:SetTexture(nil)
 					icon.text:Show()
 					icon.text:SetTextColor(spell["color"].r, spell["color"].g, spell["color"].b)
+					icon.border:Hide()
 				end
 				
 				if not icon.cd then
@@ -1146,20 +1147,6 @@ function UF:UpdateAuraWatch(frame)
 					icon.cd:SetAllPoints(icon)
 					icon.cd:SetReverse(true)
 					icon.cd:SetFrameLevel(icon:GetFrameLevel())
-				end
-				
-				if not icon.border then
-					icon.border = icon:CreateTexture(nil, "BACKGROUND");
-					icon.border:Point("TOPLEFT", -E.mult, E.mult);
-					icon.border:Point("BOTTOMRIGHT", E.mult, -E.mult);
-					icon.border:SetTexture(E["media"].blankTex);
-					icon.border:SetVertexColor(0, 0, 0);
-				end
-				
-				if icon.style ~= 'coloredIcon' and icon.style ~= 'texturedIcon' then
-					icon.border:Hide();
-				else
-					icon.border:Show();
 				end
 				
 				if not icon.count then

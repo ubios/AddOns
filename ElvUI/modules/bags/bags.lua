@@ -817,8 +817,8 @@ function B:ContructContainerFrame(name, isBank)
 		f:SetScript('OnHide', CloseAllBags)
 	end
 	
-	tinsert(UISpecialFrames, f:GetName()) --Keep an eye on this for taints..
-	table.insert(self.BagFrames, f)
+	UISpecialFrames[#UISpecialFrames + 1] = f:GetName() --Keep an eye on this for taints..
+	self.BagFrames[#self.BagFrames + 1] = f
 	return f
 end
 

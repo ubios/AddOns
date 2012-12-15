@@ -245,7 +245,7 @@ function E:StaticPopup_SetUpPosition(dialog)
 		else
 			dialog:SetPoint("TOP", E.UIParent, "TOP", 0, -100);
 		end
-		tinsert(E.StaticPopup_DisplayedFrames, dialog);
+		E.StaticPopup_DisplayedFrames[#E.StaticPopup_DisplayedFrames + 1] = dialog
 	end
 end
 
@@ -671,9 +671,9 @@ function E:StaticPopup_Show(which, text_arg1, text_arg2, data)
 	do	--If there is any recursion in this block, we may get errors (tempButtonLocs is static). If you have to recurse, we'll have to create a new table each time.
 		assert(#tempButtonLocs == 0);	--If this fails, we're recursing. (See the table.wipe at the end of the block)
 		
-		tinsert(tempButtonLocs, button1);
-		tinsert(tempButtonLocs, button2);
-		tinsert(tempButtonLocs, button3);
+		tempButtonLocs[#tempButtonLocs + 1] = button1
+		tempButtonLocs[#tempButtonLocs + 1] = button2
+		tempButtonLocs[#tempButtonLocs + 1] = button3
 		
 		for i=#tempButtonLocs, 1, -1 do
 			--Do this stuff before we move it. (This is why we go back-to-front)
@@ -783,7 +783,7 @@ function E:StaticPopup_CombineTables()
 		else
 			dialog:SetPoint("TOP", E.UIParent, "TOP", 0, -135);
 		end
-		tinsert(E.StaticPopup_DisplayedFrames, dialog);
+		E.StaticPopup_DisplayedFrames[#E.StaticPopup_DisplayedFrames + 1] = dialog
 	end
 end
 

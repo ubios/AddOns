@@ -307,10 +307,10 @@ local HarmItems = {
 
 -- This could've been done by checking player race as well and creating tables for those, but it's easier like this
 for k, v in pairs(FriendSpells) do
-    tinsert(v, 28880) -- ["Gift of the Naaru"]
+	v[#v + 1] = 28880 -- ["Gift of the Naaru"]
 end
 for k, v in pairs(HarmSpells) do
-    tinsert(v, 28734) -- ["Mana Tap"]
+	v[#v + 1] = 28734 -- ["Mana Tap"]
 end
 
 -- >> END OF STATIC CONFIG
@@ -453,7 +453,7 @@ local function addChecker(t, range, minRange, checker)
             return
         end
     end
-    tinsert(t, rc)
+    t[#t + 1] = rc
 end
 
 local function createCheckerList(spellList, itemList, interactList)

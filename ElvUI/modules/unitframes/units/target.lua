@@ -28,7 +28,7 @@ function UF:Construct_TargetFrame(frame)
 	frame.HealPrediction = self:Construct_HealComm(frame)
 	frame.DebuffHighlight = self:Construct_DebuffHighlight(frame)
 	
-	table.insert(frame.__elements, UF.SmartAuraDisplay)
+	frame.__elements[#frame.__elements + 1] = UF.SmartAuraDisplay
 	frame:RegisterEvent('PLAYER_TARGET_CHANGED', UF.SmartAuraDisplay)
 	
 	frame.AuraBars = self:Construct_AuraBarHeader(frame)
@@ -598,4 +598,4 @@ function UF:Update_TargetFrame(frame, db)
 	frame:UpdateAllElements()
 end
 
-tinsert(UF['unitstoload'], 'target')
+UF['unitstoload'][#UF['unitstoload'] + 1] = 'target'

@@ -164,7 +164,7 @@ function E:UIFrameFade(frame, fadeInfo)
 		end
 		index = index + 1;
 	end
-	tinsert(FADEFRAMES, frame);
+	FADEFRAMES[#FADEFRAMES + 1] = frame
 	frameFadeManager:SetScript("OnUpdate", E.UIFrameFade_OnUpdate);
 end
 

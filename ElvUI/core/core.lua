@@ -284,7 +284,7 @@ E.UIParent = CreateFrame('Frame', 'ElvUIParent', UIParent);
 E.UIParent:SetFrameLevel(UIParent:GetFrameLevel());
 E.UIParent:SetPoint('CENTER', UIParent, 'CENTER');
 E.UIParent:SetSize(UIParent:GetSize());
-tinsert(E['snapBars'], E.UIParent)
+E['snapBars'][#E['snapBars'] + 1] = E.UIParent
 
 E.HiddenFrame = CreateFrame('Frame')
 E.HiddenFrame:Hide()
@@ -568,12 +568,12 @@ function E:RegisterModule(name)
 	if self.initialized then
 		self:GetModule(name):Initialize()
 	else
-		tinsert(self['RegisteredModules'], name)
+		self['RegisteredModules'][#self['RegisteredModules'] + 1] = name
 	end
 end
 
 function E:RegisterInitialModule(name)
-	tinsert(self['RegisteredInitialModules'], name)
+	self['RegisteredInitialModules'][#self['RegisteredInitialModules'] + 1] = name
 end
 
 function E:InitializeInitialModules()

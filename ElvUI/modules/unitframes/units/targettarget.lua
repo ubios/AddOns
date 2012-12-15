@@ -280,4 +280,4 @@ function UF:Update_TargetTargetFrame(frame, db)
 	frame:UpdateAllElements()
 end
 
-tinsert(UF['unitstoload'], 'targettarget')
+UF['unitstoload'][#UF['unitstoload'] + 1] = 'targettarget'

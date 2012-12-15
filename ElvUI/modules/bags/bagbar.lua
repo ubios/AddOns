@@ -102,8 +102,8 @@ function B:LoadBagBar()
 	MainMenuBarBackpackButtonCount:Point("BOTTOMRIGHT", MainMenuBarBackpackButton, "BOTTOMRIGHT", -1, 4)
 	MainMenuBarBackpackButton:HookScript('OnEnter', OnEnter)
 	MainMenuBarBackpackButton:HookScript('OnLeave', OnLeave)
-		
-	table.insert(ElvUIBags.buttons, MainMenuBarBackpackButton)
+
+	ElvUIBags.buttons[#ElvUIBags.buttons + 1] = MainMenuBarBackpackButton
 	self:SkinBag(MainMenuBarBackpackButton)
 
 	for i=0, NUM_BAG_FRAMES-1 do
@@ -114,7 +114,8 @@ function B:LoadBagBar()
 		b:HookScript('OnLeave', OnLeave)
 		
 		self:SkinBag(b)
-		table.insert(ElvUIBags.buttons, b)
+		
+		ElvUIBags.buttons[#ElvUIBags.buttons + 1] = b
 	end
 	
 	self:SizeAndPositionBagBar()

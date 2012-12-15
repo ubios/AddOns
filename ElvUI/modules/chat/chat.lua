@@ -886,7 +886,7 @@ function CH:AddLines(lines, ...)
   for i=select("#", ...),1,-1 do
     local x = select(i, ...)
     if x:GetObjectType() == "FontString" and not x:GetName() then
-        table.insert(lines, x:GetText())
+    	lines[#lines + 1] = x:GetText()
     end
   end
 end
@@ -967,7 +967,7 @@ function CH:ChatEdit_AddHistory(editBox, line)
 			end
 		end
 		
-		table.insert(ElvCharacterDB.ChatEditHistory, #ElvCharacterDB.ChatEditHistory + 1, line)
+		ElvCharacterDB.ChatEditHistory[#ElvCharacterDB.ChatEditHistory + 1] = line
 		if #ElvCharacterDB.ChatEditHistory > 5 then
 			table.remove(ElvCharacterDB.ChatEditHistory, 1)
 		end
@@ -1012,7 +1012,7 @@ end
 function CH:DisplayChatHistory()	
 	local temp, data = {}
 	for id, _ in pairs(ElvCharacterDB.ChatHistory) do
-		table.insert(temp, tonumber(id))
+		temp[#temp + 1] = tonumber(id)
 	end
 	
 	table.sort(temp, function(a, b)
