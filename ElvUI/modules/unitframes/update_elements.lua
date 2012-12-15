@@ -194,6 +194,7 @@ function UF:UpdateAuraTimer(elapsed)
 	
 	self.elapsed = (self.elapsed or 0) + elapsed
 	
+	if self.timeLeft > 5 and self.elapsed < 0.25 then return end
 	if self.elapsed < 0.1 then return end
 	
 	if not self.first then
@@ -210,6 +211,7 @@ function UF:UpdateAuraTimer(elapsed)
 			self.text:SetTextColor(1, 1, 1)
 		end
 	else
+		self.text:SetText()
 		self.text:Hide()
 		self:SetScript("OnUpdate", nil)
 	end
@@ -332,9 +334,9 @@ end
 
 local ticks = {}
 function UF:HideTicks()
-	for _, tick in pairs(ticks) do
-		tick:Hide()
-	end		
+  for i=1, #ticks do
+    ticks[i]:Hide()
+  end
 end
 
 function UF:SetCastTicks(frame, numTicks, extraTickRatio)
@@ -1050,57 +1052,59 @@ function UF:UpdateAuraWatch(frame)
 	end
 	
 	if frame.unit == 'pet' then
-		for _, value in pairs(E.global['unitframe'].buffwatch.PET or {}) do
-			buffs[#buffs + 1] = value
+		local petWatch = E.global['unitframe'].buffwatch.PET or {}
+		for i=1, #petWatch do
+			buffs[#buffs + 1] = petWatch[i]
 		end	
 	else
-		for _, value in pairs(E.global['unitframe'].buffwatch[E.myclass] or {}) do
-			buffs[#buffs + 1] = value
+		local buffWatch = E.global['unitframe'].buffwatch[E.myclass] or {}
+		for i=1, #buffWatch do
+			buffs[#buffs + 1] = buffWatch[i]
 		end	
 	end
 	
 	--CLEAR CACHE
 	if auras.icons then
-		for spell in pairs(auras.icons) do
+		for i=1, #auras.icons do
 			local matchFound = false;
-			for _, spell2 in pairs(buffs) do
-				if spell2["id"] and spell2["id"] == spell then
+			for j=1, #buffs do
+				if #buffs[j]["id"] and #buffs[j]["id"] == auras.icons[i] then
 						matchFound = true;
 						break;
 				end
 			end
 			
 			if not matchFound then
-				auras.icons[spell]:Hide()
-				auras.icons[spell] = nil;
+				auras.icons[i]:Hide()
+				auras.icons[i] = nil;
 			end
 		end
 	end
 	
 	unitframeFont = unitframeFont or LSM:Fetch("font", E.db['unitframe'].font)
 	
-	for _, spell in pairs(buffs) do
-		local icon;
-		if spell["id"] then
-			local name, _, image = GetSpellInfo(spell["id"]);
+	for i=1, #buffs do
+		if buffs[i]["id"] then
+			local name, _, image = GetSpellInfo(buffs[i]["id"]);
 			if name then
-				if not auras.icons[spell.id] then
+				local icon;
+				if not auras.icons[buffs[i].id] then
 					icon = CreateFrame("Frame", nil, auras);
 				else
-					icon = auras.icons[spell.id];
+					icon = auras.icons[buffs[i].id];
 				end
 				icon.name = name
 				icon.image = image
-				icon.spellID = spell["id"];
-				icon.anyUnit = spell["anyUnit"];
-				icon.style = spell['style'];
-				icon.onlyShowMissing = spell["onlyShowMissing"];
-				icon.presentAlpha = spell["onlyShowMissing"] and 0 or 1;
-				icon.missingAlpha = spell["onlyShowMissing"] and 1 or 0;
+				icon.spellID = buffs[i]["id"];
+				icon.anyUnit = buffs[i]["anyUnit"];
+				icon.style = buffs[i]['style'];
+				icon.onlyShowMissing = buffs[i]["onlyShowMissing"];
+				icon.presentAlpha = buffs[i]["onlyShowMissing"] and 0 or 1;
+				icon.missingAlpha = buffs[i]["onlyShowMissing"] and 1 or 0;
 				icon:Width(db.size);
 				icon:Height(db.size);
 				icon:ClearAllPoints()
-				icon:SetPoint(spell["point"], frame.Health, spell['point'], E.PixelMode and 0, E.PixelMode and 0);
+				icon:SetPoint(buffs[i]["point"], frame.Health, buffs[i]['point'], E.PixelMode and 0, E.PixelMode and 0);
 
 				if not icon.icon then
 					icon.icon = icon:CreateTexture(nil, "BORDER");
@@ -1122,8 +1126,8 @@ function UF:UpdateAuraWatch(frame)
 				if icon.style == 'coloredIcon' then
 					icon.icon:SetTexture(E["media"].blankTex);
 					
-					if (spell["color"]) then
-						icon.icon:SetVertexColor(spell["color"].r, spell["color"].g, spell["color"].b);
+					if (buffs[i]["color"]) then
+						icon.icon:SetVertexColor(buffs[i]["color"].r, buffs[i]["color"].g, buffs[i]["color"].b);
 					else
 						icon.icon:SetVertexColor(0.8, 0.8, 0.8);
 					end		
@@ -1138,7 +1142,7 @@ function UF:UpdateAuraWatch(frame)
 				else
 					icon.icon:SetTexture(nil)
 					icon.text:Show()
-					icon.text:SetTextColor(spell["color"].r, spell["color"].g, spell["color"].b)
+					icon.text:SetTextColor(buffs[i]["color"].r, buffs[i]["color"].g, buffs[i]["color"].b)
 					icon.border:Hide()
 				end
 				
@@ -1151,23 +1155,23 @@ function UF:UpdateAuraWatch(frame)
 				
 				if not icon.count then
 					icon.count = icon:CreateFontString(nil, "OVERLAY");
-					icon.count:SetPoint("CENTER", unpack(counterOffsets[spell["point"]]));
+					icon.count:SetPoint("CENTER", unpack(counterOffsets[buffs[i]["point"]]));
 				end
 				
 				icon.count:FontTemplate(unitframeFont, db.fontSize, 'OUTLINE');
 				icon.text:FontTemplate(unitframeFont, db.fontSize, 'OUTLINE');
 				icon.text:ClearAllPoints()
-				icon.text:SetPoint(spell["point"])
+				icon.text:SetPoint(buffs[i]["point"])
 				
-				if spell["enabled"] then
-					auras.icons[spell.id] = icon;
+				if buffs[i]["enabled"] then
+					auras.icons[buffs[i].id] = icon;
 					if auras.watched then
-						auras.watched[spell.id] = icon;
+						auras.watched[buffs[i].id] = icon;
 					end
 				else	
-					auras.icons[spell.id] = nil;
+					auras.icons[buffs[i].id] = nil;
 					if auras.watched then
-						auras.watched[spell.id] = nil;
+						auras.watched[buffs[i].id] = nil;
 					end
 					icon:Hide();
 					icon = nil;
