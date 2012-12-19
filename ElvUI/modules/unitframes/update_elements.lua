@@ -1,6 +1,7 @@
 local E, L, V, P, G, _ = unpack(select(2, ...)); --Inport: Engine, Locales, PrivateDB, ProfileDB, GlobalDB, Localize Underscore
 local UF = E:GetModule('UnitFrames');
 local LSM = LibStub("LibSharedMedia-3.0");
+local LGIST = LibStub("LibGroupInSpecT-1.0")
 
 local abs = math.abs
 local random = math.random
@@ -1199,15 +1200,24 @@ function UF:UpdateRoleIcon()
 		role = rnd == 1 and "TANK" or (rnd == 2 and "HEALER" or (rnd == 3 and "DAMAGER"))
 	end
 	
-	if(role == 'TANK' or role == 'HEALER' or role == 'DAMAGER') and (UnitIsConnected(self.unit) or self.isForced) and db.enable then
+	if not (role == 'TANK' or role == 'HEALER' or role == 'DAMAGER') then
+		local guid = UnitGUID(self.unit)
+		if guid then
+			local info = LGIST:GetCachedInfo(guid)
+			if info and info.spec_role then
+				role = info.spec_role
+			end
+		end	
+	end
+	
+	if db.enable and (role == 'TANK' or role == 'HEALER' or role == 'DAMAGER') and (UnitIsConnected(self.unit) or self.isForced) then
 		if role == 'TANK' then
 			lfdrole:SetTexture([[Interface\AddOns\ElvUI\media\textures\tank.tga]])
 		elseif role == 'HEALER' then
 			lfdrole:SetTexture([[Interface\AddOns\ElvUI\media\textures\healer.tga]])
 		elseif role == 'DAMAGER' then
 			lfdrole:SetTexture([[Interface\AddOns\ElvUI\media\textures\dps.tga]])
-		end
-		
+		end	
 		lfdrole:Show()
 	else
 		lfdrole:Hide()
