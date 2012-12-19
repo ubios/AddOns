@@ -619,6 +619,7 @@ function UF:Construct_RoleIcon(frame)
 	tex:Point("BOTTOM", frame.Health, "BOTTOM", 0, 2)
 	tex.Override = UF.UpdateRoleIcon
 	frame:RegisterEvent("UNIT_CONNECTION", UF.UpdateRoleIcon)
+	frame:RegisterEvent("GROUP_ROSTER_UPDATE", UF.UpdateRoleIcon)
 	frame:RegisterEvent("INSPECT_READY", UF.UpdateRoleIcon)
 	
 	return tex

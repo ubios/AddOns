@@ -180,7 +180,9 @@ function CH:GetSmileyReplacementText(msg)
 		startpos = endpos + 1;
 		if(pos ~= nil) then
 			endpos = string.find(msg,"|h]|r",startpos,-1) or string.find(msg,"|h",startpos,-1);
-			endpos = endpos or origlen;
+			if(endpos == nil) then
+				endpos = origlen;
+			end
 			if(startpos < endpos) then
 				outstr = outstr .. string.sub(msg,startpos,endpos); --don't run replacement on this bit
 				startpos = endpos + 1;
@@ -308,6 +310,10 @@ function CH:StyleChat(frame)
 			editbox:SetBackdropBorderColor(ChatTypeInfo[type].r,ChatTypeInfo[type].g,ChatTypeInfo[type].b)
 		end
 	end)
+	
+	--this taints
+	frame.OldAddMessage = frame.AddMessage
+	frame.AddMessage = CH.AddMessage	
 	
 	--copy chat button
 	frame.button = CreateFrame('Frame', format("CopyChatButton%d", id), frame)
@@ -456,7 +462,9 @@ function CH:PositionChat(override)
 		isDocked = chat.isDocked
 		
 		if id > NUM_CHAT_WINDOWS then
-			point = point or select(1, chat:GetPoint());
+			if point == nil then
+				point = select(1, chat:GetPoint())
+			end
 			if select(2, tab:GetPoint()):GetName() ~= bg then
 				isDocked = true
 			else
@@ -610,11 +618,66 @@ function CH:ShortChannel()
 	return string.format("|Hchannel:%s|h[%s]|h", self, DEFAULT_STRINGS[self] or self:gsub("channel:", ""))
 end
 
-function CH:AddMessage()
+function CH:AddMessage(text, ...)
+	if type(text) == "string" then		
+		if CH.db.shortChannels then
+			text = text:gsub("|Hchannel:(.-)|h%[(.-)%]|h", CH.ShortChannel)
+			text = text:gsub('CHANNEL:', '')
+			text = text:gsub("^(.-|h) "..L['whispers'], "%1")
+			text = text:gsub("^(.-|h) "..L['says'], "%1")
+			text = text:gsub("^(.-|h) "..L['yells'], "%1")
+			text = text:gsub("<"..AFK..">", "[|cffFF0000"..L['AFK'].."|r] ")
+			text = text:gsub("<"..DND..">", "[|cffE7E716"..L['DND'].."|r] ")
+			text = text:gsub("^%["..RAID_WARNING.."%]", '['..L['RW']..']')	
+			text = text:gsub("%[BN_CONVERSATION:", '%['..L["BN:"])
+		end
+
+		local timeStamp
+		if CHAT_TIMESTAMP_FORMAT ~= nil then
+			timeStamp = BetterDate(CHAT_TIMESTAMP_FORMAT, time());
+			text = text:gsub(timeStamp, '')
+		end
+		
+		--Add Timestamps
+		if ( CH.db.timeStampFormat and CH.db.timeStampFormat ~= 'NONE' ) then
+			timeStamp = BetterDate(CH.db.timeStampFormat, CH.timeOverride or time());
+			timeStamp = timeStamp:gsub(' ', '')
+			timeStamp = timeStamp:gsub('AM', ' AM')
+			timeStamp = timeStamp:gsub('PM', ' PM')
+			text = '|cffB3B3B3['..timeStamp..'] |r'..text
+		end
+		
+		if specialChatIcons[E.myrealm] then
+			for character, texture in pairs(specialChatIcons[E.myrealm]) do
+				text = text:gsub('|Hplayer:'..character..':', texture..'|Hplayer:'..character..':')
+			end
+			
+			for realm, _ in pairs(specialChatIcons) do
+				if realm ~= E.myrealm then
+					for character, texture in pairs(specialChatIcons[realm]) do
+						text = text:gsub("|Hplayer:"..character.."%-"..realm, texture.."|Hplayer:"..character.."%-"..realm)
+					end
+				end
+			end			
+		else
+			for realm, _ in pairs(specialChatIcons) do
+				for character, texture in pairs(specialChatIcons[realm]) do
+					text = text:gsub("|Hplayer:"..character.."%-"..realm, texture.."|Hplayer:"..character.."%-"..realm)
+				end
+			end		
+		end
+		
+		CH.timeOverride = nil;
+	end
+
+	self.OldAddMessage(self, text, ...)
+end
+
+--[[function CH:AddMessage()
 	for i=1, self:GetNumRegions() do
 		local region = select(i, self:GetRegions())
 		
-		if region:GetObjectType() == "FontString" and not region.hooked then		
+		if region:GetObjectType() == "FontString" then		
 			local text = region:GetText();
 			if CH.db.shortChannels then
 				text = text:gsub("|Hchannel:(.-)|h%[(.-)%]|h", CH.ShortChannel)
@@ -628,15 +691,10 @@ function CH:AddMessage()
 				text = text:gsub("%[BN_CONVERSATION:", '%['..L["BN:"])
 			end
 
-			local timeStamp
-			if CHAT_TIMESTAMP_FORMAT ~= nil then
-				timeStamp = BetterDate(CHAT_TIMESTAMP_FORMAT, time());
-				text = text:gsub(timeStamp, '')
-			end
 			
 			--Add Timestamps
-			if ( CH.db.timeStampFormat and CH.db.timeStampFormat ~= 'NONE' ) then
-				timeStamp = BetterDate(CH.db.timeStampFormat, CH.timeOverride or time());
+			if ( CH.db.timeStampFormat and CH.db.timeStampFormat ~= 'NONE' ) and text:find('|Hplayer:') then
+				local timeStamp = BetterDate(CH.db.timeStampFormat, CH.timeOverride or time());
 				timeStamp = timeStamp:gsub(' ', '')
 				timeStamp = timeStamp:gsub('AM', ' AM')
 				timeStamp = timeStamp:gsub('PM', ' PM')
@@ -667,7 +725,7 @@ function CH:AddMessage()
 			CH.timeOverride = nil;
 		end
 	end
-end
+end]]
 
 local hyperLinkEntered
 function CH:OnHyperlinkEnter(frame, refString)
@@ -747,7 +805,8 @@ function CH:SetupChat(event, ...)
 			end
 		end)
 
-		frame:HookScript("OnMessageScrollChanged", CH.AddMessage)
+		--frame:HookScript("OnMessageScrollChanged", CH.AddMessage)
+		--hooksecurefunc(frame, "AddMessage", CH.AddMessage)
 	end	
 	
 	if self.db.hyperlinkHover then
@@ -913,7 +972,7 @@ function CH:AddLines(lines, ...)
   for i=select("#", ...),1,-1 do
     local x = select(i, ...)
     if x:GetObjectType() == "FontString" and not x:GetName() then
-    	lines[#lines + 1] = x:GetText()
+        table.insert(lines, x:GetText())
     end
   end
 end
@@ -953,7 +1012,7 @@ function CH:ChatEdit_AddHistory(editBox, line)
 			end
 		end
 		
-		ElvCharacterDB.ChatEditHistory[#ElvCharacterDB.ChatEditHistory + 1] = line
+		table.insert(ElvCharacterDB.ChatEditHistory, #ElvCharacterDB.ChatEditHistory + 1, line)
 		if #ElvCharacterDB.ChatEditHistory > 5 then
 			table.remove(ElvCharacterDB.ChatEditHistory, 1)
 		end
@@ -998,7 +1057,7 @@ end
 function CH:DisplayChatHistory()	
 	local temp, data = {}
 	for id, _ in pairs(ElvCharacterDB.ChatHistory) do
-		temp[#temp + 1] = tonumber(id)
+		table.insert(temp, tonumber(id))
 	end
 	
 	table.sort(temp, function(a, b)
