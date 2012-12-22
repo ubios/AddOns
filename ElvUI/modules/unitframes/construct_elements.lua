@@ -1,6 +1,7 @@
 local E, L, V, P, G, _ = unpack(select(2, ...)); --Inport: Engine, Locales, PrivateDB, ProfileDB, GlobalDB, Localize Underscore
 local UF = E:GetModule('UnitFrames');
 local LSM = LibStub("LibSharedMedia-3.0");
+local LSR = LibStub("LibSpecRoster-1.0")
 
 function UF:SpawnMenu()
 	local unit = E:StringTitle(self.unit)
@@ -619,8 +620,7 @@ function UF:Construct_RoleIcon(frame)
 	tex:Point("BOTTOM", frame.Health, "BOTTOM", 0, 2)
 	tex.Override = UF.UpdateRoleIcon
 	frame:RegisterEvent("UNIT_CONNECTION", UF.UpdateRoleIcon)
-	frame:RegisterEvent("GROUP_ROSTER_UPDATE", UF.UpdateRoleIcon)
-	frame:RegisterEvent("INSPECT_READY", UF.UpdateRoleIcon)
+	frame:SetScript('OnUpdate', UF.UpdateRoleIconInterval)
 	
 	return tex
 end

@@ -1,7 +1,7 @@
 local E, L, V, P, G, _ = unpack(select(2, ...)); --Inport: Engine, Locales, PrivateDB, ProfileDB, GlobalDB, Localize Underscore
 local UF = E:GetModule('UnitFrames');
 local LSM = LibStub("LibSharedMedia-3.0");
-local LGIST = LibStub("LibGroupInSpecT-1.0")
+local LSR = LibStub("LibSpecRoster-1.0")
 
 local abs = math.abs
 local random = math.random
@@ -1195,9 +1195,20 @@ local roleIconTextures = {
 	DAMAGER = [[Interface\AddOns\ElvUI\media\textures\dps.tga]]
 }
 
+function UF:UpdateRoleIconInterval(elapsed)
+	if not self then return end
+	
+	self.elapsed = (self.elapsed or 0) + elapsed
+	if (self.elapsed > 10) then
+		UF.UpdateRoleIcon(self)
+	end
+end
+
 function UF:UpdateRoleIcon()
 	local lfdrole = self.LFDRole
 	local db = self.db.roleIcon;
+	
+	self.elapsed = 0
 	
 	if not (db or db.enable) then 
 		lfdrole:Hide()
@@ -1210,17 +1221,11 @@ function UF:UpdateRoleIcon()
 			local rnd = random(1, 3)
 			role = rnd == 1 and "TANK" or (rnd == 2 and "HEALER" or (rnd == 3 and "DAMAGER"))
 		else
-			local guid = UnitGUID(self.unit)
-			if guid then
-				local info = LGIST:GetCachedInfo(guid)
-				if info and info.spec_role then
-					role = info.spec_role
-				end
-			end
+			_, role = LSR:getRole(UnitGUID(self.unit))
 		end
 	end
 	
-	if role ~= 'NONE' and (self.isForced or UnitIsConnected(self.unit)) then
+	if role and role ~= 'NONE' and (self.isForced or UnitIsConnected(self.unit)) then
 		lfdrole:SetTexture(roleIconTextures[role])
 		lfdrole:Show()
 	else
