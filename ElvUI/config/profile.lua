@@ -6,7 +6,6 @@ P.farmSize = 340
 --Core
 P['general'] = {
 	["taintLog"] = false,
-	["autoscale"] = true,
 	["stickyFrames"] = true,
 	['loginmessage'] = true,
 	["interruptAnnounce"] = "NONE",
@@ -90,6 +89,7 @@ P["nameplate"] = {
 	['auraFontSize'] = 7,
 	['auraFontOutline'] = 'MONOCHROMEOUTLINE',
 	
+	["classIcons"] = true,
 	["markBGHealers"] = true,
 	["width"] = 112,
 	["height"] = 7,
@@ -207,6 +207,8 @@ P['datatexts'] = {
 --Tooltip
 P['tooltip'] = {
 	['anchor'] = 'SMART',
+	['health'] = true,
+	['healthHeight'] = 5,
 	['ufhide'] = 'NONE',
 	['whostarget'] = true,
 	['combathide'] = false,
