@@ -261,4 +261,4 @@ function UF:Update_PetTargetFrame(frame, db)
 	frame:UpdateAllElements()
 end
 
-UF['unitstoload'][#UF['unitstoload'] + 1] = 'pettarget'
+tinsert(UF['unitstoload'], 'pettarget')
