@@ -1231,10 +1231,10 @@ function UF:UpdateRoleIcon()
 	if role and role ~= 'NONE' and (self.isForced or UnitIsConnected(self.unit)) then
 		lfdrole:SetTexture(roleIconTextures[role])
 		lfdrole:Show()	
-		lfdrole:SetScript('OnUpdate', nil)
+		self:SetScript('OnUpdate', nil)
 	else
 		lfdrole:Hide()
-		lfdrole:SetScript('OnUpdate', UF.UpdateRoleIconInterval)
+		self:SetScript('OnUpdate', UF.UpdateRoleIconInterval)
 	end	
 end
 
