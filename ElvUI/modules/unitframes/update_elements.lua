@@ -7,6 +7,7 @@ local abs = math.abs
 local random = math.random
 local ceil = math.ceil
 local format = string.format
+local sub = string.sub
 local floor = math.floor
 local _, ns = ...
 local ElvUF = ns.oUF
@@ -19,6 +20,7 @@ local borderColors
 
 -- Localize unit frame font
 local unitframeFont
+local PixelMode = E.PixelMode
 
 local function CheckFilter(filterType, isFriend)
 	local FRIENDLY_CHECK, ENEMY_CHECK = false, false
@@ -40,20 +42,21 @@ local function CheckFilter(filterType, isFriend)
 end
 
 function UF:PostUpdateHealth(unit, min, max)
-	if self:GetParent().isForced then
+	local parent = self:GetParent()
+	if parent.isForced then
 		min = random(1, max)
 		self:SetValue(min)
 	end
 
-	if min == 0 and self:GetParent().ResurrectIcon then
-		self:GetParent().ResurrectIcon:SetAlpha(1)
-	elseif self:GetParent().ResurrectIcon then
-		self:GetParent().ResurrectIcon:SetAlpha(0)
+	if min == 0 and parent.ResurrectIcon then
+		parent.ResurrectIcon:SetAlpha(1)
+	elseif parent.ResurrectIcon then
+		parent.ResurrectIcon:SetAlpha(0)
 	end
 	
 	local r, g, b = self:GetStatusBarColor()
 	local colors = E.db['unitframe']['colors'];
-	if (colors.healthclass == true and colors.colorhealthbyvalue == true) or (colors.colorhealthbyvalue and self:GetParent().isForced) and not (UnitIsTapped(unit) and not UnitIsTappedByPlayer(unit)) then
+	if (colors.healthclass == true and colors.colorhealthbyvalue == true) or (colors.colorhealthbyvalue and parent.isForced) and not (UnitIsTapped(unit) and not UnitIsTappedByPlayer(unit)) then
 		local newr, newg, newb = ElvUF.ColorGradient(min, max, 1, 0, 0, 1, 1, 0, r, g, b)
 
 		self:SetStatusBarColor(newr, newg, newb)
@@ -67,9 +70,9 @@ function UF:PostUpdateHealth(unit, min, max)
 		local t
 		if UnitIsPlayer(unit) then
 			local _, class = UnitClass(unit)
-			t = self:GetParent().colors.class[class]
+			t = parent.colors.class[class]
 		elseif UnitReaction(unit, 'player') then
-			t = self:GetParent().colors.reaction[UnitReaction(unit, "player")]
+			t = parent.colors.reaction[UnitReaction(unit, "player")]
 		end
 
 		if t then
@@ -109,42 +112,34 @@ local tokens = { [0] = "MANA", "RAGE", "FOCUS", "ENERGY", "RUNIC_POWER" }
 
 function UF:PostUpdatePower(unit, min, max)
 	local pType, _, altR, altG, altB = UnitPowerType(unit)
-	local color
+	local parent = self:GetParent()
 	
-	if self:GetParent().isForced then
+	if parent.isForced then
 		min = random(1, max)
 		pType = random(0, 4)
 		self:SetValue(min)
-		color = ElvUF['colors'].power[tokens[pType]]
-		
+		local color = ElvUF['colors'].power[tokens[pType]]
 		if not self.colorClass then
 			self:SetStatusBarColor(color[1], color[2], color[3])
 			local mu = self.bg.multiplier or 1
 			self.bg:SetVertexColor(color[1] * mu, color[2] * mu, color[3] * mu)
 		end
-	elseif pType then
-		color = ElvUF['colors'].power[tokens[pType]]
 	end	
 	
-	local db = self:GetParent().db
+	local db = parent.db
 	if self.LowManaText and db then
-		if pType == 0 then
-			local perc = max == 0 and 0 or floor(min / max * 100)
-			if perc <= db.lowmana and not UnitIsDead(unit) and not UnitIsGhost(unit) then
-				self.LowManaText:SetText(LOW..' '..MANA)
-				E:Flash(self.LowManaText, 0.6)
-			else
-				self.LowManaText:SetText()
-				E:StopFlash(self.LowManaText)
-			end
+		if pType == 0 and not UnitIsDead(unit) and not UnitIsGhost(unit) 
+			and (max == 0 and 0 or floor(min / max * 100)) <= db.lowmana then
+			self.LowManaText:SetText(LOW..' '..MANA)
+			E:Flash(self.LowManaText, 0.6)
 		else
 			self.LowManaText:SetText()
 			E:StopFlash(self.LowManaText)
 		end
 	end
 	
-	if db and db['power'] and db['power'].hideonnpc then
-		UF:PostNamePosition(self:GetParent(), unit)
+	if db and db.power and db.power.hideonnpc then
+		UF:PostNamePosition(parent, unit)
 	end	
 end
 
@@ -153,7 +148,7 @@ function UF:PortraitUpdate(unit)
 	
 	if not db then return end
 	
-	local portrait = db['portrait']
+	local portrait = db.portrait
 	if portrait.enable and portrait.overlay then
 		self:SetAlpha(0); 
 		self:SetAlpha(0.35);
@@ -162,7 +157,8 @@ function UF:PortraitUpdate(unit)
 	end
 	
 	if self:GetObjectType() ~= 'Texture' then
-		if self:GetModel() and self:GetModel().find and self:GetModel():find("worgenmale") then
+		local model = self:GetModel()
+		if model and model.find and model:find("worgenmale") then
 			self:SetCamera(1)
 		end	
 
@@ -361,25 +357,26 @@ function UF:SetCastTicks(frame, numTicks, extraTickRatio)
 end
 
 function UF:PostCastStart(unit, name, rank, castid)
-	if unit == "vehicle" then unit = "player" end
 	local db = self:GetParent().db
-	if not db then return; end
+	if not db then return end
+
+	if unit == "vehicle" then unit = "player" end
 	
 	castNoInterruptColors = castNoInterruptColors or unpack(ElvUF.colors.castNoInterrupt)
 	castColors = castColors or unpack(ElvUF.colors.castColor)
 	
 	if db.castbar.displayTarget and self.curTarget then
-		self.Text:SetText(string.sub(name..' --> '..self.curTarget, 0, floor((((32/245) * self:GetWidth()) / E.db['unitframe'].fontSize) * 12)))
+		self.Text:SetText(sub(name..' --> '..self.curTarget, 0, floor((((32/245) * self:GetWidth()) / E.db['unitframe'].fontSize) * 12)))
 	else
-		self.Text:SetText(string.sub(name, 0, floor((((32/245) * self:GetWidth()) / E.db['unitframe'].fontSize) * 12)))
+		self.Text:SetText(sub(name, 0, floor((((32/245) * self:GetWidth()) / E.db['unitframe'].fontSize) * 12)))
 	end
 
 	self.Spark:Height(self:GetHeight() * 2)
-		
 	self.unit = unit
 
 	if db.castbar.ticks and unit == "player" then
-		local baseTicks = E.global.unitframe.ChannelTicks[name]
+		local unitframe = E.global.unitframe
+		local baseTicks = unitframe.ChannelTicks[name]
 		
         -- Detect channeling spell and if it's the same as the previously channeled one
         if baseTicks and name == prevSpellCast then
@@ -389,7 +386,7 @@ function UF:PostCastStart(unit, name, rank, castid)
             self.prevSpellCast = name
         end
 		
-		if baseTicks and E.global.unitframe.ChannelTicksSize[name] and E.global.unitframe.HastedChannelTicks[name] then
+		if baseTicks and unitframe.ChannelTicksSize[name] and unitframe.HastedChannelTicks[name] then
 			local tickIncRate = 1 / baseTicks
 			local curHaste = UnitSpellHaste("player") * 0.01
 			local firstTickInc = tickIncRate / 2
@@ -406,15 +403,15 @@ function UF:PostCastStart(unit, name, rank, castid)
 				end
 			end
 
-            local baseTickSize = E.global.unitframe.ChannelTicksSize[name]
+            local baseTickSize = unitframe.ChannelTicksSize[name]
             local hastedTickSize = baseTickSize / (1 + curHaste)
             local extraTick = self.max - hastedTickSize * (baseTicks + bonusTicks)
             local extraTickRatio = extraTick / hastedTickSize
 
 			UF:SetCastTicks(self, baseTicks + bonusTicks, extraTickRatio)
-		elseif baseTicks and E.global.unitframe.ChannelTicksSize[name] then
+		elseif baseTicks and unitframe.ChannelTicksSize[name] then
 			local curHaste = UnitSpellHaste("player") * 0.01
-            local baseTickSize = E.global.unitframe.ChannelTicksSize[name]
+            local baseTickSize = unitframe.ChannelTicksSize[name]
             local hastedTickSize = baseTickSize / (1 +  curHaste)
             local extraTick = self.max - hastedTickSize * (baseTicks)
             local extraTickRatio = extraTick / hastedTickSize
@@ -446,14 +443,15 @@ function UF:PostCastStop(unit, name, castid)
 end
 
 function UF:PostChannelUpdate(unit, name)
-	if unit == "vehicle" then unit = "player" end
 	local db = self:GetParent().db
-	if not db then return; end
+	if not db then return end
+	if not (unit == "player" or unit == "vehicle") then return end
     
-	if db.castbar.ticks and unit == "player" then
-		local baseTicks = E.global.unitframe.ChannelTicks[name]
+	if db.castbar.ticks then
+		local unitframe = E.global.unitframe
+		local baseTicks = unitframe.ChannelTicks[name]
 
-		if baseTicks and E.global.unitframe.ChannelTicksSize[name] and E.global.unitframe.HastedChannelTicks[name] then
+		if baseTicks and unitframe.ChannelTicksSize[name] and unitframe.HastedChannelTicks[name] then
 			local tickIncRate = 1 / baseTicks
 			local curHaste = UnitSpellHaste("player") * 0.01
 			local firstTickInc = tickIncRate / 2
@@ -470,7 +468,7 @@ function UF:PostChannelUpdate(unit, name)
 				end
 			end
 
-			local baseTickSize = E.global.unitframe.ChannelTicksSize[name]
+			local baseTickSize = unitframe.ChannelTicksSize[name]
 			local hastedTickSize = baseTickSize / (1 + curHaste)
 			local extraTick = self.max - hastedTickSize * (baseTicks + bonusTicks)
 			if self.chainChannel then
@@ -479,9 +477,9 @@ function UF:PostChannelUpdate(unit, name)
 			end
 
 			UF:SetCastTicks(self, baseTicks + bonusTicks, self.extraTickRatio)
-		elseif baseTicks and E.global.unitframe.ChannelTicksSize[name] then
+		elseif baseTicks and unitframe.ChannelTicksSize[name] then
 			local curHaste = UnitSpellHaste("player") * 0.01
-			local baseTickSize = E.global.unitframe.ChannelTicksSize[name]
+			local baseTickSize = unitframe.ChannelTicksSize[name]
 			local hastedTickSize = baseTickSize / (1 + curHaste)
 			local extraTick = self.max - hastedTickSize * (baseTicks)
 			if self.chainChannel then
@@ -495,7 +493,7 @@ function UF:PostChannelUpdate(unit, name)
 		else
 			UF:HideTicks()
 		end
-	elseif unit == 'player' then
+	else
 		UF:HideTicks()			
 	end	
 end
@@ -521,7 +519,8 @@ end
 function UF:UpdateHoly(event, unit, powerType)
 	if(self.unit ~= unit or (powerType and powerType ~= 'HOLY_POWER')) then return end
 	local db = self.db
-	if not db then return; end
+	if not db then return end
+	
 	local BORDER = E.Border
 	local numHolyPower = UnitPower('player', SPELL_POWER_HOLY_POWER);
 	local maxHolyPower = UnitPowerMax('player', SPELL_POWER_HOLY_POWER);	
@@ -538,7 +537,7 @@ function UF:UpdateHoly(event, unit, powerType)
 	
 	local CLASSBAR_WIDTH = db.width - (E.Border * 2)
 	if USE_PORTRAIT then
-		CLASSBAR_WIDTH = math.ceil((db.width - (BORDER*2)) - PORTRAIT_WIDTH)
+		CLASSBAR_WIDTH = ceil((db.width - (BORDER*2)) - PORTRAIT_WIDTH)
 	end
 	
 	if USE_POWERBAR_OFFSET then
@@ -558,7 +557,7 @@ function UF:UpdateHoly(event, unit, powerType)
 			self.HolyPower[i]:SetAlpha(.2)
 		end
 		
-		self.HolyPower[i]:SetWidth(E:Scale(self.HolyPower:GetWidth() - (E.PixelMode and 4 or 2))/maxHolyPower)	
+		self.HolyPower[i]:SetWidth(E:Scale(self.HolyPower:GetWidth() - (PixelMode and 4 or 2))/maxHolyPower)	
 		self.HolyPower[i]:ClearAllPoints()
 		if i == 1 then
 			self.HolyPower[i]:SetPoint("LEFT", self.HolyPower)
@@ -640,7 +639,7 @@ function UF:UpdateHarmony()
 	end
 	
 	if USE_PORTRAIT then
-		CLASSBAR_WIDTH = math.ceil((CLASSBAR_WIDTH) - PORTRAIT_WIDTH)
+		CLASSBAR_WIDTH = ceil((CLASSBAR_WIDTH) - PORTRAIT_WIDTH)
 	end
 	
 	if USE_POWERBAR_OFFSET then
@@ -670,7 +669,7 @@ function UF:UpdateHarmony()
 			self[i]:SetPoint("LEFT", self)
 		else
 			if USE_MINI_CLASSBAR then
-				self[i]:Point("LEFT", self[i-1], "RIGHT", E.PixelMode and (maxBars == 5 and 4 or 7) or (maxBars == 5 and 6 or 9), 0)
+				self[i]:Point("LEFT", self[i-1], "RIGHT", PixelMode and (maxBars == 5 and 4 or 7) or (maxBars == 5 and 6 or 9), 0)
 			else
 				self[i]:Point("LEFT", self[i-1], "RIGHT", 1, 0)
 			end
@@ -735,10 +734,11 @@ function UF:EclipseDirection()
 end
 
 function UF:DruidResourceBarVisibilityUpdate(unit)
-	local eclipseBar = self:GetParent().EclipseBar
-	local druidAltMana = self:GetParent().DruidAltMana
+	local parent = self:GetParent()
+	local eclipseBar = parent.EclipseBar
+	local druidAltMana = parent.DruidAltMana
 	
-	UF:UpdatePlayerFrameAnchors(self:GetParent(), eclipseBar:IsShown() or druidAltMana:IsShown())
+	UF:UpdatePlayerFrameAnchors(parent, eclipseBar:IsShown() or druidAltMana:IsShown())
 end
 
 function UF:DruidPostUpdateAltPower(unit, min, max)
@@ -824,6 +824,8 @@ end
 
 function UF:AltPowerBarPostUpdate(min, cur, max)
 	local perc = floor((cur/max)*100)
+	local parent = self:GetParent()
+	
 	
 	if perc < 35 then
 		self:SetStatusBarColor(0, 1, 0)
@@ -833,7 +835,7 @@ function UF:AltPowerBarPostUpdate(min, cur, max)
 		self:SetStatusBarColor(1, 0, 0)
 	end
 	
-	local unit = self:GetParent().unit
+	local unit = parent.unit
 	
 	if unit == "player" and self.text then 
 		local type = select(10, UnitAlternatePowerInfo(unit))
@@ -845,10 +847,10 @@ function UF:AltPowerBarPostUpdate(min, cur, max)
 		end
 	elseif unit and unit:find("boss%d") and self.text then
 		self.text:SetTextColor(self:GetStatusBarColor())
-		if not self:GetParent().Power.value:GetText() or self:GetParent().Power.value:GetText() == "" then
-			self.text:Point("BOTTOMRIGHT", self:GetParent().Health, "BOTTOMRIGHT")
+		if not parent.Power.value:GetText() or parent.Power.value:GetText() == "" then
+			self.text:Point("BOTTOMRIGHT", parent.Health, "BOTTOMRIGHT")
 		else
-			self.text:Point("RIGHT", self:GetParent().Power.value.value, "LEFT", 2, E.mult)	
+			self.text:Point("RIGHT", parent.Power.value.value, "LEFT", 2, E.mult)	
 		end
 		if perc > 0 then
 			self.text:SetText("|cffD7BEA5[|r"..format("%d%%", perc).."|cffD7BEA5]|r")
@@ -868,7 +870,6 @@ function UF:UpdateComboDisplay(event, unit)
 	else
 		cp = GetComboPoints('player', 'target')
 	end
-
 
 	for i=1, MAX_COMBO_POINTS do
 		if(i <= cp) then
@@ -1040,6 +1041,8 @@ local counterOffsets = {
 	['BOTTOM'] = {0, 0},
 }
 
+local mediaTexture
+
 function UF:UpdateAuraWatch(frame)
 	local buffs = {};
 	local auras = frame.AuraWatch;
@@ -1069,7 +1072,7 @@ function UF:UpdateAuraWatch(frame)
 		for i=1, #auras.icons do
 			local matchFound = false;
 			for j=1, #buffs do
-				if #buffs[j]["id"] and #buffs[j]["id"] == auras.icons[i] then
+				if #buffs[j].id and #buffs[j].id == auras.icons[i] then
 						matchFound = true;
 						break;
 				end
@@ -1083,29 +1086,31 @@ function UF:UpdateAuraWatch(frame)
 	end
 	
 	unitframeFont = unitframeFont or LSM:Fetch("font", E.db['unitframe'].font)
+	mediaTexture = mediaTexture or E["media"].blankTex
 	
 	for i=1, #buffs do
-		if buffs[i]["id"] then
-			local name, _, image = GetSpellInfo(buffs[i]["id"]);
+		local b = buffs[i]
+		if b.id then
+			local name, _, image = GetSpellInfo(b.id);
 			if name then
 				local icon;
-				if not auras.icons[buffs[i].id] then
+				if not auras.icons[b.id] then
 					icon = CreateFrame("Frame", nil, auras);
 				else
-					icon = auras.icons[buffs[i].id];
+					icon = auras.icons[b.id];
 				end
 				icon.name = name
 				icon.image = image
-				icon.spellID = buffs[i]["id"];
-				icon.anyUnit = buffs[i]["anyUnit"];
-				icon.style = buffs[i]['style'];
-				icon.onlyShowMissing = buffs[i]["onlyShowMissing"];
-				icon.presentAlpha = buffs[i]["onlyShowMissing"] and 0 or 1;
-				icon.missingAlpha = buffs[i]["onlyShowMissing"] and 1 or 0;
+				icon.spellID = b.id
+				icon.anyUnit = b.anyUnit
+				icon.style = b.style
+				icon.onlyShowMissing = b.onlyShowMissing
+				icon.presentAlpha = b.onlyShowMissing and 0 or 1
+				icon.missingAlpha = b.onlyShowMissing and 1 or 0
 				icon:Width(db.size);
 				icon:Height(db.size);
 				icon:ClearAllPoints()
-				icon:SetPoint(buffs[i]["point"], frame.Health, buffs[i]['point'], E.PixelMode and 0, E.PixelMode and 0);
+				icon:SetPoint(b.point, frame.Health, b.point, PixelMode and 0, PixelMode and 0);
 
 				if not icon.icon then
 					icon.icon = icon:CreateTexture(nil, "BORDER");
@@ -1120,15 +1125,15 @@ function UF:UpdateAuraWatch(frame)
 					icon.border = icon:CreateTexture(nil, "BACKGROUND");
 					icon.border:Point("TOPLEFT", -E.mult, E.mult);
 					icon.border:Point("BOTTOMRIGHT", E.mult, -E.mult);
-					icon.border:SetTexture(E["media"].blankTex);
+					icon.border:SetTexture(mediaTexture);
 					icon.border:SetVertexColor(0, 0, 0);
 				end
 
 				if icon.style == 'coloredIcon' then
-					icon.icon:SetTexture(E["media"].blankTex);
+					icon.icon:SetTexture(mediaTexture);
 					
-					if (buffs[i]["color"]) then
-						icon.icon:SetVertexColor(buffs[i]["color"].r, buffs[i]["color"].g, buffs[i]["color"].b);
+					if (b.color) then
+						icon.icon:SetVertexColor(b.color.r, b.color.g, b.color.b);
 					else
 						icon.icon:SetVertexColor(0.8, 0.8, 0.8);
 					end		
@@ -1143,7 +1148,7 @@ function UF:UpdateAuraWatch(frame)
 				else
 					icon.icon:SetTexture(nil)
 					icon.text:Show()
-					icon.text:SetTextColor(buffs[i]["color"].r, buffs[i]["color"].g, buffs[i]["color"].b)
+					icon.text:SetTextColor(b.color.r, b.color.g, b.color.b)
 					icon.border:Hide()
 				end
 				
@@ -1156,23 +1161,23 @@ function UF:UpdateAuraWatch(frame)
 				
 				if not icon.count then
 					icon.count = icon:CreateFontString(nil, "OVERLAY");
-					icon.count:SetPoint("CENTER", unpack(counterOffsets[buffs[i]["point"]]));
+					icon.count:SetPoint("CENTER", unpack(counterOffsets[b.point]));
 				end
 				
 				icon.count:FontTemplate(unitframeFont, db.fontSize, 'OUTLINE');
 				icon.text:FontTemplate(unitframeFont, db.fontSize, 'OUTLINE');
 				icon.text:ClearAllPoints()
-				icon.text:SetPoint(buffs[i]["point"])
+				icon.text:SetPoint(b.point)
 				
-				if buffs[i]["enabled"] then
-					auras.icons[buffs[i].id] = icon;
+				if b.enabled then
+					auras.icons[b.id] = icon;
 					if auras.watched then
-						auras.watched[buffs[i].id] = icon;
+						auras.watched[b.id] = icon;
 					end
 				else	
-					auras.icons[buffs[i].id] = nil;
+					auras.icons[b.id] = nil;
 					if auras.watched then
-						auras.watched[buffs[i].id] = nil;
+						auras.watched[b.id] = nil;
 					end
 					icon:Hide();
 					icon = nil;
@@ -1273,24 +1278,18 @@ end
 
 function UF:AuraBarFilter(unit, name, rank, icon, count, debuffType, duration, expirationTime, unitCaster, isStealable, shouldConsolidate, spellID)
 	if not self.db then return; end
-	local db = self.db.aurabar
-
-	local returnValue = true;
-	local returnValueChanged = false
-	local isPlayer, isFriend
-	local auraType
-	--print(name..': '..spellID, E.global.unitframe.InvalidSpells[spellID])
 	if E.global.unitframe.InvalidSpells[spellID] then
 		return false;
 	end
 	
-	if unitCaster == 'player' or unitCaster == 'vehicle' then isPlayer = true end
-	if UnitIsFriend('player', unit) then isFriend = true end
-	if isFriend then
-		auraType = db.friendlyAuraType
-	else
-		auraType = db.enemyAuraType
-	end
+	local db = self.db.aurabar
+
+	local returnValue = true;
+	local returnValueChanged = false
+	local isPlayer = unitCaster == 'player' or unitCaster == 'vehicle'
+	local isFriend = UnitIsFriend('player', unit) == 1 and true or false
+	local auraType = isFriend and db.friendlyAuraType or db.enemyAuraType
+	--print(name..': '..spellID, E.global.unitframe.InvalidSpells[spellID])
 	
 	--This should be sorted as least priority checked first
 	--most priority last
@@ -1358,16 +1357,16 @@ function UF:AuraBarFilter(unit, name, rank, icon, count, debuffType, duration, e
 	local useFilter = E.global['unitframe']['aurafilters'][db.useFilter]
 	if db.useFilter and useFilter then
 		local type = useFilter.type
-		local spellList = useFilter.spells
+		local filter = useFilter.spells[name]
 
 		if type == 'Whitelist' then
-			if spellList[name] and spellList[name].enable then
+			if filter and filter.enable then
 				returnValue = true	
 			elseif not returnValueChanged then
 				returnValue = false
 			end
 
-		elseif type == 'Blacklist' and spellList[name] and spellList[name].enable then
+		elseif type == 'Blacklist' and filter and filter.enable then
 			returnValue = false				
 		end
 	end		
@@ -1379,13 +1378,11 @@ function UF:ColorizeAuraBars(event, unit)
 	local bars = self.bars
 	for index = 1, #bars do
 		local frame = bars[index]
-		local bar = frame.statusBar
 		if not frame:IsVisible() then
 			break
 		end
-		local name = bar.aura.name
-		local colors = E.global.unitframe.AuraBarColors[name]
-		if E.global.unitframe.AuraBarColors[name] then
+		local colors = E.global.unitframe.AuraBarColors[frame.statusBar.aura.name]
+		if colors then
 			bar:SetStatusBarColor(colors.r, colors.g, colors.b)
 		end
 	end
@@ -1419,7 +1416,7 @@ function UF:SmartAuraDisplay()
 	end
 	
 	local yOffset = 0;
-	if E.PixelMode then
+	if PixelMode then
 		if db.aurabar.anchorPoint == 'BELOW' then
 			yOffset = 1;
 		else
