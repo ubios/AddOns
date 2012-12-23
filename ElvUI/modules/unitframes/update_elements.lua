@@ -1,8 +1,14 @@
 local E, L, V, P, G, _ = unpack(select(2, ...)); --Inport: Engine, Locales, PrivateDB, ProfileDB, GlobalDB, Localize Underscore
 local UF = E:GetModule('UnitFrames');
 local LSM = LibStub("LibSharedMedia-3.0");
+local LSR = LibStub("LibSpecRoster-1.0")
 
 local abs = math.abs
+local random = math.random
+local ceil = math.ceil
+local format = string.format
+local sub = string.sub
+local floor = math.floor
 local _, ns = ...
 local ElvUF = ns.oUF
 assert(ElvUF, "ElvUI was unable to locate oUF.")
@@ -28,7 +34,7 @@ end
 
 function UF:PostUpdateHealth(unit, min, max)
 	if self:GetParent().isForced then
-		min = math.random(1, max)
+		min = random(1, max)
 		self:SetValue(min)
 	end
 
@@ -93,8 +99,8 @@ function UF:PostUpdatePower(unit, min, max)
 	local color
 	
 	if self:GetParent().isForced then
-		min = math.random(1, max)
-		pType = math.random(0, 4)
+		min = random(1, max)
+		pType = random(0, 4)
 		pToken = pType == 0 and "MANA" or pType == 1 and "RAGE" or pType == 2 and "FOCUS" or pType == 3 and "ENERGY" or pType == 4 and "RUNIC_POWER"
 		self:SetValue(min)
 		color = ElvUF['colors'].power[pToken]
@@ -108,17 +114,11 @@ function UF:PostUpdatePower(unit, min, max)
 		color = ElvUF['colors'].power[pToken]
 	end	
 	
-	local perc
-	if max == 0 then
-		perc = 0
-	else
-		perc = floor(min / max * 100)
-	end
-
 	local db = self:GetParent().db
 	if self.LowManaText and db then
 		if pToken == 'MANA' then
-			if perc <= db.lowmana and not dead and not ghost then
+			local perc = max == 0 and 0 or floor(min / max * 100)		
+			if perc <= db.lowmana and not (UnitIsDead(unit) or UnitIsGhost(unit)) then
 				self.LowManaText:SetText(LOW..' '..MANA)
 				E:Flash(self.LowManaText, 0.6)
 			else
@@ -178,31 +178,32 @@ function UF:FormatTime(s, reverse)
 end
 
 function UF:UpdateAuraTimer(elapsed)	
-	if self.timeLeft then
-		self.elapsed = (self.elapsed or 0) + elapsed
-		if self.elapsed >= 0.1 then
-			if not self.first then
-				self.timeLeft = self.timeLeft - self.elapsed
-			else
-				self.timeLeft = self.timeLeft - GetTime()
-				self.first = false
-			end
-			if self.timeLeft > 0 then
-				local time = UF:FormatTime(self.timeLeft)
-				if self.reverse then time = UF:FormatTime(abs(self.timeLeft - self.duration), true) end
-				self.text:SetText(time)
-				if self.timeLeft <= 5 then
-					self.text:SetTextColor(0.99, 0.31, 0.31)
-				else
-					self.text:SetTextColor(1, 1, 1)
-				end
-			else
-				self.text:Hide()
-				self:SetScript("OnUpdate", nil)
-			end
-			self.elapsed = 0
-		end
+	if not self.timeLeft then return end
+	
+	self.elapsed = (self.elapsed or 0) + elapsed
+	
+	if self.timeLeft > 5 and self.elapsed < 0.25 then return end
+	if self.elapsed < 0.1 then return end
+	
+	if not self.first then
+		self.timeLeft = self.timeLeft - self.elapsed
+	else
+		self.timeLeft = self.timeLeft - GetTime()
+		self.first = false
 	end
+	if self.timeLeft > 0 then
+		self.text:SetText(not self.reverse and UF:FormatTime(self.timeLeft) or UF:FormatTime(abs(self.timeLeft - self.duration), true))
+		if self.timeLeft <= 5 then
+			self.text:SetTextColor(0.99, 0.31, 0.31)
+		else
+			self.text:SetTextColor(1, 1, 1)
+		end
+	else
+		self:SetScript("OnUpdate", nil)
+		self.text:Hide()
+		self.text:SetText()
+	end
+	self.elapsed = 0
 end
 
 function UF:PostUpdateAura(unit, button, index, offset, filter, isDebuff, duration, timeLeft)
@@ -273,7 +274,7 @@ function UF:CustomCastDelayText(duration)
 		local text		
 		if self.channeling then
 			if db.castbar.format == 'CURRENT' then
-				self.Time:SetText(("%.1f |cffaf5050%.1f|r"):format(math.abs(duration - self.max), self.delay))
+				self.Time:SetText(("%.1f |cffaf5050%.1f|r"):format(abs(duration - self.max), self.delay))
 			elseif db.castbar.format == 'CURRENTMAX' then
 				self.Time:SetText(("%.1f / %.1f |cffaf5050%.1f|r"):format(duration, self.max, self.delay))
 			elseif db.castbar.format == 'REMAINING' then
@@ -285,7 +286,7 @@ function UF:CustomCastDelayText(duration)
 			elseif db.castbar.format == 'CURRENTMAX' then
 				self.Time:SetText(("%.1f / %.1f |cffaf5050%s %.1f|r"):format(duration, self.max, "+", self.delay))
 			elseif db.castbar.format == 'REMAINING' then
-				self.Time:SetText(("%.1f |cffaf5050%s %.1f|r"):format(math.abs(duration - self.max), "+", self.delay))
+				self.Time:SetText(("%.1f |cffaf5050%s %.1f|r"):format(abs(duration - self.max), "+", self.delay))
 			end		
 		end
 	end
@@ -298,10 +299,10 @@ function UF:CustomTimeText(duration)
 	local text
 	if self.channeling then
 		if db.castbar.format == 'CURRENT' then
-			self.Time:SetText(("%.1f"):format(math.abs(duration - self.max)))
+			self.Time:SetText(("%.1f"):format(abs(duration - self.max)))
 		elseif db.castbar.format == 'CURRENTMAX' then
 			self.Time:SetText(("%.1f / %.1f"):format(duration, self.max))
-			self.Time:SetText(("%.1f / %.1f"):format(math.abs(duration - self.max), self.max))
+			self.Time:SetText(("%.1f / %.1f"):format(abs(duration - self.max), self.max))
 		elseif db.castbar.format == 'REMAINING' then
 			self.Time:SetText(("%.1f"):format(duration))
 		end				
@@ -311,7 +312,7 @@ function UF:CustomTimeText(duration)
 		elseif db.castbar.format == 'CURRENTMAX' then
 			self.Time:SetText(("%.1f / %.1f"):format(duration, self.max))
 		elseif db.castbar.format == 'REMAINING' then
-			self.Time:SetText(("%.1f"):format(math.abs(duration - self.max)))
+			self.Time:SetText(("%.1f"):format(abs(duration - self.max)))
 		end		
 	end
 end
@@ -348,9 +349,9 @@ function UF:PostCastStart(unit, name, rank, castid)
 	local db = self:GetParent().db
 	if not db then return; end
 	if db.castbar.displayTarget and self.curTarget then
-		self.Text:SetText(string.sub(name..' --> '..self.curTarget, 0, math.floor((((32/245) * self:GetWidth()) / E.db['unitframe'].fontSize) * 12)))
+		self.Text:SetText(sub(name..' --> '..self.curTarget, 0, floor((((32/245) * self:GetWidth()) / E.db['unitframe'].fontSize) * 12)))
 	else
-		self.Text:SetText(string.sub(name, 0, math.floor((((32/245) * self:GetWidth()) / E.db['unitframe'].fontSize) * 12)))
+		self.Text:SetText(sub(name, 0, floor((((32/245) * self:GetWidth()) / E.db['unitframe'].fontSize) * 12)))
 	end
 
 	self.Spark:Height(self:GetHeight() * 2)
@@ -514,7 +515,7 @@ function UF:UpdateHoly(event, unit, powerType)
 	
 	local CLASSBAR_WIDTH = db.width - (E.Border * 2)
 	if USE_PORTRAIT then
-		CLASSBAR_WIDTH = math.ceil((db.width - (BORDER*2)) - PORTRAIT_WIDTH)
+		CLASSBAR_WIDTH = ceil((db.width - (BORDER*2)) - PORTRAIT_WIDTH)
 	end
 	
 	if USE_POWERBAR_OFFSET then
@@ -616,7 +617,7 @@ function UF:UpdateHarmony()
 	end
 	
 	if USE_PORTRAIT then
-		CLASSBAR_WIDTH = math.ceil((CLASSBAR_WIDTH) - PORTRAIT_WIDTH)
+		CLASSBAR_WIDTH = ceil((CLASSBAR_WIDTH) - PORTRAIT_WIDTH)
 	end
 	
 	if USE_POWERBAR_OFFSET then
@@ -710,6 +711,23 @@ function UF:EclipseDirection()
 	end
 end
 
+local eclipsedirection = {
+  ["sun"] = function (x, c) x.Text:SetText(c and "#>" or ">") x.Text:SetTextColor(.4,.4,1,1) end,
+  ["moon"] = function (x, c) x.Text:SetText(c and "<#" or "<") x.Text:SetTextColor(1,1,.4, 1) end,
+  ["none"] = function (x, c) x.Text:SetText("") end,
+}
+
+function UF:PredictEclipse(self, energy, direction, virtual_energy, virtual_direction, virtual_eclipse)
+	if self and self:IsShown() then
+		eclipsedirection[virtual_direction](self, direction ~= virtual_direction)
+	end
+end
+
+function UF:EclipseDirection()
+	energy, direction, virtual_energy, virtual_direction, virtual_eclipse = LibBalancePowerTracker:GetEclipseEnergyInfo()
+	eclipsedirection[virtual_direction](self, direction ~= virtual_direction)
+end
+
 function UF:DruidResourceBarVisibilityUpdate(unit)
 	local eclipseBar = self:GetParent().EclipseBar
 	local druidAltMana = self:GetParent().DruidAltMana
@@ -799,7 +817,7 @@ function UF:UpdateTargetGlow(event)
 end
 
 function UF:AltPowerBarPostUpdate(min, cur, max)
-	local perc = math.floor((cur/max)*100)
+	local perc = floor((cur/max)*100)
 	
 	if perc < 35 then
 		self:SetStatusBarColor(0, 1, 0)
@@ -909,8 +927,6 @@ function UF:AuraFilter(unit, icon, name, rank, texture, count, dtype, duration, 
 		return false;
 	end
 
-	local isPlayer, isFriend
-
 	local db = self:GetParent().db
 	if not db or not db[self.type] then return true; end
 	
@@ -918,8 +934,8 @@ function UF:AuraFilter(unit, icon, name, rank, texture, count, dtype, duration, 
 
 	local returnValue = true;
 	local returnValueChanged = false;
-	if caster == 'player' or caster == 'vehicle' then isPlayer = true end
-	if UnitIsFriend('player', unit) then isFriend = true end
+	local isPlayer = caster == 'player' or caster == 'vehicle'
+	local isFriend = UnitIsFriend('player', unit) == 1 and true or false
 	
 	icon.isPlayer = isPlayer
 	icon.owner = caster
@@ -967,7 +983,8 @@ function UF:AuraFilter(unit, icon, name, rank, texture, count, dtype, duration, 
 	end
 	
 	if CheckFilter(db.useBlacklist, isFriend) then
-		if E.global['unitframe']['aurafilters']['Blacklist'].spells[name] and E.global['unitframe']['aurafilters']['Blacklist'].spells[name].enable then
+		local blackList = E.global['unitframe']['aurafilters']['Blacklist'].spells[name]
+		if blackList and blackList.enable then
 			returnValue = false;
 		elseif not returnValueChanged then
 			returnValue = true;
@@ -977,7 +994,8 @@ function UF:AuraFilter(unit, icon, name, rank, texture, count, dtype, duration, 
 	end
 	
 	if CheckFilter(db.useWhitelist, isFriend) then
-		if E.global['unitframe']['aurafilters']['Whitelist'].spells[name] and E.global['unitframe']['aurafilters']['Whitelist'].spells[name].enable then
+		local whiteList = E.global['unitframe']['aurafilters']['Whitelist'].spells[name]
+		if whiteList and whiteList.enable then
 			returnValue = true;
 		elseif not returnValueChanged then
 			returnValue = false;
@@ -986,9 +1004,10 @@ function UF:AuraFilter(unit, icon, name, rank, texture, count, dtype, duration, 
 		returnValueChanged = true;
 	end	
 
-	if db.useFilter and E.global['unitframe']['aurafilters'][db.useFilter] then
-		local type = E.global['unitframe']['aurafilters'][db.useFilter].type
-		local spellList = E.global['unitframe']['aurafilters'][db.useFilter].spells
+	local useFilter = E.global['unitframe']['aurafilters'][db.useFilter]
+	if db.useFilter and useFilter then
+		local type = useFilter.type
+		local spellList = useFilter.spells
 
 		if type == 'Whitelist' then
 			if spellList[name] and spellList[name].enable then
@@ -1172,30 +1191,50 @@ function UF:UpdateAuraWatch(frame)
 	buffs = nil;
 end
 
+-- local role texture buffer
+local roleIconTextures = { 
+	TANK = [[Interface\AddOns\ElvUI\media\textures\tank.tga]],
+	HEALER = [[Interface\AddOns\ElvUI\media\textures\healer.tga]],
+	DAMAGER = [[Interface\AddOns\ElvUI\media\textures\dps.tga]]
+}
+
+function UF:UpdateRoleIconInterval(elapsed)
+	if not self then return end
+	
+	self.elapsed = (self.elapsed or 0) + elapsed
+	if (self.elapsed < 10) then return end
+
+	UF.UpdateRoleIcon(self)
+end
+
 function UF:UpdateRoleIcon()
 	local lfdrole = self.LFDRole
 	local db = self.db.roleIcon;
 	
-	if not db then return; end
-	local role = UnitGroupRolesAssigned(self.unit)
-
-	if self.isForced then
-		local rnd = math.random(1, 3)
-		role = rnd == 1 and "TANK" or (rnd == 2 and "HEALER" or (rnd == 3 and "DAMAGER"))
+	self.elapsed = 0
+	
+	if not (db or db.enable) then 
+		lfdrole:Hide()
+		return 
 	end
 	
-	if(role == 'TANK' or role == 'HEALER' or role == 'DAMAGER') and (UnitIsConnected(self.unit) or self.isForced) and db.enable then
-		if role == 'TANK' then
-			lfdrole:SetTexture([[Interface\AddOns\ElvUI\media\textures\tank.tga]])
-		elseif role == 'HEALER' then
-			lfdrole:SetTexture([[Interface\AddOns\ElvUI\media\textures\healer.tga]])
-		elseif role == 'DAMAGER' then
-			lfdrole:SetTexture([[Interface\AddOns\ElvUI\media\textures\dps.tga]])
+	local role = UnitGroupRolesAssigned(self.unit)
+	if role == 'NONE' then
+		if self.isForced then
+			local rnd = random(1, 3)
+			role = rnd == 1 and "TANK" or (rnd == 2 and "HEALER" or (rnd == 3 and "DAMAGER"))
+		else
+			_, role = LSR:getRole(UnitGUID(self.unit))
 		end
-		
-		lfdrole:Show()
+	end
+	
+	if role and role ~= 'NONE' and (self.isForced or UnitIsConnected(self.unit)) then
+		lfdrole:SetTexture(roleIconTextures[role])
+		lfdrole:Show()	
+		lfdrole:SetScript('OnUpdate', nil)
 	else
 		lfdrole:Hide()
+		lfdrole:SetScript('OnUpdate', UF.UpdateRoleIconInterval)
 	end	
 end
 
@@ -1243,19 +1282,12 @@ function UF:AuraBarFilter(unit, name, rank, icon, count, debuffType, duration, e
 
 	local returnValue = true;
 	local returnValueChanged = false
-	local isPlayer, isFriend
-	local auraType
+	local isPlayer = unitCaster == 'player' or unitCaster == 'vehicle'
+	local isFriend = UnitIsFriend('player', unit) == 1 and true or false
+	local auraType = isFriend and db.friendlyAuraType or db.enemyAuraType	
 	--print(name..': '..spellID, E.global.unitframe.InvalidSpells[spellID])
 	if E.global.unitframe.InvalidSpells[spellID] then
 		return false;
-	end
-	
-	if unitCaster == 'player' or unitCaster == 'vehicle' then isPlayer = true end
-	if UnitIsFriend('player', unit) then isFriend = true end
-	if isFriend then
-		auraType = db.friendlyAuraType
-	else
-		auraType = db.enemyAuraType
 	end
 	
 	--This should be sorted as least priority checked first
@@ -1300,7 +1332,8 @@ function UF:AuraBarFilter(unit, name, rank, icon, count, debuffType, duration, e
 	end
 	
 	if CheckFilter(db.useBlacklist, isFriend) then
-		if E.global['unitframe']['aurafilters']['Blacklist'].spells[name] and E.global['unitframe']['aurafilters']['Blacklist'].spells[name].enable then
+		local blackList = E.global['unitframe']['aurafilters']['Blacklist'].spells[name]
+		if blackList and blackList.enable then
 			returnValue = false;
 		elseif not returnValueChanged then
 			returnValue = true;
@@ -1310,7 +1343,8 @@ function UF:AuraBarFilter(unit, name, rank, icon, count, debuffType, duration, e
 	end
 	
 	if CheckFilter(db.useWhitelist, isFriend) then
-		if E.global['unitframe']['aurafilters']['Whitelist'].spells[name] and E.global['unitframe']['aurafilters']['Whitelist'].spells[name].enable then
+		local whiteList = E.global['unitframe']['aurafilters']['Whitelist'].spells[name]
+		if whiteList and whiteList.enable then
 			returnValue = true;
 		elseif not returnValueChanged then
 			returnValue = false;
@@ -1319,9 +1353,10 @@ function UF:AuraBarFilter(unit, name, rank, icon, count, debuffType, duration, e
 		returnValueChanged = true;
 	end	
 
-	if db.useFilter and E.global['unitframe']['aurafilters'][db.useFilter] then
-		local type = E.global['unitframe']['aurafilters'][db.useFilter].type
-		local spellList = E.global['unitframe']['aurafilters'][db.useFilter].spells
+	local useFilter = E.global['unitframe']['aurafilters'][db.useFilter]
+	if db.useFilter and useFilter then
+		local type = useFilter.type
+		local spellList = useFilter.spells
 
 		if type == 'Whitelist' then
 			if spellList[name] and spellList[name].enable then
@@ -1346,9 +1381,8 @@ function UF:ColorizeAuraBars(event, unit)
 		if not frame:IsVisible() then
 			break
 		end
-		local name = bar.aura.name
-		local colors = E.global.unitframe.AuraBarColors[name]
-		if E.global.unitframe.AuraBarColors[name] then
+		local colors = E.global.unitframe.AuraBarColors[bar.aura.name]
+		if colors then
 			bar:SetStatusBarColor(colors.r, colors.g, colors.b)
 		end
 	end
@@ -1361,9 +1395,7 @@ function UF:SmartAuraDisplay()
 	local buffs = self.Buffs
 	local debuffs = self.Debuffs
 	local auraBars = self.AuraBars
-	local isFriend
-	
-	if UnitIsFriend('player', unit) then isFriend = true end
+	local isFriend = UnitIsFriend('player', unit) == 1 and true or false
 	
 	if isFriend then
 		if db.smartAuraDisplay == 'SHOW_DEBUFFS_ON_FRIENDLIES' then

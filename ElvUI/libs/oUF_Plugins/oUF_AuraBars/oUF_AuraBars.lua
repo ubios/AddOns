@@ -1,5 +1,5 @@
 local _, ns = ...
-local oUF = oUF or ns.oUF
+local oUF = ns.oUF or oUF
 assert(oUF, 'oUF_AuraBars was unable to locate oUF install.')
 
 local function Round(number, decimalPlaces)
