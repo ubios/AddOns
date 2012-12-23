@@ -13,6 +13,8 @@ local _, ns = ...
 local ElvUF = ns.oUF
 assert(ElvUF, "ElvUI was unable to locate oUF.")
 
+local unitframeFont
+
 local function CheckFilter(filterType, isFriend)
 	local FRIENDLY_CHECK, ENEMY_CHECK = false, false
 	if type(filterType) == 'string' then
@@ -33,19 +35,20 @@ local function CheckFilter(filterType, isFriend)
 end
 
 function UF:PostUpdateHealth(unit, min, max)
-	if self:GetParent().isForced then
+	local parent = self:GetParent()
+	if parent.isForced then
 		min = random(1, max)
 		self:SetValue(min)
 	end
 
-	if min == 0 and self:GetParent().ResurrectIcon then
-		self:GetParent().ResurrectIcon:SetAlpha(1)
-	elseif self:GetParent().ResurrectIcon then
-		self:GetParent().ResurrectIcon:SetAlpha(0)
+	if min == 0 and parent.ResurrectIcon then
+		parent.ResurrectIcon:SetAlpha(1)
+	elseif parent.ResurrectIcon then
+		parent.ResurrectIcon:SetAlpha(0)
 	end
 	
 	local r, g, b = self:GetStatusBarColor()
-	if (E.db['unitframe']['colors'].healthclass == true and E.db['unitframe']['colors'].colorhealthbyvalue == true) or (E.db['unitframe']['colors'].colorhealthbyvalue and self:GetParent().isForced) and not (UnitIsTapped(unit) and not UnitIsTappedByPlayer(unit)) then
+	if (E.db['unitframe']['colors'].healthclass == true and E.db['unitframe']['colors'].colorhealthbyvalue == true) or (E.db['unitframe']['colors'].colorhealthbyvalue and parent.isForced) and not (UnitIsTapped(unit) and not UnitIsTappedByPlayer(unit)) then
 		local newr, newg, newb = ElvUF.ColorGradient(min, max, 1, 0, 0, 1, 1, 0, r, g, b)
 
 		self:SetStatusBarColor(newr, newg, newb)
@@ -59,9 +62,9 @@ function UF:PostUpdateHealth(unit, min, max)
 		local t
 			if UnitIsPlayer(unit) then
 				local _, class = UnitClass(unit)
-				t = self:GetParent().colors.class[class]
+				t = parent.colors.class[class]
 			elseif UnitReaction(unit, 'player') then
-				t = self:GetParent().colors.reaction[UnitReaction(unit, "player")]
+				t = parent.colors.reaction[UnitReaction(unit, "player")]
 			end
 
 		if t then
@@ -94,29 +97,27 @@ function UF:PostNamePosition(frame, unit)
 	end
 end
 
+local powerTypes = { [0] = "MANA", "RAGE", "FOCUS", "ENERGY", "RUNIC_POWER" }
 function UF:PostUpdatePower(unit, min, max)
-	local pType, pToken, altR, altG, altB = UnitPowerType(unit)
-	local color
+	local pType = UnitPowerType(unit)
+	local parent = self:GetParent()
 	
-	if self:GetParent().isForced then
+	if parent.isForced then
 		min = random(1, max)
 		pType = random(0, 4)
-		pToken = pType == 0 and "MANA" or pType == 1 and "RAGE" or pType == 2 and "FOCUS" or pType == 3 and "ENERGY" or pType == 4 and "RUNIC_POWER"
 		self:SetValue(min)
-		color = ElvUF['colors'].power[pToken]
 		
 		if not self.colorClass then
+			local color = ElvUF['colors'].power[powerTypes[pType]]
 			self:SetStatusBarColor(color[1], color[2], color[3])
 			local mu = self.bg.multiplier or 1
 			self.bg:SetVertexColor(color[1] * mu, color[2] * mu, color[3] * mu)
 		end
-	elseif pToken then
-		color = ElvUF['colors'].power[pToken]
 	end	
 	
-	local db = self:GetParent().db
+	local db = parent.db
 	if self.LowManaText and db then
-		if pToken == 'MANA' then
+		if pType == 0 then
 			local perc = max == 0 and 0 or floor(min / max * 100)		
 			if perc <= db.lowmana and not (UnitIsDead(unit) or UnitIsGhost(unit)) then
 				self.LowManaText:SetText(LOW..' '..MANA)
@@ -132,7 +133,7 @@ function UF:PostUpdatePower(unit, min, max)
 	end
 	
 	if db and db['power'] and db['power'].hideonnpc then
-		UF:PostNamePosition(self:GetParent(), unit)
+		UF:PostNamePosition(parent, unit)
 	end	
 end
 
@@ -149,7 +150,8 @@ function UF:PortraitUpdate(unit)
 	end
 	
 	if self:GetObjectType() ~= 'Texture' then
-		if self:GetModel() and self:GetModel().find and self:GetModel():find("worgenmale") then
+		local portraitModel = self:GetModel()
+		if portraitModel and portraitModel.find and portraitModel:find("worgenmale") then
 			self:SetCamera(1)
 		end	
 
@@ -191,6 +193,7 @@ function UF:UpdateAuraTimer(elapsed)
 		self.timeLeft = self.timeLeft - GetTime()
 		self.first = false
 	end
+	
 	if self.timeLeft > 0 then
 		self.text:SetText(not self.reverse and UF:FormatTime(self.timeLeft) or UF:FormatTime(abs(self.timeLeft - self.duration), true))
 		if self.timeLeft <= 5 then
@@ -213,8 +216,10 @@ function UF:PostUpdateAura(unit, button, index, offset, filter, isDebuff, durati
 	
 	button.text:Show()
 	if db and db[self.type] then
-		button.text:FontTemplate(LSM:Fetch("font", E.db['unitframe'].font), db[self.type].fontSize, 'OUTLINE')
-		button.count:FontTemplate(LSM:Fetch("font", E.db['unitframe'].font), db[self.type].fontSize, 'OUTLINE')
+		unitframeFont = unitframeFont or LSM:Fetch("font", E.db['unitframe'].font)
+	
+		button.text:FontTemplate(unitframeFont, db[self.type].fontSize, 'OUTLINE')
+		button.count:FontTemplate(unitframeFont, db[self.type].fontSize, 'OUTLINE')
 		
 		if db[self.type].clickThrough and button:IsMouseEnabled() then
 			button:EnableMouse(false)
@@ -347,7 +352,8 @@ end
 function UF:PostCastStart(unit, name, rank, castid)
 	if unit == "vehicle" then unit = "player" end
 	local db = self:GetParent().db
-	if not db then return; end
+	if not db then return end
+	
 	if db.castbar.displayTarget and self.curTarget then
 		self.Text:SetText(sub(name..' --> '..self.curTarget, 0, floor((((32/245) * self:GetWidth()) / E.db['unitframe'].fontSize) * 12)))
 	else
@@ -698,19 +704,6 @@ function UF:UpdateShardBar(spec)
 	UF:UpdatePlayerFrameAnchors(frame, self:IsShown())
 end
 
-function UF:EclipseDirection()
-	local direction = GetEclipseDirection()
-	if direction == "sun" then
-		self.Text:SetText(">")
-		self.Text:SetTextColor(.2,.2,1,1)
-	elseif direction == "moon" then
-		self.Text:SetText("<")
-		self.Text:SetTextColor(1,1,.3, 1)
-	else
-		self.Text:SetText("")
-	end
-end
-
 local eclipsedirection = {
   ["sun"] = function (x, c) x.Text:SetText(c and "#>" or ">") x.Text:SetTextColor(.4,.4,1,1) end,
   ["moon"] = function (x, c) x.Text:SetText(c and "<#" or "<") x.Text:SetTextColor(1,1,.4, 1) end,
@@ -739,29 +732,30 @@ function UF:DruidPostUpdateAltPower(unit, min, max)
 	local powerText = self:GetParent().Power.value
 	
 	if min ~= max then
-		local color = ElvUF['colors'].power['MANA']
-		color = E:RGBToHex(color[1], color[2], color[3])
-		
-		self.Text:ClearAllPoints()
-		if powerText:GetText() then
-			if select(4, powerText:GetPoint()) < 0 then
-				self.Text:SetPoint("RIGHT", powerText, "LEFT", 3, 0)
-				self.Text:SetFormattedText(color.."%d%%|r |cffD7BEA5- |r", floor(min / max * 100))			
-			else
-				self.Text:SetPoint("LEFT", powerText, "RIGHT", -3, 0)
-				self.Text:SetFormattedText("|cffD7BEA5-|r"..color.." %d%%|r", floor(min / max * 100))
-			end
-		else
-			self.Text:SetPoint(powerText:GetPoint())
-			self.Text:SetFormattedText(color.."%d%%|r", floor(min / max * 100))
-		end	
-	else
 		self.Text:SetText()
+		return	
 	end
+	
+	local color = ElvUF['colors'].power['MANA']
+	color = E:RGBToHex(color[1], color[2], color[3])
+	
+	self.Text:ClearAllPoints()
+	if powerText:GetText() then
+		if select(4, powerText:GetPoint()) < 0 then
+			self.Text:SetPoint("RIGHT", powerText, "LEFT", 3, 0)
+			self.Text:SetFormattedText(color.."%d%%|r |cffD7BEA5- |r", floor(min / max * 100))			
+		else
+			self.Text:SetPoint("LEFT", powerText, "RIGHT", -3, 0)
+			self.Text:SetFormattedText("|cffD7BEA5-|r"..color.." %d%%|r", floor(min / max * 100))
+		end
+	else
+		self.Text:SetPoint(powerText:GetPoint())
+		self.Text:SetFormattedText(color.."%d%%|r", floor(min / max * 100))
+	end	
 end
 
 function UF:UpdateThreat(event, unit)
-	if (self.unit ~= unit) or not unit or not E.initialized then return end
+	if not unit or (self.unit ~= unit) or not E.initialized then return end
 	local status = UnitThreatSituation(unit)
 	
 	if status and status > 1 then
@@ -1015,7 +1009,6 @@ function UF:AuraFilter(unit, icon, name, rank, texture, count, dtype, duration, 
 			elseif not returnValueChanged then
 				returnValue = false
 			end
-
 		elseif type == 'Blacklist' and spellList[name] and spellList[name].enable then
 			returnValue = false				
 		end
@@ -1042,32 +1035,31 @@ function UF:UpdateAuraWatch(frame)
 
 	if not db.enable then
 		auras:Hide()
-		return;
+		return
 	else
 		auras:Show()
 	end
 	
-	if not E.global['unitframe'].buffwatch[E.myclass] then E.global['unitframe'].buffwatch[E.myclass] = {} end
-
-	if frame.unit == 'pet' and E.global['unitframe'].buffwatch.PET then
-		for _, value in pairs(E.global['unitframe'].buffwatch.PET) do
-			tinsert(buffs, value);
+	if frame.unit == 'pet' then
+		local buffWatchPET = E.global['unitframe'].buffwatch.PET or {}
+		for i = 1, #buffWatchPET do
+			buffs[#buffs + 1] = buffWatchPET[i]
 		end	
 	else
-		for _, value in pairs(E.global['unitframe'].buffwatch[E.myclass]) do
-			tinsert(buffs, value);
+		local buffWatchClass =  E.global['unitframe'].buffwatch[E.myclass] or {}
+		for i = 1, #buffWatchClass do
+			buffs[#buffs + 1] = buffWatchClass[i]
 		end	
 	end
 	
 	--CLEAR CACHE
 	if auras.icons then
 		for spell in pairs(auras.icons) do
-			local matchFound = false;
-			for _, spell2 in pairs(buffs) do
-				if spell2["id"] then
-					if spell2["id"] == spell then
-						matchFound = true;
-					end
+			local matchFound = false
+			for i = 1, #buffs do
+				if buffs[i] and buffs[i].id == spell then
+					matchFound = true
+					break
 				end
 			end
 			
@@ -1078,23 +1070,24 @@ function UF:UpdateAuraWatch(frame)
 		end
 	end
 	
-	for _, spell in pairs(buffs) do
-		local icon;
-		if spell["id"] then
-			local name, _, image = GetSpellInfo(spell["id"]);
+	for i = 1, #buffs do
+		local buff = buffs[i]
+		if buff["id"] then
+			local name, _, image = GetSpellInfo(buff["id"]);
+			local icon
 			if name then
-				if not auras.icons[spell.id] then
+				if not auras.icons[buff.id] then
 					icon = CreateFrame("Frame", nil, auras);
 				else
-					icon = auras.icons[spell.id];
+					icon = auras.icons[buff.id];
 				end
 				icon.name = name
 				icon.image = image
-				icon.spellID = spell["id"];
-				icon.anyUnit = spell["anyUnit"];
-				icon.style = spell['style'];
-				icon.onlyShowMissing = spell["onlyShowMissing"];
-				if spell["onlyShowMissing"] then
+				icon.spellID = buff["id"];
+				icon.anyUnit = buff["anyUnit"];
+				icon.style = buff['style'];
+				icon.onlyShowMissing = buff["onlyShowMissing"];
+				if buff["onlyShowMissing"] then
 					icon.presentAlpha = 0;
 					icon.missingAlpha = 1;
 				else
@@ -1104,7 +1097,7 @@ function UF:UpdateAuraWatch(frame)
 				icon:Width(db.size);
 				icon:Height(db.size);
 				icon:ClearAllPoints()
-				icon:SetPoint(spell["point"], frame.Health, spell['point'], E.PixelMode and 0, E.PixelMode and 0);
+				icon:SetPoint(buff["point"], frame.Health, buff['point'], E.PixelMode and 0, E.PixelMode and 0);
 
 				if not icon.icon then
 					icon.icon = icon:CreateTexture(nil, "BORDER");
@@ -1115,34 +1108,6 @@ function UF:UpdateAuraWatch(frame)
 					icon.text = icon:CreateFontString(nil, 'BORDER');
 				end
 				
-				
-				if icon.style == 'coloredIcon' then
-					icon.icon:SetTexture(E["media"].blankTex);
-					
-					if (spell["color"]) then
-						icon.icon:SetVertexColor(spell["color"].r, spell["color"].g, spell["color"].b);
-					else
-						icon.icon:SetVertexColor(0.8, 0.8, 0.8);
-					end		
-					icon.text:Hide()
-				elseif icon.style == 'texturedIcon' then
-					icon.icon:SetVertexColor(1, 1, 1)
-					icon.icon:SetTexCoord(.18, .82, .18, .82);
-					icon.icon:SetTexture(icon.image);
-					icon.text:Hide()
-				else
-					icon.icon:SetTexture(nil)
-					icon.text:Show()
-					icon.text:SetTextColor(spell["color"].r, spell["color"].g, spell["color"].b)
-				end
-				
-				if not icon.cd then
-					icon.cd = CreateFrame("Cooldown", nil, icon)
-					icon.cd:SetAllPoints(icon)
-					icon.cd:SetReverse(true)
-					icon.cd:SetFrameLevel(icon:GetFrameLevel())
-				end
-				
 				if not icon.border then
 					icon.border = icon:CreateTexture(nil, "BACKGROUND");
 					icon.border:Point("TOPLEFT", -E.mult, E.mult);
@@ -1151,31 +1116,57 @@ function UF:UpdateAuraWatch(frame)
 					icon.border:SetVertexColor(0, 0, 0);
 				end
 				
-				if icon.style ~= 'coloredIcon' and icon.style ~= 'texturedIcon' then
-					icon.border:Hide();
-				else
+				if icon.style == 'coloredIcon' then
+					icon.icon:SetTexture(E["media"].blankTex);
+					
+					if (buff["color"]) then
+						icon.icon:SetVertexColor(buff["color"].r, buff["color"].g, buff["color"].b);
+					else
+						icon.icon:SetVertexColor(0.8, 0.8, 0.8);
+					end		
+					icon.text:Hide()
 					icon.border:Show();
+				elseif icon.style == 'texturedIcon' then
+					icon.icon:SetVertexColor(1, 1, 1)
+					icon.icon:SetTexCoord(.18, .82, .18, .82);
+					icon.icon:SetTexture(icon.image);
+					icon.text:Hide()
+					icon.border:Show();
+				else
+					icon.icon:SetTexture(nil)
+					icon.text:Show()
+					icon.text:SetTextColor(buff["color"].r, buff["color"].g, buff["color"].b)
+					icon.border:Hide()
 				end
 				
+				if not icon.cd then
+					icon.cd = CreateFrame("Cooldown", nil, icon)
+					icon.cd:SetAllPoints(icon)
+					icon.cd:SetReverse(true)
+					icon.cd:SetFrameLevel(icon:GetFrameLevel())
+				end
+								
 				if not icon.count then
 					icon.count = icon:CreateFontString(nil, "OVERLAY");
-					icon.count:SetPoint("CENTER", unpack(counterOffsets[spell["point"]]));
+					icon.count:SetPoint("CENTER", unpack(counterOffsets[buff["point"]]));
 				end
 				
-				icon.count:FontTemplate(LSM:Fetch("font", E.db['unitframe'].font), db.fontSize, 'OUTLINE');
-				icon.text:FontTemplate(LSM:Fetch("font", E.db['unitframe'].font), db.fontSize, 'OUTLINE');
-				icon.text:ClearAllPoints()
-				icon.text:SetPoint(spell["point"])
+				unitframeFont = unitframeFont or LSM:Fetch("font", E.db['unitframe'].font)
 				
-				if spell["enabled"] then
-					auras.icons[spell.id] = icon;
+				icon.count:FontTemplate(unitframeFont, db.fontSize, 'OUTLINE');
+				icon.text:FontTemplate(unitframeFont, db.fontSize, 'OUTLINE');
+				icon.text:ClearAllPoints()
+				icon.text:SetPoint(buff["point"])
+				
+				if buff["enabled"] then
+					auras.icons[buff.id] = icon;
 					if auras.watched then
-						auras.watched[spell.id] = icon;
+						auras.watched[buff.id] = icon;
 					end
 				else	
-					auras.icons[spell.id] = nil;
+					auras.icons[buff.id] = nil;
 					if auras.watched then
-						auras.watched[spell.id] = nil;
+						auras.watched[buff.id] = nil;
 					end
 					icon:Hide();
 					icon = nil;
