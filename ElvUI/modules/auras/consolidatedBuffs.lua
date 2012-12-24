@@ -2,6 +2,8 @@ local E, L, V, P, G, _ = unpack(select(2, ...)); --Inport: Engine, Locales, Priv
 local A = E:GetModule('Auras');
 local LSM = LibStub("LibSharedMedia-3.0")
 
+local max = math.max
+
 A.Stats = {
 	[90363] = 'HUNTER', -- Embrace of the Shale Spider
 	[117667] = 'MONK', --Legacy of The Emperor
@@ -101,23 +103,32 @@ function A:CheckFilterForActiveBuff(filter)
 end
 
 function A:UpdateConsolidatedTime(elapsed)
-	if(self.expiration) then	
-		self.expiration = math.max(self.expiration - elapsed, 0)
-		if(self.expiration <= 0) then
-			self.timer:SetText("")
-		else
-			local time = A:FormatTime(self.expiration)
-			if self.expiration <= 86400.5 and self.expiration > 3600.5 then
-				self.timer:SetText("|cffcccccc"..time.."|r")
-			elseif self.expiration <= 3600.5 and self.expiration > 60.5 then
-				self.timer:SetText("|cffcccccc"..time.."|r")
-			elseif self.expiration <= 60.5 and self.expiration > E.db.auras.fadeThreshold then
-				self.timer:SetText("|cffcccccc"..time.."|r")
-			elseif self.expiration <= 5 then
-				self.timer:SetText("|cffff0000"..time.."|r")
-			end
+	if (not self.expiration) then return end
+	
+	self.elapsed = (self.elapsed or 0) + elapsed
+	if self.expiration > 86400 and self.elapsed < 3600 then return end
+	if self.expiration > 3600 and self.elapsed < 60 then return end
+	if self.expiration > 60 and self.elapsed < 5 then return end
+	if self.expiration > 5 and self.elapsed < .5 then return end
+	if self.elapsed < .05 then return end
+
+	self.expiration = self.expiration - self.elapsed
+	if(self.expiration <= 0) then
+		self.timer:SetText("")
+	else
+		local time = A:FormatTime(self.expiration)
+		if self.expiration <= 86400.5 and self.expiration > 3600.5 then
+			self.timer:SetText("|cffcccccc"..time.."|r")
+		elseif self.expiration <= 3600.5 and self.expiration > 60.5 then
+			self.timer:SetText("|cffcccccc"..time.."|r")
+		elseif self.expiration <= 60.5 and self.expiration > E.db.auras.fadeThreshold then
+			self.timer:SetText("|cffcccccc"..time.."|r")
+		elseif self.expiration <= 5 then
+			self.timer:SetText("|cffff0000"..time.."|r")
 		end
 	end
+	
+	self.elapsed = 0
 end
 
 function A:UpdateReminder(event, unit)
