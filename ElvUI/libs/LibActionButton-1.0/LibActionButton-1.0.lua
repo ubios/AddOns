@@ -494,8 +494,13 @@ local function PickupAny(kind, target, detail, ...)
 	end
 end
 
-function Generic:OnUpdate()
-	if not GetCVarBool('lockActionBars') then return; end
+function Generic:OnUpdate(elapsed)
+	if not GetCVarBool('lockActionBars') then return end
+	
+	self.lastupdate = (self.lastupdate or 0) + elapsed; 	
+
+	if (self.lastupdate < .2) then return end
+	self.lastupdate = 0
 	
 	local isDragKeyDown
 	if GetModifiedClick("PICKUPACTION") == 'ALT' then
