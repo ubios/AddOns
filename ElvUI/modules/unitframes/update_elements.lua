@@ -48,7 +48,8 @@ function UF:PostUpdateHealth(unit, min, max)
 	end
 	
 	local r, g, b = self:GetStatusBarColor()
-	if (E.db['unitframe']['colors'].healthclass == true and E.db['unitframe']['colors'].colorhealthbyvalue == true) or (E.db['unitframe']['colors'].colorhealthbyvalue and parent.isForced) and not (UnitIsTapped(unit) and not UnitIsTappedByPlayer(unit)) then
+	local unitframeColors = E.db['unitframe']['colors']
+	if (unitframeColors.healthclass == true and unitframeColors.colorhealthbyvalue == true) or (unitframeColors.colorhealthbyvalue and parent.isForced) and not (UnitIsTapped(unit) and not UnitIsTappedByPlayer(unit)) then
 		local newr, newg, newb = ElvUF.ColorGradient(min, max, 1, 0, 0, 1, 1, 0, r, g, b)
 
 		self:SetStatusBarColor(newr, newg, newb)
@@ -58,7 +59,7 @@ function UF:PostUpdateHealth(unit, min, max)
 		end
 	end
 
-	if E.db['unitframe']['colors'].classbackdrop then
+	if unitframeColors.classbackdrop then
 		local t
 			if UnitIsPlayer(unit) then
 				local _, class = UnitClass(unit)
@@ -73,14 +74,14 @@ function UF:PostUpdateHealth(unit, min, max)
 	end
 	
 	--Backdrop
-	if E.db['unitframe']['colors'].customhealthbackdrop then
-		local backdrop = E.db['unitframe']['colors'].health_backdrop
+	if unitframeColors.customhealthbackdrop then
+		local backdrop = unitframeColors.health_backdrop
 		self.bg:SetVertexColor(backdrop.r, backdrop.g, backdrop.b)		
 	end	
 end
 
 function UF:PostNamePosition(frame, unit)
-	if --[[frame.Power.value:GetText() and]] UnitIsPlayer(unit) and frame.Power.value:IsShown() then
+	if UnitIsPlayer(unit) and frame.Power.value:IsShown() then
 		local db = frame.db
 		
 		local position = db.name.position
@@ -194,6 +195,8 @@ function UF:UpdateAuraTimer(elapsed)
 		self.first = false
 	end
 	
+	self.elapsed = 0
+	
 	if self.timeLeft > 0 then
 		self.text:SetText(not self.reverse and UF:FormatTime(self.timeLeft) or UF:FormatTime(abs(self.timeLeft - self.duration), true))
 		if self.timeLeft <= 5 then
@@ -204,17 +207,15 @@ function UF:UpdateAuraTimer(elapsed)
 	else
 		self:SetScript("OnUpdate", nil)
 		self.text:Hide()
-		self.text:SetText()
-	end
-	self.elapsed = 0
+		self.text:SetText('')
+		self.text:SetTextColor(1, 1, 1)
+	end	
 end
 
 function UF:PostUpdateAura(unit, button, index, offset, filter, isDebuff, duration, timeLeft)
-	local name, _, _, _, dtype, duration, expirationTime, unitCaster, isStealable, _, spellID = UnitAura(unit, index, button.filter)
-
+	local name, _, _, _, dtype, duration, expirationTime, _, isStealable = UnitAura(unit, index, button.filter)
 	local db = self:GetParent().db
 	
-	button.text:Show()
 	if db and db[self.type] then
 		unitframeFont = unitframeFont or LSM:Fetch("font", E.db['unitframe'].font)
 	
@@ -257,17 +258,13 @@ function UF:PostUpdateAura(unit, button, index, offset, filter, isDebuff, durati
 	button.duration = duration
 	button.timeLeft = expirationTime
 	button.first = true	
+	button.text:SetText(UF:FormatTime(expirationTime - GetTime(), button.reverse))
+	button.text:Show()
 	
 	local size = button:GetParent().size
 	if size then
 		button:Size(size)
 	end
-	
-	--[[if E.ReverseTimer and E.ReverseTimer[spellID] then 
-		button.reverse = true 
-	else
-		button.reverse = nil
-	end]]
 	
 	button:SetScript('OnUpdate', UF.UpdateAuraTimer)
 end
@@ -324,8 +321,8 @@ end
 
 local ticks = {}
 function UF:HideTicks()
-	for _, tick in pairs(ticks) do
-		tick:Hide()
+	for i = 1, #ticks do
+		ticks[i]:Hide()
 	end		
 end
 
@@ -415,14 +412,15 @@ function UF:PostCastStart(unit, name, rank, castid)
 		UF:HideTicks()			
 	end	
 	
+	local colors = ElvUF.colors
 	if self.interrupt and unit ~= "player" then
 		if UnitCanAttack("player", unit) then
-			self:SetStatusBarColor(unpack(ElvUF.colors.castNoInterrupt))
+			self:SetStatusBarColor(colors.castNoInterrupt[1], colors.castNoInterrupt[2], colors.castNoInterrupt[3])
 		else
-			self:SetStatusBarColor(unpack(ElvUF.colors.castColor))			
+			self:SetStatusBarColor(colors.castColor[1], colors.castColor[2], colors.castColor[3])
 		end
 	else
-		self:SetStatusBarColor(unpack(ElvUF.colors.castColor))
+		self:SetStatusBarColor(colors.castColor[1], colors.castColor[2], colors.castColor[3])
 	end
 end
 
@@ -487,24 +485,27 @@ function UF:PostChannelUpdate(unit, name)
 end
 
 function UF:PostCastInterruptible(unit)
-	if unit == "vehicle" then unit = "player" end
-	if unit ~= "player" then
-		if UnitCanAttack("player", unit) then
-			self:SetStatusBarColor(unpack(ElvUF.colors.castNoInterrupt))	
-		else
-			self:SetStatusBarColor(unpack(ElvUF.colors.castColor))
-		end
+	if unit == "vehicle" or unit == "player" then return end
+	
+	local colors = ElvUF.colors
+	if UnitCanAttack("player", unit) then
+		self:SetStatusBarColor(colors.castNoInterrupt[1], colors.castNoInterrupt[2], colors.castNoInterrupt[3])	
+	else
+		self:SetStatusBarColor(colors.castColor[1], colors.castColor[2], colors.castColor[3])
 	end
 end
 
 function UF:PostCastNotInterruptible(unit)
-	self:SetStatusBarColor(unpack(ElvUF.colors.castNoInterrupt))
+	local colors = ElvUF.colors.castNoInterrupt
+	self:SetStatusBarColor(colors[1], colors[2], colors[3])
 end
 
 function UF:UpdateHoly(event, unit, powerType)
-	if(self.unit ~= unit or (powerType and powerType ~= 'HOLY_POWER')) then return end
+	if (self.unit ~= unit or (powerType and powerType ~= 'HOLY_POWER')) then return end
+
 	local db = self.db
-	if not db then return; end
+	if not db then return end
+
 	local BORDER = E.Border
 	local numHolyPower = UnitPower('player', SPELL_POWER_HOLY_POWER);
 	local maxHolyPower = UnitPowerMax('player', SPELL_POWER_HOLY_POWER);	
@@ -603,9 +604,10 @@ end
 function UF:UpdateHarmony()
 	local maxBars = self.numPoints
 	local frame = self:GetParent()
+
 	local db = frame.db
-	if not db then return; end
-	
+	if not db then return end
+
 	local UNIT_WIDTH = db.width
 	local BORDER = E.Border
 	local CLASSBAR_WIDTH = db.width - (BORDER*2)
@@ -644,6 +646,7 @@ function UF:UpdateHarmony()
 	
 	self:SetWidth(CLASSBAR_WIDTH)
 	
+	local colors = ElvUF.colors.harmony
 	for i = 1, maxBars do		
 		self[i]:SetHeight(self:GetHeight())	
 		self[i]:SetWidth((self:GetWidth() - (maxBars - 1)) / maxBars)	
@@ -659,15 +662,17 @@ function UF:UpdateHarmony()
 			end
 		end	
 				
-		self[i]:SetStatusBarColor(unpack(ElvUF.colors.harmony[i]))
+		self[i]:SetStatusBarColor(colors[i][1], colors[i][2], colors[i][3])
 	end	
 end
 
 function UF:UpdateShardBar(spec)
-	local maxBars = self.number
-	local db = self:GetParent().db
 	local frame = self:GetParent()
-	if not db then return; end
+
+	local db = frame.db
+	if not db then return end
+
+	local maxBars = self.number
 	
 	for i=1, UF['classMaxResourceBar'][E.myclass] do
 		if self[i]:IsShown() and db.classbar.fill == 'spaced' then
@@ -705,9 +710,17 @@ function UF:UpdateShardBar(spec)
 end
 
 local eclipsedirection = {
-  ["sun"] = function (x, c) x.Text:SetText(c and "#>" or ">") x.Text:SetTextColor(.4,.4,1,1) end,
-  ["moon"] = function (x, c) x.Text:SetText(c and "<#" or "<") x.Text:SetTextColor(1,1,.4, 1) end,
-  ["none"] = function (x, c) x.Text:SetText("") end,
+  ["sun"] = function (frame, change)
+  	frame.Text:SetText(change and "#>" or ">")
+  	frame.Text:SetTextColor(.6, .6, 1, 1) 
+  end,
+  ["moon"] = function (frame, change)
+  	frame.Text:SetText(change and "<#" or "<") 
+  	frame.Text:SetTextColor(1, 1, .4, 1) 
+  end,
+  ["none"] = function (frame, change)
+  	frame.Text:SetText("") 
+  end,
 }
 
 function UF:PredictEclipse(self, energy, direction, virtual_energy, virtual_direction, virtual_eclipse)
@@ -784,7 +797,7 @@ function UF:UpdateThreat(event, unit)
 end
 
 function UF:UpdateTargetGlow(event)
-	if not self.unit then return; end
+	if not self.unit then return end
 	local unit = self.unit
 	
 	if UnitIsUnit(unit, 'target') then
@@ -847,41 +860,26 @@ function UF:AltPowerBarPostUpdate(min, cur, max)
 end
 
 function UF:UpdateComboDisplay(event, unit)
-	if(unit == 'pet') then return end
+	if (unit == 'pet') then return end
 	local db = UF.player.db
 	local cpoints = self.CPoints
-	local cp
-	if (UnitHasVehicleUI("player") or UnitHasVehicleUI("vehicle")) then
-		cp = GetComboPoints('vehicle', 'target')
-	else
-		cp = GetComboPoints('player', 'target')
-	end
-
+	local cp = (UnitHasVehicleUI("player") or UnitHasVehicleUI("vehicle")) and GetComboPoints('vehicle', 'target') or GetComboPoints('player', 'target')
 
 	for i=1, MAX_COMBO_POINTS do
-		if(i <= cp) then
+		if (i <= cp) then
 			cpoints[i]:SetAlpha(1)
-			
-			if i == MAX_COMBO_POINTS and db.classbar.fill == 'spaced' then
-				for c = 1, MAX_COMBO_POINTS do
-					cpoints[c].backdrop.shadow:Show()
-					cpoints[c]:SetScript('OnUpdate', function(self)
-						E:Flash(self.backdrop.shadow, 0.6)
-					end)
-				end
-			else
-				for c = 1, MAX_COMBO_POINTS do
-					cpoints[c].backdrop.shadow:Hide()
-					cpoints[c]:SetScript('OnUpdate', nil)
-				end
-			end
+		else 
+			cpoints[i]:SetAlpha(.15)			
+		end
+		if cp == MAX_COMBO_POINTS and db.classbar.fill == 'spaced' then
+			cpoints[i].backdrop.shadow:Show()
+			cpoints[i]:SetScript('OnUpdate', function(self)
+				E:Flash(self.backdrop.shadow, 0.6)
+			end)
 		else
-			cpoints[i]:SetAlpha(.15)
-			for c = 1, MAX_COMBO_POINTS do
-				cpoints[c].backdrop.shadow:Hide()
-				cpoints[c]:SetScript('OnUpdate', nil)
-			end		
-		end	
+			cpoints[i].backdrop.shadow:Hide()
+			cpoints[i]:SetScript('OnUpdate', nil)
+		end
 	end
 	
 	local BORDER = E.Border;
@@ -1028,6 +1026,33 @@ local counterOffsets = {
 	['BOTTOM'] = {0, 0},
 }
 
+local iconconfiguration = {
+	["coloredIcon"] = function (icon, buff)
+		icon.icon:SetTexture(E["media"].blankTex);
+		
+		if (buff["color"]) then
+			icon.icon:SetVertexColor(buff["color"].r, buff["color"].g, buff["color"].b)
+		else
+			icon.icon:SetVertexColor(0.8, 0.8, 0.8)
+		end		
+		icon.text:Hide()
+		icon.border:Show()
+	end,
+	["texturedIcon"] = function (icon, buff)
+		icon.icon:SetVertexColor(1, 1, 1)
+		icon.icon:SetTexCoord(.18, .82, .18, .82);
+		icon.icon:SetTexture(icon.image);
+		icon.text:Hide()
+		icon.border:Show();	
+	end,
+	["text"] = function (icon, buff)
+		icon.icon:SetTexture(nil)
+		icon.text:Show()
+		icon.text:SetTextColor(buff["color"].r, buff["color"].g, buff["color"].b)
+		icon.border:Hide()
+	end,
+}
+
 function UF:UpdateAuraWatch(frame)
 	local buffs = {};
 	local auras = frame.AuraWatch;
@@ -1070,30 +1095,22 @@ function UF:UpdateAuraWatch(frame)
 		end
 	end
 	
+	unitframeFont = unitframeFont or LSM:Fetch("font", E.db['unitframe'].font)
+	
 	for i = 1, #buffs do
 		local buff = buffs[i]
 		if buff["id"] then
 			local name, _, image = GetSpellInfo(buff["id"]);
-			local icon
 			if name then
-				if not auras.icons[buff.id] then
-					icon = CreateFrame("Frame", nil, auras);
-				else
-					icon = auras.icons[buff.id];
-				end
+				local icon = auras.icons[buff.id] or CreateFrame("Frame", nil, auras)
 				icon.name = name
 				icon.image = image
-				icon.spellID = buff["id"];
-				icon.anyUnit = buff["anyUnit"];
-				icon.style = buff['style'];
-				icon.onlyShowMissing = buff["onlyShowMissing"];
-				if buff["onlyShowMissing"] then
-					icon.presentAlpha = 0;
-					icon.missingAlpha = 1;
-				else
-					icon.presentAlpha = 1;
-					icon.missingAlpha = 0;		
-				end		
+				icon.spellID = buff["id"]
+				icon.anyUnit = buff["anyUnit"]
+				icon.style = buff['style']
+				icon.onlyShowMissing = buff["onlyShowMissing"]
+				icon.presentAlpha = icon.onlyShowMissing and 0 or 1
+				icon.missingAlpha = icon.onlyShowMissing and 1 or 0				
 				icon:Width(db.size);
 				icon:Height(db.size);
 				icon:ClearAllPoints()
@@ -1116,28 +1133,7 @@ function UF:UpdateAuraWatch(frame)
 					icon.border:SetVertexColor(0, 0, 0);
 				end
 				
-				if icon.style == 'coloredIcon' then
-					icon.icon:SetTexture(E["media"].blankTex);
-					
-					if (buff["color"]) then
-						icon.icon:SetVertexColor(buff["color"].r, buff["color"].g, buff["color"].b);
-					else
-						icon.icon:SetVertexColor(0.8, 0.8, 0.8);
-					end		
-					icon.text:Hide()
-					icon.border:Show();
-				elseif icon.style == 'texturedIcon' then
-					icon.icon:SetVertexColor(1, 1, 1)
-					icon.icon:SetTexCoord(.18, .82, .18, .82);
-					icon.icon:SetTexture(icon.image);
-					icon.text:Hide()
-					icon.border:Show();
-				else
-					icon.icon:SetTexture(nil)
-					icon.text:Show()
-					icon.text:SetTextColor(buff["color"].r, buff["color"].g, buff["color"].b)
-					icon.border:Hide()
-				end
+				iconconfiguration[icon.style](icon, buff)
 				
 				if not icon.cd then
 					icon.cd = CreateFrame("Cooldown", nil, icon)
@@ -1147,12 +1143,10 @@ function UF:UpdateAuraWatch(frame)
 				end
 								
 				if not icon.count then
-					icon.count = icon:CreateFontString(nil, "OVERLAY");
-					icon.count:SetPoint("CENTER", unpack(counterOffsets[buff["point"]]));
+					icon.count = icon:CreateFontString(nil, "OVERLAY")
+					icon.count:SetPoint("CENTER", counterOffsets[buff["point"]][0], counterOffsets[buff["point"]][1])
 				end
-				
-				unitframeFont = unitframeFont or LSM:Fetch("font", E.db['unitframe'].font)
-				
+							
 				icon.count:FontTemplate(unitframeFont, db.fontSize, 'OUTLINE');
 				icon.text:FontTemplate(unitframeFont, db.fontSize, 'OUTLINE');
 				icon.text:ClearAllPoints()
@@ -1193,7 +1187,7 @@ function UF:UpdateRoleIconInterval(elapsed)
 	if not self then return end
 	
 	self.elapsed = (self.elapsed or 0) + elapsed
-	if (self.elapsed < 10) then return end
+	if (self.elapsed < 2) then return end
 
 	UF.UpdateRoleIcon(self)
 end
@@ -1368,10 +1362,9 @@ function UF:ColorizeAuraBars(event, unit)
 	local bars = self.bars
 	for index = 1, #bars do
 		local frame = bars[index]
+		if not frame:IsVisible() then	break end
+		
 		local bar = frame.statusBar
-		if not frame:IsVisible() then
-			break
-		end
 		local colors = E.global.unitframe.AuraBarColors[bar.aura.name]
 		if colors then
 			bar:SetStatusBarColor(colors.r, colors.g, colors.b)
@@ -1383,6 +1376,7 @@ function UF:SmartAuraDisplay()
 	local db = self.db
 	local unit = self.unit
 	if not db or not db.smartAuraDisplay or db.smartAuraDisplay == 'DISABLED' or not UnitExists(unit) then return; end
+
 	local buffs = self.Buffs
 	local debuffs = self.Debuffs
 	local auraBars = self.AuraBars
@@ -1406,14 +1400,7 @@ function UF:SmartAuraDisplay()
 		end
 	end
 	
-	local yOffset = 0;
-	if E.PixelMode then
-		if db.aurabar.anchorPoint == 'BELOW' then
-			yOffset = 1;
-		else
-			yOffset = -1;
-		end
-	end		
+	local yOffset = E.PixelMode and (db.aurabar.anchorPoint == 'BELOW' and 1 or -1) or 0;
 	
 	if buffs:IsShown() then
 		local x, y = E:GetXYOffset(db.buffs.anchorPoint)
