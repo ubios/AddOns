@@ -414,7 +414,8 @@ function UF:Construct_DruidResourceBar(frame)
 	eclipseBar.SolarBar = solarBar
 	
 	eclipseBar.Text = lunarBar:CreateFontString(nil, 'OVERLAY')
-	UF:Configure_FontString(eclipseBar.Text)
+	eclipseBar.Text:SetFont([[Interface\AddOns\ElvUI\media\fonts\Continuum_Medium.ttf]], 18, 'OUTLINE')
+	--UF:Configure_FontString(eclipseBar.Text)
 	eclipseBar.Text:SetPoint("CENTER", lunarBar:GetStatusBarTexture(), "RIGHT")
 	
 	return eclipseBar
