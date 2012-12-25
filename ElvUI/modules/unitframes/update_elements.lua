@@ -3,12 +3,24 @@ local UF = E:GetModule('UnitFrames');
 local LSM = LibStub("LibSharedMedia-3.0");
 local LSR = LibStub("LibSpecRoster-1.0")
 
+-- Localized LUA
 local abs = math.abs
 local random = math.random
 local ceil = math.ceil
 local format = string.format
 local sub = string.sub
 local floor = math.floor
+
+-- Localized WOW
+local UnitAura = UnitAura
+local UnitClass = UnitClass
+local UnitExists = UnitExists
+local UnitIsFriend = UnitIsFriend
+local UnitIsPlayer = UnitIsPlayer
+local UnitReaction = UnitReaction
+local UnitSpellHaste = UnitSpellHaste
+local UnitThreatSituation = UnitThreatSituation
+
 local _, ns = ...
 local ElvUF = ns.oUF
 assert(ElvUF, "ElvUI was unable to locate oUF.")
@@ -41,10 +53,8 @@ function UF:PostUpdateHealth(unit, min, max)
 		self:SetValue(min)
 	end
 
-	if min == 0 and parent.ResurrectIcon then
-		parent.ResurrectIcon:SetAlpha(1)
-	elseif parent.ResurrectIcon then
-		parent.ResurrectIcon:SetAlpha(0)
+	if parent.ResurrectIcon then
+		parent.ResurrectIcon:SetAlpha(min == 0 and 1 or 0)
 	end
 	
 	local r, g, b = self:GetStatusBarColor()
@@ -60,13 +70,14 @@ function UF:PostUpdateHealth(unit, min, max)
 	end
 
 	if unitframeColors.classbackdrop then
+		local reaction = UnitReaction(unit, 'player')
 		local t
-			if UnitIsPlayer(unit) then
-				local _, class = UnitClass(unit)
-				t = parent.colors.class[class]
-			elseif UnitReaction(unit, 'player') then
-				t = parent.colors.reaction[UnitReaction(unit, "player")]
-			end
+		if UnitIsPlayer(unit) then
+			local _, class = UnitClass(unit)
+			t = parent.colors.class[class]
+		elseif reaction then
+			t = parent.colors.reaction[reaction]
+		end
 
 		if t then
 			self.bg:SetVertexColor(t[1], t[2], t[3])
@@ -81,7 +92,9 @@ function UF:PostUpdateHealth(unit, min, max)
 end
 
 function UF:PostNamePosition(frame, unit)
-	if UnitIsPlayer(unit) and frame.Power.value:IsShown() then
+	if not frame.Power.value:IsShown() then return end
+
+	if UnitIsPlayer(unit) then
 		local db = frame.db
 		
 		local position = db.name.position
@@ -90,7 +103,7 @@ function UF:PostNamePosition(frame, unit)
 		
 		frame.Name:ClearAllPoints()
 		frame.Name:Point(position, frame.Health, position, x, y)	
-	elseif frame.Power.value:IsShown() then
+	else
 		frame.Power.value:SetAlpha(0)
 		
 		frame.Name:ClearAllPoints()
@@ -144,8 +157,8 @@ function UF:PortraitUpdate(unit)
 	if not db then return end
 	
 	if db['portrait'].enable and db['portrait'].overlay then
-		self:SetAlpha(0); 
-		self:SetAlpha(0.35);
+		self:SetAlpha(0)
+		self:SetAlpha(0.35)
 	else
 		self:SetAlpha(1)
 	end
@@ -185,7 +198,6 @@ function UF:UpdateAuraTimer(elapsed)
 	
 	self.elapsed = (self.elapsed or 0) + elapsed
 	
-	if self.timeLeft > 5 and self.elapsed < 0.25 then return end
 	if self.elapsed < 0.1 then return end
 	
 	if not self.first then
@@ -227,16 +239,13 @@ function UF:PostUpdateAura(unit, button, index, offset, filter, isDebuff, durati
 		elseif not db[self.type].clickThrough and not button:IsMouseEnabled() then
 			button:EnableMouse(true)
 		end
-	end	
+	end
 	
+	local isFriend = UnitIsFriend('player', unit) == 1 and true or false
 	if button.isDebuff then
-		if(not UnitIsFriend("player", unit) and button.owner ~= "player" and button.owner ~= "vehicle") --[[and (not E.isDebuffWhiteList[name])]] then
+		if(not isFriend and button.owner ~= "player" and button.owner ~= "vehicle") --[[and (not E.isDebuffWhiteList[name])]] then
 			button:SetBackdropBorderColor(0.9, 0.1, 0.1)
-			if unit and not unit:find('arena%d') then
-				button.icon:SetDesaturated(true)
-			else
-				button.icon:SetDesaturated(false)
-			end
+			button.icon:SetDesaturated((unit and not unit:find('arena%d')) and true or false)
 		else
 			local color = DebuffTypeColor[dtype] or DebuffTypeColor.none
 			if (name == "Unstable Affliction" or name == "Vampiric Touch") and E.myclass ~= "WARLOCK" then
@@ -247,7 +256,7 @@ function UF:PostUpdateAura(unit, button, index, offset, filter, isDebuff, durati
 			button.icon:SetDesaturated(false)
 		end
 	else
-		if (isStealable) and not UnitIsFriend("player", unit) then
+		if (isStealable) and not isFriend then
 			button:SetBackdropBorderColor(237/255, 234/255, 142/255)
 		else
 			button:SetBackdropBorderColor(unpack(E["media"].bordercolor))		
@@ -271,26 +280,24 @@ end
 
 function UF:CustomCastDelayText(duration)
 	local db = self:GetParent().db
+	if not db then return end
 	
-	if db then
-		local text		
-		if self.channeling then
-			if db.castbar.format == 'CURRENT' then
-				self.Time:SetText(("%.1f |cffaf5050%.1f|r"):format(abs(duration - self.max), self.delay))
-			elseif db.castbar.format == 'CURRENTMAX' then
-				self.Time:SetText(("%.1f / %.1f |cffaf5050%.1f|r"):format(duration, self.max, self.delay))
-			elseif db.castbar.format == 'REMAINING' then
-				self.Time:SetText(("%.1f |cffaf5050%.1f|r"):format(duration, self.delay))
-			end			
-		else
-			if db.castbar.format == 'CURRENT' then
-				self.Time:SetText(("%.1f |cffaf5050%s %.1f|r"):format(duration, "+", self.delay))
-			elseif db.castbar.format == 'CURRENTMAX' then
-				self.Time:SetText(("%.1f / %.1f |cffaf5050%s %.1f|r"):format(duration, self.max, "+", self.delay))
-			elseif db.castbar.format == 'REMAINING' then
-				self.Time:SetText(("%.1f |cffaf5050%s %.1f|r"):format(abs(duration - self.max), "+", self.delay))
-			end		
-		end
+	if self.channeling then
+		if db.castbar.format == 'CURRENT' then
+			self.Time:SetText(("%.1f |cffaf5050%.1f|r"):format(abs(duration - self.max), self.delay))
+		elseif db.castbar.format == 'CURRENTMAX' then
+			self.Time:SetText(("%.1f / %.1f |cffaf5050%.1f|r"):format(duration, self.max, self.delay))
+		elseif db.castbar.format == 'REMAINING' then
+			self.Time:SetText(("%.1f |cffaf5050%.1f|r"):format(duration, self.delay))
+		end			
+	else
+		if db.castbar.format == 'CURRENT' then
+			self.Time:SetText(("%.1f |cffaf5050%s %.1f|r"):format(duration, "+", self.delay))
+		elseif db.castbar.format == 'CURRENTMAX' then
+			self.Time:SetText(("%.1f / %.1f |cffaf5050%s %.1f|r"):format(duration, self.max, "+", self.delay))
+		elseif db.castbar.format == 'REMAINING' then
+			self.Time:SetText(("%.1f |cffaf5050%s %.1f|r"):format(abs(duration - self.max), "+", self.delay))
+		end		
 	end
 end
 
@@ -298,7 +305,6 @@ function UF:CustomTimeText(duration)
 	local db = self:GetParent().db
 	if not db then return end
 	
-	local text
 	if self.channeling then
 		if db.castbar.format == 'CURRENT' then
 			self.Time:SetText(("%.1f"):format(abs(duration - self.max)))
@@ -430,11 +436,12 @@ function UF:PostCastStop(unit, name, castid)
 end
 
 function UF:PostChannelUpdate(unit, name)
-	if unit == "vehicle" then unit = "player" end
 	local db = self:GetParent().db
 	if not db then return; end
+
+	if not (unit == "vehicle" or unit == "player") then return end
     
-	if db.castbar.ticks and unit == "player" then
+	if db.castbar.ticks then
 		local baseTicks = E.global.unitframe.ChannelTicks[name]
 
 		if baseTicks and E.global.unitframe.ChannelTicksSize[name] and E.global.unitframe.HastedChannelTicks[name] then
@@ -479,7 +486,7 @@ function UF:PostChannelUpdate(unit, name)
 		else
 			UF:HideTicks()
 		end
-	elseif unit == 'player' then
+	else
 		UF:HideTicks()			
 	end	
 end
@@ -602,11 +609,12 @@ function UF:UpdateArcaneCharges(event, unit, arcaneCharges, maxCharges)
 end	
 
 function UF:UpdateHarmony()
-	local maxBars = self.numPoints
 	local frame = self:GetParent()
 
 	local db = frame.db
 	if not db then return end
+
+	local maxBars = self.numPoints
 
 	local UNIT_WIDTH = db.width
 	local BORDER = E.Border
@@ -787,8 +795,7 @@ function UF:UpdateThreat(event, unit)
 		if self.Threat and self.Threat:GetBackdrop() then
 			self.Threat:Hide()
 		elseif self.Health.backdrop then
-			self.Health.backdrop:SetTemplate("Default")
-			
+			self.Health.backdrop:SetTemplate("Default")		
 			if self.Power and self.Power.backdrop then
 				self.Power.backdrop:SetTemplate("Default")
 			end
@@ -798,8 +805,8 @@ end
 
 function UF:UpdateTargetGlow(event)
 	if not self.unit then return end
+
 	local unit = self.unit
-	
 	if UnitIsUnit(unit, 'target') then
 		self.TargetGlow:Show()
 		local reaction = UnitReaction(unit, 'player')
@@ -916,11 +923,11 @@ end
 
 function UF:AuraFilter(unit, icon, name, rank, texture, count, dtype, duration, timeLeft, caster, isStealable, shouldConsolidate, spellID, canApplyAura, isBossDebuff)	
 	if E.global.unitframe.InvalidSpells[spellID] then
-		return false;
+		return false
 	end
 
 	local db = self:GetParent().db
-	if not db or not db[self.type] then return true; end
+	if not db or not db[self.type] then return true end
 	
 	db = db[self.type]
 
