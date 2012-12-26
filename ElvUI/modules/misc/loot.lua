@@ -48,7 +48,7 @@ local OnClick = function(self)
 	end
 end
 
-local OnUpdate = function(self)
+local OnShow = function(self)
 	if(GameTooltip:IsOwned(self)) then
 		GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
 		GameTooltip:SetLootItem(self:GetID())
@@ -84,7 +84,7 @@ local function createSlot(id)
 	frame:SetScript("OnEnter", OnEnter)
 	frame:SetScript("OnLeave", OnLeave)
 	frame:SetScript("OnClick", OnClick)
-	frame:SetScript("OnUpdate", OnUpdate)
+	frame:SetScript("OnShow", OnShow)
 
 	local iconFrame = CreateFrame("Frame", nil, frame)
 	iconFrame:Height(iconsize)
