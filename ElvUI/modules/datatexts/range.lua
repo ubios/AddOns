@@ -7,8 +7,11 @@ local displayString = ''
 local lastPanel
 local int = 1
 local curMin, curMax
+local updateTargetRange = false
 
 local function OnUpdate(self, t)
+	if not updateTargetRange then return end
+
 	int = int - t
 	if int > 0 then return end
 	int = .25
@@ -24,8 +27,16 @@ local function OnUpdate(self, t)
 	else
 		self.text:SetText("")
 	end
-
+	
 	lastPanel = self
+end
+
+local function OnEvent(self, event)
+	updateTargetRange = UnitName("target") ~= nil
+	int = 0
+	if not updateTargetRange then
+		self.text:SetText("")
+	end
 end
 
 local function ValueColorUpdate(hex, r, g, b)
@@ -47,4 +58,4 @@ E['valueColorUpdateFuncs'][ValueColorUpdate] = true
 	click - function to fire when clicking the datatext
 	onEnterFunc - function to fire OnEnter
 ]]
-DT:RegisterDatatext('Target Range', nil, nil, OnUpdate)
+DT:RegisterDatatext('Target Range', {"PLAYER_TARGET_CHANGED"}, OnEvent, OnUpdate)
