@@ -174,7 +174,7 @@ function A:UpdateReminder(event, unit)
 			end
 		else
 			for i=3, 6 do
-				_G['ConsolidatedBuffsTooltipBuff'..i]:Show()
+				_G[("ConsolidatedBuffsTooltipBuff%d"):format(i)]:Show()
 			end			
 		end
 	end
@@ -269,17 +269,17 @@ function A:Button_OnEnter()
 		if (id == 3 or id == 4) and E.role == 'Caster' then
 			A.IndexTable[3] = A.SpellPower
 			A.IndexTable[4] = A.SpellHaste
-			
-			GameTooltip:AddLine(_G["RAID_BUFF_"..id+2])
+
+			GameTooltip:AddLine(_G[("RAID_BUFF_%d"):format(id+2)])
 		elseif id >= 5 then
-			GameTooltip:AddLine(_G["RAID_BUFF_"..id+2])
+			GameTooltip:AddLine(_G[("RAID_BUFF_%d"):format(id+2)])
 		else
 			if E.role ~= "Caster" then
 				A.IndexTable[3] = A.AttackPower
 				A.IndexTable[4] = A.AttackSpeed
 			end
 			
-			GameTooltip:AddLine(_G["RAID_BUFF_"..id])
+			GameTooltip:AddLine(_G[("RAID_BUFF_%d"):format(id)])
 		end
 	else
 		A.IndexTable[3] = A.AttackPower;
@@ -289,7 +289,7 @@ function A:Button_OnEnter()
 		A.IndexTable[7] = A.CriticalStrike;
 		A.IndexTable[8] = A.Mastery;
 		
-		GameTooltip:AddLine(_G["RAID_BUFF_"..id])
+		GameTooltip:AddLine(_G[("RAID_BUFF_%d"):format(id)])
 	end
 	
 	GameTooltip:AddLine(" ")
@@ -373,7 +373,7 @@ function A:Update_ConsolidatedBuffsSettings()
 		if i == 1 then
 			button:Point("TOP", ElvUI_ConsolidatedBuffs, "TOP", 0, -(E.PixelMode and 0 or 2)) -- -2 needs to be 0
 		else
-			button:Point("TOP", frame['spell'..i - 1], "BOTTOM", 0, (E.PixelMode and 1 or -1)) -- -1 needs to be 1
+			button:Point("TOP", frame[("spell%d"):format(i - 1)], "BOTTOM", 0, (E.PixelMode and 1 or -1)) -- -1 needs to be 1
 		end
 
 		if i == 6 and E.db.auras.consolidatedBuffs.filter or i == 8 then
@@ -403,8 +403,8 @@ function A:Update_ConsolidatedBuffsSettings()
 		end
 		local consolidatedBuffTooltipId = ("ConsolidatedBuffsTooltipBuff%d"):format(i)
 		_G[consolidatedBuffTooltipId]:ClearAllPoints()
-		_G[consolidatedBuffTooltipId]:SetAllPoints(frame['spell'..id])
-		_G[consolidatedBuffTooltipId]:SetParent(frame['spell'..id])
+		_G[consolidatedBuffTooltipId]:SetAllPoints(frame[("spell%d"):format(id)])
+		_G[consolidatedBuffTooltipId]:SetParent(frame[("spell%d"):format(id)])
 		_G[consolidatedBuffTooltipId]:SetAlpha(0)
 		_G[consolidatedBuffTooltipId]:SetScript("OnEnter", A.Button_OnEnter)
 		_G[consolidatedBuffTooltipId]:SetScript("OnLeave", A.Button_OnLeave)		
