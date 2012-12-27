@@ -85,14 +85,10 @@ function M:DisbandRaidGroup()
 	LeaveParty()
 end
 
-function M:IsPlayerMoving()
-	local val = GetUnitSpeed('player')
-	return val ~= 0
-end
-
 function M:CheckMovement()
-	if not WorldMapFrame:IsShown() then return; end
-	if self:IsPlayerMoving() then
+	if E.db.general.mapAlpha == 100 or not WorldMapFrame:IsShown() then return end
+	
+	if GetUnitSpeed('player') ~= 0 then
 		WorldMapFrame:SetAlpha(E.db.general.mapAlpha)
 	else
 		WorldMapFrame:SetAlpha(1)
