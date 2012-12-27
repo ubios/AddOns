@@ -44,33 +44,31 @@ local function SortGuildTable(shift)
 	end)
 end
 
+local chatframetexture = ChatFrame_GetMobileEmbeddedTexture(73/255, 177/255, 73/255)
+local onlinestatusstring = "|cffFFFFFF[|r|cffFF0000%s|r|cffFFFFFF]|r"
+local onlinestatus = {
+	[0] = function () return '' end,
+	[1] = function () return format(onlinestatusstring, L['AFK']) end,
+	[2] = function () return format(onlinestatusstring, L['DND']) end,
+}
+local mobilestatus = {
+	[0] = function () return chatframetexture end,
+	[1] = function () return MOBILE_AWAY_ICON end,
+	[2] = function () return MOBILE_BUSY_ICON end,
+}
+
 local function BuildGuildTable()
 	wipe(guildTable)
-	local name, rank, level, zone, note, officernote, connected, status, class, isMobile
+	local statusInfo
+	local name, rank, level, zone, note, officernote, connected, memberstatus, class, isMobile
 	for i = 1, GetNumGuildMembers() do
-		name, rank, rankIndex, level, _, zone, note, officernote, connected, status, class, _, _, isMobile = GetGuildRosterInfo(i)
-
-		if ( isMobile ) then
-			if status == 1 then
-				status = MOBILE_AWAY_ICON
-			elseif status == 2 then
-				status = MOBILE_BUSY_ICON
-			else
-				status = ChatFrame_GetMobileEmbeddedTexture(73/255, 177/255, 73/255)
-			end
-			zone = '';
-		else
-			if status == 1 then
-				status = "|cffFFFFFF[|r|cffFF0000"..L['AFK'].."|r|cffFFFFFF]|r"
-			elseif status == 2 then
-				status = "|cffFFFFFF[|r|cffFF0000"..L['DND'].."|r|cffFFFFFF]|r"
-			else 
-				status = '';
-			end		
-		end
+		name, rank, rankIndex, level, _, zone, note, officernote, connected, memberstatus, class, _, _, isMobile = GetGuildRosterInfo(i)
 		
+		statusInfo = isMobile and mobilestatus[memberstatus]() or onlinestatus[memberstatus]()
+		zone = isMobile and '' or zone
+
 		if connected then 
-			guildTable[#guildTable + 1] = { name, rank, level, zone, note, officernote, connected, status, class, rankIndex, isMobile }
+			guildTable[#guildTable + 1] = { name, rank, level, zone, note, officernote, connected, statusInfo, class, rankIndex, isMobile }
 		end
 	end
 end
@@ -95,8 +93,21 @@ end
 local eventHandlers = {
 	-- special handler to request guild roster updates when guild members come online or go
 	-- offline, since this does not automatically trigger the GuildRoster update from the server
+	-- another check is to make sure your AFK flag in the GuildRoster is updated correctly
 	["CHAT_MSG_SYSTEM"] = function (self, arg1)
-		if find(arg1, friendOnline) or find(arg1, friendOffline) then GuildRoster() end
+		if find(arg1, friendOnline) or find(arg1, friendOffline) or find(arg1, MARKED_AFK) or find(arg1, CLEARED_AFK) then 
+			GuildRoster()
+		end
+	end,
+	['PLAYER_FLAGS_CHANGED'] = function (self, arg1)
+		local memberstatus = IsChatAFK() and 1 or IsChatDND() and 2 or 0
+
+		for i = 1, #guildTable do
+			if guildTable[i][1] == E.myname then
+				guildTable[i][8] = onlinestatus[memberstatus]()
+				break
+			end
+		end
 	end,
 	-- when we enter the world and guildframe is not available then
 	-- load guild frame, update guild message and guild xp	
@@ -296,4 +307,4 @@ E['valueColorUpdateFuncs'][ValueColorUpdate] = true
 	onLeaveFunc - function to fire OnLeave, if not provided one will be set for you that hides the tooltip.
 ]]
 
-DT:RegisterDatatext('Guild', {'PLAYER_ENTERING_WORLD', "GUILD_ROSTER_UPDATE", "GUILD_XP_UPDATE", "PLAYER_GUILD_UPDATE", "GUILD_MOTD", "CHAT_MSG_SYSTEM"}, OnEvent, nil, Click, OnEnter)
+DT:RegisterDatatext('Guild', {'PLAYER_ENTERING_WORLD', "GUILD_ROSTER_UPDATE", "GUILD_XP_UPDATE", "PLAYER_GUILD_UPDATE", "GUILD_MOTD", "CHAT_MSG_SYSTEM", "PLAYER_FLAGS_CHANGED"}, OnEvent, nil, Click, OnEnter)
