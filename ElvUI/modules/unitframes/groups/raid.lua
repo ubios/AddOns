@@ -506,6 +506,7 @@ for i=10, 40, 15 do
 		frame:UpdateAllElements()
 		
 		if db.customTexts then
+			local customFont = UF.LSM:Fetch("font", objectDB.font or UF.db.font)
 			for objectName, _ in pairs(db.customTexts) do
 				if not frame[objectName] then
 					frame[objectName] = frame.RaisedElementParent:CreateFontString(nil, 'OVERLAY')
@@ -514,11 +515,11 @@ for i=10, 40, 15 do
 				local objectDB = db.customTexts[objectName]
 				UF:CreateCustomTextGroup('raid'..i, objectName)
 				
-				frame[objectName]:FontTemplate(UF.LSM:Fetch("font", objectDB.font or UF.db.font), objectDB.size or UF.db.fontSize, objectDB.fontOutline or UF.db.fontOutline)
+				frame[objectName]:FontTemplate(customFont, objectDB.size or UF.db.fontSize, objectDB.fontOutline or UF.db.fontOutline)
 				frame:Tag(frame[objectName], objectDB.text_format or '')
 				frame[objectName]:SetJustifyH(objectDB.justifyH or 'CENTER')
-			frame[objectName]:ClearAllPoints()
-			frame[objectName]:SetPoint(objectDB.justifyH or 'CENTER', frame, 'CENTER', objectDB.xOffset, objectDB.yOffset)
+				frame[objectName]:ClearAllPoints()
+				frame[objectName]:SetPoint(objectDB.justifyH or 'CENTER', frame, 'CENTER', objectDB.xOffset, objectDB.yOffset)
 			end
 		end		
 	end
