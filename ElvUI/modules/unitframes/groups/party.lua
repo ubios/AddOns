@@ -76,20 +76,7 @@ function UF:Update_PartyHeader(header, db)
 		self:ChangeVisibility(header, 'custom '..db.visibility)
 	end
 	
-	if db.groupBy == 'CLASS' then
-		header:SetAttribute("groupingOrder", "DEATHKNIGHT,DRUID,HUNTER,MAGE,PALADIN,PRIEST,SHAMAN,WARLOCK,WARRIOR")
-		header:SetAttribute('sortMethod', 'NAME')
-	elseif db.groupBy == 'ROLE' then
-		header:SetAttribute("groupingOrder", "MAINTANK,MAINASSIST,1,2,3,4,5,6,7,8")
-		header:SetAttribute('sortMethod', 'NAME')
-	elseif db.groupBy == 'NAME' then
-		header:SetAttribute("groupingOrder", "1,2,3,4,5,6,7,8")
-		header:SetAttribute('sortMethod', 'NAME')	
-	else
-		header:SetAttribute("groupingOrder", "1,2,3,4,5,6,7,8")
-		header:SetAttribute('sortMethod', 'INDEX')
-	end
-	
+	UF['headerGroupBy'][db.groupBy](header)
 	header:SetAttribute("groupBy", db.groupBy)
 	
 	if not header.isForced then
@@ -559,6 +546,7 @@ function UF:Update_PartyFrames(frame, db)
 	frame:EnableElement('ReadyCheck')		
 	
 	if db.customTexts then
+		local customFont = UF.LSM:Fetch("font", objectDB.font or UF.db.font)
 		for objectName, _ in pairs(db.customTexts) do
 			if not frame[objectName] then
 				frame[objectName] = frame.RaisedElementParent:CreateFontString(nil, 'OVERLAY')
@@ -567,7 +555,7 @@ function UF:Update_PartyFrames(frame, db)
 			local objectDB = db.customTexts[objectName]
 			UF:CreateCustomTextGroup('party', objectName)
 			
-			frame[objectName]:FontTemplate(UF.LSM:Fetch("font", objectDB.font or UF.db.font), objectDB.size or UF.db.fontSize, objectDB.fontOutline or UF.db.fontOutline)
+			frame[objectName]:FontTemplate(customFont, objectDB.size or UF.db.fontSize, objectDB.fontOutline or UF.db.fontOutline)
 			frame:Tag(frame[objectName], objectDB.text_format or '')
 			frame[objectName]:SetJustifyH(objectDB.justifyH or 'CENTER')
 			frame[objectName]:ClearAllPoints()

@@ -88,20 +88,7 @@ for i=10, 40, 15 do
 			self:ChangeVisibility(header, 'custom '..db.visibility)
 		end
 		
-		if db.groupBy == 'CLASS' then
-			header:SetAttribute("groupingOrder", "DEATHKNIGHT,DRUID,HUNTER,MAGE,PALADIN,PRIEST,SHAMAN,WARLOCK,WARRIOR")
-			header:SetAttribute('sortMethod', 'NAME')
-		elseif db.groupBy == 'ROLE' then
-			header:SetAttribute("groupingOrder", "MAINTANK,MAINASSIST,1,2,3,4,5,6,7,8")
-			header:SetAttribute('sortMethod', 'NAME')
-		elseif db.groupBy == 'NAME' then
-			header:SetAttribute("groupingOrder", "1,2,3,4,5,6,7,8")
-			header:SetAttribute('sortMethod', 'NAME')	
-		else
-			header:SetAttribute("groupingOrder", "1,2,3,4,5,6,7,8")
-			header:SetAttribute('sortMethod', 'INDEX')
-		end
-		
+		UF['headerGroupBy'][db.groupBy](header)
 		header:SetAttribute("groupBy", db.groupBy)
 		
 		if not header.isForced then
@@ -507,7 +494,6 @@ for i=10, 40, 15 do
 		UF:UpdateAuraWatch(frame)
 		
 		frame:EnableElement('ReadyCheck')		
-		frame:UpdateAllElements()
 		
 		if db.customTexts then
 			local customFont = UF.LSM:Fetch("font", objectDB.font or UF.db.font)
@@ -522,10 +508,12 @@ for i=10, 40, 15 do
 				frame[objectName]:FontTemplate(customFont, objectDB.size or UF.db.fontSize, objectDB.fontOutline or UF.db.fontOutline)
 				frame:Tag(frame[objectName], objectDB.text_format or '')
 				frame[objectName]:SetJustifyH(objectDB.justifyH or 'CENTER')
-			frame[objectName]:ClearAllPoints()
-			frame[objectName]:SetPoint(objectDB.justifyH or 'CENTER', frame, 'CENTER', objectDB.xOffset, objectDB.yOffset)
+				frame[objectName]:ClearAllPoints()
+				frame[objectName]:SetPoint(objectDB.justifyH or 'CENTER', frame, 'CENTER', objectDB.xOffset, objectDB.yOffset)
 			end
-		end		
+			
+			frame:UpdateAllElements()
+		end
 	end
 
 	UF['headerstoload']['raid'..i] = true

@@ -47,6 +47,25 @@ UF['classMaxResourceBar'] = {
 	['MAGE'] = 6,
 }
 
+UF['headerGroupBy'] = {
+	['CLASS'] = function(header)
+		header:SetAttribute("groupingOrder", "DEATHKNIGHT,DRUID,HUNTER,MAGE,PALADIN,PRIEST,SHAMAN,WARLOCK,WARRIOR")
+		header:SetAttribute('sortMethod', 'NAME')
+	end,
+	['ROLE'] = function(header)
+		header:SetAttribute("groupingOrder", "MAINTANK,MAINASSIST,1,2,3,4,5,6,7,8")
+		header:SetAttribute('sortMethod', 'NAME')	
+	end,
+	['NAME'] = function(header)
+		header:SetAttribute("groupingOrder", "1,2,3,4,5,6,7,8")
+		header:SetAttribute('sortMethod', 'NAME')	
+	end,
+	['GROUP'] = function(header)
+		header:SetAttribute("groupingOrder", "1,2,3,4,5,6,7,8")
+		header:SetAttribute('sortMethod', 'INDEX')
+	end,
+}
+
 local find = string.find
 local gsub = string.gsub
 
@@ -202,9 +221,10 @@ function UF:UpdateColors()
 end
 
 function UF:Update_StatusBars()
+	local statusBarTexture = LSM:Fetch("statusbar", self.db.statusbar)
 	for statusbar in pairs(UF['statusbars']) do
 		if statusbar and statusbar:GetObjectType() == 'StatusBar' then
-			statusbar:SetStatusBarTexture(LSM:Fetch("statusbar", self.db.statusbar))
+			statusbar:SetStatusBarTexture(statusBarTexture)
 		end
 	end
 end
@@ -218,8 +238,9 @@ function UF:Update_FontString(object)
 end
 
 function UF:Update_FontStrings()
+	local stringFont = LSM:Fetch("font", self.db.font)
 	for font in pairs(UF['fontstrings']) do
-		font:FontTemplate(LSM:Fetch("font", self.db.font), self.db.fontSize, self.db.fontOutline)
+		font:FontTemplate(stringFont, self.db.fontSize, self.db.fontOutline)
 	end
 end
 
@@ -238,8 +259,9 @@ function UF:ChangeVisibility(header, visibility)
 end
 
 function UF:Update_AllFrames()
-	if InCombatLockdown() then self:RegisterEvent('PLAYER_REGEN_ENABLED'); return end
-	if E.private["unitframe"].enable ~= true then return; end
+	if InCombatLockdown() then self:RegisterEvent('PLAYER_REGEN_ENABLED') return end
+	if E.private["unitframe"].enable ~= true then return end
+	
 	self:UpdateColors()
 	self:Update_FontStrings()
 	self:Update_StatusBars()	
@@ -266,7 +288,7 @@ function UF:Update_AllFrames()
 end
 
 function UF:CreateAndUpdateUFGroup(group, numGroup)
-	if InCombatLockdown() then self:RegisterEvent('PLAYER_REGEN_ENABLED'); return end
+	if InCombatLockdown() then self:RegisterEvent('PLAYER_REGEN_ENABLED') return end
 
 	for i=1, numGroup do
 		local unit = group..i
@@ -300,7 +322,7 @@ function UF:CreateAndUpdateUFGroup(group, numGroup)
 end
 
 function UF:CreateAndUpdateHeaderGroup(group, groupFilter, template)
-	if InCombatLockdown() then self:RegisterEvent('PLAYER_REGEN_ENABLED'); return end
+	if InCombatLockdown() then self:RegisterEvent('PLAYER_REGEN_ENABLED') return end
 
 	local db = self.db['units'][group]
 	if not self[group] then
@@ -390,7 +412,7 @@ end
 
 function UF:CreateAndUpdateUF(unit)
 	assert(unit, 'No unit provided to create or update.')
-	if InCombatLockdown() then self:RegisterEvent('PLAYER_REGEN_ENABLED'); return end
+	if InCombatLockdown() then self:RegisterEvent('PLAYER_REGEN_ENABLED') return end
 
 	local frameName = E:StringTitle(unit)
 	frameName = frameName:gsub('t(arget)', 'T%1')
@@ -447,7 +469,7 @@ function UF:UpdateAllHeaders(event)
 	if event == 'PLAYER_REGEN_ENABLED' then
 		self:UnregisterEvent('PLAYER_REGEN_ENABLED')
 	end
-		
+	
 	local _, instanceType = IsInInstance();
 	local ORD = ns.oUF_RaidDebuffs or oUF_RaidDebuffs
 	if ORD then
@@ -589,7 +611,7 @@ function ElvUF:DisableBlizzard(unit)
 end
 
 function UF:ADDON_LOADED(event, addon)
-	if addon ~= 'Blizzard_ArenaUI' then return; end
+	if addon ~= 'Blizzard_ArenaUI' then return end
 	ElvUF:DisableBlizzard('arena')
 	self:UnregisterEvent("ADDON_LOADED");
 end
@@ -731,6 +753,5 @@ function UF:MergeUnitSettings(fromUnit, toUnit)
 	E:SetupTheme(E.private.theme, true)
 	self:Update_AllFrames()
 end
-
 
 E:RegisterInitialModule(UF:GetName())
