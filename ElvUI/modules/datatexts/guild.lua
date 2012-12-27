@@ -47,7 +47,6 @@ end
 local function BuildGuildTable()
 	wipe(guildTable)
 	local name, rank, level, zone, note, officernote, connected, status, class, isMobile
-	local count = 0
 	for i = 1, GetNumGuildMembers() do
 		name, rank, rankIndex, level, _, zone, note, officernote, connected, status, class, _, _, isMobile = GetGuildRosterInfo(i)
 
@@ -71,11 +70,9 @@ local function BuildGuildTable()
 		end
 		
 		if connected then 
-			count = count + 1
-			guildTable[count] = { name, rank, level, zone, note, officernote, connected, status, class, rankIndex, isMobile }
+			guildTable[#guildTable + 1] = { name, rank, level, zone, note, officernote, connected, status, class, rankIndex, isMobile }
 		end
 	end
-	SortGuildTable(IsShiftKeyDown())
 end
 
 local function UpdateGuildXP()
@@ -95,31 +92,49 @@ local function UpdateGuildMessage()
 	guildMotD = GetGuildRosterMOTD()
 end
 
+local eventHandlers = {
+	-- special handler to request guild roster updates when guild members come online or go
+	-- offline, since this does not automatically trigger the GuildRoster update from the server
+	["CHAT_MSG_SYSTEM"] = function (self, arg1)
+		if find(arg1, friendOnline) or find(arg1, friendOffline) then GuildRoster() end
+	end,
+	-- when we enter the world and guildframe is not available then
+	-- load guild frame, update guild message and guild xp	
+	["PLAYER_ENTERING_WORLD"] = function (self, arg1)
+		if not GuildFrame and IsInGuild() then 
+			LoadAddOn("Blizzard_GuildUI")
+			UpdateGuildMessage() 
+			UpdateGuildXP() 
+			GuildRoster() 
+		end
+	end,
+	-- Guild Roster updated, so rebuild the guild table
+	["GUILD_ROSTER_UPDATE"] = function (self, arg1)
+		BuildGuildTable()
+	end,
+	-- our guild xp changed, recalculate it	
+	["GUILD_XP_UPDATE"] = function (self, arg1)
+		UpdateGuildXP()
+	end,
+	["PLAYER_GUILD_UPDATE"] = function (self, arg1)
+		GuildRoster()
+	end,
+	-- our guild message of the day changed
+	["GUILD_MOTD"] = function (self, arg1)
+		UpdateGuildMessage()
+	end,
+	["ELVUI_FORCE_RUN"] = function() end,
+	["ELVUI_COLOR_UPDATE"] = function() end,
+}
+
 local function OnEvent(self, event, ...)
 	lastPanel = self
 	
 	if IsInGuild() then
-		-- special handler to request guild roster updates when guild members come online or go
-		-- offline, since this does not automatically trigger the GuildRoster update from the server
-		if event == "CHAT_MSG_SYSTEM" then
-			local message = select(1, ...)
-			if find(message, friendOnline) or find(message, friendOffline) then GuildRoster() end
-		end
-		-- our guild xp changed, recalculate it
-		if event == "GUILD_XP_UPDATE" then UpdateGuildXP() return end
-		-- our guild message of the day changed
-		if event == "GUILD_MOTD" then UpdateGuildMessage() return end
-		-- when we enter the world and guildframe is not available then
-		-- load guild frame, update guild message and guild xp
-		
-		if event == "PLAYER_ENTERING_WORLD" then
-			if not GuildFrame and IsInGuild() then LoadAddOn("Blizzard_GuildUI") UpdateGuildMessage() UpdateGuildXP() end
-		end
-		-- an event occured that could change the guild roster, so request update, and wait for guild roster update to occur
-		if (event ~= "GUILD_ROSTER_UPDATE" and event~="PLAYER_GUILD_UPDATE") or event == 'ELVUI_FORCE_RUN' then GuildRoster()  if event ~= 'ELVUI_FORCE_RUN' then return end end
+		eventHandlers[event](self, select(1, ...))
 
-		local _, online = GetNumGuildMembers()
-		
+		-- update datatext information
+		local _, online = GetNumGuildMembers()	
 		self.text:SetFormattedText(displayString, online)
 	else
 		self.text:SetText(noGuildString)
@@ -194,8 +209,9 @@ local function OnEnter(self)
 	DT:SetupTooltip(self)
 	
 	local total, online = GetNumGuildMembers()
-	GuildRoster()
-	BuildGuildTable()
+	if #guildTable == 0 then BuildGuildTable() end
+
+	SortGuildTable(IsShiftKeyDown())
 
 	local guildName, guildRank = GetGuildInfo('player')
 	local guildLevel = GetGuildLevel()
@@ -280,4 +296,4 @@ E['valueColorUpdateFuncs'][ValueColorUpdate] = true
 	onLeaveFunc - function to fire OnLeave, if not provided one will be set for you that hides the tooltip.
 ]]
 
-DT:RegisterDatatext('Guild', {'PLAYER_ENTERING_WORLD', "GUILD_ROSTER_SHOW", "GUILD_ROSTER_UPDATE", "GUILD_XP_UPDATE", "PLAYER_GUILD_UPDATE", "GUILD_MOTD", "CHAT_MSG_SYSTEM"}, OnEvent, nil, Click, OnEnter)
+DT:RegisterDatatext('Guild', {'PLAYER_ENTERING_WORLD', "GUILD_ROSTER_UPDATE", "GUILD_XP_UPDATE", "PLAYER_GUILD_UPDATE", "GUILD_MOTD", "CHAT_MSG_SYSTEM"}, OnEvent, nil, Click, OnEnter)
