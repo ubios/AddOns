@@ -11,6 +11,7 @@ V['general'] = {
 	["namefont"] = "ElvUI Font",
 	['bubbles'] = true,
 	['pvpautorelease'] = true,
+	['autorepchange'] = true,
 	['pixelPerfect'] = true,
 
 	['minimap'] = {

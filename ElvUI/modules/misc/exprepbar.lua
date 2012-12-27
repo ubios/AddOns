@@ -192,6 +192,8 @@ function M:CreateBar(name, onEnter, ...)
 end
 
 function M:SetWatchedFactionOnReputationBar(event, msg)
+	if not E.private.general.autorepchange then return end
+	
 	local _, _, faction, amount = find(msg, incpat)
 	if not faction then _, _, faction, amount = find(msg, changedpat) or find(msg, decpat) end
 	if faction then

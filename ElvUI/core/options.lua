@@ -171,18 +171,26 @@ E.Options.args.general = {
 					name = L['PvP Autorelease'],
 					desc = L['Automatically release body when killed inside a battleground.'],
 					get = function(info) return E.private.general.pvpautorelease end,
-					set = function(info, value) E.private.general.pvpautorelease = value; E:StaticPopup_Show("PRIVATE_RL") end
+					set = function(info, value) E.private.general.pvpautorelease = value; E:StaticPopup_Show("PRIVATE_RL") end,
+				},
+				autorepchange = {
+					order = 16,
+					type = "toggle",
+					name = L['Track Reputation'],
+					desc = L['Automatically change your watched faction on the reputation bar to the faction you got reputation points for.'],
+					get = function(info) return E.private.general.autorepchange end,
+					set = function(info, value) E.private.general.autorepchange = value; end,
 				},
 				bottomPanel = {
-					order = 16,
+					order = 17,
 					type = 'toggle',
 					name = L['Bottom Panel'],
 					desc = L['Display a panel across the bottom of the screen. This is for cosmetic only.'],
 					get = function(info) return E.db.general.bottomPanel end,
-					set = function(info, value) E.db.general.bottomPanel = value; E:GetModule('Layout'):BottomPanelVisibility() end						
+					set = function(info, value) E.db.general.bottomPanel = value; E:GetModule('Layout'):BottomPanelVisibility() end,
 				},
 				topPanel = {
-					order = 17,
+					order = 18,
 					type = 'toggle',
 					name = L['Top Panel'],
 					desc = L['Display a panel across the top of the screen. This is for cosmetic only.'],
