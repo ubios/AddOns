@@ -2,6 +2,13 @@ local E, L, V, P, G, _ = unpack(select(2, ...)); --Inport: Engine, Locales, Priv
 local A = E:NewModule('Auras', 'AceHook-3.0', 'AceEvent-3.0');
 local LSM = LibStub("LibSharedMedia-3.0")
 
+local DAY, HOUR, MINUTE = 86400, 3600, 60 --used for formatting text
+local DAYISH, HOURISH, MINUTEISH = 3600 * 23.5, 60 * 59.5, 59.5 --used for formatting text at transition points
+local HALFDAYISH, HALFHOURISH, HALFMINUTEISH = DAY/2 + 0.5, HOUR/2 + 0.5, MINUTE/2 + 0.5 --used for calculating next update times
+
+local ceil = math.ceil
+local max = math.max
+
 function A:FormatTime(s)
 	local day, hour, minute = 86400, 3600, 60
 	if s >= day then
@@ -11,33 +18,58 @@ function A:FormatTime(s)
 	elseif s >= minute then
 		return format("|cffeeeeee%dm|r", ceil(s / minute))
 	elseif s >= minute / 12 and s > E.db.auras.fadeThreshold then
-		return tostring(floor(s))..'s'
+		return ("%ds"):format(floor(s))
 	end
 	return format("%.1fs", s)
 end
 
-function A:UpdateTime(elapsed)
-	if(self.expiration) then	
-		self.expiration = math.max(self.expiration - elapsed, 0)
-		if(self.expiration <= 0) then
-			self.time:SetText("")
+function A:AuraTimeGetText(s)
+	--format text as seconds when below a minute
+	if s < MINUTEISH then
+		if s >= 5 then
+			return A:FormatTime(s), 0.51
 		else
-			local time = A:FormatTime(self.expiration)
-			if self.expiration <= 86400.5 and self.expiration > 3600.5 then
-				self.time:SetText("|cffcccccc"..time.."|r")
-				E:StopFlash(self)
-			elseif self.expiration <= 3600.5 and self.expiration > 60.5 then
-				self.time:SetText("|cffcccccc"..time.."|r")
-				E:StopFlash(self)
-			elseif self.expiration <= 60.5 and self.expiration > E.db.auras.fadeThreshold then
-				self.time:SetText("|cffcccccc"..time.."|r")
-				E:StopFlash(self)
-			elseif self.expiration <= E.db.auras.fadeThreshold then
-				self.time:SetText("|cffff0000"..time.."|r")
-				E:Flash(self, 1)
-			end
+			return A:FormatTime(s), 0.051
 		end
+	--format text as minutes when below an hour
+	elseif s < HOURISH then
+		local minutes = tonumber(E:Round(s/MINUTE))
+		return A:FormatTime(s), minutes > 1 and (s - (minutes*MINUTE - HALFMINUTEISH)) or (s - MINUTEISH)
+	--format text as hours when below a day
+	elseif s < DAYISH then
+		local hours = tonumber(E:Round(s/HOUR))
+		return A:FormatTime(s), hours > 1 and (s - (hours*HOUR - HALFHOURISH)) or (s - HOURISH)
+	--format text as days
+	else
+		local days = tonumber(E:Round(s/DAY))
+		return A:FormatTime(s),  days > 1 and (s - (days*DAY - HALFDAYISH)) or (s - DAYISH)
 	end
+end
+
+function A:UpdateTime(elapsed)
+	if not self.expiration then return end
+
+	self.expiration = self.expiration - elapsed
+
+	if self.nextupdate > 0 then
+		self.nextupdate = self.nextupdate - elapsed
+		return
+	end
+	
+	if(self.expiration <= 0) then
+		self.time:SetText("")
+		return
+	end
+
+	local formattedTime, nextUpdate = A:AuraTimeGetText(self.expiration)
+	if self.expiration > 5 then
+		self.time:SetFormattedText("|cffcccccc%s|r", formattedTime)
+		E:StopFlash(self)
+	else
+		self.time:SetFormattedText("|cffff0000%s|r", formattedTime)
+		E:Flash(self, 1)
+	end
+	self.nextupdate = nextUpdate
 end
 
 function A:UpdateWeapon(button)
@@ -98,6 +130,7 @@ function A:UpdateAuras(header, button)
 		button.texture:SetTexCoord(unpack(E.TexCoords))
 		button.count:SetText(count > 1 and count or "")
 		button.expiration = expiration - GetTime()
+		button.nextupdate = 0
 		
 		if(header:GetAttribute("filter") == "HARMFUL") then
 			local color = DebuffTypeColor[dtype] or DebuffTypeColor.none

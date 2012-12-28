@@ -4,11 +4,6 @@ local LSM = LibStub("LibSharedMedia-3.0")
 
 local max = math.max
 
-local DAY, HOUR, MINUTE = 86400, 3600, 60 --used for formatting text
-local DAYISH, HOURISH, MINUTEISH = 3600 * 23.5, 60 * 59.5, 59.5 --used for formatting text at transition points
-local HALFDAYISH, HALFHOURISH, HALFMINUTEISH = DAY/2 + 0.5, HOUR/2 + 0.5, MINUTE/2 + 0.5 --used for calculating next update times
-
-
 A.Stats = {
 	[90363] = 'HUNTER', -- Embrace of the Shale Spider
 	[117667] = 'MONK', --Legacy of The Emperor
@@ -107,30 +102,6 @@ function A:CheckFilterForActiveBuff(filter)
 	return false, texture
 end
 
-function A:ConsolidatedTimeGetText(s)
-	--format text as seconds when below a minute
-
-	if s < MINUTEISH then
-		if s >= 5 then
-			return A:FormatTime(s), 0.51
-		else
-			return A:FormatTime(s), 0.051
-		end
-	--format text as minutes when below an hour
-	elseif s < HOURISH then
-		local minutes = tonumber(E:Round(s/MINUTE))
-		return A:FormatTime(s), minutes > 1 and (s - (minutes*MINUTE - HALFMINUTEISH)) or (s - MINUTEISH)
-	--format text as hours when below a day
-	elseif s < DAYISH then
-		local hours = tonumber(E:Round(s/HOUR))
-		return A:FormatTime(s), hours > 1 and (s - (hours*HOUR - HALFHOURISH)) or (s - HOURISH)
-	--format text as days
-	else
-		local days = tonumber(E:Round(s/DAY))
-		return A:FormatTime(s),  days > 1 and (s - (days*DAY - HALFDAYISH)) or (s - DAYISH)
-	end
-end
-
 function A:UpdateConsolidatedTime(elapsed)
 	if (not self.expiration) then return end
 	
@@ -146,7 +117,7 @@ function A:UpdateConsolidatedTime(elapsed)
 		return
 	end
 		
-	local formattedTime, nextUpdate = A:ConsolidatedTimeGetText(self.expiration)
+	local formattedTime, nextUpdate = A:AuraTimeGetText(self.expiration)
 	if self.expiration > 5 then
 		self.timer:SetFormattedText("|cffcccccc%s|r", formattedTime)
 	else
