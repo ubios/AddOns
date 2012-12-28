@@ -44,3 +44,14 @@ SlashCmdList["PERFORMANCE"] = function(arg)
 	end
 	print(string.format("Method 2: %.5f", debugprofilestop()))
 end
+
+SLASH_PROFILE1 = "/profile"
+SlashCmdList["PROFILE"] = function(arg)
+	local cpuProfiling = GetCVar("scriptProfile") == "1"
+	if cpuProfiling then
+		SetCVar("scriptProfile", "0")
+	else
+		SetCVar("scriptProfile", "1")
+	end
+	ReloadUI()
+end
