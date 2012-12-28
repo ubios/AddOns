@@ -2,18 +2,20 @@ local _, ns = ...
 local oUF = ns.oUF or oUF
 assert(oUF, 'oUF_AuraBars was unable to locate oUF install.')
 
+local floor = math.floor
+
 local function Round(number, decimalPlaces)
 	if decimalPlaces and decimalPlaces > 0 then
 		local mult = 10^decimalPlaces
-		return math.floor(number * mult + .5) / mult
+		return floor(number * mult + .5) / mult
 	end
-	return math.floor(num + .5)
+	return floor(num + .5)
 end
 
 local function FormatTime(timeInSec)
-	local h = math.floor(timeInSec / 3600)
-	local m = math.floor((timeInSec - (3600 * h)) / 60)
-	local s = math.floor(timeInSec - ((3600 * h) + (60 * m)))
+	local h = floor(timeInSec / 3600)
+	local m = floor((timeInSec - (3600 * h)) / 60)
+	local s = floor(timeInSec - ((3600 * h) + (60 * m)))
 	if h > 0 then
 		return h .. ":" .. m .. "h"
 	elseif m > 0 then
@@ -141,7 +143,11 @@ local function CreateAuraBar(oUF, anchor)
 	return frame
 end
 
-local function UpdateBars(auraBars)
+local function UpdateBars(auraBars, elapsed)
+	auraBars.elapsed = (auraBars.elapsed or 0) + elapsed
+	if auraBars.elapsed < .03333 then return end
+	auraBars.elapsed = 0
+	
 	local bars = auraBars.bars
 	local timenow = GetTime()
 

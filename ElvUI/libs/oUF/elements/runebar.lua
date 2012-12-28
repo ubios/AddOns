@@ -53,13 +53,17 @@ oUF.colors.runes = {
 local runemap = { 1, 2, 5, 6, 3, 4 }
 local BLOOD_OF_THE_NORTH = 54637
 local OnUpdate = function(self, elapsed)
-	local duration = self.duration + elapsed
+	self.elapsed = (self.elapsed or 0) + elapsed
+	if self.elapsed < .03333 then return end
+
+	local duration = self.duration + self.elapsed
 	if(duration >= self.max) then
 		return self:SetScript("OnUpdate", nil)
 	else
 		self.duration = duration
 		return self:SetValue(duration)
 	end
+	self.elapsed = 0
 end
 
 local spellName = GetSpellInfo(54637)
