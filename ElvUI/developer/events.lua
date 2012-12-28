@@ -26,5 +26,21 @@ SlashCmdList["CPU"] = function(arg)
 		ChatFrame1:AddMessage(string.format("%s [%d ms] -> %d calls.", frameInfo[i][1], frameInfo[i][2], frameInfo[i][3]))
 	end
 	ChatFrame1:AddMessage("*****")
+end
 
+SLASH_PERFORMANCE1 = "/performance"
+SlashCmdList["PERFORMANCE"] = function(arg)
+	local result
+
+	debugprofilestart()
+	for i=1, 1000000 do
+
+	end
+	print(string.format("Method 1: %.5f", debugprofilestop()))
+
+	debugprofilestart()
+	for i=1, 1000000 do
+	
+	end
+	print(string.format("Method 2: %.5f", debugprofilestop()))
 end
