@@ -6,12 +6,6 @@ local OVERLAY = [=[Interface\TargetingFrame\UI-TargetingFrame-Flash]=]
 local numChildren = -1
 local backdrop
 
--- Localized WoW functions
-local InCombatLockdown = InCombatLockdown
-local UnitExists = UnitExists
-local UnitGUID = UnitGUID
-local UnitName = UnitName
-
 NP.Handled = {} --Skinned Nameplates
 NP.BattleGroundHealers = {};
 

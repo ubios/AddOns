@@ -11,16 +11,6 @@ local format = string.format
 local sub = string.sub
 local floor = math.floor
 
--- Localized WOW
-local UnitAura = UnitAura
-local UnitClass = UnitClass
-local UnitExists = UnitExists
-local UnitIsFriend = UnitIsFriend
-local UnitIsPlayer = UnitIsPlayer
-local UnitReaction = UnitReaction
-local UnitSpellHaste = UnitSpellHaste
-local UnitThreatSituation = UnitThreatSituation
-
 local _, ns = ...
 local ElvUF = ns.oUF
 assert(ElvUF, "ElvUI was unable to locate oUF.")

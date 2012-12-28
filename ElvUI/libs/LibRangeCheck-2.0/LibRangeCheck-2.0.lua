@@ -328,22 +328,6 @@ local wipe = wipe
 local tinsert = tinsert
 local tremove = tremove
 local BOOKTYPE_SPELL = BOOKTYPE_SPELL
-local GetSpellInfo = GetSpellInfo
-local GetSpellBookItemName = GetSpellBookItemName
-local GetNumSpellTabs = GetNumSpellTabs
-local GetSpellTabInfo = GetSpellTabInfo
-local GetItemInfo = GetItemInfo
-local UnitCanAttack = UnitCanAttack
-local UnitCanAssist = UnitCanAssist
-local UnitExists = UnitExists
-local UnitIsDeadOrGhost = UnitIsDeadOrGhost
-local CheckInteractDistance = CheckInteractDistance
-local IsSpellInRange = IsSpellInRange
-local IsItemInRange = IsItemInRange
-local UnitClass = UnitClass
-local UnitRace = UnitRace
-local GetInventoryItemLink = GetInventoryItemLink
-local GetTime = GetTime
 local HandSlotId = GetInventorySlotInfo("HandsSlot")
 
 -- temporary stuff

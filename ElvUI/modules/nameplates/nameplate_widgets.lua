@@ -5,15 +5,6 @@ local ceil = math.ceil
 local wipe = table.wipe
 local band = bit.band
 
--- localized WoW functions
-local UnitCastingInfo = UnitCastingInfo
-local UnitChannelInfo = UnitChannelInfo
-local UnitDebuff = UnitDebuff
-local UnitExists = UnitExists
-local UnitGUID = UnitGUID
-local UnitName = UnitName
-
-
 --[[
 	This file handles functions for the Castbar and Debuff modules of nameplates.
 ]]
