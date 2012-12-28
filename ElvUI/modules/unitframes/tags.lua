@@ -268,12 +268,12 @@ end
 
 ElvUF.Tags.Methods['pvptimer'] = function(unit)	
 	if (UnitIsPVPFreeForAll(unit) or UnitIsPVP(unit)) then
-		local time = GetPVPTimer()
-		local min = format("%01.f", floor((time / 1000) / 60))
-		local sec = format("%02.f", floor((time / 1000) - min * 60)) 
+		local timer = GetPVPTimer()
 
-		if time ~= 301000 and time ~= -1 then	
-			return ("%s (%d:%d)"):format(PVP, min, sec)
+		if timer ~= 301000 and timer ~= -1 then	
+			local mins = floor((timer / 1000) / 60)
+			local secs = floor((timer / 1000) - (mins * 60))
+			return ("%s (%01.f:%02.f)"):format(PVP, mins, secs)
 		else
 			return PVP
 		end
