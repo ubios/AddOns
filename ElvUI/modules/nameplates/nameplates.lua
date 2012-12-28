@@ -20,6 +20,7 @@ NP.Healers = {
 	[L['Mistweaver']] = true,
 }
 
+
 function NP:Initialize()
 	self.db = E.db["nameplate"]
 	if E.private["nameplate"].enable ~= true then return end
@@ -59,10 +60,8 @@ function NP:QueueObject(frame, object)
 	if not frame.queue then frame.queue = {} end
 	frame.queue[object] = true
 	
-	if object.OldShow then
-		object.Show = object.OldShow
-		object:Show()
-	end
+	object.allowShow = true;
+	object:Show();
 	
 	if object.OldTexture then
 		object:SetTexture(object.OldTexture)
@@ -73,7 +72,7 @@ function NP:CreateVirtualFrame(parent, point)
 	if point == nil then point = parent end
 	local noscalemult = E.mult * UIParent:GetScale()
 	
-	if point.backdrop then return end
+	if point.bordertop then return end
 	
 	point.backdrop2 = parent:CreateTexture(nil, "BORDER")
 	point.backdrop2:SetDrawLayer("BORDER", -4)
@@ -166,10 +165,17 @@ function NP:ForEachPlate(functionToRun, ...)
 	end
 end
 
+local function RehideFrame(self)
+	if not self.allowShow then
+		self:Hide()
+	end
+	
+	self.allowShow = nil;
+end
+
 function NP:HideObjects(frame)
 	for object in pairs(frame.queue) do
-		object.OldShow = object.Show
-		object.Show = E.noop
+		hooksecurefunc(object, "Show", RehideFrame)
 		
 		local objectType = object:GetObjectType()	
 		if objectType == "Texture" then
@@ -297,6 +303,13 @@ function NP:HealthBar_OnShow(frame)
 	NP:Colorize(frame, r, g, b)
 	frame.hp.hpbg:SetTexture(frame.hp.rcolor, frame.hp.gcolor, frame.hp.bcolor, 0.25)
 	
+	if frame.hasClass and self.db.classIcons then
+		local tCoords = CLASS_BUTTONS[frame.hasClass]
+		frame.classIcon:SetTexCoord(tCoords[1], tCoords[2], tCoords[3], tCoords[4])
+		frame.classIcon:Show()
+	elseif frame.classIcon:IsShown() then
+		frame.classIcon:Hide()
+	end
 	--Set the name text
 	frame.hp.name:SetText(frame.hp.oldname:GetText())	
 	while frame.hp:GetEffectiveScale() < 1 do
@@ -325,6 +338,7 @@ function NP:OnHide(frame)
 	frame.hp.name:SetTextColor(1, 1, 1)
 	frame.hp:SetScale(1)
 	frame.cb:SetScale(1)
+	frame.classIcon:Hide()
 	frame.AuraWidget:SetScale(1)
 	frame.cb:Hide()
 	frame.unit = nil
@@ -415,6 +429,13 @@ function NP:SkinPlate(frame, nameFrame)
 		frame.hp.level:SetText(oldlevel:GetText())
 	end
 	
+	if not frame.classIcon then
+		frame.classIcon = frame.hp:CreateTexture(nil, "ARTWORK");
+		frame.classIcon:Size(30);
+		frame.classIcon:Point("RIGHT", frame.hp.level, "LEFT", -1, 0);
+		frame.classIcon:SetTexture([[Interface\WorldStateFrame\Icons-Classes]]);
+		frame.classIcon:Hide();
+	end	
 	--Name Text
 	if not frame.hp.name then
 		frame.hp.name = frame.hp:CreateFontString(nil, 'OVERLAY')
