@@ -8,6 +8,7 @@ local HALFDAYISH, HALFHOURISH, HALFMINUTEISH = DAY/2 + 0.5, HOUR/2 + 0.5, MINUTE
 
 local ceil = math.ceil
 local max = math.max
+local find = string.find
 
 function A:FormatTime(s, short)
 	local day, hour, minute = 86400, 3600, 60
@@ -221,7 +222,7 @@ function A:PostDrag(position)
 	for _, header in pairs(headers) do
 		if header then
 			if not position then position = E:GetScreenQuadrant(header) end
-			if string.find(position, "LEFT") then
+			if find(position, "LEFT") then
 				header:SetAttribute("point", "TOPLEFT")
 				header:SetAttribute("xOffset", (E.private.auras.size + (E.PixelMode and 6 or 10)))
 			else
@@ -233,7 +234,7 @@ function A:PostDrag(position)
 		end
 	end
 	
-	if string.find(position, "LEFT") then
+	if find(position, "LEFT") then
 		ElvUIPlayerBuffs:Point("TOPLEFT", AurasHolder, "TOPLEFT", 2, -2)
 		
 		if ElvUIPlayerDebuffs then
@@ -250,7 +251,7 @@ end
 
 function A:WeaponPostDrag(point)
 	if not point then point = E:GetScreenQuadrant(self) end
-	if string.find(point, "LEFT") then
+	if find(point, "LEFT") then
 		TempEnchant1:ClearAllPoints()
 		TempEnchant2:ClearAllPoints()
 		TempEnchant1:SetPoint("TOPLEFT", self, "TOPLEFT", 0, 0)

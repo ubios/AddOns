@@ -7,6 +7,9 @@ local oUF = ns.oUF
 
 local _PATTERN = '%[..-%]+'
 
+local floor = math.floor
+local insert, remove = table.insert, table.remove
+
 local _ENV = {
 	Hex = function(r, g, b)
 		if type(r) == "table" then
@@ -93,7 +96,7 @@ local tagStrings = {
 		if(m == 0) then
 			return 0
 		else
-			return math.floor(UnitHealth(u)/m*100+.5)
+			return floor(UnitHealth(u)/m*100+.5)
 		end
 	end]],
 
@@ -102,7 +105,7 @@ local tagStrings = {
 		if(m == 0) then
 			return 0
 		else
-			return math.floor(UnitPower(u)/m*100+.5)
+			return floor(UnitPower(u)/m*100+.5)
 		end
 	end]],
 
@@ -443,7 +446,7 @@ local RegisterEvent = function(fontstr, event)
 	if(not events[event]) then events[event] = {} end
 
 	frame:RegisterEvent(event)
-	table.insert(events[event], fontstr)
+	insert(events[event], fontstr)
 end
 
 local RegisterEvents = function(fontstr, tagstr)
@@ -466,7 +469,7 @@ local UnregisterEvents = function(fontstr)
 					frame:UnregisterEvent(event)
 				end
 
-				table.remove(data, k)
+				remove(data, k)
 			end
 		end
 	end
@@ -500,7 +503,7 @@ local Tag = function(self, fs, tagstr)
 	if(not self.__tags) then
 		self.__tags = {}
 		self.__mousetags = {}
-		table.insert(self.__elements, OnShow)
+		insert(self.__elements, OnShow)
 	else
 		-- Since people ignore everything that's good practice - unregister the tag
 		-- if it already exists.
@@ -522,7 +525,7 @@ local Tag = function(self, fs, tagstr)
 	end
 	
 	if tagstr:find('%[mouseover%]') then
-		table.insert(self.__mousetags, fs)
+		insert(self.__mousetags, fs)
 		fs:SetAlpha(0)
 		if not self.__HookFunc then
 			self:HookScript('OnEnter', OnEnter)
@@ -596,7 +599,7 @@ local Tag = function(self, fs, tagstr)
 			end
 
 			if(tagFunc) then
-				table.insert(args, tagFunc)
+				insert(args, tagFunc)
 			else
 				numTags = -1
 				func = function(self)
@@ -689,14 +692,14 @@ local Tag = function(self, fs, tagstr)
 		end
 
 		if(not eventlessUnits[timer]) then eventlessUnits[timer] = {} end
-		table.insert(eventlessUnits[timer], fs)
+		insert(eventlessUnits[timer], fs)
 
 		createOnUpdate(timer)
 	else
 		RegisterEvents(fs, tagstr)
 	end
 
-	table.insert(self.__tags, fs)
+	insert(self.__tags, fs)
 end
 
 local Untag = function(self, fs)
@@ -706,14 +709,14 @@ local Untag = function(self, fs)
 	for _, timers in next, eventlessUnits do
 		for k, fontstr in next, timers do
 			if(fs == fontstr) then
-				table.remove(timers, k)
+				remove(timers, k)
 			end
 		end
 	end
 
 	for k, fontstr in next, self.__tags do
 		if(fontstr == fs) then
-			table.remove(self.__tags, k)
+			remove(self.__tags, k)
 		end
 	end
 
