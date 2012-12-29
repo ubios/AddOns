@@ -3,6 +3,9 @@ local A = E:GetModule('Auras');
 local LSM = LibStub("LibSharedMedia-3.0")
 
 local max = math.max
+local format = string.format
+local join = string.join
+local wipe = table.wipe
 
 A.Stats = {
 	[90363] = 'HUNTER', -- Embrace of the Shale Spider
@@ -114,14 +117,10 @@ function A:UpdateConsolidatedTime(elapsed)
 		self:SetScript("OnUpdate", nil)
 		return
 	end
-		
-	local formattedTime, nextUpdate = A:AuraTimeGetText(self.expiration, false)
-	if self.expiration > E.db.auras.fadeThreshold then
-		self.timer:SetFormattedText("|cffcccccc%s|r", formattedTime)
-	else
-		self.timer:SetFormattedText("|cffff0000%s|r", formattedTime)
-	end
-	self.nextupdate = nextUpdate
+	
+	local timervalue, formatid
+	timervalue, formatid, self.nextupdate = A:AuraTimeGetInfo(self.expiration)
+	self.timer:SetFormattedText(join("", "|", A.TimeColors[formatid], A.TimeFormats[formatid][1], "|r"), timervalue)
 end
 
 function A:UpdateReminder(event, unit)
@@ -218,7 +217,7 @@ function A:UpdateReminder(event, unit)
 		end
 	end
 	
-	table.wipe(buffs)
+	wipe(buffs)
 	buffs = nil
 end
 
@@ -268,7 +267,7 @@ function A:Button_OnEnter()
 			local color = RAID_CLASS_COLORS[buffProvider]
 			
 			if self:GetParent().hasBuff == spellName then
-				GameTooltip:AddLine(spellName..' - '..ACTIVE_PETS, color.r, color.g, color.b)
+				GameTooltip:AddLine(("%s - %s"):format(spellName, ACTIVE_PETS), color.r, color.g, color.b)
 			else
 				GameTooltip:AddLine(spellName, color.r, color.g, color.b)
 			end
@@ -303,7 +302,7 @@ end
 
 function A:EnableCB()
 	ElvUI_ConsolidatedBuffs:Show()
-	BuffFrame:RegisterEvent('UNIT_AURA')
+	BuffFrame:RegisterUnitEvent('UNIT_AURA', "player")
 	self:RegisterEvent("ACTIVE_TALENT_GROUP_CHANGED", 'UpdateReminder')
 	self:RegisterEvent("UNIT_INVENTORY_CHANGED", 'UpdateReminder')
 	self:RegisterEvent("UNIT_AURA", 'UpdateReminder')
@@ -318,7 +317,7 @@ end
 
 function A:DisableCB()
 	ElvUI_ConsolidatedBuffs:Hide()
-	BuffFrame:UnregisterEvent('UNIT_AURA')
+	BuffFrame:UnregisterUnitEvent('UNIT_AURA', "player")
 	self:UnregisterEvent("ACTIVE_TALENT_GROUP_CHANGED")
 	self:UnregisterEvent("UNIT_INVENTORY_CHANGED")
 	self:UnregisterEvent("UNIT_AURA")
