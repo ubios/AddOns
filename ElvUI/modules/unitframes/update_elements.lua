@@ -1,5 +1,6 @@
 local E, L, V, P, G, _ = unpack(select(2, ...)); --Inport: Engine, Locales, PrivateDB, ProfileDB, GlobalDB, Localize Underscore
 local UF = E:GetModule('UnitFrames');
+local A = E:GetModule('Auras')
 local LSM = LibStub("LibSharedMedia-3.0");
 local LSR = LibStub("LibSpecRoster-1.0")
 
@@ -164,58 +165,30 @@ function UF:PortraitUpdate(unit)
 	end
 end
 
-local day, hour, minute, second = 86400, 3600, 60, 1
-function UF:FormatTime(s, reverse)
-	if s >= day then
-		return format("%dd", ceil(s / hour))
-	elseif s >= hour then
-		return format("%dh", ceil(s / hour))
-	elseif s >= minute then
-		return format("%dm", ceil(s / minute))
-	elseif s >= minute / 12 then
-		return floor(s)
-	end
-	
-	if reverse and reverse == true and s >= second then
-		return floor(s)
-	else	
-		return format("%.1f", s)
-	end
-end
-
 function UF:UpdateAuraTimer(elapsed)	
-	if not self.timeLeft then return end
-	
-	self.elapsed = (self.elapsed or 0) + elapsed
-	
-	if self.elapsed < 0.1 then return end
-	
-	if not self.first then
-		self.timeLeft = self.timeLeft - self.elapsed
-	else
-		self.timeLeft = self.timeLeft - GetTime()
-		self.first = false
+	self.expiration = self.expiration - elapsed
+	if self.nextupdate > 0 then
+		self.nextupdate = self.nextupdate - elapsed
+		return
 	end
 	
-	self.elapsed = 0
-	
-	if self.timeLeft > 0 then
-		self.text:SetText(not self.reverse and UF:FormatTime(self.timeLeft) or UF:FormatTime(abs(self.timeLeft - self.duration), true))
-		if self.timeLeft <= 5 then
-			self.text:SetTextColor(0.99, 0.31, 0.31)
-		else
-			self.text:SetTextColor(1, 1, 1)
-		end
-	else
-		self:SetScript("OnUpdate", nil)
-		self.text:Hide()
+	if(self.expiration <= 0) then
+		self:SetScript('OnUpdate', nil)
 		self.text:SetText('')
-		self.text:SetTextColor(1, 1, 1)
-	end	
+		return
+	end
+
+	local formattedTime, nextUpdate = A:AuraTimeGetText(self.expiration, true)
+	if self.expiration > E.db.auras.fadeThreshold then
+		self.text:SetFormattedText("|cffcccccc%s|r", formattedTime)
+	else
+		self.text:SetFormattedText("|cffff0000%s|r", formattedTime)
+	end
+	self.nextupdate = nextUpdate
 end
 
 function UF:PostUpdateAura(unit, button, index, offset, filter, isDebuff, duration, timeLeft)
-	local name, _, _, _, dtype, duration, expirationTime, _, isStealable = UnitAura(unit, index, button.filter)
+	local name, _, _, _, dtype, duration, expiration, _, isStealable = UnitAura(unit, index, button.filter)
 	local db = self:GetParent().db
 	
 	if db and db[self.type] then
@@ -252,20 +225,31 @@ function UF:PostUpdateAura(unit, button, index, offset, filter, isDebuff, durati
 			button:SetBackdropBorderColor(unpack(E["media"].bordercolor))		
 		end	
 	end
-	
-	button.isStealable = isStealable
-	button.duration = duration
-	button.timeLeft = expirationTime
-	button.first = true	
-	button.text:SetText(UF:FormatTime(expirationTime - GetTime(), button.reverse))
-	button.text:Show()
-	
+
 	local size = button:GetParent().size
 	if size then
 		button:Size(size)
 	end
 	
-	button:SetScript('OnUpdate', UF.UpdateAuraTimer)
+	button.spell = name
+	button.isStealable = isStealable
+	if duration ~= 0 then
+		if not button:GetScript('OnUpdate') then
+			button.expirationTime = expiration
+			button.expiration = expiration - GetTime()
+			button.nextupdate = 0.05
+			button:SetScript('OnUpdate', UF.UpdateAuraTimer)
+		end
+		if button.expirationTime ~= expiration  then
+			button.expirationTime = expiration
+			button.expiration = expiration - GetTime()
+			button.nextupdate = 0.05
+		end
+	end	
+	if duration == 0 or expiration == 0 then
+		button:SetScript('OnUpdate', nil)
+		button.text:SetText('')
+	end
 end
 
 function UF:CustomCastDelayText(duration)

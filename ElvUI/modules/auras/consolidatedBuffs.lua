@@ -103,22 +103,20 @@ function A:CheckFilterForActiveBuff(filter)
 end
 
 function A:UpdateConsolidatedTime(elapsed)
-	if (not self.expiration) then return end
-	
-	self.expiration = self.expiration - elapsed
-	
+	self.expiration = self.expiration - elapsed	
 	if self.nextupdate > 0 then
 		self.nextupdate = self.nextupdate - elapsed
 		return
 	end
-
-	if self.expiration <= 0 then
+	
+	if(self.expiration <= 0) then
 		self.timer:SetText("")
+		self:SetScript("OnUpdate", nil)
 		return
 	end
 		
-	local formattedTime, nextUpdate = A:AuraTimeGetText(self.expiration)
-	if self.expiration > 5 then
+	local formattedTime, nextUpdate = A:AuraTimeGetText(self.expiration, false)
+	if self.expiration > E.db.auras.fadeThreshold then
 		self.timer:SetFormattedText("|cffcccccc%s|r", formattedTime)
 	else
 		self.timer:SetFormattedText("|cffff0000%s|r", formattedTime)

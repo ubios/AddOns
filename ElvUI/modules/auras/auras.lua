@@ -9,48 +9,45 @@ local HALFDAYISH, HALFHOURISH, HALFMINUTEISH = DAY/2 + 0.5, HOUR/2 + 0.5, MINUTE
 local ceil = math.ceil
 local max = math.max
 
-function A:FormatTime(s)
+function A:FormatTime(s, short)
 	local day, hour, minute = 86400, 3600, 60
-	if s >= day then
-		return format("|cffeeeeee%dd|r", ceil(s / day))
-	elseif s >= hour then
-		return format("|cffeeeeee%dh|r", ceil(s / hour))
-	elseif s >= minute then
-		return format("|cffeeeeee%dm|r", ceil(s / minute))
-	elseif s >= minute / 12 and s > E.db.auras.fadeThreshold then
-		return ("%ds"):format(floor(s))
+	if s >= DAY then
+		return format("|cffeeeeee%dd|r", ceil(s / DAY))
+	elseif s >= HOUR then
+		return format("|cffeeeeee%dh|r", ceil(s / HOUR))
+	elseif s >= MINUTE then
+		return format("|cffeeeeee%dm|r", ceil(s / MINUTE))
+	elseif s > E.db.auras.fadeThreshold then
+		return format(short and "%d" or "%ds", floor(s))
 	end
-	return format("%.1fs", s)
+	return format(short and "%.1f" or "%.1fs", s)
 end
 
-function A:AuraTimeGetText(s)
+function A:AuraTimeGetText(s, short)
 	--format text as seconds when below a minute
 	if s < MINUTEISH then
-		if s >= 5 then
-			return A:FormatTime(s), 0.51
+		if s >= E.db.auras.fadeThreshold then
+			return A:FormatTime(s, short), 0.51
 		else
-			return A:FormatTime(s), 0.051
+			return A:FormatTime(s, short), 0.051
 		end
 	--format text as minutes when below an hour
 	elseif s < HOURISH then
 		local minutes = tonumber(E:Round(s/MINUTE))
-		return A:FormatTime(s), minutes > 1 and (s - (minutes*MINUTE - HALFMINUTEISH)) or (s - MINUTEISH)
+		return A:FormatTime(s, short), minutes > 1 and (s - (minutes*MINUTE - HALFMINUTEISH)) or (s - MINUTEISH)
 	--format text as hours when below a day
 	elseif s < DAYISH then
 		local hours = tonumber(E:Round(s/HOUR))
-		return A:FormatTime(s), hours > 1 and (s - (hours*HOUR - HALFHOURISH)) or (s - HOURISH)
+		return A:FormatTime(s, short), hours > 1 and (s - (hours*HOUR - HALFHOURISH)) or (s - HOURISH)
 	--format text as days
 	else
 		local days = tonumber(E:Round(s/DAY))
-		return A:FormatTime(s),  days > 1 and (s - (days*DAY - HALFDAYISH)) or (s - DAYISH)
+		return A:FormatTime(s, short),  days > 1 and (s - (days*DAY - HALFDAYISH)) or (s - DAYISH)
 	end
 end
 
 function A:UpdateTime(elapsed)
-	if not self.expiration then return end
-
 	self.expiration = self.expiration - elapsed
-
 	if self.nextupdate > 0 then
 		self.nextupdate = self.nextupdate - elapsed
 		return
@@ -58,11 +55,12 @@ function A:UpdateTime(elapsed)
 	
 	if(self.expiration <= 0) then
 		self.time:SetText("")
+		self:SetScript("OnUpdate", nil)
 		return
 	end
 
-	local formattedTime, nextUpdate = A:AuraTimeGetText(self.expiration)
-	if self.expiration > 5 then
+	local formattedTime, nextUpdate = A:AuraTimeGetText(self.expiration, false)
+	if self.expiration > E.db.auras.fadeThreshold then
 		self.time:SetFormattedText("|cffcccccc%s|r", formattedTime)
 		E:StopFlash(self)
 	else
@@ -108,8 +106,6 @@ function A:UpdateAuras(header, button)
 		button.time = button:CreateFontString(nil, "ARTWORK")
 		button.time:SetPoint("TOP", button, 'BOTTOM', 0, -2)
 		button.time:FontTemplate()--safty
-
-		button:SetScript("OnUpdate", A.UpdateTime)
 		
 		button:CreateBackdrop('Default')
 
@@ -131,6 +127,7 @@ function A:UpdateAuras(header, button)
 		button.count:SetText(count > 1 and count or "")
 		button.expiration = expiration - GetTime()
 		button.nextupdate = 0
+		button:SetScript("OnUpdate", A.UpdateTime)
 		
 		if(header:GetAttribute("filter") == "HARMFUL") then
 			local color = DebuffTypeColor[dtype] or DebuffTypeColor.none
