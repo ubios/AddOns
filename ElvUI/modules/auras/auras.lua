@@ -11,7 +11,6 @@ local max = math.max
 local find = string.find
 
 function A:FormatTime(s, short)
-	local day, hour, minute = 86400, 3600, 60
 	if s >= DAY then
 		return format("|cffeeeeee%dd|r", ceil(s / DAY))
 	elseif s >= HOUR then
