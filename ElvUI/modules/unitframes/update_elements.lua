@@ -124,7 +124,7 @@ function UF:PostUpdatePower(unit, min, max)
 	if self.LowManaText and db then
 		if pType == 0 then
 			local perc = max == 0 and 0 or floor(min / max * 100)		
-			if perc <= db.lowmana and not (UnitIsDead(unit) or UnitIsGhost(unit)) then
+			if perc <= db.lowmana and not UnitIsDeadOrGhost(unit) then
 				self.LowManaText:SetText(LOW..' '..MANA)
 				E:Flash(self.LowManaText, 0.6)
 			else

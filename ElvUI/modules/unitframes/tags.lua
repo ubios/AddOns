@@ -19,7 +19,7 @@ end
 
 ElvUF.Tags.Events['healthcolor'] = 'UNIT_HEALTH_FREQUENT UNIT_MAXHEALTH UNIT_CONNECTION'
 ElvUF.Tags.Methods['healthcolor'] = function(unit)
-	if UnitIsDead(unit) or UnitIsGhost(unit) or not UnitIsConnected(unit) then
+	if UnitIsDeadOrGhost(unit) or not UnitIsConnected(unit) then
 		return Hex(0.84, 0.75, 0.65)
 	else
 		local r, g, b = ElvUF.ColorGradient(UnitHealth(unit), UnitHealthMax(unit), 0.69, 0.31, 0.31, 0.65, 0.63, 0.35, 0.33, 0.59, 0.33)
