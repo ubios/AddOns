@@ -487,7 +487,7 @@ do --Talent check/change events
 				--It not very interesting having a FREQUENT event free for more time than needed, so the delayed unregister of the event
 				
 				frequentFiredOnce = false;
-				frame:RegisterEvent("UNIT_POWER_FREQUENT");
+				frame:RegisterUnitEvent("UNIT_POWER_FREQUENT", "player");
 				timers.delayedUpdate:SetScript("OnHide",function() frame:UnregisterEvent("UNIT_POWER_FREQUENT"); end)
 				timers.delayedUpdate:SetCooldown(GetTime(),0) 
 			end
@@ -501,21 +501,21 @@ do --Talent check/change events
 	end
 
 	function LBPT.UNIT_POWER_FREQUENT(unit,power) 
-		if unit == "player" and power == "ECLIPSE" then
-			vars.bug0ToBeWorkarounded = false;
-			local e = UnitPower("player",SPELL_POWER_ECLIPSE)
-			local d = GetEclipseDirection() --REMOVE when (7) is removed 
-			if (vars.energy ~= e or vars.direction ~= d) then
-				vars.direction = d
-				LBPT.RecalcEnergy(e)
-				frequentFiredOnce = true;
-			end
-			
-			if frequentFiredOnce then 
-				frame:UnregisterEvent("UNIT_POWER_FREQUENT");
-			end
+		if not power == "ECLIPSE" then return end
+		
+		vars.bug0ToBeWorkarounded = false;
+		local e = UnitPower("player",SPELL_POWER_ECLIPSE)
+		local d = GetEclipseDirection() --REMOVE when (7) is removed 
+		if (vars.energy ~= e or vars.direction ~= d) then
+			vars.direction = d
+			LBPT.RecalcEnergy(e)
 			frequentFiredOnce = true;
 		end
+		
+		if frequentFiredOnce then 
+			frame:UnregisterEvent("UNIT_POWER_FREQUENT");
+		end
+		frequentFiredOnce = true;
 	end
 end
 
@@ -583,16 +583,16 @@ do --Combat events-------------
 		deleteSpell()
 	end
 	
-	function LBPT.UNIT_POWER(unit,power) --Scheduled energy recheck by combat events (0bug & AC energy update)
-		if unit == "player" and power == "ECLIPSE" then
-			frame:UnregisterEvent("UNIT_POWER");
-			vars.bug0ToBeWorkarounded = false;
-			local e = UnitPower("player",SPELL_POWER_ECLIPSE)
-			local d = GetEclipseDirection() --REMOVE when (7) is removed 
-			if vars.isBalance and (vars.energy ~= e or vars.direction ~= d) then
-				vars.direction = d
-				LBPT.RecalcEnergy(e)
-			end
+	function LBPT.UNIT_POWER(unit, power) --Scheduled energy recheck by combat events (0bug & AC energy update)
+		if not power == "ECLIPSE" then return end
+		
+		frame:UnregisterEvent("UNIT_POWER");
+		vars.bug0ToBeWorkarounded = false;
+		local e = UnitPower("player",SPELL_POWER_ECLIPSE)
+		local d = GetEclipseDirection() --REMOVE when (7) is removed 
+		if vars.isBalance and (vars.energy ~= e or vars.direction ~= d) then
+			vars.direction = d
+			LBPT.RecalcEnergy(e)
 		end
 	end
 	
@@ -662,7 +662,7 @@ do --Combat events-------------
 										
 										if (energy == 0 and vars.energy+amount ~= 0) or vars.bug0ToBeWorkarounded then --need to check 0bug (and SS)
 											vars.bug0ToBeWorkarounded = true;
-											frame:RegisterEvent("UNIT_POWER"); --Schedule energy check
+											frame:RegisterUnitEvent("UNIT_POWER", "player"); --Schedule energy check
 											LBPT.RecalcEnergy(vars.energy+amount)  --predict with the energy we have
 										else
 											LBPT.RecalcEnergy(energy) 
@@ -679,7 +679,7 @@ do --Combat events-------------
 										checkCelestialAligmentBuff()
 										
 										if UnitPower("player",SPELL_POWER_ECLIPSE) ~= 0 then
-											frame:RegisterEvent("UNIT_POWER"); --Schedule energy check
+											frame:RegisterUnitEvent("UNIT_POWER", "player"); --Schedule energy check
 										end
 										LBPT.RecalcEnergy(0) 
 									end
@@ -901,7 +901,7 @@ do --Energy not gained by critters or wild pets
 				count = count+1;
 				if count == 1 then
 					sendTo = {}
-					combatFrame:RegisterEvent("UNIT_SPELLCAST_SENT");
+					combatFrame:RegisterUnitEvent("UNIT_SPELLCAST_SENT", "player");
 					combatTable.UNIT_SPELLCAST_SENT = LBPT.spellcast_sent
 					LBPT.Critter = Critter
 				end
@@ -924,7 +924,6 @@ do --Energy not gained by critters or wild pets
 	function combatTable.UPDATE_MOUSEOVER_UNIT()	check("mouseover");	end
 
 	function LBPT.spellcast_sent(unit,_,_,target,num)
-		if unit ~= "player" then return end
 		if isCritterOrWildPet.mouseover and not UnitExists("mouseover") then check("mouseover")	end
 		if count>0 then sendTo[num] = target end
 	end
