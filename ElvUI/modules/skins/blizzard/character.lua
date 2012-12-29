@@ -201,12 +201,12 @@ local function LoadSkin()
 			
 			object.icon:Size(36, 36)
 			hooksecurefunc(object.icon, "SetSize", function(self, width, height)
-				if width ~= 36 or height ~= 36 then
-					object.icon:Size(36, 36)
+				if width == 30 or height == 30 then
+					self:Size(36, 36)
 				end
 			end)
 			
-			if not object.bordertop then
+			if not object.icon.bordertop then
 				E:GetModule("NamePlates"):CreateVirtualFrame(object, object.icon)
 			end			
 		end
