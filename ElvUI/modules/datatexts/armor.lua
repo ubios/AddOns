@@ -9,14 +9,9 @@ local displayString = '';
 local baseArmor, effectiveArmor, armor, posBuff, negBuff
 	
 local function OnEvent(self, event, unit)
-	if event == "UNIT_RESISTANCES" and unit ~= 'player' then return end
-	lastPanel = self
-	
 	baseArmor, effectiveArmor, armor, posBuff, negBuff = UnitArmor("player");
-
 	self.text:SetFormattedText(displayString, armorString, effectiveArmor)
-	
-	int = 2
+	lastPanel = self
 end
 
 

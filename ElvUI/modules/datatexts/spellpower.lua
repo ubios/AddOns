@@ -6,7 +6,6 @@ local displayModifierString = ''
 local lastPanel;
 
 local function OnEvent(self, event, unit)
-	if event == "UNIT_AURA" and unit ~= 'player' then return end
 	spellpwr = GetSpellBonusDamage(7)
 	healpwr = GetSpellBonusHealing()
 	
@@ -15,8 +14,6 @@ local function OnEvent(self, event, unit)
 	else
 		self.text:SetFormattedText(displayNumberString, L['SP'], spellpwr)
 	end
-
-	int = 2
 	lastPanel = self
 end
 

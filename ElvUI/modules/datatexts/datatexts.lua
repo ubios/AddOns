@@ -154,7 +154,13 @@ end
 function DT:AssignPanelToDataText(panel, data)	
 	if data['events'] then
 		for _, event in pairs(data['events']) do
-			panel:RegisterEvent(event)
+			-- use new filtered event registration for appropriate events
+			if event == "UNIT_AURA" or event == "UNIT_RESISTANCES"  or event == "UNIT_STATS" or event == "UNIT_ATTACK_POWER" 
+				or event == "UNIT_RANGED_ATTACK_POWER" or event == "UNIT_TARGET" or event == "UNIT_SPELL_HASTE" then
+				panel:RegisterUnitEvent(event, 'player')
+			else
+				panel:RegisterEvent(event)
+			end
 		end
 	end
 	
