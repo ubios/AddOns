@@ -8,6 +8,7 @@ local lastPanel
 local int = 1
 local curMin, curMax
 local updateTargetRange = false
+local forceUpdate = false
 
 local function OnUpdate(self, t)
 	if not updateTargetRange then return end
@@ -17,7 +18,7 @@ local function OnUpdate(self, t)
 	int = .25
 
 	local min, max = rc:GetRange('target')
-	if (min == curMin and max == curMax) then return end
+	if not forceUpdate and (min == curMin and max == curMax) then return end
 
 	curMin = min
 	curMax = max
@@ -27,14 +28,16 @@ local function OnUpdate(self, t)
 	else
 		self.text:SetText("")
 	end
-	
+	forceUpdate = false	
 	lastPanel = self
 end
 
 local function OnEvent(self, event)
 	updateTargetRange = UnitName("target") ~= nil
 	int = 0
-	if not updateTargetRange then
+	if updateTargetRange then
+		forceUpdate = true
+	else
 		self.text:SetText("")
 	end
 end
