@@ -180,7 +180,7 @@ function UF:UpdateAuraTimer(elapsed)
 
 	local timervalue, formatid
 	timervalue, formatid, self.nextupdate = A:AuraTimeGetInfo(self.expiration)
-	self.text:SetFormattedText(format("|%s%s|r", A.TimeColors[formatid], A.TimeFormats[formatid][2]), timervalue)	
+	self.text:SetFormattedText(("|%s%s|r"):format(A.TimeColors[formatid], A.TimeFormats[formatid][2]), timervalue)	
 end
 
 function UF:PostUpdateAura(unit, button, index, offset, filter, isDebuff, duration, timeLeft)

@@ -120,7 +120,7 @@ function A:UpdateConsolidatedTime(elapsed)
 	
 	local timervalue, formatid
 	timervalue, formatid, self.nextupdate = A:AuraTimeGetInfo(self.expiration)
-	self.timer:SetFormattedText(join("", "|", A.TimeColors[formatid], A.TimeFormats[formatid][1], "|r"), timervalue)
+	self.timer:SetFormattedText(("|%s%s|r"):format(A.TimeColors[formatid], A.TimeFormats[formatid][1]), timervalue)
 end
 
 function A:UpdateReminder(event, unit)
