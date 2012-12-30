@@ -196,6 +196,7 @@ function DT:LoadDataTexts()
 	end	
 
 	local inInstance, instanceType = IsInInstance()
+	local fontTemplate = LSM:Fetch("font", self.db.font)
 	for panelName, panel in pairs(DT.RegisteredPanels) do
 		--Restore Panels
 		for i=1, panel.numPoints do
@@ -205,7 +206,7 @@ function DT:LoadDataTexts()
 			panel.dataPanels[pointIndex]:SetScript('OnEnter', nil)
 			panel.dataPanels[pointIndex]:SetScript('OnLeave', nil)
 			panel.dataPanels[pointIndex]:SetScript('OnClick', nil)
-			panel.dataPanels[pointIndex].text:FontTemplate(LSM:Fetch("font", self.db.font), self.db.fontSize, self.db.fontOutline)
+			panel.dataPanels[pointIndex].text:FontTemplate(fontTemplate, self.db.fontSize, self.db.fontOutline)
 			panel.dataPanels[pointIndex].text:SetText(nil)
 			panel.dataPanels[pointIndex].pointIndex = pointIndex
 			
