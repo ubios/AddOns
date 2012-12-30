@@ -274,7 +274,7 @@ function A:UpdateWeaponText(auraButton, timeLeft)
 			duration:SetText("")
 			E:StopFlash(auraButton)
 		else
-			local timervalue, formatid = A:AuraTimeGetInfo(self.expiration, E.db.auras.fadeThreshold)
+			local timervalue, formatid = A:AuraTimeGetInfo(timeLeft, E.db.auras.fadeThreshold)
 			duration:SetFormattedText(("%s%s|r"):format(A.TimeColors[formatid], A.TimeFormats[formatid][2]), timervalue)	
 			if timeLeft <= E.db.auras.fadeThreshold then
 				E:Flash(auraButton, 1)
