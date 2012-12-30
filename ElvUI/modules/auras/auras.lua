@@ -34,9 +34,9 @@ A.TimeFormats = {
 function A:AuraTimeGetInfo(s, threshhold)
 	if s < MINUTE then
 		if s >= threshhold then
-			return floor(s), 3, 0.6
+			return floor(s), 3, 0.51
 		else
-			return s, 4, 0.1
+			return s, 4, 0.051
 		end
 	elseif s < HOUR then
 		local minutes = tonumber(E:Round(s/MINUTE))
