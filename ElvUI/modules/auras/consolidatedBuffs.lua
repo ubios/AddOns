@@ -92,7 +92,7 @@ function A:CheckFilterForActiveBuff(filter)
 		if spell ~= 'DEFAULT' then
 			spellName, _, texture = GetSpellInfo(spell)
 			
-			assert(spellName, spell..': ID is not correct.')
+			assert(spellName, format('%s: ID is not correct.', spell))
 			
 			if UnitAura("player", spellName) then
 				return spellName, texture
@@ -119,8 +119,8 @@ function A:UpdateConsolidatedTime(elapsed)
 	end
 	
 	local timervalue, formatid
-	timervalue, formatid, self.nextupdate = A:AuraTimeGetInfo(self.expiration)
-	self.timer:SetFormattedText(("|%s%s|r"):format(A.TimeColors[formatid], A.TimeFormats[formatid][1]), timervalue)
+	timervalue, formatid, self.nextupdate = A:AuraTimeGetInfo(self.expiration, E.db.auras.fadeThreshold)
+	self.timer:SetFormattedText(("%s%s|r"):format(A.TimeColors[formatid], A.TimeFormats[formatid][1]), timervalue)
 end
 
 function A:UpdateReminder(event, unit)

@@ -125,7 +125,7 @@ function UF:PostUpdatePower(unit, min, max)
 		if pType == 0 then
 			local perc = max == 0 and 0 or floor(min / max * 100)		
 			if perc <= db.lowmana and not UnitIsDeadOrGhost(unit) then
-				self.LowManaText:SetText(LOW..' '..MANA)
+				self.LowManaText:SetFormattedText("%s %s", LOW, MANA)
 				E:Flash(self.LowManaText, 0.6)
 			else
 				self.LowManaText:SetText()
@@ -179,8 +179,8 @@ function UF:UpdateAuraTimer(elapsed)
 	end
 
 	local timervalue, formatid
-	timervalue, formatid, self.nextupdate = A:AuraTimeGetInfo(self.expiration)
-	self.text:SetFormattedText(("|%s%s|r"):format(A.TimeColors[formatid], A.TimeFormats[formatid][2]), timervalue)	
+	timervalue, formatid, self.nextupdate = A:AuraTimeGetInfo(self.expiration, E.db.auras.fadeThreshold)
+	self.text:SetFormattedText(("%s%s|r"):format(A.TimeColors[formatid], A.TimeFormats[formatid][2]), timervalue)
 end
 
 function UF:PostUpdateAura(unit, button, index, offset, filter, isDebuff, duration, timeLeft)
@@ -328,7 +328,7 @@ function UF:PostCastStart(unit, name, rank, castid)
 	if not db then return end
 	
 	if db.castbar.displayTarget and self.curTarget then
-		self.Text:SetText(sub(name..' --> '..self.curTarget, 0, floor((((32/245) * self:GetWidth()) / E.db['unitframe'].fontSize) * 12)))
+		self.Text:SetText(sub(format("%s -> %s", name, self.curTarget), 0, floor((((32/245) * self:GetWidth()) / E.db['unitframe'].fontSize) * 12)))
 	else
 		self.Text:SetText(sub(name, 0, floor((((32/245) * self:GetWidth()) / E.db['unitframe'].fontSize) * 12)))
 	end
@@ -734,14 +734,14 @@ function UF:DruidPostUpdateAltPower(unit, min, max)
 	if powerText:GetText() then
 		if select(4, powerText:GetPoint()) < 0 then
 			self.Text:SetPoint("RIGHT", powerText, "LEFT", 3, 0)
-			self.Text:SetFormattedText(color.."%d%%|r |cffD7BEA5- |r", floor(min / max * 100))			
+			self.Text:SetFormattedText("%s%d%%|r |cffD7BEA5- |r", color, floor(min / max * 100))			
 		else
 			self.Text:SetPoint("LEFT", powerText, "RIGHT", -3, 0)
-			self.Text:SetFormattedText("|cffD7BEA5-|r"..color.." %d%%|r", floor(min / max * 100))
+			self.Text:SetFormattedText("|cffD7BEA5-|r%s %d%%|r", color, floor(min / max * 100))
 		end
 	else
 		self.Text:SetPoint(powerText:GetPoint())
-		self.Text:SetFormattedText(color.."%d%%|r", floor(min / max * 100))
+		self.Text:SetFormattedText("%s%d%%|r", color, floor(min / max * 100))
 	end	
 end
 
@@ -817,9 +817,9 @@ function UF:AltPowerBarPostUpdate(min, cur, max)
 		local type = select(10, UnitAlternatePowerInfo(unit))
 				
 		if perc > 0 then
-			self.text:SetText(type..": "..format("%d%%", perc))
+			self.text:SetFormattedText("%s: %d%%", type, perc)
 		else
-			self.text:SetText(type..": 0%")
+			self.text:SetFormattedText("%s: 0%", type)
 		end
 	elseif unit and unit:find("boss%d") and self.text then
 		self.text:SetTextColor(self:GetStatusBarColor())
@@ -829,7 +829,7 @@ function UF:AltPowerBarPostUpdate(min, cur, max)
 			self.text:Point("RIGHT", self:GetParent().Power.value.value, "LEFT", 2, E.mult)	
 		end
 		if perc > 0 then
-			self.text:SetText("|cffD7BEA5[|r"..format("%d%%", perc).."|cffD7BEA5]|r")
+			self.text:SetFormattedText("|cffD7BEA5[|r%d%%|cffD7BEA5]|r", perc)
 		else
 			self.text:SetText(nil)
 		end
@@ -1390,8 +1390,8 @@ function UF:SmartAuraDisplay()
 			anchorPoint, anchorTo = 'TOP', 'BOTTOM'
 		end		
 		auraBars:ClearAllPoints()
-		auraBars:SetPoint(anchorPoint..'LEFT', buffs, anchorTo..'LEFT', 0, yOffset)
-		auraBars:SetPoint(anchorPoint..'RIGHT', buffs, anchorTo..'RIGHT', 0, yOffset)
+		auraBars:SetPoint(format("%sLEFT", anchorPoint), buffs, format("%sLEFT", anchorTo), 0, yOffset)
+		auraBars:SetPoint(format("%sRIGHT", anchorPoint), buffs, format("%sRIGHT", anchorTo), 0, yOffset)
 	end
 	
 	if debuffs:IsShown() then
@@ -1405,7 +1405,7 @@ function UF:SmartAuraDisplay()
 			anchorPoint, anchorTo = 'TOP', 'BOTTOM'
 		end		
 		auraBars:ClearAllPoints()
-		auraBars:SetPoint(anchorPoint..'LEFT', debuffs, anchorTo..'LEFT', 0, yOffset)
-		auraBars:SetPoint(anchorPoint..'RIGHT', debuffs, anchorTo..'RIGHT', 0, yOffset)		
+		auraBars:SetPoint(format("%sLEFT", anchorPoint), buffs, format("%sLEFT", anchorTo), 0, yOffset)
+		auraBars:SetPoint(format("%sRIGHT", anchorPoint), buffs, format("%sRIGHT", anchorTo), 0, yOffset)
 	end
 end
