@@ -1,6 +1,8 @@
 local E, L, V, P, G, _ = unpack(select(2, ...)); --Inport: Engine, Locales, PrivateDB, ProfileDB, GlobalDB, Localize Underscore
 local NP = E:GetModule('NamePlates')
 
+local GetTime = GetTime
+
 local ceil = math.ceil
 local wipe = table.wipe
 local band = bit.band
@@ -196,11 +198,11 @@ function NP:CreateAuraIcon(parent)
 end
 
 function NP:UpdateAuraTime(frame, expiration)
-	local timeleft = ceil(expiration-GetTime())
-	if timeleft > 60 then 
-		frame.TimeLeft:SetText(ceil(timeleft/60).."m")
+	local duration = expiration - GetTime()
+	if duration > 60 then 
+		frame.TimeLeft:SetFormattedText("%dm", ceil(duration / 60))
 	else
-		frame.TimeLeft:SetText(ceil(timeleft))
+		frame.TimeLeft:SetFormattedText("%d", ceil(duration))
 	end
 end
 
@@ -336,8 +338,8 @@ function NP:SetAuraInstance(guid, spellid, expiration, stacks, caster, duration,
 	end
 
 	if guid and spellid and caster and texture then
-		local aura_id = spellid..(tostring(caster or "UNKNOWN_CASTER"))
-		local aura_instance_id = guid..aura_id
+		local aura_id = format("%d%s", spellid, (caster or "UNKNOWN_CASTER"))
+		local aura_instance_id = format("%s%s", guid, aura_id)
 		NP.Aura_List[guid] = NP.Aura_List[guid] or {}
 		NP.Aura_List[guid][aura_id] = aura_instance_id
 		NP.Aura_Spellid[aura_instance_id] = spellid
@@ -353,8 +355,8 @@ end
 
 function NP:RemoveAuraInstance()
 	if guid and spellid and NP.Aura_List[guid] then
-		local aura_instance_id = tostring(guid)..tostring(spellid)..(tostring(caster or "UNKNOWN_CASTER"))
-		local aura_id = spellid..(tostring(caster or "UNKNOWN_CASTER"))
+		local aura_instance_id = format("%s%d%s", guid, spellid, (caster or "UNKNOWN_CASTER"))
+		local aura_id = format("%d%s", spellid, (caster or "UNKNOWN_CASTER"))
 		if NP.Aura_List[guid][aura_id] then
 			NP.Aura_Spellid[aura_instance_id] = nil
 			NP.Aura_Expiration[aura_instance_id] = nil
@@ -377,7 +379,7 @@ function NP:UpdateAuraByLookup(guid)
 	elseif self.TargetOfGroupMembers[guid] then
 		local unit = self.TargetOfGroupMembers[guid]
 		if unit then
-			local unittarget = UnitGUID(unit.."target")
+			local unittarget = UnitGUID(("%starget"):format(unit))
 			if guid == unittarget then
 				NP:UpdateAurasByUnitID(unittarget)
 			end
@@ -648,7 +650,7 @@ end
 
 function NP:GetAuraInstance(guid, aura_id)
 	if guid and aura_id then
-		local aura_instance_id = guid..aura_id
+		local aura_instance_id = format("%s%s", guid, aura_id)
 		return self.Aura_Spellid[aura_instance_id], self.Aura_Expiration[aura_instance_id], self.Aura_Stacks[aura_instance_id], self.Aura_Caster[aura_instance_id],
 			self.Aura_Duration[aura_instance_id], self.Aura_Texture[aura_instance_id], self.Aura_Type[aura_instance_id], self.Aura_Target[aura_instance_id]
 	end
@@ -778,7 +780,7 @@ function NP:UNIT_TARGET()
 	self.TargetOfGroupMembers = wipe(self.TargetOfGroupMembers)
 	
 	for name, unitid in pairs(self.GroupMembers) do
-		local targetOf = unitid..("target" or "")
+		local targetOf = ("%starget"):format(unitid)
 		if UnitExists(targetOf) then
 			self.TargetOfGroupMembers[UnitGUID(targetOf)] = targetOf
 		end
