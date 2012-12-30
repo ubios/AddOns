@@ -2,10 +2,11 @@ local E, L, V, P, G, _ = unpack(select(2, ...)); --Inport: Engine, Locales, Priv
 local NP = E:NewModule('NamePlates', 'AceHook-3.0', 'AceEvent-3.0', 'AceTimer-3.0')
 local LSM = LibStub("LibSharedMedia-3.0")
 
+local wipe = table.wipe
+
 local OVERLAY = [=[Interface\TargetingFrame\UI-TargetingFrame-Flash]=]
 local numChildren = -1
 local backdrop
-
 NP.Handled = {} --Skinned Nameplates
 NP.BattleGroundHealers = {};
 
@@ -35,7 +36,7 @@ function NP:Initialize()
 		if(count ~= numChildren) then
 			numChildren = count
 			NP:HookFrames(WorldFrame:GetChildren())
-		end
+		end	
 		
 		NP:ForEachPlate(NP.InvalidCastCheck)
 		NP:ForEachPlate(NP.CheckFilter)
@@ -73,6 +74,7 @@ function NP:CreateVirtualFrame(parent, point)
 	local noscalemult = E.mult * UIParent:GetScale()
 	
 	if point.bordertop then return end
+
 	
 	point.backdrop2 = parent:CreateTexture(nil, "BORDER")
 	point.backdrop2:SetDrawLayer("BORDER", -4)
@@ -174,17 +176,19 @@ local function RehideFrame(self)
 end
 
 function NP:HideObjects(frame)
+	local objectType
 	for object in pairs(frame.queue) do
 		hooksecurefunc(object, "Show", RehideFrame)
 		
-		local objectType = object:GetObjectType()	
+		objectType = object:GetObjectType()
 		if objectType == "Texture" then
 			object.OldTexture = object:GetTexture()
 			object:SetTexture(nil)
 			object:SetTexCoord(0, 0, 0, 0)
 		elseif objectType == 'FontString' then
 			object:SetWidth(0.001)
-		end		
+		end
+		
 		object:Hide()
 	end
 end
@@ -204,6 +208,7 @@ function NP:Update_LevelText(frame)
 				frame.hp.level:Show()
 			elseif not elite and level == mylevel then
 				frame.hp.level:Hide()
+				frame.hp.level:SetText(nil)
 			elseif level then
 				frame.hp.level:SetText(level..(elite and "+" or ""))
 				frame.hp.level:SetTextColor(frame.hp.oldlevel:GetTextColor())
@@ -213,6 +218,7 @@ function NP:Update_LevelText(frame)
 			frame.hp.oldlevel:SetWidth(000.1)
 		elseif frame.hp.level then
 			frame.hp.level:Hide()
+			frame.hp.level:SetText(nil)
 		end
 	elseif frame.isBoss and self.db.showlevel and frame.hp.level:GetText() ~= '??' then
 		frame.hp.level:SetText("??")
@@ -234,7 +240,7 @@ function NP:Colorize(frame, r, g, b)
 		end
 		
 		if RAID_CLASS_COLORS[class].r == r and RAID_CLASS_COLORS[class].g == g and RAID_CLASS_COLORS[class].b == bb then
-			frame.hasClass = true
+			frame.hasClass = class
 			frame.isFriendly = false
 			frame.hp:SetStatusBarColor(RAID_CLASS_COLORS[class].r, RAID_CLASS_COLORS[class].g, RAID_CLASS_COLORS[class].b)
 			frame.hp.rcolor, frame.hp.gcolor, frame.hp.bcolor = RAID_CLASS_COLORS[class].r, RAID_CLASS_COLORS[class].g, RAID_CLASS_COLORS[class].b
@@ -270,7 +276,7 @@ function NP:Colorize(frame, r, g, b)
 		frame.isFriendly = false
 	end
 	
-	frame.hasClass = false
+	frame.hasClass = nil
 	frame.hp.rcolor, frame.hp.gcolor, frame.hp.bcolor = r, g, b
 	frame.hp:SetStatusBarColor(r,g,b)
 end
@@ -303,6 +309,7 @@ function NP:HealthBar_OnShow(frame)
 	NP:Colorize(frame, r, g, b)
 	frame.hp.hpbg:SetTexture(frame.hp.rcolor, frame.hp.gcolor, frame.hp.bcolor, 0.25)
 	
+	
 	if frame.hasClass and self.db.classIcons then
 		local tCoords = CLASS_BUTTONS[frame.hasClass]
 		frame.classIcon:SetTexCoord(tCoords[1], tCoords[2], tCoords[3], tCoords[4])
@@ -310,6 +317,7 @@ function NP:HealthBar_OnShow(frame)
 	elseif frame.classIcon:IsShown() then
 		frame.classIcon:Hide()
 	end
+	
 	--Set the name text
 	frame.hp.name:SetText(frame.hp.oldname:GetText())	
 	while frame.hp:GetEffectiveScale() < 1 do
@@ -403,7 +411,7 @@ function NP:SkinPlate(frame, nameFrame)
 	end
 	frame.hp:SetStatusBarTexture(E["media"].normTex)
 	self:SetVirtualBackdrop(frame.hp, unpack(E["media"].backdropcolor))
-	
+		
 	if not frame.overlay then
 		overlay:SetTexture(1, 1, 1, 0.35)
 		overlay:SetParent(frame.hp)
@@ -436,6 +444,7 @@ function NP:SkinPlate(frame, nameFrame)
 		frame.classIcon:SetTexture([[Interface\WorldStateFrame\Icons-Classes]]);
 		frame.classIcon:Hide();
 	end	
+	
 	--Name Text
 	if not frame.hp.name then
 		frame.hp.name = frame.hp:CreateFontString(nil, 'OVERLAY')
@@ -537,12 +546,12 @@ function NP:SkinPlate(frame, nameFrame)
 	end
 	
 	if frame.AuraWidget.AuraIconFrames then
-		local auraFont = LSM:Fetch("font", self.db.auraFont)
-		for index = 1, NP.MAX_DISPLAYABLE_DEBUFFS do 
-			local auraIconFrame = frame.AuraWidget.AuraIconFrames[index]
+		local auraIconFont, auraIconFrame = LSM:Fetch("font", self.db.auraFont)
+		for index = 1, NP.MAX_DISPLAYABLE_DEBUFFS do
+			auraIconFrame = frame.AuraWidget.AuraIconFrames[index]
 			if auraIconFrame then
-				auraIconFrame.TimeLeft:FontTemplate(auraFont, self.db.auraFontSize, self.db.auraFontOutline)
-				auraIconFrame.Stacks:FontTemplate(auraFont, self.db.auraFontSize, self.db.auraFontOutline)
+				auraIconFrame.TimeLeft:FontTemplate(auraIconFont, self.db.auraFontSize, self.db.auraFontOutline)
+				auraIconFrame.Stacks:FontTemplate(auraIconFont, self.db.auraFontSize, self.db.auraFontOutline)
 			end
 		end
 	end
@@ -835,7 +844,7 @@ function NP:CheckBGHealers()
 			if name and self.Healers[talentSpec] and self.factionOpposites[self.PlayerFaction] == faction then
 				self.BattleGroundHealers[name] = talentSpec
 			elseif name and self.BattleGroundHealers[name] then
-				self.BattleGroundHealers[name] = nil
+				self.BattleGroundHealers[name] = nil;
 			end
 		end
 	end
@@ -851,7 +860,7 @@ function NP:PLAYER_ENTERING_WORLD()
 	self:UpdateRoster()
 	self:CleanAuraLists()
 	
-	table.wipe(self.BattleGroundHealers)
+	wipe(self.BattleGroundHealers)
 	local inInstance, instanceType = IsInInstance()
 	if inInstance and instanceType == 'pvp' and self.db.markBGHealers then
 		self.CheckHealerTimer = self:ScheduleRepeatingTimer("CheckBGHealers", 3)

@@ -4,6 +4,7 @@ local NP = E:GetModule('NamePlates')
 local ceil = math.ceil
 local wipe = table.wipe
 local band = bit.band
+local format = string.format
 
 --[[
 	This file handles functions for the Castbar and Debuff modules of nameplates.
@@ -229,6 +230,7 @@ function NP:UpdateAuraContext(frame)
 		if guid and raidicon then ByRaidIcon[raidicon] = guid end
 	end
 	
+	
 	local frame = NP:SearchForFrame(guid, raidicon, parent.hp.name:GetText())
 	if frame then
 		NP:UpdateDebuffs(frame)
@@ -278,8 +280,8 @@ function NP:SearchNameplateByIcon(UnitFlags)
 			UnitIcon = iconname
 			break
 		end
-	end	
-
+	end
+	
 	return NP:SearchNameplateByIconName(UnitIcon)
 end
 
@@ -309,11 +311,11 @@ function NP:SetAuraInstance(guid, spellid, expiration, stacks, caster, duration,
 		filter = true;
 	end
 
-	local trackFilter = E.global['unitframe']['aurafilters'][self.db.trackfilter]
-	if self.db.trackfilter and #self.db.trackfilter > 1 and trackFilter then
+	local auratrackfilter = E.global['unitframe']['aurafilters'][self.db.trackfilter]
+	if self.db.trackfilter and #self.db.trackfilter > 1 and auratrackfilter then
 		local name = GetSpellInfo(spellid)
-		local spellList = trackFilter.spells
-		local type = trackFilter.type
+		local spellList = auratrackfilter.spells
+		local type = auratrackfilter.type
 		if type == 'Blacklist' then
 			if spellList[name] and spellList[name].enable then
 				filter = false;
@@ -537,7 +539,7 @@ function NP:UpdateCastInfo(event, ignoreInt)
 	end
 	
 	local GUID = UnitGUID(unit)
-	if not GUID then return end
+	if not GUID then return; end
 
 	if not ignoreInt then
 		NP:UpdateAurasByUnitID(unit)
@@ -606,7 +608,7 @@ function NP:UpdateRoster()
 	-- Cycle through Group
 	if groupType then
 		for index = 1, groupSize do
-			unitId = groupType:format(index	)
+			unitId = format(groupType, index)
 			unitName = UnitName(unitId)
 			if unitName then
 				self.GroupMembers[unitName] = unitId
@@ -647,12 +649,12 @@ end
 function NP:GetAuraInstance(guid, aura_id)
 	if guid and aura_id then
 		local aura_instance_id = guid..aura_id
-		return self.Aura_Spellid[aura_instance_id], self.Aura_Expiration[aura_instance_id], self.Aura_Stacks[aura_instance_id], self.Aura_Caster[aura_instance_id], self.Aura_Duration[aura_instance_id], self.Aura_Texture[aura_instance_id], self.Aura_Type[aura_instance_id], self.Aura_Target[aura_instance_id]
+		return self.Aura_Spellid[aura_instance_id], self.Aura_Expiration[aura_instance_id], self.Aura_Stacks[aura_instance_id], self.Aura_Caster[aura_instance_id],
+			self.Aura_Duration[aura_instance_id], self.Aura_Texture[aura_instance_id], self.Aura_Type[aura_instance_id], self.Aura_Target[aura_instance_id]
 	end
 end
 
 function NP:UpdateIcon(frame, texture, expiration, stacks)
-
 	if frame and texture and expiration then
 		-- Icon
 		frame.Icon:SetTexture(texture)
