@@ -317,7 +317,7 @@ end
 
 function A:DisableCB()
 	ElvUI_ConsolidatedBuffs:Hide()
-	BuffFrame:UnregisterUnitEvent('UNIT_AURA', "player")
+	BuffFrame:UnregisterEvent('UNIT_AURA', "player")
 	self:UnregisterEvent("ACTIVE_TALENT_GROUP_CHANGED")
 	self:UnregisterEvent("UNIT_INVENTORY_CHANGED")
 	self:UnregisterEvent("UNIT_AURA")
