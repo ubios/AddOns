@@ -1,7 +1,7 @@
 --[[
 Interface: 5.0.1
 Title: LibBalancePowerTracker
-Version: 1.1.3
+Version: 1.1.4
 Author: Kurohoshi (EU-Minahonda)
 
 --INFO
@@ -43,6 +43,13 @@ Author: Kurohoshi (EU-Minahonda)
 	While changing from 2nd spec to 1st, UnitPower is wrong --- True in 5.0.4
 
 --CHANGELOG
+v 1.1.4	Checks eclipse direction more often
+		Balance check uses GetSpecialization()
+		Should be more responsive when casting
+		Logging changed a little 
+		Fixed timers
+		Removed double check for no energy change
+		
 v 1.1.3	Cast failed detection improved
 		Included LICENSE.txt in Lib
 		CPU usage by critter detection recalculated
@@ -139,7 +146,7 @@ v 1.0.1 Reduced the number of callbacks fired.
 v 1.0.0 Release
 --]]
 
-local version = {1,1,3};
+local version = {1,1,4};
 if (LibBalancePowerTracker and LibBalancePowerTracker.CompareVersion and LibBalancePowerTracker:CompareVersion(version)) then return; end;
 if select(4, GetBuildInfo())<50001 then return; end;
 
@@ -159,7 +166,7 @@ end;
 ----GLOBALS TO LOCALS-------------------------------------------------------------------
 local GetEclipseDirection,UnitPower,SPELL_FAILED_NOT_READY,SPELL_FAILED_SPELL_IN_PROGRESS = GetEclipseDirection,UnitPower,SPELL_FAILED_NOT_READY,SPELL_FAILED_SPELL_IN_PROGRESS;
 local UnitGUID,UnitBuff,GetTalentInfo,GetSpellInfo = UnitGUID,UnitBuff,GetTalentInfo,GetSpellInfo
-local GetInventoryItemID,abs,pairs,ipairs,tonumber,GetSpellCooldown,GetTime,select = GetInventoryItemID,abs,pairs,ipairs,tonumber,GetSpellCooldown,GetTime,select
+local GetInventoryItemID,abs,pairs,ipairs,tonumber,GetSpecialization,GetTime,select = GetInventoryItemID,abs,pairs,ipairs,tonumber,GetSpecialization,GetTime,select
 local LibBalancePowerTracker = LibBalancePowerTracker;
 local SPELL_POWER_ECLIPSE,UnitCastingInfo,UnitChannelInfo = SPELL_POWER_ECLIPSE,UnitCastingInfo,UnitChannelInfo;
 ----DATA--------------------------------------------------------------------------------
@@ -346,7 +353,19 @@ local function deleteSpell()
 	vars.spell_casting = 0;
 	vars.spell_num = 0;
 	vars.energize_events_remaining = 0;
-	LBPT.RecalcEnergy()
+	if vars.bug0ToBeWorkarounded then --need to avoid 0bug 
+		LBPT.RecalcEnergy(vars.energy,vars.direction) 
+	else
+		LBPT.RecalcEnergy()
+	end
+end
+local function UpdateEclipseOnEnergyDirection(energy,direction)
+	if abs(energy) == 100 then 		
+		vars.eclipse = energy
+	elseif (direction == "moon" and energy <=0) or (direction == "sun"  and energy >=0) or (direction == "none") then
+		vars.eclipse = false; 
+	end	
+	return vars.eclipse;
 end
 local function CheckEcplipseBuff() 
 	vars.eclipse = (UnitBuff('player',data.SolarEclipse.name) and 100) or (UnitBuff('player',data.LunarEclipse.name) and -100)
@@ -358,14 +377,14 @@ local function checkCelestialAligmentBuff()
 	return vars.celestial_lockout_end;
 end
 local function isBalance()
-	return GetSpellCooldown(data.SS.name)~=nil
+	return GetSpecialization() == 1
 end
 local function UpdateEnergizeAt(channeled)
 	if channeled then
-		vars.last_energize_at = select(6,UnitChannelInfo("player"))
+		vars.last_energize_at = select(6,UnitChannelInfo("player")) or 0
 		--vars.next_energize_at = vars.last_energize_at - data.AC.ms_btwn_events * (vars.energize_events_remaining-1)
 	else
-		vars.last_energize_at = select(6,UnitCastingInfo("player"))
+		vars.last_energize_at = select(6,UnitCastingInfo("player")) or 0
 		--vars.next_energize_at = vars.last_energize_at
 	end
 end
@@ -422,7 +441,7 @@ do --Loading
 			frame:RegisterEvent("ECLIPSE_DIRECTION_CHANGE"); --not fired when /reload, used to check eclipse & dir on load
 
 			timers.delayedUpdate:SetScript("OnHide",function() frame:UnregisterEvent("ECLIPSE_DIRECTION_CHANGE"); end)
-			timers.delayedUpdate:SetCooldown(GetTime(),0) 
+			timers.delayedUpdate:SetCooldown(GetTime(),.05) 
 		end
 	end
 	
@@ -433,7 +452,7 @@ do --Loading
 	
 	function LBPT.ECLIPSE_DIRECTION_CHANGE()
 		LBPT.Reset(true)
-		timers.delayedUpdate:SetCooldown(GetTime(),0) 
+		timers.delayedUpdate:SetCooldown(GetTime(),.05) 
 	end; 
 
 	function LBPT.RegisterCombatEvents(balanceNow)
@@ -488,12 +507,12 @@ do --Talent check/change events
 			if (UnitPower("player",SPELL_POWER_ECLIPSE) ~= 0)  then
 				--Si al pasar de pollo a pollo tenemos energia, retrasar un evento para actualizar cuando vuelva a 0
 				--Only interesting when switching specs from boomkin to boomkin, to reset the energy
-				--It not very interesting having a FREQUENT event free for more time than needed, so the delayed unregister of the event
+				--It's not very interesting having a FREQUENT event free for more time than needed, so the delayed unregister for the event
 				
 				frequentFiredOnce = false;
 				frame:RegisterUnitEvent("UNIT_POWER_FREQUENT", "player");
 				timers.delayedUpdate:SetScript("OnHide",function() frame:UnregisterEvent("UNIT_POWER_FREQUENT"); end)
-				timers.delayedUpdate:SetCooldown(GetTime(),0) 
+				timers.delayedUpdate:SetCooldown(GetTime(),.05) 
 			end
 		end
 		
@@ -508,11 +527,11 @@ do --Talent check/change events
 		if not power == "ECLIPSE" then return end
 		
 		vars.bug0ToBeWorkarounded = false;
-		local e = UnitPower("player",SPELL_POWER_ECLIPSE)
-		local d = GetEclipseDirection() --REMOVE when (7) is removed 
+		local e = UnitPower("player", SPELL_POWER_ECLIPSE)
+		local d = GetEclipseDirection() 
+
 		if (vars.energy ~= e or vars.direction ~= d) then
-			vars.direction = d
-			LBPT.RecalcEnergy(e)
+			LBPT.RecalcEnergy(e,d)
 			frequentFiredOnce = true;
 		end
 		
@@ -547,7 +566,7 @@ do --Combat events-------------
 			UpdateEnergizeAt(channeled)
 			
 			if vars.bug0ToBeWorkarounded then --need to avoid 0bug 
-				LBPT.RecalcEnergy(vars.energy) 
+				LBPT.RecalcEnergy(vars.energy,vars.direction) 
 			else
 				LBPT.RecalcEnergy()
 			end
@@ -561,7 +580,7 @@ do --Combat events-------------
 		if unit == "player" and spellsUsed[id] and vars.celestial_lockout_end ~= 0 and vars.spell_num == num and vars.spell_casting == id then
 			UpdateEnergizeAt(channeled)
 			if vars.bug0ToBeWorkarounded then --need to avoid 0bug 
-				LBPT.RecalcEnergy(vars.energy) 
+				LBPT.RecalcEnergy(vars.energy,vars.direction) 
 			else
 				LBPT.RecalcEnergy()
 			end
@@ -583,27 +602,31 @@ do --Combat events-------------
 	function LBPT.combat.UNIT_SPELLCAST_INTERRUPTED(unit,_,_,num,id)	if not UnitCastingInfo("player") then finishSpell(unit,num,id) end end
 
 	function LBPT.combat.PLAYER_DEAD() --Reset queue & clear energy upon death
-		vars.direction = GetEclipseDirection() or "none"; 
 		deleteSpell()
 	end
 	
-	function LBPT.UNIT_POWER(unit, power) --Scheduled energy recheck by combat events (0bug & AC energy update)
-		if not power == "ECLIPSE" then return end
-		
-		frame:UnregisterEvent("UNIT_POWER");
-		vars.bug0ToBeWorkarounded = false;
-		local e = UnitPower("player",SPELL_POWER_ECLIPSE)
-		local d = GetEclipseDirection() --REMOVE when (7) is removed 
-		if vars.isBalance and (vars.energy ~= e or vars.direction ~= d) then
-			vars.direction = d
-			LBPT.RecalcEnergy(e)
+	function LBPT.UNIT_POWER(unit,power) --Scheduled energy recheck by combat events (0bug & AC energy update)
+		if unit == "player" and power == "ECLIPSE" then
+			frame:UnregisterEvent("UNIT_POWER");
+			vars.bug0ToBeWorkarounded = false;
+			
+			if vars.isBalance then
+				local e = UnitPower("player",SPELL_POWER_ECLIPSE)
+				local d = GetEclipseDirection()
+				
+				UpdateEclipseOnEnergyDirection(e,d)
+			
+				if (vars.energy ~= e or vars.direction ~= d) then
+					LBPT.RecalcEnergy(e,d)
+				end
+			end
 		end
 	end
 	
 	do --COMBAT LOG HANDLER -------------------------------------------------------		
 		local auraLossFunctionTable = {
-			[data.LunarEclipse.spellId] = 	function() if vars.eclipse then vars.eclipse = false vars.direction = GetEclipseDirection() or "none";  LBPT.RecalcEnergy() end end,
-			[data.SolarEclipse.spellId] = 	function() if vars.eclipse then vars.eclipse = false vars.direction = GetEclipseDirection() or "none";  LBPT.RecalcEnergy() end end,
+			[data.LunarEclipse.spellId] = 	function() if vars.eclipse then vars.eclipse = false;  LBPT.RecalcEnergy() end end,
+			[data.SolarEclipse.spellId] = 	function() if vars.eclipse then vars.eclipse = false;  LBPT.RecalcEnergy() end end,
 			[data.CA.spellId] 			= 	function() if vars.celestial_lockout_end ~=0 then vars.celestial_lockout_end = 0; LBPT.RecalcEnergy() end end,
 		}
 		
@@ -622,15 +645,18 @@ do --Combat events-------------
 			return vars.energize_events_remaining 
 		end
 		
+		local function addEnergy(a,b)
+			local ret = a + b
+			if ret <=-100 then return -100 end
+			if ret >= 100 then return  100 end
+			return ret;
+		end
+		
 		local unfilteredCombatLogTable = {
 			SPELL_ENERGIZE 		= function(id,amount,typeEnergy)	
 									if (typeEnergy == SPELL_POWER_ECLIPSE) then
 										local energy = UnitPower("player" , SPELL_POWER_ECLIPSE);
-										
-										if (vars.energy == energy) then
-											--If there's no real energy gain, there is no update (7)
-											return
-										end
+										local direction;
 										
 										if id == data.EE.spellId then
 											if vars.celestial_lockout_end == 0 then 
@@ -654,36 +680,35 @@ do --Combat events-------------
 											end
 										end
 										
-										if energy ==100 then 
-											vars.direction = "moon"; 		
-											vars.eclipse = 100
-										elseif energy == -100 then 
-											vars.direction = "sun";	
-											vars.eclipse = -100
-										elseif (vars.direction == "moon" and energy <=0) or (vars.direction == "sun"  and energy >=0) or (vars.direction == "none") then
-											vars.eclipse=false; 
+										if (energy ~= addEnergy(vars.energy,amount)) or vars.bug0ToBeWorkarounded then --need to check 0bug (and SS)
+											energy = addEnergy(vars.energy,amount) --predict with the energy we have
+											direction = vars.vDirection;
+											
+											if not vars.bug0ToBeWorkarounded then
+												vars.bug0ToBeWorkarounded = true;
+												frame:RegisterEvent("UNIT_POWER"); --Schedule energy check 
+											end
+										else
+											direction = GetEclipseDirection();
 										end
 										
-										if (energy == 0 and vars.energy+amount ~= 0) or vars.bug0ToBeWorkarounded then --need to check 0bug (and SS)
-											vars.bug0ToBeWorkarounded = true;
-											frame:RegisterUnitEvent("UNIT_POWER", "player"); --Schedule energy check
-											LBPT.RecalcEnergy(vars.energy+amount)  --predict with the energy we have
-										else
-											LBPT.RecalcEnergy(energy) 
-										end
+										if energy == 100 then 
+											direction = "moon"; 		
+										elseif energy == -100 then 
+											direction = "sun";	
+										end	
+										
+										UpdateEclipseOnEnergyDirection(energy,direction)									
+
+										LBPT.RecalcEnergy(energy,direction) 
 									end
 								end,
-			--[[SPELL_CAST_FAILED 	= function(id,msg) --Handled with other events, left in case something goes wrong
-									if vars.spell_casting == id and msg ~= SPELL_FAILED_NOT_READY and msg ~= SPELL_FAILED_SPELL_IN_PROGRESS then 
-										deleteSpell()
-									end 
-								end,]]
 			SPELL_AURA_APPLIED 	= function(id)
 									if id == data.CA.spellId then
 										checkCelestialAligmentBuff()
 										
 										if UnitPower("player",SPELL_POWER_ECLIPSE) ~= 0 then
-											frame:RegisterUnitEvent("UNIT_POWER", "player"); --Schedule energy check
+											frame:RegisterEvent("UNIT_POWER"); --Schedule energy check
 										end
 										LBPT.RecalcEnergy(0) 
 									end
@@ -705,7 +730,6 @@ do --Combat events-------------
 
 	do --Direction & energy when teleporting  
 		function LBPT.combat.PLAYER_ENTERING_WORLD()
-			vars.direction = GetEclipseDirection() or "none";
 			deleteSpell()
 		end; 
 	end
@@ -714,13 +738,13 @@ end
 do --Recalc Energy function	
 	local SotFIndex = data.SoulOfTheForest.talentIndex;
 	local SotFBonus = data.SoulOfTheForest.bonus;
-	local function ExtraEnergy(energy,direction) --computes extra energy
-		local eclipse = vars.eclipse
+	local function ExtraEnergy(energy,direction,eclipse) --computes extra energy
+		local newEclipse;
 		local newEnergy;
 		local newDirection;
 		
 		--Get spell energy
-		if vars.energize_events_remaining > 0 and vars.last_energize_at >= vars.celestial_lockout_end then
+		if vars.energize_events_remaining > 0 and vars.last_energize_at > vars.celestial_lockout_end then
 			newEnergy = energy + energyFromSpell[vars.spell_casting][direction][((direction == "none") and ((energy>=0 and 100) or -100)) or (eclipse or 0) ];
 		else
 			newEnergy = energy;
@@ -743,13 +767,14 @@ do --Recalc Energy function
 		
 		--Set energy boundaries
 		if newEnergy>=100 then 
-			newEnergy,newDirection,eclipse = 100,"moon",100;
+			newEnergy,newDirection,newEclipse = 100,"moon",100;
 		elseif newEnergy<=-100 then 
-			newEnergy,newDirection,eclipse = -100,"sun",-100;
+			newEnergy,newDirection,newEclipse = -100,"sun",-100;
 		elseif (direction == "moon" and newEnergy <=0) or (direction == "sun"  and newEnergy >=0) or (direction == "none") then
-			eclipse = false;
+			newEclipse = false;
 			newDirection = direction
 		else
+			newEclipse = eclipse
 			newDirection = direction
 		end
 		
@@ -763,16 +788,20 @@ do --Recalc Energy function
 				-- +2 asignación /ciclo
 				-- +1 comprobación
 			---- total: +2 instrucciones: incremento irrelevante
-			return newEnergy,newDirection,eclipse;
+			return newEnergy,newDirection,newEclipse;
 		else
-			return energy,direction,vars.eclipse;
+			return energy,direction,eclipse;
 		end
 	end
 	
-	function LBPT.RecalcEnergy(energy)
+	function LBPT.RecalcEnergy(energy,direction)
 		if not energy then  energy = UnitPower("player" , SPELL_POWER_ECLIPSE); end
+		if not direction then direction = GetEclipseDirection() or "none" end
+		
 		vars.energy = energy;
-		vars.vEnergy,vars.vDirection,vars.vEclipse = ExtraEnergy(energy,vars.direction)	
+		vars.direction = direction;
+		
+		vars.vEnergy,vars.vDirection,vars.vEclipse = ExtraEnergy(energy,direction,vars.eclipse)	
 		LBPT.FireCallbacks()
 	end
 end
@@ -988,7 +1017,7 @@ do --Tier bonus check
 			vars.tiers.tierPieceCount[setInSlot]= num_p_tier --print("Tienes "..vars.tiers.tierPieceCount[setInSlot].." piezas de tier "..setInSlot)
 			
 			if data.balanceTiersItemId[setInSlot]["bonus"..(num_p_tier+1).."p"] and LBPT.BonusTier[setInSlot][num_p_tier+1].Off() then 
-				timers.broadcastTier:SetCooldown(GetTime(),0)  
+				timers.broadcastTier:SetCooldown(GetTime(),.05) 
 			end	
 		end
 		
@@ -1002,7 +1031,7 @@ do --Tier bonus check
 					vars.tiers.tierPieceCount[k]= num_p_tier --print("Tienes "..vars.tiers.tierPieceCount[k].." piezas de tier "..k);
 					
 					if v["bonus"..num_p_tier.."p"] and LBPT.BonusTier[k][num_p_tier].On() then 
-						timers.broadcastTier:SetCooldown(GetTime(),0)
+						timers.broadcastTier:SetCooldown(GetTime(),.05)
 					end
 					
 					return
@@ -1054,12 +1083,8 @@ LBPT.BonusTier={
 }
 
 do ----DEBUG---------------------
-	local debug_on_load --= true; 
-	------------------------------
 	local dbug = false;
 	local dbug_init = false;
-	local ev;
-	if BalancePowerTracker_Options then BalancePowerTracker_Options.debug_event_list = nil end
 	
 	function LibBalancePowerTracker:ToogleDebug()
 		dbug = not dbug;
@@ -1071,8 +1096,10 @@ do ----DEBUG---------------------
 		if BalancePowerTracker_Options then BalancePowerTracker_Options.debug_event_list = LBPT_DEBUG_EVENT_LIST end
 				
 		if not dbug_init then
-			local function insert(...)
-				LBPT_DEBUG_EVENT_LIST[LBPT_DEBUG_EVENT_LIST.insertAt] = {UnitPower("player",SPELL_POWER_ECLIPSE),GetEclipseDirection(),CheckEcplipseBuff(),GetTime(),...}
+			local function insert(event,drawn,...)
+				if not dbug then return end
+				
+				LBPT_DEBUG_EVENT_LIST[LBPT_DEBUG_EVENT_LIST.insertAt] = {event,drawn,GetTime(),UnitPower("player",SPELL_POWER_ECLIPSE),vars.energy,vars.vEnergy,GetEclipseDirection(),vars.direction,vars.vDirection,CheckEcplipseBuff(),vars.vEclipse,...}
 				LBPT_DEBUG_EVENT_LIST.insertAt = LBPT_DEBUG_EVENT_LIST.insertAt+1
 			end
 			
@@ -1084,17 +1111,16 @@ do ----DEBUG---------------------
 				end
 			end
 			
+			local drawn = false;
 			function LBPT.FireCallbacks()
-				if dbug then
-					insert("CALLBACKS_FIRED",vars.energy,vars.direction,vars.vEnergy,vars.vDirection,vars.vEclipse,ev) 
-				end
+				drawn = true;
 				for k,v in pairs(callbacks) 		
 					do v(vars.energy,vars.direction,vars.vEnergy,vars.vDirection,vars.vEclipse); 	
 				end; 
 			end;
 			
-			combatFrame:SetScript("OnEvent",  function(_, event, ...) ev=event insert(event,...) LBPT.combat[event](...)	end);
-			frame:SetScript("OnEvent",  function(_, event, ...) ev=event insert(event,...) LBPT[event](...)  end);
+			combatFrame:SetScript("OnEvent",  	function(_, event, ...) drawn = false;  LBPT.combat[event](...)	insert(event,drawn,...) end);
+			frame:SetScript("OnEvent",  		function(_, event, ...) drawn = false;  LBPT[event](...) 		insert(event,drawn,...) end);
 			
 			function LibBalancePowerTracker:mySearch(s,t,n,l)
 				if not n then n = 0; end
@@ -1115,8 +1141,5 @@ do ----DEBUG---------------------
 			end
 		end
 		dbug_init = true;
-	end
-	if debug_on_load then
-		LibBalancePowerTracker:ToogleDebug()
 	end
 end

@@ -1,6 +1,6 @@
 --[[
 Name: LibRangeCheck-2.0
-Revision: $Revision: 124 $
+Revision: $Revision: 127 $
 Author(s): mitch0
 Website: http://www.wowace.com/projects/librangecheck-2-0/
 Description: A range checking library based on interact distances and spell ranges
@@ -41,7 +41,7 @@ License: Public Domain
 -- @class file
 -- @name LibRangeCheck-2.0
 local MAJOR_VERSION = "LibRangeCheck-2.0"
-local MINOR_VERSION = tonumber(("$Revision: 124 $"):match("%d+")) + 100000
+local MINOR_VERSION = tonumber(("$Revision: 127 $"):match("%d+")) + 100000
 
 local lib, oldminor = LibStub:NewLibrary(MAJOR_VERSION, MINOR_VERSION)
 if not lib then
@@ -294,7 +294,8 @@ local HarmItems = {
         28767, -- The Decapitator
     },
     [45] = {
-        32698, -- Wrangling Rope
+--        32698, -- Wrangling Rope
+        23836, -- Goblin Rocket Launcher
     },
     [60] = {
         32825, -- Soul Cannon
@@ -307,10 +308,10 @@ local HarmItems = {
 
 -- This could've been done by checking player race as well and creating tables for those, but it's easier like this
 for k, v in pairs(FriendSpells) do
-	v[#v + 1] = 28880 -- ["Gift of the Naaru"]
+    tinsert(v, 28880) -- ["Gift of the Naaru"]
 end
 for k, v in pairs(HarmSpells) do
-	v[#v + 1] = 28734 -- ["Mana Tap"]
+    tinsert(v, 28734) -- ["Mana Tap"]
 end
 
 -- >> END OF STATIC CONFIG
@@ -328,6 +329,22 @@ local wipe = wipe
 local tinsert = tinsert
 local tremove = tremove
 local BOOKTYPE_SPELL = BOOKTYPE_SPELL
+local GetSpellInfo = GetSpellInfo
+local GetSpellBookItemName = GetSpellBookItemName
+local GetNumSpellTabs = GetNumSpellTabs
+local GetSpellTabInfo = GetSpellTabInfo
+local GetItemInfo = GetItemInfo
+local UnitCanAttack = UnitCanAttack
+local UnitCanAssist = UnitCanAssist
+local UnitExists = UnitExists
+local UnitIsDeadOrGhost = UnitIsDeadOrGhost
+local CheckInteractDistance = CheckInteractDistance
+local IsSpellInRange = IsSpellInRange
+local IsItemInRange = IsItemInRange
+local UnitClass = UnitClass
+local UnitRace = UnitRace
+local GetInventoryItemLink = GetInventoryItemLink
+local GetTime = GetTime
 local HandSlotId = GetInventorySlotInfo("HandsSlot")
 
 -- temporary stuff
@@ -437,7 +454,7 @@ local function addChecker(t, range, minRange, checker)
             return
         end
     end
-    t[#t + 1] = rc
+    tinsert(t, rc)
 end
 
 local function createCheckerList(spellList, itemList, interactList)
