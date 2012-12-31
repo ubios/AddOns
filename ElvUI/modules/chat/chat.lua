@@ -1,6 +1,13 @@
 ﻿local E, L, V, P, G, _ = unpack(select(2, ...)); --Inport: Engine, Locales, PrivateDB, ProfileDB, GlobalDB, Localize Underscore
 local CH = E:NewModule('Chat', 'AceTimer-3.0', 'AceHook-3.0', 'AceEvent-3.0')
 local LSM = LibStub("LibSharedMedia-3.0")
+
+local gsub = string.gsub
+local sub = string.sub
+local format = string.format
+local find = string.find
+local insert, remove, sort, wipe = table.insert, table.remove, table.sort, table.wipe
+
 local CreatedFrames = 0;
 local lines = {};
 local msgList, msgCount, msgTime = {}, {}, {}
@@ -158,7 +165,7 @@ end
 
 function CH:InsertEmotions(msg)
 	for k,v in pairs(smileyKeys) do
-		msg = string.gsub(msg,k,"|T"..smileyPack[v]..":16|t");
+		msg = gsub(msg,k,("|T%s:16|t"):format(smileyPack[v]));
 	end
 	return msg;
 end
@@ -172,19 +179,19 @@ function CH:GetSmileyReplacementText(msg)
 	
 	while(startpos <= origlen) do
 		endpos = origlen;
-		local pos = string.find(msg,"|H",startpos,true);
+		local pos = find(msg,"|H",startpos,true);
 		if(pos ~= nil) then
 			endpos = pos;
 		end
-		outstr = outstr .. CH:InsertEmotions(string.sub(msg,startpos,endpos)); --run replacement on this bit
+		outstr = outstr .. CH:InsertEmotions(sub(msg,startpos,endpos)); --run replacement on this bit
 		startpos = endpos + 1;
 		if(pos ~= nil) then
-			endpos = string.find(msg,"|h]|r",startpos,-1) or string.find(msg,"|h",startpos,-1);
+			endpos = find(msg,"|h]|r",startpos,-1) or find(msg,"|h",startpos,-1);
 			if(endpos == nil) then
 				endpos = origlen;
 			end
 			if(startpos < endpos) then
-				outstr = outstr .. string.sub(msg,startpos,endpos); --don't run replacement on this bit
+				outstr = outstr .. sub(msg,startpos,endpos); --don't run replacement on this bit
 				startpos = endpos + 1;
 			end
 		end
@@ -257,7 +264,7 @@ function CH:StyleChat(frame)
 			if (string.len(text) > MIN_REPEAT_CHARACTERS) then
 			local repeatChar = true;
 			for i=1, MIN_REPEAT_CHARACTERS, 1 do 
-				if ( string.sub(text,(0-i), (0-i)) ~= string.sub(text,(-1-i),(-1-i)) ) then
+				if ( sub(text,(0-i), (0-i)) ~= sub(text,(-1-i),(-1-i)) ) then
 					repeatChar = false;
 					break;
 				end
@@ -549,7 +556,7 @@ function CH:ScrollToBottom(frame)
 end
 
 function CH:PrintURL(url)
-	return "|cFFFFFFFF[|Hurl:"..url.."|h"..url.."|h]|r "
+	return format("|cFFFFFFFF[|Hurl:%s|h%s|h]|r ", url, url)
 end
 
 function CH:FindURL(event, msg, ...)
@@ -660,11 +667,11 @@ function CH:DisableHyperlink()
 end
 
 function CH:DisableChatThrottle()
-	table.wipe(msgList); table.wipe(msgCount); table.wipe(msgTime)
+	wipe(msgList); wipe(msgCount); wipe(msgTime)
 end
 
 function CH:ShortChannel()
-	return string.format("|Hchannel:%s|h[%s]|h", self, DEFAULT_STRINGS[self] or self:gsub("channel:", ""))
+	return format("|Hchannel:%s|h[%s]|h", self, DEFAULT_STRINGS[self] or self:gsub("channel:", ""))
 end
 
 function CH:ConcatenateTimeStamp(msg)
@@ -673,7 +680,7 @@ function CH:ConcatenateTimeStamp(msg)
 		timeStamp = timeStamp:gsub(' ', '')
 		timeStamp = timeStamp:gsub('AM', ' AM')
 		timeStamp = timeStamp:gsub('PM', ' PM')
-		msg = '|cffB3B3B3['..timeStamp..'] |r'..msg
+		msg = format('|cffB3B3B3[%s]|r %s', timeStamp, msg)
 		CH.timeOverride = nil;
 	end
 	
@@ -967,9 +974,9 @@ function CH:ChatFrame_MessageEventHandler(event, ...)
 			
 			-- Search for icon links and replace them with texture links.
 			for tag in string.gmatch(arg1, "%b{}") do
-				local term = strlower(string.gsub(tag, "[{}]", ""));
+				local term = strlower(gsub(tag, "[{}]", ""));
 				if ( ICON_TAG_LIST[term] and ICON_LIST[ICON_TAG_LIST[term]] ) then
-					arg1 = string.gsub(arg1, tag, ICON_LIST[ICON_TAG_LIST[term]] .. "0|t");
+					arg1 = gsub(arg1, tag, ICON_LIST[ICON_TAG_LIST[term]] .. "0|t");
 				elseif ( GROUP_TAG_LIST[term] ) then
 					local groupIndex = GROUP_TAG_LIST[term];
 					local groupList = "[";
@@ -978,13 +985,13 @@ function CH:ChatFrame_MessageEventHandler(event, ...)
 						if ( name and subgroup == groupIndex ) then
 							local classColorTable = RAID_CLASS_COLORS[classFileName];
 							if ( classColorTable ) then
-								name = string.format("\124cff%.2x%.2x%.2x%s\124r", classColorTable.r*255, classColorTable.g*255, classColorTable.b*255, name);
+								name = format("\124cff%.2x%.2x%.2x%s\124r", classColorTable.r*255, classColorTable.g*255, classColorTable.b*255, name);
 							end
 							groupList = groupList..(groupList == "[" and "" or PLAYER_LIST_DELIMITER)..name;
 						end
 					end
 					groupList = groupList.."]";
-					arg1 = string.gsub(arg1, tag, groupList);
+					arg1 = gsub(arg1, tag, groupList);
 				end
 			end
 			
@@ -1022,7 +1029,7 @@ function CH:ChatFrame_MessageEventHandler(event, ...)
 					if ( type == "EMOTE" ) then
 						body = format(_G["CHAT_"..type.."_GET"]..message, pflag..playerLink..coloredName.."|h");
 					elseif ( type == "TEXT_EMOTE") then
-						body = string.gsub(message, arg2, pflag..playerLink..coloredName.."|h", 1);
+						body = gsub(message, arg2, pflag..playerLink..coloredName.."|h", 1);
 					else
 						body = format(_G["CHAT_"..type.."_GET"]..message, pflag..playerLink.."["..coloredName.."]".."|h");
 					end
@@ -1307,7 +1314,7 @@ function CH:AddLines(lines, ...)
   for i=select("#", ...),1,-1 do
     local x = select(i, ...)
     if x:GetObjectType() == "FontString" and not x:GetName() then
-        table.insert(lines, x:GetText())
+        insert(lines, x:GetText())
     end
   end
 end
@@ -1347,15 +1354,15 @@ function CH:ChatEdit_AddHistory(editBox, line)
 			end
 		end
 		
-		table.insert(ElvCharacterDB.ChatEditHistory, #ElvCharacterDB.ChatEditHistory + 1, line)
+		insert(ElvCharacterDB.ChatEditHistory, #ElvCharacterDB.ChatEditHistory + 1, line)
 		if #ElvCharacterDB.ChatEditHistory > 5 then
-			table.remove(ElvCharacterDB.ChatEditHistory, 1)
+			remove(ElvCharacterDB.ChatEditHistory, 1)
 		end
 	end
 end
 
 function CH:UpdateChatKeywords()
-	table.wipe(CH.Keywords)
+	wipe(CH.Keywords)
 	local keywords = self.db.keywords
 	keywords = keywords:gsub(',%s', ',')
 
@@ -1392,10 +1399,10 @@ end
 function CH:DisplayChatHistory()	
 	local temp, data = {}
 	for id, _ in pairs(ElvCharacterDB.ChatHistory) do
-		table.insert(temp, tonumber(id))
+		insert(temp, tonumber(id))
 	end
 	
-	table.sort(temp, function(a, b)
+	sort(temp, function(a, b)
 		return a < b
 	end)
 	
@@ -1645,11 +1652,11 @@ function CH:Initialize()
 		local text = self:GetText()
 		
 		for _, size in pairs(sizes) do
-			if string.find(text, size) and not string.find(text, size.."]") then
+			if find(text, size) and not find(text, size.."]") then
 				if size == ':13:22' then
-					self:SetText(string.gsub(text, size, ":12:20"))
+					self:SetText(gsub(text, size, ":12:20"))
 				else
-					self:SetText(string.gsub(text, size, ":12:12"))
+					self:SetText(gsub(text, size, ":12:12"))
 				end
 			end		
 		end
