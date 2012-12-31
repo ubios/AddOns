@@ -9,6 +9,8 @@ local timeStamp = 0
 local lastSegment = 0
 local lastPanel
 local displayString = '';
+local dpsInfoString = L["DPS"]..': '
+
 
 local function Reset()
 	timeStamp = 0
@@ -17,14 +19,8 @@ local function Reset()
 	lastDMGAmount = 0
 end	
 
-local function GetDPS(self)
-	local DPS
-	if DMGTotal == 0 or combatTime == 0 then
-		DPS = "0.0"
-	else
-		DPS = (DMGTotal) / (combatTime)
-	end
-	self.text:SetFormattedText(displayString, L["DPS"]..': ', DPS)
+local function SetDPS(self)
+	self.text:SetFormattedText(displayString, dpsInfoString, combatTime == 0 and 0 or (DMGTotal / combatTime))
 end
 
 local function OnEvent(self, event, ...)
@@ -41,31 +37,30 @@ local function OnEvent(self, event, ...)
 	elseif event == 'COMBAT_LOG_EVENT_UNFILTERED' then
 		if not events[select(2, ...)] then return end
 
-		-- only use events from the player
+		-- only use events from the player or pet
 		local id = select(4, ...)
-
-		if id == playerID or id == petID then
-			if timeStamp == 0 then timeStamp = select(1, ...) end
-			lastSegment = timeStamp
-			combatTime = select(1, ...) - timeStamp
-			if select(2, ...) == "SWING_DAMAGE" then
-				lastDMGAmount = select(12, ...)
-			else
-				lastDMGAmount = select(15, ...)
-			end
-
-			DMGTotal = DMGTotal + lastDMGAmount
+		if not (id == playerID or id == petID) then return end	
+		
+		if timeStamp == 0 then timeStamp = select(1, ...) end
+		lastSegment = timeStamp
+		combatTime = select(1, ...) - timeStamp
+		if select(2, ...) == "SWING_DAMAGE" then
+			lastDMGAmount = select(12, ...)
+		else
+			lastDMGAmount = select(15, ...)
 		end
+
+		DMGTotal = DMGTotal + lastDMGAmount
 	elseif event == UNIT_PET then
 		petID = UnitGUID("pet")
 	end
 	
-	GetDPS(self)
+	SetDPS(self)
 end
 
 local function OnClick(self)
 	Reset()
-	GetDPS(self)
+	SetDPS(self)
 end
 
 local function ValueColorUpdate(hex, r, g, b)

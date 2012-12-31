@@ -210,7 +210,7 @@ function NP:Update_LevelText(frame)
 				frame.hp.level:Hide()
 				frame.hp.level:SetText(nil)
 			elseif level then
-				frame.hp.level:SetText(level..(elite and "+" or ""))
+				frame.hp.level:SetFormattedText("%d%s", level, (elite and "+" or ""))
 				frame.hp.level:SetTextColor(frame.hp.oldlevel:GetTextColor())
 				frame.hp.level:Show()
 			end

@@ -85,10 +85,10 @@ local function BuildFriendTable(total)
 	for i = 1, total do
 		name, level, class, area, connected, status, note = GetFriendInfo(i)
 
-		if status == "<"..AFK..">" then
-			status = "|cffFFFFFF[|r|cffFF0000"..L['AFK'].."|r|cffFFFFFF]|r"
-		elseif status == "<"..DND..">" then
-			status = "|cffFFFFFF[|r|cffFF0000"..L['DND'].."|r|cffFFFFFF]|r"
+		if status == format("<%s>", AFK) then
+			status = format("|cffFFFFFF[|r|cffFF0000%s|r|cffFFFFFF]|r", L['AFK'])
+		elseif status == format("<%s>", DND) then
+			status = format("|cffFFFFFF[|r|cffFF0000%s|r|cffFFFFFF]|r", L['DND'])
 		end
 		
 		if connected then 
@@ -275,7 +275,7 @@ local function OnEnter(self)
 		for client, BNTable in pairs(tableList) do
 			if #BNTable > 0 then
 				GameTooltip:AddLine(' ')
-				GameTooltip:AddLine(battleNetString..' ('..client..')')			
+				GameTooltip:AddLine(format('%s (%s)', battleNetString, client))
 				for i = 1, #BNTable do
 					info = BNTable[i]
 					if info[6] then

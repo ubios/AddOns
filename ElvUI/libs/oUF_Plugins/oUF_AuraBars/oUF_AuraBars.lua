@@ -3,6 +3,7 @@ local oUF = ns.oUF or oUF
 assert(oUF, 'oUF_AuraBars was unable to locate oUF install.')
 
 local floor = math.floor
+local min = math.min
 
 local function Round(number, decimalPlaces)
 	if decimalPlaces and decimalPlaces > 0 then
@@ -17,11 +18,11 @@ local function FormatTime(timeInSec)
 	local m = floor((timeInSec - (3600 * h)) / 60)
 	local s = floor(timeInSec - ((3600 * h) + (60 * m)))
 	if h > 0 then
-		return h .. ":" .. m .. "h"
+		return format("%d:%.2dh", h, m)
 	elseif m > 0 then
-		return m .. "m"
+		return format("%dm", m)
 	else
-		return s .. "s"
+		return format("%ds", s)
 	end
 end
 
@@ -264,7 +265,7 @@ local function Update(self, event, unit)
 			bar:SetValue(1)
 		else
 			if auraBars.scaleTime then
-				local maxvalue = math.min(auraBars.scaleTime, bar.aura.duration)
+				local maxvalue = min(auraBars.scaleTime, bar.aura.duration)
 				bar:SetMinMaxValues(0, maxvalue)
 				bar:SetWidth(
 					( maxvalue / auraBars.scaleTime ) *

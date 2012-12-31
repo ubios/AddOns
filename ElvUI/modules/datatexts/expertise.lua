@@ -9,15 +9,11 @@ local expertiseString = join("", STAT_EXPERTISE, ": ")
 
 local function OnEvent(self, event, unit)
 	local expertise, offhandExpertise = GetExpertise();
-	expertise = format("%.2f%%", expertise);
-	offhandExpertise = format("%.2f%%", offhandExpertise);
-	
-	local speed, offhandSpeed = UnitAttackSpeed("player");
-	local text;
-	if( offhandSpeed ) then
-		text = expertise.." / "..offhandExpertise;
+	local text
+	if(IsDualWielding()) then
+		text = format("%.2f%% / %.2f%%", expertise, offhandExpertise)
 	else
-		text = expertise;
+		text = format("%.2f%%", expertise)
 	end
 	self.text:SetFormattedText(displayString, expertiseString, text)
 	lastPanel = self
@@ -27,14 +23,11 @@ local function OnEnter(self)
 	DT:SetupTooltip(self)
 	
 	local expertisePercent, offhandExpertisePercent = GetExpertise();
-	expertisePercent = format("%.2f", expertisePercent);
-	offhandExpertisePercent = format("%.2f", offhandExpertisePercent);
-
 	local expertisePercentDisplay;
 	if (IsDualWielding()) then
-		expertisePercentDisplay = expertisePercent.."% / "..offhandExpertisePercent.."%";
+		expertisePercentDisplay = format("%.2f%% / %.2f%%", expertisePercent, offhandExpertisePercent)
 	else
-		expertisePercentDisplay = expertisePercent.."%";
+		expertisePercentDisplay = format("%.2f%%", expertisePercent)
 	end
 	
 	GameTooltip:AddLine(format(CR_EXPERTISE_TOOLTIP, expertisePercentDisplay, GetCombatRating(CR_EXPERTISE), GetCombatRatingBonus(CR_EXPERTISE)), NORMAL_FONT_COLOR.r, NORMAL_FONT_COLOR.g, NORMAL_FONT_COLOR.b, true);
@@ -45,17 +38,15 @@ local function OnEnter(self)
 	local playerLevel = UnitLevel("player");
 	for i=0, 3 do
 		local mainhandDodge, offhandDodge = GetEnemyDodgeChance(i);
-		mainhandDodge = format("%.2f%%", mainhandDodge);
-		offhandDodge = format("%.2f%%", offhandDodge);
 		local level = playerLevel + i;
 		if (i == 3) then
 			level = level.." / |TInterface\\TargetingFrame\\UI-TargetingFrame-Skull:0|t";
 		end
 		local dodgeDisplay;
 		if (IsDualWielding() and mainhandDodge ~= offhandDodge) then
-			dodgeDisplay = mainhandDodge.." / "..offhandDodge;
+			dodgeDisplay = format("%.2f%% / %.2f%%", mainhandDodge, offhandDodge)
 		else
-			dodgeDisplay = mainhandDodge.."  ";
+			dodgeDisplay = format("%.2f%%  ", mainhandDodge)
 		end
 		GameTooltip:AddDoubleLine("      "..level, dodgeDisplay.."  ", NORMAL_FONT_COLOR.r, NORMAL_FONT_COLOR.g, NORMAL_FONT_COLOR.b, NORMAL_FONT_COLOR.r, NORMAL_FONT_COLOR.g, NORMAL_FONT_COLOR.b);
 	end
@@ -66,17 +57,15 @@ local function OnEnter(self)
 	local playerLevel = UnitLevel("player");
 	for i=0, 3 do
 		local mainhandParry, offhandParry = GetEnemyParryChance(i);
-		mainhandParry = format("%.2f%%", mainhandParry);
-		offhandParry = format("%.2f%%", offhandParry);
 		local level = playerLevel + i;
 		if (i == 3) then
 			level = level.." / |TInterface\\TargetingFrame\\UI-TargetingFrame-Skull:0|t";
 		end
 		local parryDisplay;
 		if (IsDualWielding() and mainhandParry ~= offhandParry) then
-			parryDisplay = mainhandParry.." / "..offhandParry;
+			parryDisplay = format("%.2f%% / %.2f%%", mainhandParry, offhandParry)
 		else
-			parryDisplay = mainhandParry.."  ";
+			parryDisplay = format("%.2f%%  ", mainhandParry)
 		end
 		GameTooltip:AddDoubleLine("      "..level, parryDisplay.."  ", NORMAL_FONT_COLOR.r, NORMAL_FONT_COLOR.g, NORMAL_FONT_COLOR.b, NORMAL_FONT_COLOR.r, NORMAL_FONT_COLOR.g, NORMAL_FONT_COLOR.b);
 	end

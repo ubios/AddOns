@@ -3,6 +3,7 @@ local M = E:GetModule('Misc');
 
 local find				= string.find
 local gsub				= string.gsub
+local format			= string.format
 local incpat 			= gsub(gsub(FACTION_STANDING_INCREASED, "(%%s)", "(.+)"), "(%%d)", "(.+)")
 local changedpat	= gsub(gsub(FACTION_STANDING_CHANGED, "(%%s)", "(.+)"), "(%%d)", "(.+)")
 local decpat			= gsub(gsub(FACTION_STANDING_DECREASED, "(%%s)", "(.+)"), "(%%d)", "(.+)")
@@ -49,7 +50,6 @@ function M:UpdateExperience(event)
 		bar.statusBar:SetValue(cur)
 		
 		local rested = GetXPExhaustion()
-		local text = ''
 		local textFormat = E.db.general.experience.textFormat
 		
 		if rested and rested > 0 then
@@ -57,26 +57,24 @@ function M:UpdateExperience(event)
 			bar.rested:SetValue(math.min(cur + rested, max))
 			
 			if textFormat == 'PERCENT' then
-				text = string.format('%d%% R:%d%%', cur / max * 100, rested / max * 100)
+				bar.text:SetFormattedText('%d%% R:%d%%', cur / max * 100, rested / max * 100)
 			elseif textFormat == 'CURMAX' then
-				text = string.format('%s - %s R:%s', E:ShortValue(cur), E:ShortValue(max), E:ShortValue(rested))
+				bar.text:SetFormattedText('%s - %s R:%s', E:ShortValue(cur), E:ShortValue(max), E:ShortValue(rested))
 			elseif textFormat == 'CURPERC' then
-				text = string.format('%s - %d%% R:%s [%d%%]', E:ShortValue(cur), cur / max * 100, E:ShortValue(rested), rested / max * 100)
+				bar.text:SetFormattedText('%s - %d%% R:%s [%d%%]', E:ShortValue(cur), cur / max * 100, E:ShortValue(rested), rested / max * 100)
 			end
 		else
 			bar.rested:SetMinMaxValues(0, 1)
 			bar.rested:SetValue(0)	
 
 			if textFormat == 'PERCENT' then
-				text = string.format('%d%%', cur / max * 100)
+				bar.text:SetFormattedText('%d%%', cur / max * 100)
 			elseif textFormat == 'CURMAX' then
-				text = string.format('%s - %s', E:ShortValue(cur), E:ShortValue(max))
+				bar.text:SetFormattedText('%s - %s', E:ShortValue(cur), E:ShortValue(max))
 			elseif textFormat == 'CURPERC' then
-				text = string.format('%s - %d%%', E:ShortValue(cur), cur / max * 100)
+				bar.text:SetFormattedText('%s - %d%%', E:ShortValue(cur), cur / max * 100)
 			end			
 		end
-		
-		bar.text:SetText(text)
 	end
 	
 	self:UpdateExpRepAnchors()
@@ -115,17 +113,14 @@ function M:UpdateReputation(event)
 		bar.statusBar:SetMinMaxValues(barMin, barMax)
 		bar.statusBar:SetValue(barValue)
 
-		local text = ''
 		local textFormat = E.db.general.reputation.textFormat		
 		if textFormat == 'PERCENT' then
-			text = string.format('%s: %d%% [%s]', name, ((barValue - barMin) / (barMax - barMin) * 100), _G['FACTION_STANDING_LABEL'..standingID])
+			bar.text:SetFormattedText('%s: %d%% [%s]', name, ((barValue - barMin) / (barMax - barMin) * 100), _G['FACTION_STANDING_LABEL'..standingID])
 		elseif textFormat == 'CURMAX' then
-			text = string.format('%s: %s - %s [%s]', name, E:ShortValue(barValue - barMin), E:ShortValue(barMax - barMin), _G['FACTION_STANDING_LABEL'..standingID])
+			bar.text:SetFormattedText('%s: %s - %s [%s]', name, E:ShortValue(barValue - barMin), E:ShortValue(barMax - barMin), _G['FACTION_STANDING_LABEL'..standingID])
 		elseif textFormat == 'CURPERC' then
-			text = string.format('%s: %s - %d%% [%s]', name, E:ShortValue(barValue - barMin), ((barValue - barMin) / (barMax - barMin) * 100), _G['FACTION_STANDING_LABEL'..standingID])
+			bar.text:SetFormattedText('%s: %s - %d%% [%s]', name, E:ShortValue(barValue - barMin), ((barValue - barMin) / (barMax - barMin) * 100), _G['FACTION_STANDING_LABEL'..standingID])
 		end					
-		
-		bar.text:SetText(text)
 	end
 	
 	self:UpdateExpRepAnchors()
@@ -140,11 +135,11 @@ local function ExperienceBar_OnEnter(self)
 	GameTooltip:AddLine(L['Experience'])
 	GameTooltip:AddLine(' ')
 	
-	GameTooltip:AddDoubleLine(L['XP:'], string.format(' %d / %d (%d%%)', curValue, maxValue, curValue/maxValue * 100), 1, 1, 1)
-	GameTooltip:AddDoubleLine(L['Remaining:'], string.format(' %d (%d%% - %d '..L['Bars']..')', maxValue - curValue, (maxValue - curValue) / maxValue * 100, 20 * (maxValue - curValue) / maxValue), 1, 1, 1)	
+	GameTooltip:AddDoubleLine(L['XP:'], format(' %d / %d (%d%%)', curValue, maxValue, curValue/maxValue * 100), 1, 1, 1)
+	GameTooltip:AddDoubleLine(L['Remaining:'], format(' %d (%d%% - %d '..L['Bars']..')', maxValue - curValue, (maxValue - curValue) / maxValue * 100, 20 * (maxValue - curValue) / maxValue), 1, 1, 1)	
 	
 	if rested then
-		GameTooltip:AddDoubleLine(L['Rested:'], string.format('+%d (%d%%)', rested, rested / maxValue * 100), 1, 1, 1)	
+		GameTooltip:AddDoubleLine(L['Rested:'], format('+%d (%d%%)', rested, rested / maxValue * 100), 1, 1, 1)	
 	end
 	
 	GameTooltip:Show()
