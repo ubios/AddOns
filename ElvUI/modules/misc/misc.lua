@@ -76,9 +76,11 @@ function M:DisbandRaidGroup()
 			end
 		end
 	else
+		local partyKey
 		for i = MAX_PARTY_MEMBERS, 1, -1 do
-			if UnitExists("party"..i) then
-				UninviteUnit(UnitName("party"..i))
+			partyKey = ("party"):format(i)
+			if UnitExists(partyKey) then
+				UninviteUnit(UnitName(partyKey))
 			end
 		end
 	end
@@ -208,7 +210,7 @@ function M:Initialize()
 	self:RegisterEvent('CVAR_UPDATE', 'ForceCVars')
 	self:RegisterEvent('PLAYER_ENTERING_WORLD')
 	
-	self.MovingTimer = self:ScheduleRepeatingTimer("CheckMovement", 0.1)
+	self.MovingTimer = self:ScheduleRepeatingTimer("CheckMovement", 0.2)
 end
 
 E:RegisterModule(M:GetName())
