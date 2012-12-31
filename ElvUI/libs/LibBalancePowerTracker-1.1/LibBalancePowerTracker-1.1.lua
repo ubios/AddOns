@@ -439,7 +439,11 @@ do --Loading
 	function LBPT.RegisterCombatEvents(balanceNow)
 		if balanceNow then
 			for k in pairs(LBPT.combat) do
-				combatFrame:RegisterEvent(k);
+				if k == "COMBAT_LOG_EVENT_UNFILTERED" then
+					combatFrame:RegisterUnitEvent(k, UnitGUID('player'))
+				else
+					combatFrame:RegisterEvent(k);
+				end
 			end
 		else 
 			for k in pairs(LBPT.combat) do
