@@ -91,7 +91,7 @@ header h2 {
 
 .inner {
   position: relative;
-  width: 940px;
+  width: 980px;
   margin: 0 auto;
 }
 
@@ -101,7 +101,8 @@ header h2 {
 }
 
 #main-content {
-  width: 690px;
+  width: 750px;
+  font-size: 14px;
   float: left;
 }
 
@@ -110,7 +111,7 @@ header h2 {
 }
 
 aside#sidebar {
-  width: 200px;
+  width: 180px;
   padding-left: 20px;
   min-height: 504px;
   float: right;
