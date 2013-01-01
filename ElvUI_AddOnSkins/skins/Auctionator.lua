@@ -1,12 +1,13 @@
-
+﻿
 local E, L, V, P, G,_ = unpack(ElvUI)
 local AS = E:GetModule('AddOnSkins')
 local S = E:GetModule('Skins')
 
 local name = "AuctionatorSkin"
-local function AtrSkin(self,event)
+function AtrSkin(self,event)
 	if event == "PLAYER_ENTERING_WORLD" then return end
 	if E.private.skins.blizzard.enable ~= true or E.private.skins.blizzard.auctionhouse ~= true then return end
+	if not auctionatorskinned then
 	AuctionsCancelAuctionButton:Point("RIGHT", AuctionFrameMoneyFrame, "RIGHT", 554, 0)
 	AuctionsCloseButton:ClearAllPoints()
 	AuctionsCloseButton:Point("RIGHT", AuctionsCancelAuctionButton, "RIGHT", 86, 0)
@@ -198,7 +199,10 @@ local function AtrSkin(self,event)
 	end
 	AuctionFrameTab1:Point("TOPLEFT", AuctionFrame, "BOTTOMLEFT", 5, 2)
 
-	AS:UnregisterEvent(name,"AUCTION_HOUSE_SHOW")
+		auctionatorskinned = true
+	end
+
+	--AS:UnregisterEvent(name,self,"AUCTION_HOUSE_SHOW")
 end
 
 AS:RegisterSkin(name,AtrSkin,'AUCTION_HOUSE_SHOW')

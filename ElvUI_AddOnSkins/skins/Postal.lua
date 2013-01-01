@@ -1,4 +1,4 @@
-local E, L, V, P, G,_ = unpack(ElvUI)
+﻿local E, L, V, P, G,_ = unpack(ElvUI)
 local AS = E:GetModule('AddOnSkins')
 local S = E:GetModule('Skins')
 
@@ -44,7 +44,7 @@ local function SkinPostal(self)
 
 	if Postal_ModuleMenuButton then
 		S:HandleNextPrevButton(Postal_ModuleMenuButton, true)
-		Postal_ModuleMenuButton:SetPoint('TOPRIGHT', MailFrame, -53, -6)
+		Postal_ModuleMenuButton:SetPoint('TOPRIGHT', MailFrame, -83, -6)
 	end
 	
 	if Postal_BlackBookButton then

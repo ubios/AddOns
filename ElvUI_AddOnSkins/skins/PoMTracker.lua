@@ -1,4 +1,4 @@
-local E, L, V, P, G,_ = unpack(ElvUI)
+﻿local E, L, V, P, G,_ = unpack(ElvUI)
 local AS = E:GetModule('AddOnSkins')
 local S = E:GetModule('Skins')
 
@@ -25,7 +25,7 @@ local function SkinPoMTracker(self)
 	pomtrackerstatusBar:ClearAllPoints()
 	pomtrackerstatusBar:Point("TOP", pomtracker2, "BOTTOM", 0, -5)
 	pomtrackerstatusBar:CreateBackdrop("Transparent")
-	pomtrackerstatusBar:SetStatusBarTexture(AS.LSM:Fetch("statusbar",E.private.general.normTex))
+	pomtrackerstatusBar:SetStatusBarTexture(E["media"].normTex)
 
 	for i = 1,6 do
 		S:HandleCheckBox(_G["PoMOptionFrame_CheckButton"..i])

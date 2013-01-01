@@ -1,4 +1,4 @@
-local E, L, V, P, G,_ = unpack(ElvUI)
+﻿local E, L, V, P, G,_ = unpack(ElvUI)
 local AS = E:GetModule('AddOnSkins')
 
 local Skins = {
@@ -241,9 +241,9 @@ local Skins = {
 		["buttonText"] = "Tukui Combo",
 		["addon"] = "tCombo",
 	},
-	["TellMeWhenSkin"] = {
-		["addon"] = "TellMeWhen",
-	},
+	--["TellMeWhenSkin"] = {
+	--	["addon"] = "TellMeWhen",
+	--},
 	["TinyDPSSkin"] = {
 		["addon"] = "TinyDPS",
 	},
@@ -389,17 +389,11 @@ function AS:GenerateOptions()
 						name = 'Settings to control addons embedded in right chat panel',
 						order = 1
 					},
-					EmbedRight = {
-						type = 'toggle',
-						name = 'Embed to Right Chat Panel',
-						desc = 'Embed to right chat panel, otherwise left chat panel',
-						order = 2
-					},
 					EmbedRecount = {
 						type = 'toggle',
 						name = 'Recount',
 						desc = L['TOGGLESKIN_DESC'],
-						order = 3,
+						order = 2,
 						disabled = function() return not IsAddOnLoaded("Recount") end,
 					},
 					EmbedSkada = {

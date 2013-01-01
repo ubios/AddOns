@@ -1,4 +1,4 @@
---[[
+﻿--[[
 	Author: Affli@RU-Howling Fjord, 
 	Modified: Elv, Azilroka
 	All rights reserved.
@@ -81,12 +81,12 @@ local function LoadSkin()
 					end
 
 					if not texture.styled then
-						texture:SetTexture(AS.LSM:Fetch("statusbar",E.private.general.normTex))
+						texture:SetTexture(E["media"].normTex)
 						texture.styled=true
 					end
 					
 					if not tbar.styled then
-						tbar:SetStatusBarTexture(AS.LSM:Fetch("statusbar",E.private.general.normTex))
+						tbar:SetStatusBarTexture(E["media"].normTex)
 						tbar:SetInside(frame)
 						--tbar:Point("TOPLEFT", frame, "TOPLEFT", 2, -2)
 						--tbar:Point("BOTTOMRIGHT", frame, "BOTTOMRIGHT", -2, 2)
@@ -186,7 +186,7 @@ local function LoadSkin()
 			end	
 			
 			if not progress.styled then
-				progress:SetStatusBarTexture(AS.LSM:Fetch("statusbar",E.private.general.normTex))
+				progress:SetStatusBarTexture(E["media"].normTex)
 				progress.styled=true
 			end				
 			progress:ClearAllPoints()

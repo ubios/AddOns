@@ -1,5 +1,4 @@
-
-local E, L, V, P, G = unpack(ElvUI); --Inport: Engine, Locales, PrivateDB, ProfileDB, GlobalDB
+﻿local E, L, V, P, G = unpack(ElvUI); --Inport: Engine, Locales, PrivateDB, ProfileDB, GlobalDB
 local S = E:GetModule('Skins')
 
 local buttonsize = 20
@@ -117,7 +116,7 @@ local applystyle = function(bar)
 	bar.candyBarBar:SetAllPoints(bar)
 	bar.candyBarBar.OldSetPoint = bar.candyBarBar.SetPoint
 	bar.candyBarBar.SetPoint=E.noop
-	bar.candyBarBar:SetStatusBarTexture(AS.LSM:Fetch("statusbar",E.private.general.normTex))
+	bar.candyBarBar:SetStatusBarTexture(E["media"].normTex)
 	bar.candyBarBackground:SetTexture(unpack(E.media.backdropcolor))
 
 	-- setup icon positions and other things
@@ -155,6 +154,11 @@ local function RegisterStyle()
 		BarStopped = freestyle,
 		GetStyleName = function() return "ElvUI" end,
 	})
+	if prox and BigWigs.pluginCore.modules.Bars.db.profile.barStyle == "ElvUI" then
+		hooksecurefunc(BigWigs.pluginCore.modules.Proximity, "RestyleWindow", function()
+			BigWigsProximityAnchor:SetTemplate("Transparent")
+		end)
+	end
 end
 
 S:RegisterSkin('BigWigs_Plugins', RegisterStyle, nil, true)
