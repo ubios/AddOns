@@ -119,7 +119,7 @@ for i=10, 40, 15 do
 		if not header.positioned then
 			header:ClearAllPoints()
 			header:Point("BOTTOMLEFT", E.UIParent, "BOTTOMLEFT", 4, 195)	
-			E:CreateMover(header, header:GetName()..'Mover', L['Raid 1-']..i..L[' Frames'], nil, nil, nil, 'ALL,RAID'..i)
+			E:CreateMover(header, ('%sMover'):format(header:GetName()), ("%s%d%s"):format(L['Raid 1-'], i, L[' Frames']), nil, nil, nil, ('ALL,RAID%d'):format(i))
 			
 			header:SetAttribute('minHeight', header.dirtyHeight)
 			header:SetAttribute('minWidth', header.dirtyWidth)
@@ -503,7 +503,7 @@ for i=10, 40, 15 do
 				end
 				
 				local objectDB = db.customTexts[objectName]
-				UF:CreateCustomTextGroup('raid'..i, objectName)
+				UF:CreateCustomTextGroup(('raid%d'):format(i), objectName)
 				
 				frame[objectName]:FontTemplate(customFont, objectDB.size or UF.db.fontSize, objectDB.fontOutline or UF.db.fontOutline)
 				frame:Tag(frame[objectName], objectDB.text_format or '')

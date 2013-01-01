@@ -2,7 +2,7 @@ local E, L, V, P, G, _ = unpack(select(2, ...)); --Inport: Engine, Locales, Priv
 local M = E:GetModule('Misc');
 
 local function SelectQuestReward(index)
-	local btn = _G["QuestInfoItem"..index]
+	local btn = _G[("QuestInfoItem%d"):format(index)]
 	if (btn.type == "choice") then
 		QuestInfoItemHighlight:ClearAllPoints()
 		QuestInfoItemHighlight:SetAllPoints(btn)

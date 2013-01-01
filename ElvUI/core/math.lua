@@ -1,5 +1,7 @@
 local E, L, V, P, G, _ = unpack(select(2, ...)); --Inport: Engine, Locales, PrivateDB, ProfileDB, GlobalDB, Localize Underscore
 
+local format = string.format
+
 --Return short value of a number
 function E:ShortValue(v)
 	if v >= 1e6 then
@@ -36,18 +38,6 @@ function E:ColorGradient(perc, ...)
 	return r1 + (r2-r1)*relperc, g1 + (g2-g1)*relperc, b1 + (b2-b1)*relperc
 end
 
---Return short negative value of a number, example -1000 returned as string -1k
-function E:ShortValueNegative(v)
-	if v <= 999 then return v end
-	if v >= 1000000 then
-		local value = string.format("%.1fm", v/1000000)
-		return value
-	elseif v >= 1000 then
-		local value = string.format("%.1fk", v/1000)
-		return value
-	end
-end
-
 --Return rounded number
 function E:Round(v, decimals)
 	if not decimals then decimals = 0 end
@@ -65,7 +55,7 @@ function E:RGBToHex(r, g, b)
 	r = r <= 1 and r >= 0 and r or 0
 	g = g <= 1 and g >= 0 and g or 0
 	b = b <= 1 and b >= 0 and b or 0
-	return string.format("|cff%02x%02x%02x", r*255, g*255, b*255)
+	return format("|cff%02x%02x%02x", r*255, g*255, b*255)
 end
 
 --Hex to RGB
@@ -122,24 +112,6 @@ function E:GetXYOffset(position, override)
 	end
 end
 
---This is differant than the round function because if a number is 20.0 for example it will return an integer value instead of floating point (20.0 will be 20)
-function E:TrimFloatingPoint(number, decimals)
-	assert(number, 'You must provide a floating point number to trim decimals from. Usage: E:TrimFloatingPoint(floatingPoint, <decimals>)')
-	if not decimals then decimals = 1 end
-	
-	local newNumber = string.format("%%.%df", decimals):format(number)
-	local checkstring = "."
-	for i=1, decimals do
-		checkstring = checkstring..'0'
-	end
-
-	if newNumber ~= tostring(math.ceil(number))..checkstring then
-		return newNumber
-	end
-	
-	return math.floor(number)
-end
-
 local styles = {
 	['CURRENT'] = '%s',
 	['CURRENT_MAX'] = '%s - %s',
@@ -158,25 +130,23 @@ function E:GetFormattedText(style, min, max)
 	
 	local useStyle = styles[style]
 
-	local percentValue = E:TrimFloatingPoint(min / max * 100)
-	
 	if style == 'DEFICIT' then
 		local deficit = max - min
 		if deficit <= 0 then
 			return ''
 		else
-			return string.format(useStyle, E:ShortValue(deficit))
+			return format(useStyle, E:ShortValue(deficit))
 		end
 	elseif style == 'PERCENT' then
-		return string.format(useStyle, percentValue)
+		return format(useStyle, min / max * 100)
 	elseif style == 'CURRENT' or ((style == 'CURRENT_MAX' or style == 'CURRENT_MAX_PERCENT' or style == 'CURRENT_PERCENT') and min == max) then
-		return string.format(styles['CURRENT'],  E:ShortValue(min))
+		return format(styles['CURRENT'],  E:ShortValue(min))
 	elseif style == 'CURRENT_MAX' then
-		return string.format(useStyle,  E:ShortValue(min), E:ShortValue(max))
+		return format(useStyle,  E:ShortValue(min), E:ShortValue(max))
 	elseif style == 'CURRENT_PERCENT' then
-		return string.format(useStyle, E:ShortValue(min), percentValue)
+		return format(useStyle, E:ShortValue(min), min / max * 100)
 	elseif style == 'CURRENT_MAX_PERCENT' then
-		return string.format(useStyle, E:ShortValue(min), E:ShortValue(max), percentValue)
+		return format(useStyle, E:ShortValue(min), E:ShortValue(max), min / max * 100)
 	end
 end
 

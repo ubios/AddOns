@@ -7,6 +7,7 @@ local DAYISH, HOURISH, MINUTEISH = 3600 * 23.5, 60 * 59.5, 59.5 --used for caclc
 local HALFDAYISH, HALFHOURISH, HALFMINUTEISH = DAY/2 + 0.5, HOUR/2 + 0.5, MINUTE/2 + 0.5 --used for calculating next update times
 
 local ceil = math.ceil
+local floor = math.floor
 local max = math.max
 local find = string.find
 local format = string.format
@@ -39,13 +40,13 @@ function A:AuraTimeGetInfo(s, threshhold)
 			return s, 4, 0.051
 		end
 	elseif s < HOUR then
-		local minutes = tonumber(E:Round(s/MINUTE))
+		local minutes = floor(s / MINUTE)
 		return ceil(s / MINUTE), 2, minutes > 1 and (s - (minutes*MINUTE - HALFMINUTEISH)) or (s - MINUTEISH)
 	elseif s < DAY then
-		local hours = tonumber(E:Round(s/HOUR))
+		local hours = floor(s / HOUR)
 		return ceil(s / HOUR), 1, hours > 1 and (s - (hours*HOUR - HALFHOURISH)) or (s - HOURISH)
 	else
-		local days = tonumber(E:Round(s/DAY))
+		local days = floor(s / DAY)
 		return ceil(s / DAY), 0,  days > 1 and (s - (days*DAY - HALFDAYISH)) or (s - DAYISH)
 	end
 end

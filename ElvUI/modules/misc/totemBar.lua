@@ -13,11 +13,13 @@ function TOTEMS:Update(event)
 			displayedTotems = displayedTotems + 1
 			CooldownFrame_SetTimer(self.bar[i].cooldown, startTime, duration, 1)
 			
-			for d=1, MAX_TOTEMS do
-				if _G['TotemFrameTotem'..d..'IconTexture']:GetTexture() == icon then
-					_G['TotemFrameTotem'..d]:ClearAllPoints();
-					_G['TotemFrameTotem'..d]:SetParent(self.bar[i].holder);
-					_G['TotemFrameTotem'..d]:SetAllPoints(self.bar[i].holder);		
+			local totemFrame
+			for d = 1, MAX_TOTEMS do
+				totemFrame = _G[('TotemFrameTotem%d'):format(d)]
+				if _G[('TotemFrameTotem%dIconTexture'):format(d)]:GetTexture() == icon then
+					totemFrame:ClearAllPoints();
+					totemFrame:SetParent(self.bar[i].holder);
+					totemFrame:SetAllPoints(self.bar[i].holder);		
 				end		
 			end
 		else
@@ -92,7 +94,7 @@ function TOTEMS:Initialize()
 	self.bar = bar;
 	
 	for i=1, MAX_TOTEMS do
-		local frame = CreateFrame('Button', bar:GetName()..'Totem'..i, bar)
+		local frame = CreateFrame('Button', ('%sTotem%d'):format(bar:GetName(), i), bar)
 		frame:SetID(i)
 		frame:SetTemplate('Default')
 		frame:StyleButton()
@@ -105,7 +107,7 @@ function TOTEMS:Initialize()
 		frame.iconTexture:SetInside()
 		frame.iconTexture:SetTexCoord(unpack(E.TexCoords))
 		
-		frame.cooldown = CreateFrame('Cooldown', frame:GetName()..'Cooldown', frame, 'CooldownFrameTemplate')
+		frame.cooldown = CreateFrame('Cooldown', ('%sCooldown'):format(frame:GetName()), frame, 'CooldownFrameTemplate')
 		frame.cooldown:SetReverse(true)
 		frame.cooldown:SetInside()
 		self.bar[i] = frame;

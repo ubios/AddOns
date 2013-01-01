@@ -341,13 +341,13 @@ function AB:UpdateButtonSettings()
 	end
 	
 	for i=1, 5 do
-		self:PositionAndSizeBar('bar'..i)
+		self:PositionAndSizeBar(('bar%d'):format(i))
 	end	
 	self:PositionAndSizeBarPet()
 	self:PositionAndSizeBarShapeShift()
 	self:UpdatePetBindings()	
 	self:UpdateStanceBindings()
-	for barName, bar in pairs(self["handledBars"]) do
+	for _, bar in pairs(self["handledBars"]) do
 		self:UpdateButtonConfig(bar, bar.bindButtons)
 	end
 end
@@ -694,8 +694,7 @@ function AB:StyleFlyout(button)
 	SpellFlyoutBackgroundEnd:SetAlpha(0)
 	
 	for i=1, GetNumFlyouts() do
-		local x = GetFlyoutID(i)
-		local _, _, numSlots, isKnown = GetFlyoutInfo(x)
+		local _, _, numSlots, isKnown = GetFlyoutInfo(GetFlyoutID(i))
 		if isKnown then
 			buttons = numSlots
 			break

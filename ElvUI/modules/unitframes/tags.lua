@@ -240,7 +240,7 @@ ElvUF.Tags.Events['threat:percent'] = 'UNIT_THREAT_LIST_UPDATE GROUP_ROSTER_UPDA
 ElvUF.Tags.Methods['threat:percent'] = function(unit)
 	local _, _, percent = UnitDetailedThreatSituation('player', unit)
 	if(percent and percent > 0) and (IsInGroup() or UnitExists('pet')) then
-		return format('%d%%', E:TrimFloatingPoint(percent / 100 * 100))
+		return format('%.0f%%', percent)
 	else 
 		return ''
 	end
