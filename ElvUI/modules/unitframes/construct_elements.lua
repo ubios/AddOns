@@ -47,7 +47,6 @@ function UF:Construct_HealthBar(frame, bg, text, textPos)
 	UF['statusbars'][health] = true
 	
 	health:SetFrameStrata("LOW")
-	--health.frequentUpdates = true
 	health.PostUpdate = self.PostUpdateHealth
 	
 	if bg then
@@ -667,8 +666,8 @@ function UF:Construct_HealComm(frame)
 		otherBar = ohpb,
 		maxOverflow = 1,
 		PostUpdate = function(self)
-			if self.myBar:GetValue() == 0 then self.myBar:SetAlpha(0) else self.myBar:SetAlpha(1) end
-			if self.otherBar:GetValue() == 0 then self.otherBar:SetAlpha(0) else self.otherBar:SetAlpha(1) end
+			self.myBar:SetAlpha(self.myBar:GetValue() == 0 and 0 or 1)
+			self.otherBar:SetAlpha(self.otherBar:GetValue() == 0 and 0 or 1)
 		end
 	}
 end
@@ -736,7 +735,6 @@ function UF:Construct_AuraBarHeader(frame)
 	auraBar.sort = true
 	auraBar.filter = UF.AuraBarFilter
 	auraBar.PostUpdate = UF.ColorizeAuraBars
-
 	
 	return auraBar
 end

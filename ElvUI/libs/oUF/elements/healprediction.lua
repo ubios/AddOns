@@ -2,7 +2,7 @@ local _, ns = ...
 local oUF = ns.oUF
 
 local function Update(self, event, unit)
-	if(self.unit ~= unit) or not unit then return end
+	if self.unit ~= unit then return end
 
 	local hp = self.HealPrediction
 	if(hp.PreUpdate) then hp:PreUpdate(unit) end
@@ -49,7 +49,7 @@ end
 
 local function Enable(self)
 	local hp = self.HealPrediction
-	if(hp) then
+	if (hp) then
 		hp.__owner = self
 		hp.ForceUpdate = ForceUpdate
 
@@ -57,9 +57,7 @@ local function Enable(self)
 		self:RegisterEvent('UNIT_MAXHEALTH', Path)
 		self:RegisterEvent('UNIT_HEALTH', Path)
 
-		if(not hp.maxOverflow) then
-			hp.maxOverflow = 1.05
-		end
+		hp.maxOverflow = hp.maxOverflow or 1.05
 
 		if(hp.myBar and hp.myBar:IsObjectType'StatusBar' and not hp.myBar:GetStatusBarTexture()) then
 			hp.myBar:SetStatusBarTexture([[Interface\TargetingFrame\UI-StatusBar]])
@@ -74,7 +72,7 @@ end
 
 local function Disable(self)
 	local hp = self.HealPrediction
-	if(hp) then
+	if (hp) then
 		self:UnregisterEvent('UNIT_HEAL_PREDICTION', Path)
 		self:UnregisterEvent('UNIT_MAXHEALTH', Path)
 		self:UnregisterEvent('UNIT_HEALTH', Path)
