@@ -66,8 +66,9 @@ UF['headerGroupBy'] = {
 	end,
 }
 
-local find = string.find
-local gsub = string.gsub
+local find, gsub, split, format = string.find, string.gsub, string.split, string.format
+local min = math.min
+local tremove = table.remove
 
 function UF:Construct_UF(frame, unit)
 	frame:RegisterForClicks("AnyUp")
@@ -133,7 +134,7 @@ end
 
 function UF:GetAuraAnchorFrame(frame, attachTo, isConflict)
 	if isConflict then
-		E:Print(string.format(L['%s frame(s) has a conflicting anchor point, please change either the buff or debuff anchor point so they are not attached to each other. Forcing the debuffs to be attached to the main unitframe until fixed.'], E:StringTitle(frame:GetName())))
+		E:Print(format(L['%s frame(s) has a conflicting anchor point, please change either the buff or debuff anchor point so they are not attached to each other. Forcing the debuffs to be attached to the main unitframe until fixed.'], E:StringTitle(frame:GetName())))
 	end
 	
 	if isConflict or attachTo == 'FRAME' then
@@ -251,7 +252,7 @@ end
 
 function UF:ChangeVisibility(header, visibility)
 	if(visibility) then
-		local type, list = string.split(' ', visibility, 2)
+		local type, list = split(' ', visibility, 2)
 		if(list and type == 'custom') then
 			RegisterAttributeDriver(header, 'state-visibility', list)
 		end
@@ -331,7 +332,7 @@ function UF:CreateAndUpdateHeaderGroup(group, groupFilter, template)
 
 		local maxUnits, startingIndex = MAX_RAID_MEMBERS, -1
 		if db.maxColumns and db.unitsPerColumn then
-			startingIndex = -math.min(db.maxColumns * db.unitsPerColumn, maxUnits) + 1			
+			startingIndex = -min(db.maxColumns * db.unitsPerColumn, maxUnits) + 1			
 		end
 
 		if template then
@@ -556,10 +557,10 @@ function ElvUF:DisableBlizzard(unit)
 		HandleFrame(PlayerFrame)
 
 		-- For the damn vehicle support:
-		PlayerFrame:RegisterEvent('UNIT_ENTERING_VEHICLE')
-		PlayerFrame:RegisterEvent('UNIT_ENTERED_VEHICLE')
-		PlayerFrame:RegisterEvent('UNIT_EXITING_VEHICLE')
-		PlayerFrame:RegisterEvent('UNIT_EXITED_VEHICLE')
+		PlayerFrame:RegisterUnitEvent('UNIT_ENTERING_VEHICLE', "player")
+		PlayerFrame:RegisterUnitEvent('UNIT_ENTERED_VEHICLE', "player")
+		PlayerFrame:RegisterUnitEvent('UNIT_EXITING_VEHICLE', "player")
+		PlayerFrame:RegisterUnitEvent('UNIT_EXITED_VEHICLE', "player")
 		PlayerFrame:RegisterEvent('PLAYER_ENTERING_WORLD')
 		
 		-- User placed frames don't animate
@@ -671,7 +672,7 @@ function UF:Initialize()
 		for _, menu in pairs(UnitPopupMenus) do
 			for index = #menu, 1, -1 do
 				if removeMenuOptions[menu[index]] then
-					table.remove(menu, index)
+					tremove(menu, index)
 				end
 			end
 		end				

@@ -2,11 +2,10 @@ local E, L, V, P, G, _ = unpack(select(2, ...)); --Inport: Engine, Locales, Priv
 local NP = E:NewModule('NamePlates', 'AceHook-3.0', 'AceEvent-3.0', 'AceTimer-3.0')
 local LSM = LibStub("LibSharedMedia-3.0")
 
-local wipe = table.wipe
-
 local OVERLAY = [=[Interface\TargetingFrame\UI-TargetingFrame-Flash]=]
 local numChildren = -1
 local backdrop
+
 NP.Handled = {} --Skinned Nameplates
 NP.BattleGroundHealers = {};
 
@@ -21,6 +20,7 @@ NP.Healers = {
 	[L['Mistweaver']] = true,
 }
 
+local twipe = table.wipe
 
 function NP:Initialize()
 	self.db = E.db["nameplate"]
@@ -70,7 +70,7 @@ function NP:QueueObject(frame, object)
 end
 
 function NP:CreateVirtualFrame(parent, point)
-	if point == nil then point = parent end
+	point = point or parent
 	local noscalemult = E.mult * UIParent:GetScale()
 	
 	if point.bordertop then return end
@@ -180,7 +180,7 @@ function NP:HideObjects(frame)
 	for object in pairs(frame.queue) do
 		hooksecurefunc(object, "Show", RehideFrame)
 		
-		objectType = object:GetObjectType()
+		objectType = object:GetObjectType()  
 		if objectType == "Texture" then
 			object.OldTexture = object:GetTexture()
 			object:SetTexture(nil)
@@ -870,7 +870,7 @@ function NP:PLAYER_ENTERING_WORLD()
 	self:UpdateRoster()
 	self:CleanAuraLists()
 	
-	wipe(self.BattleGroundHealers)
+	twipe(self.BattleGroundHealers)
 	local inInstance, instanceType = IsInInstance()
 	if inInstance and instanceType == 'pvp' and self.db.markBGHealers then
 		self.CheckHealerTimer = self:ScheduleRepeatingTimer("CheckBGHealers", 3)

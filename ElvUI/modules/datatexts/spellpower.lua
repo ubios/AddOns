@@ -4,6 +4,7 @@ local DT = E:GetModule('DataTexts')
 local spellpwr, healpwr
 local displayModifierString = ''
 local lastPanel;
+local join = string.join
 
 local function OnEvent(self, event, unit)
 	spellpwr = GetSpellBonusDamage(7)
@@ -14,11 +15,12 @@ local function OnEvent(self, event, unit)
 	else
 		self.text:SetFormattedText(displayNumberString, L['SP'], spellpwr)
 	end
+
 	lastPanel = self
 end
 
 local function ValueColorUpdate(hex, r, g, b)
-	displayNumberString = string.join("", "%s: ", hex, "%d|r")
+	displayNumberString = join("", "%s: ", hex, "%d|r")
 	
 	if lastPanel ~= nil then
 		OnEvent(lastPanel)

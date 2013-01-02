@@ -352,14 +352,15 @@ function UF:Update_ArenaFrames(frame, db)
 	end
 	
 	if db.customTexts then
+		local objectDB
 		for objectName, _ in pairs(db.customTexts) do
 			if not frame[objectName] then
 				frame[objectName] = frame.RaisedElementParent:CreateFontString(nil, 'OVERLAY')
 			end
 			
-			local objectDB = db.customTexts[objectName]
+			objectDB = db.customTexts[objectName]
 			UF:CreateCustomTextGroup('arena', objectName)
-			
+						
 			frame[objectName]:FontTemplate(UF.LSM:Fetch("font", objectDB.font or UF.db.font), objectDB.size or UF.db.fontSize, objectDB.fontOutline or UF.db.fontOutline)
 			frame:Tag(frame[objectName], objectDB.text_format or '')
 			frame[objectName]:SetJustifyH(objectDB.justifyH or 'CENTER')

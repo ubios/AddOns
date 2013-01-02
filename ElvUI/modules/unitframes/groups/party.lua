@@ -4,7 +4,7 @@ local UF = E:GetModule('UnitFrames');
 local _, ns = ...
 local ElvUF = ns.oUF
 assert(ElvUF, "ElvUI was unable to locate oUF.")
-
+local tinsert = table.insert
 function UF:Construct_PartyFrames(unitGroup)
 	self:RegisterForClicks("AnyUp")
 	self:SetScript('OnEnter', UnitFrame_OnEnter)
@@ -35,8 +35,8 @@ function UF:Construct_PartyFrames(unitGroup)
 		self.LFDRole = UF:Construct_RoleIcon(self)
 		self.TargetGlow = UF:Construct_TargetGlow(self)
 		self.RaidRoleFramesAnchor = UF:Construct_RaidRoleFrames(self)
-		table.insert(self.__elements, UF.UpdateThreat)
-		table.insert(self.__elements, UF.UpdateTargetGlow)
+		tinsert(self.__elements, UF.UpdateThreat)
+		tinsert(self.__elements, UF.UpdateTargetGlow)
 		self:RegisterEvent('PLAYER_TARGET_CHANGED', function(...) UF.UpdateThreat(...); UF.UpdateTargetGlow(...) end)
 		self:RegisterEvent('PLAYER_ENTERING_WORLD', UF.UpdateTargetGlow)
 		self:RegisterEvent('GROUP_ROSTER_UPDATE', UF.UpdateTargetGlow)
@@ -546,16 +546,16 @@ function UF:Update_PartyFrames(frame, db)
 	frame:EnableElement('ReadyCheck')		
 	
 	if db.customTexts then
-		local customFont = UF.LSM:Fetch("font", objectDB.font or UF.db.font)
+		local objectDB
 		for objectName, _ in pairs(db.customTexts) do
 			if not frame[objectName] then
 				frame[objectName] = frame.RaisedElementParent:CreateFontString(nil, 'OVERLAY')
 			end
 			
-			local objectDB = db.customTexts[objectName]
+			objectDB = db.customTexts[objectName]
 			UF:CreateCustomTextGroup('party', objectName)
 			
-			frame[objectName]:FontTemplate(customFont, objectDB.size or UF.db.fontSize, objectDB.fontOutline or UF.db.fontOutline)
+			frame[objectName]:FontTemplate(UF.LSM:Fetch("font", objectDB.font or UF.db.font), objectDB.size or UF.db.fontSize, objectDB.fontOutline or UF.db.fontOutline)
 			frame:Tag(frame[objectName], objectDB.text_format or '')
 			frame[objectName]:SetJustifyH(objectDB.justifyH or 'CENTER')
 			frame[objectName]:ClearAllPoints()

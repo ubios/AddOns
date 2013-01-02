@@ -1,8 +1,6 @@
 local E, L, V, P, G, _ = unpack(select(2, ...)); --Inport: Engine, Locales, PrivateDB, ProfileDB, GlobalDB, Localize Underscore
 local DT = E:GetModule('DataTexts')
 
-local max = math.max
-
 local events = {SPELL_HEAL = true, SPELL_PERIODIC_HEAL = true}
 local playerID, petID
 local healTotal, lastHealAmount = 0, 0
@@ -12,6 +10,9 @@ local lastSegment = 0
 local lastPanel
 local displayString = '';
 local hpsInfoString = L["HPS"]..': '
+
+local join = string.join
+local max = math.max
 
 local function Reset()
 	timeStamp = 0
@@ -60,7 +61,7 @@ local function OnClick(self)
 end
 
 local function ValueColorUpdate(hex, r, g, b)
-	displayString = string.join("", "%s", hex, "%.1f|r")
+	displayString = join("", "%s", hex, "%.1f|r")
 
 	if lastPanel ~= nil then
 		OnEvent(lastPanel)

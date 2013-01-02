@@ -5,6 +5,8 @@
 local parent, ns = ...
 local oUF = ns.oUF
 
+local format = string.format
+local tinsert, tremove = table.insert, table.remove
 local _PATTERN = '%[..-%]+'
 
 local floor = math.floor
@@ -18,7 +20,7 @@ local _ENV = {
 		if not r or type(r) == 'string' then --wtf?
 			return '|cffFFFFFF'
 		end
-		return string.format("|cff%02x%02x%02x", r*255, g*255, b*255)
+		return format("|cff%02x%02x%02x", r*255, g*255, b*255)
 	end,
 	ColorGradient = oUF.ColorGradient,
 }
@@ -243,7 +245,7 @@ local tagStrings = {
 	["group"] = [[function(unit)
 		local name, server = UnitName(unit)
 		if(server and server ~= "") then
-			name = string.format("%s-%s", name, server)
+			name = format("%s-%s", name, server)
 		end
 
 		for i=1, GetNumGroupMembers() do
@@ -446,7 +448,7 @@ local RegisterEvent = function(fontstr, event)
 	if(not events[event]) then events[event] = {} end
 
 	frame:RegisterEvent(event)
-	insert(events[event], fontstr)
+	tinsert(events[event], fontstr)
 end
 
 local RegisterEvents = function(fontstr, tagstr)
@@ -469,7 +471,7 @@ local UnregisterEvents = function(fontstr)
 					frame:UnregisterEvent(event)
 				end
 
-				remove(data, k)
+				tremove(data, k)
 			end
 		end
 	end
@@ -503,7 +505,7 @@ local Tag = function(self, fs, tagstr)
 	if(not self.__tags) then
 		self.__tags = {}
 		self.__mousetags = {}
-		insert(self.__elements, OnShow)
+		tinsert(self.__elements, OnShow)
 	else
 		-- Since people ignore everything that's good practice - unregister the tag
 		-- if it already exists.
@@ -525,7 +527,7 @@ local Tag = function(self, fs, tagstr)
 	end
 	
 	if tagstr:find('%[mouseover%]') then
-		insert(self.__mousetags, fs)
+		tinsert(self.__mousetags, fs)
 		fs:SetAlpha(0)
 		if not self.__HookFunc then
 			self:HookScript('OnEnter', OnEnter)
@@ -599,7 +601,7 @@ local Tag = function(self, fs, tagstr)
 			end
 
 			if(tagFunc) then
-				insert(args, tagFunc)
+				tinsert(args, tagFunc)
 			else
 				numTags = -1
 				func = function(self)
@@ -692,14 +694,14 @@ local Tag = function(self, fs, tagstr)
 		end
 
 		if(not eventlessUnits[timer]) then eventlessUnits[timer] = {} end
-		insert(eventlessUnits[timer], fs)
+		tinsert(eventlessUnits[timer], fs)
 
 		createOnUpdate(timer)
 	else
 		RegisterEvents(fs, tagstr)
 	end
 
-	insert(self.__tags, fs)
+	tinsert(self.__tags, fs)
 end
 
 local Untag = function(self, fs)
@@ -709,14 +711,14 @@ local Untag = function(self, fs)
 	for _, timers in next, eventlessUnits do
 		for k, fontstr in next, timers do
 			if(fs == fontstr) then
-				remove(timers, k)
+				tremove(timers, k)
 			end
 		end
 	end
 
 	for k, fontstr in next, self.__tags do
 		if(fontstr == fs) then
-			remove(self.__tags, k)
+			tremove(self.__tags, k)
 		end
 	end
 

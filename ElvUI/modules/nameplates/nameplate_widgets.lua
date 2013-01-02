@@ -44,6 +44,10 @@ local AURA_TYPE = {
 	["Debuff"] = 6,
 }
 
+local band = bit.band
+local ceil = math.ceil
+local twipe = table.wipe
+
 NP.RaidIconCoordinate = {
 	[0]		= { [0]		= "STAR", [0.25]	= "MOON", },
 	[0.25]	= { [0]		= "CIRCLE", [0.25]	= "SQUARE",	},
@@ -283,8 +287,8 @@ function NP:SearchNameplateByIcon(UnitFlags)
 			UnitIcon = iconname
 			break
 		end
-	end
-	
+	end	
+
 	return NP:SearchNameplateByIconName(UnitIcon)
 end
 
@@ -313,12 +317,12 @@ function NP:SetAuraInstance(guid, spellid, expiration, stacks, caster, duration,
 	if (self.db.trackauras and caster == UnitGUID('player')) then
 		filter = true;
 	end
-
-	local auratrackfilter = E.global['unitframe']['aurafilters'][self.db.trackfilter]
-	if self.db.trackfilter and #self.db.trackfilter > 1 and auratrackfilter then
+	
+	local trackFilter = E.global['unitframe']['aurafilters'][self.db.trackfilter]
+	if self.db.trackfilter and #self.db.trackfilter > 1 and trackFilter then
 		local name = GetSpellInfo(spellid)
-		local spellList = auratrackfilter.spells
-		local type = auratrackfilter.type
+		local spellList = trackFilter.spells
+		local type = trackFilter.type
 		if type == 'Blacklist' then
 			if spellList[name] and spellList[name].enable then
 				filter = false;
@@ -651,9 +655,8 @@ end
 
 function NP:GetAuraInstance(guid, aura_id)
 	if guid and aura_id then
-		local aura_instance_id = format("%s%s", guid, aura_id)
-		return self.Aura_Spellid[aura_instance_id], self.Aura_Expiration[aura_instance_id], self.Aura_Stacks[aura_instance_id], self.Aura_Caster[aura_instance_id],
-			self.Aura_Duration[aura_instance_id], self.Aura_Texture[aura_instance_id], self.Aura_Type[aura_instance_id], self.Aura_Target[aura_instance_id]
+		local aura_instance_id = guid..aura_id
+		return self.Aura_Spellid[aura_instance_id], self.Aura_Expiration[aura_instance_id], self.Aura_Stacks[aura_instance_id], self.Aura_Caster[aura_instance_id], self.Aura_Duration[aura_instance_id], self.Aura_Texture[aura_instance_id], self.Aura_Type[aura_instance_id], self.Aura_Target[aura_instance_id]
 	end
 end
 

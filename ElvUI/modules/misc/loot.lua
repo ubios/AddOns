@@ -5,6 +5,9 @@ local M = E:GetModule('Misc');
 local lootFrame, lootFrameHolder
 local iconSize = 30;
 
+local max = math.max
+local tinsert = table.insert
+
 local sq, ss, sn
 local OnEnter = function(self)
 	local slot = self:GetID()
@@ -68,7 +71,7 @@ local function anchorSlots(self)
 		end
 	end
 
-	self:Height(math.max(shownSlots * iconsize + 16, 20))
+	self:Height(max(shownSlots * iconsize + 16, 20))
 end
 
 local function createSlot(id)
@@ -214,9 +217,9 @@ function M:LOOT_OPENED(event, autoloot)
 			slot.icon:SetTexture(texture)
 			
 			if quality then
-				m = math.max(m, quality)
+				m = max(m, quality)
 			end
-			w = math.max(w, slot.name:GetStringWidth())
+			w = max(w, slot.name:GetStringWidth())
 
 			slot:Enable()
 			slot:Show()
@@ -232,7 +235,7 @@ function M:LOOT_OPENED(event, autoloot)
 		slot.icon:SetTexture[[Interface\Icons\INV_Misc_Herb_AncientLichen]]
 
 		items = 1
-		w = math.max(w, slot.name:GetStringWidth())
+		w = max(w, slot.name:GetStringWidth())
 
 		slot.count:Hide()
 		slot.drop:Hide()
@@ -246,7 +249,7 @@ function M:LOOT_OPENED(event, autoloot)
 
 	local color = ITEM_QUALITY_COLORS[m]
 	lootFrame:SetBackdropBorderColor(color.r, color.g, color.b, .8)
-	lootFrame:Width(math.max(w, t))
+	lootFrame:Width(max(w, t))
 end
 
 function M:LoadLoot()
@@ -283,7 +286,7 @@ function M:LoadLoot()
 	
 	-- Fuzz
 	LootFrame:UnregisterAllEvents()
-	UISpecialFrames[#UISpecialFrames + 1] = 'ElvLootFrame'
+	tinsert(UISpecialFrames, 'ElvLootFrame')
 
 	function _G.GroupLootDropDown_GiveLoot(self)
 		if ( sq >= MASTER_LOOT_THREHOLD ) then

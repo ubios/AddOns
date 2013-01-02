@@ -1,6 +1,13 @@
 local E, L, V, P, G, _ = unpack(select(2, ...)); --Inport: Engine, Locales, PrivateDB, ProfileDB, GlobalDB, Localize Underscore
 
+
 local format = string.format
+local sub = string.sub
+local upper = string.upper
+
+local modf = math.modf
+local ceil = math.ceil
+local floor = math.floor
 
 --Return short value of a number
 function E:ShortValue(v)
@@ -14,7 +21,7 @@ function E:ShortValue(v)
 end
 
 function E:IsEvenNumber(num)
-	if num%2 == 0 then
+	if ( num % 2 ) == 0 then
 		return true;
 	else
 		return false;
@@ -24,15 +31,13 @@ end
 -- http://www.wowwiki.com/ColorGradient
 function E:ColorGradient(perc, ...)
 	if perc >= 1 then
-		local r, g, b = select(select('#', ...) - 2, ...)
-		return r, g, b
+		return select(select('#', ...) - 2, ...)
 	elseif perc <= 0 then
-		local r, g, b = ...
-		return r, g, b
+		return ...
 	end
 
 	local num = select('#', ...) / 3
-	local segment, relperc = math.modf(perc*(num-1))
+	local segment, relperc = modf(perc*(num-1))
 	local r1, g1, b1, r2, g2, b2 = select((segment*3)+1, ...)
 
 	return r1 + (r2-r1)*relperc, g1 + (g2-g1)*relperc, b1 + (b2-b1)*relperc
@@ -40,8 +45,7 @@ end
 
 --Return rounded number
 function E:Round(v, decimals)
-	if not decimals then decimals = 0 end
-    return (("%%.%df"):format(decimals)):format(v)
+    return (("%%.%df"):format(decimals or 0)):format(v)
 end
 
 --Truncate a number off to n places
@@ -60,7 +64,7 @@ end
 
 --Hex to RGB
 function E:HexToRGB(hex)
-	local rhex, ghex, bhex = string.sub(hex, 1, 2), string.sub(hex, 3, 4), string.sub(hex, 5, 6)
+	local rhex, ghex, bhex = sub(hex, 1, 2), sub(hex, 3, 4), sub(hex, 5, 6)
 	return tonumber(rhex, 16), tonumber(ghex, 16), tonumber(bhex, 16)
 end
 
@@ -214,5 +218,5 @@ function E:Delay(delay, func, ...)
 end
 
 function E:StringTitle(str)
-	return str:gsub("(.)", string.upper, 1)
+	return str:gsub("(.)", upper, 1)
 end

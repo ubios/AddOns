@@ -5,6 +5,7 @@ local lastPanel
 local armorString = ARMOR..": "
 local chanceString = "%.2f%%";
 local format = string.format
+local join = string.join
 local displayString = ''; 
 local baseArmor, effectiveArmor, armor, posBuff, negBuff
 	
@@ -37,7 +38,7 @@ local function OnEnter(self)
 end
 
 local function ValueColorUpdate(hex, r, g, b)
-	displayString = string.join("", "%s", hex, "%d|r")
+	displayString = join("", "%s", hex, "%d|r")
 	
 	if lastPanel ~= nil then
 		OnEvent(lastPanel)

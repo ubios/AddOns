@@ -1,9 +1,10 @@
 local _, ns = ...
-local oUF = ns.oUF or oUF
+local oUF = oUF or ns.oUF
 assert(oUF, 'oUF_AuraBars was unable to locate oUF install.')
 
-local floor = math.floor
-local min = math.min
+local format = string.format
+local floor, huge, min = math.floor, math.huge, math.min
+local tsort = table.sort
 
 local function Round(number, decimalPlaces)
 	if decimalPlaces and decimalPlaces > 0 then
@@ -179,7 +180,7 @@ local function DefaultFilter(self, unit, name, rank, icon, count, debuffType, du
 end
 
 local sort = function(a, b)
-	local compa, compb = a.noTime and math.huge or a.expirationTime, b.noTime and math.huge or b.expirationTime
+	local compa, compb = a.noTime and huge or a.expirationTime, b.noTime and huge or b.expirationTime
 	return compa > compb
 end
 
@@ -226,7 +227,7 @@ local function Update(self, event, unit)
 	end
 
 	if auraBars.sort then
-		table.sort(auras, type(auraBars.sort) == 'function' and auraBars.sort or sort)
+		tsort(auras, type(auraBars.sort) == 'function' and auraBars.sort or sort)
 	end
 
 	-- Show and configure bars for buffs/debuffs.
@@ -279,7 +280,7 @@ local function Update(self, event, unit)
 
 		bar.icon:SetTexture(bar.aura.icon)
 
-		bar.spellname:SetText(bar.aura.count > 1 and string.format("%s [%d]", bar.aura.name, bar.aura.count) or bar.aura.name)
+		bar.spellname:SetText(bar.aura.count > 1 and format("%s [%d]", bar.aura.name, bar.aura.count) or bar.aura.name)
 		bar.spelltime:SetText(not bar.noTime and FormatTime(bar.aura.expirationTime-GetTime()))
 
 		-- Colour bars

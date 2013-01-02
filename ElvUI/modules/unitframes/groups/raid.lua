@@ -4,7 +4,7 @@ local UF = E:GetModule('UnitFrames');
 local _, ns = ...
 local ElvUF = ns.oUF
 assert(ElvUF, "ElvUI was unable to locate oUF.")
-
+local tinsert = table.insert
 for i=10, 40, 15 do
 	UF['Construct_Raid'..i..'Frames'] = function (self, unitGroup)
 		self:RegisterForClicks("AnyUp")
@@ -31,8 +31,8 @@ for i=10, 40, 15 do
 		self.LFDRole = UF:Construct_RoleIcon(self)
 		self.RaidRoleFramesAnchor = UF:Construct_RaidRoleFrames(self)
 		self.TargetGlow = UF:Construct_TargetGlow(self)
-		table.insert(self.__elements, UF.UpdateThreat)
-		table.insert(self.__elements, UF.UpdateTargetGlow)
+		tinsert(self.__elements, UF.UpdateThreat)
+		tinsert(self.__elements, UF.UpdateTargetGlow)
 		self:RegisterEvent('PLAYER_TARGET_CHANGED', function(...) UF.UpdateThreat(...); UF.UpdateTargetGlow(...) end)
 		self:RegisterEvent('PLAYER_ENTERING_WORLD', UF.UpdateTargetGlow)
 		self:RegisterEvent('UNIT_THREAT_LIST_UPDATE', UF.UpdateThreat)
@@ -496,16 +496,16 @@ for i=10, 40, 15 do
 		frame:EnableElement('ReadyCheck')		
 		
 		if db.customTexts then
-			local customFont = UF.LSM:Fetch("font", objectDB.font or UF.db.font)
+			local objectDB
 			for objectName, _ in pairs(db.customTexts) do
 				if not frame[objectName] then
 					frame[objectName] = frame.RaisedElementParent:CreateFontString(nil, 'OVERLAY')
 				end
 				
-				local objectDB = db.customTexts[objectName]
+				objectDB = db.customTexts[objectName]
 				UF:CreateCustomTextGroup(('raid%d'):format(i), objectName)
 				
-				frame[objectName]:FontTemplate(customFont, objectDB.size or UF.db.fontSize, objectDB.fontOutline or UF.db.fontOutline)
+				frame[objectName]:FontTemplate(UF.LSM:Fetch("font", objectDB.font or UF.db.font), objectDB.size or UF.db.fontSize, objectDB.fontOutline or UF.db.fontOutline)
 				frame:Tag(frame[objectName], objectDB.text_format or '')
 				frame[objectName]:SetJustifyH(objectDB.justifyH or 'CENTER')
 				frame[objectName]:ClearAllPoints()
@@ -513,6 +513,8 @@ for i=10, 40, 15 do
 			end
 			
 			frame:UpdateAllElements()
+		
+		frame:UpdateAllElements()
 		end
 	end
 

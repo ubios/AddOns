@@ -3,6 +3,7 @@ local DT = E:GetModule('DataTexts')
 
 local displayNumberString = ''
 local lastPanel;
+local join = string.join
 
 local function OnEvent(self, event, unit)
 	local hasteRating
@@ -18,7 +19,7 @@ local function OnEvent(self, event, unit)
 end
 
 local function ValueColorUpdate(hex, r, g, b)
-	displayNumberString = string.join("", "%s: ", hex, "%.2f%%|r")
+	displayNumberString = join("", "%s: ", hex, "%.2f%%|r")
 	
 	if lastPanel ~= nil then
 		OnEvent(lastPanel)

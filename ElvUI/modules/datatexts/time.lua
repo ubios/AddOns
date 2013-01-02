@@ -1,7 +1,6 @@
 local E, L, V, P, G, _ = unpack(select(2, ...)); --Inport: Engine, Locales, PrivateDB, ProfileDB, GlobalDB, Localize Underscore
 local DT = E:GetModule('DataTexts')
 
-local format = string.format
 local join = string.join
 local floor = math.floor
 local wipe = table.wipe

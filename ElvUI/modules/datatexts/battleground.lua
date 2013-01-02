@@ -36,6 +36,7 @@ local TBFG = 736
 local AB = 461
 local TOK = 856
 local SSM = 860
+
 local name
 
 function DT:UPDATE_BATTLEFIELD_SCORE()

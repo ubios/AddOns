@@ -495,10 +495,9 @@ local function PickupAny(kind, target, detail, ...)
 end
 
 function Generic:OnUpdate(elapsed)
-	if not GetCVarBool('lockActionBars') then return end
+	if not GetCVarBool('lockActionBars') then return; end
 	
-	self.lastupdate = (self.lastupdate or 0) + elapsed; 	
-
+	self.lastupdate = (self.lastupdate or 0) + elapsed;  
 	if (self.lastupdate < .2) then return end
 	self.lastupdate = 0
 	
@@ -709,8 +708,8 @@ function OnEvent(frame, event, arg1, ...)
 		ForAllButtons(UpdateHotkeys)
 	elseif event == "PLAYER_TARGET_CHANGED" then
 		UpdateRangeTimer()
-	elseif (event == "ACTIONBAR_UPDATE_STATE") or (event == "UNIT_ENTERED_VEHICLE") or (event == "UNIT_EXITED_VEHICLE") or
-		((event == "COMPANION_UPDATE") and (arg1 == "MOUNT")) then
+	elseif event == "ACTIONBAR_UPDATE_STATE" or event == "UNIT_ENTERED_VEHICLE" or event == "UNIT_EXITED_VEHICLE" or
+		(event == "COMPANION_UPDATE" and arg1 == "MOUNT") then
 		ForAllButtons(UpdateButtonState, true)
 	elseif event == "ACTIONBAR_UPDATE_USABLE" or event == "SPELL_UPDATE_USABLE" then
 		ForAllButtons(UpdateUsable, true)

@@ -68,6 +68,7 @@ local OnUpdate = function(self, elapsed)
 			end
 		end
 	end
+	
 	self.elapsed = 0
 end
 
