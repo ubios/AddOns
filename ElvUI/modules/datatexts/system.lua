@@ -100,7 +100,7 @@ local function OnEnter(self)
 	UpdateMemory()	
 	bandwidth = GetAvailableBandwidth()
 	
-	GameTooltip:AddDoubleLine(L['Home Latency:'], format(homeLatencyString, home_latency), 0.69, 0.31, 0.31,0.84, 0.75, 0.65)
+	GameTooltip:AddDoubleLine(L['Home Latency:'], format(homeLatencyString, select(3, GetNetStats())), 0.69, 0.31, 0.31,0.84, 0.75, 0.65)
 	
 	if bandwidth ~= 0 then
 		GameTooltip:AddDoubleLine(L['Bandwidth'] , format(bandwidthString, bandwidth),0.69, 0.31, 0.31,0.84, 0.75, 0.65)
@@ -131,8 +131,8 @@ local function OnEnter(self)
 		GameTooltip:AddLine(" ")
 		for i = 1, #cpuTable do
 			if (cpuTable[i][4]) then
-				local red = cpuTable[i][3] / totalCPU
-				local green = 1 - red
+				red = cpuTable[i][3] / totalCPU
+				green = 1 - red
 				GameTooltip:AddDoubleLine(cpuTable[i][2], format(homeLatencyString, cpuTable[i][3]), 1, 1, 1, red, green + .5, 0)
 			end						
 		end
@@ -165,7 +165,6 @@ local function Update(self, t)
 			framerate, 
 			statusColors[latency < 150 and 1 or (latency >= 150 and latency < 300) and 2 or (latency >= 300 and latency < 500) and 3 or 4], 
 			latency)
-
 		int2 = 1
 		if enteredFrame then
 			OnEnter(self)
