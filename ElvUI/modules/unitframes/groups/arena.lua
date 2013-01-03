@@ -414,7 +414,7 @@ function UF:UpdatePrep(event)
 				if (i <= numOpps) then
 					if class and spec then
 						local color = RAID_CLASS_COLORS[class]
-						_G["ElvUF_Arena"..i].prepFrame.SpecClass:SetText(spec.."  -  "..LOCALIZED_CLASS_NAMES_MALE[class])
+						_G["ElvUF_Arena"..i].prepFrame.SpecClass:SetFormattedText("%s  -  %s", spec, LOCALIZED_CLASS_NAMES_MALE[class])
 						_G["ElvUF_Arena"..i].prepFrame.Health:SetStatusBarColor(color.r, color.g, color.b)
 						_G["ElvUF_Arena"..i].prepFrame.Icon:SetTexture(texture)
 						_G["ElvUF_Arena"..i].prepFrame:Show()

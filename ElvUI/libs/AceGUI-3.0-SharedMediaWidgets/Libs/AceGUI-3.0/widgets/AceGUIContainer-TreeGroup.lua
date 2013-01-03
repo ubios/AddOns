@@ -91,7 +91,7 @@ local function UpdateButton(button, treeline, selected, canExpand, isExpanded)
 	
 	if disabled then
 		button:EnableMouse(false)
-		button.text:SetText("|cff808080"..text..FONT_COLOR_CODE_CLOSE)
+		button.text:SetFormattedText("|cff808080%s%s", TEXT, FONT_COLOR_CODE_CLOSE)
 	else
 		button.text:SetText(text)
 		button:EnableMouse(true)

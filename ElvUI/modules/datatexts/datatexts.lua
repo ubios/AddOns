@@ -68,7 +68,7 @@ function DT:RegisterLDB()
 			if value == nil or (len(value) > 5) or value == 'n/a' or name == value then
 				curFrame.text:SetText(value ~= 'n/a' and value or name)
 			else
-				curFrame.text:SetText(name..': '..hex..value..'|r')
+				curFrame.text:SetFormattedText('%s: %s%s|r', name, hex, value)
 			end
 		end
 		

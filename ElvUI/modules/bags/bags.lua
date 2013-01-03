@@ -438,23 +438,23 @@ function B:UpdateTokens()
 	local numTokens = 0
 	for i = 1, MAX_WATCHED_TOKENS do
 		local name, count, icon, currencyID = GetBackpackCurrencyInfo(i);
-		local button = f.currencyButton[i];
+		local button = f.currencyButton[i]
 		
-		button:ClearAllPoints();
+		button:ClearAllPoints()
 		if name then
-			button.icon:SetTexture(icon);
+			button.icon:SetTexture(icon)
 			
 			if self.db.currencyFormat == 'ICON_TEXT' then
-				button.text:SetText(name..': '..count);
+				button.text:SetFormattedText('%s: %d', name, count)
 			elseif self.db.currencyFormat == 'ICON' then
-				button.text:SetText(count);
+				button.text:SetText(count)
 			end
 			
 			button.currencyID = currencyID;
-			button:Show();
-			numTokens = numTokens + 1;
+			button:Show()
+			numTokens = numTokens + 1
 		else
-			button:Hide();
+			button:Hide()
 		end
 	end
 	
@@ -711,7 +711,7 @@ function B:ContructContainerFrame(name, isBank)
 		f.detail:FontTemplate();
 		f.detail:SetAllPoints(f.editBox);
 		f.detail:SetJustifyH("LEFT");
-		f.detail:SetText("|cff9999ff" .. SEARCH);
+		f.detail:SetFormattedText("|cff9999ff%s|r", SEARCH);
 		
 		local button = CreateFrame("Button", nil, f)
 		button:RegisterForClicks("LeftButtonUp", "RightButtonUp");

@@ -15,12 +15,12 @@ function E:PostAlertMove(screenQuadrant)
 		POSITION = 'TOP'
 		ANCHOR_POINT = 'BOTTOM'
 		YOFFSET = -10
-		AlertFrameMover:SetText(AlertFrameMover.textString..' (Grow Down)')
+		AlertFrameMover:SetFormattedText('%s (Grow Down)', AlertFrameMover.textString)
 	else
 		POSITION = 'BOTTOM'
 		ANCHOR_POINT = 'TOP'
 		YOFFSET = 10
-		AlertFrameMover:SetText(AlertFrameMover.textString..' (Grow Up)')
+		AlertFrameMover:SetFormattedText('%s (Grow Up)', AlertFrameMover.textString)
 	end
 
 	local rollBars = E:GetModule('Misc').RollBars

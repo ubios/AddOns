@@ -251,19 +251,19 @@ function UF:CustomCastDelayText(duration)
 	
 	if self.channeling then
 		if db.castbar.format == 'CURRENT' then
-			self.Time:SetText(("%.1f |cffaf5050%.1f|r"):format(abs(duration - self.max), self.delay))
+			self.Time:SetFormattedText("%.1f |cffaf5050%.1f|r", abs(duration - self.max), self.delay)
 		elseif db.castbar.format == 'CURRENTMAX' then
-			self.Time:SetText(("%.1f / %.1f |cffaf5050%.1f|r"):format(duration, self.max, self.delay))
+			self.Time:SetFormattedText("%.1f / %.1f |cffaf5050%.1f|r", duration, self.max, self.delay)
 		elseif db.castbar.format == 'REMAINING' then
-			self.Time:SetText(("%.1f |cffaf5050%.1f|r"):format(duration, self.delay))
+			self.Time:SetFormattedText("%.1f |cffaf5050%.1f|r", duration, self.delay)
 		end			
 	else
 		if db.castbar.format == 'CURRENT' then
-			self.Time:SetText(("%.1f |cffaf5050%s %.1f|r"):format(duration, "+", self.delay))
+			self.Time:SetFormattedText("%.1f |cffaf5050%s %.1f|r", duration, "+", self.delay)
 		elseif db.castbar.format == 'CURRENTMAX' then
-			self.Time:SetText(("%.1f / %.1f |cffaf5050%s %.1f|r"):format(duration, self.max, "+", self.delay))
+			self.Time:SetFormattedText("%.1f / %.1f |cffaf5050%s %.1f|r", duration, self.max, "+", self.delay)
 		elseif db.castbar.format == 'REMAINING' then
-			self.Time:SetText(("%.1f |cffaf5050%s %.1f|r"):format(abs(duration - self.max), "+", self.delay))
+			self.Time:SetFormattedText("%.1f |cffaf5050%s %.1f|r", abs(duration - self.max), "+", self.delay)
 		end		
 	end
 end
@@ -274,20 +274,19 @@ function UF:CustomTimeText(duration)
 
 	if self.channeling then
 		if db.castbar.format == 'CURRENT' then
-			self.Time:SetText(("%.1f"):format(abs(duration - self.max)))
+			self.Time:SetFormattedText("%.1f", abs(duration - self.max))
 		elseif db.castbar.format == 'CURRENTMAX' then
-			self.Time:SetText(("%.1f / %.1f"):format(duration, self.max))
-			self.Time:SetText(("%.1f / %.1f"):format(abs(duration - self.max), self.max))
+			self.Time:SetFormattedText("%.1f / %.1f", abs(duration - self.max), self.max)
 		elseif db.castbar.format == 'REMAINING' then
-			self.Time:SetText(("%.1f"):format(duration))
+			self.Time:SetFormattedText("%.1f", duration)
 		end				
 	else
 		if db.castbar.format == 'CURRENT' then
-			self.Time:SetText(("%.1f"):format(duration))
+			self.Time:SetFormattedText("%.1f", duration)
 		elseif db.castbar.format == 'CURRENTMAX' then
-			self.Time:SetText(("%.1f / %.1f"):format(duration, self.max))
+			self.Time:SetFormattedText("%.1f / %.1f", duration, self.max)
 		elseif db.castbar.format == 'REMAINING' then
-			self.Time:SetText(("%.1f"):format(abs(duration - self.max)))
+			self.Time:SetFormattedText("%.1f", abs(duration - self.max))
 		end		
 	end
 end

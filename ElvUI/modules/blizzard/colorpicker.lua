@@ -14,14 +14,14 @@ local function UpdateAlphaText()
 	local a = OpacitySliderFrame:GetValue()
 	a = a * 100
 	a = floor(a +.05)
-	ColorPPBoxA:SetText(format("%d", a))	
+	ColorPPBoxA:SetFormattedText("%d", a)	
 end
 
 local function UpdateAlpha(tbox)
 	local a = tbox:GetNumber()
 	if a > 100 then 
 		a = 100 
-		ColorPPBoxA:SetText(format("%d", a))
+		ColorPPBoxA:SetFormattedText("%d", a)
 	end
 	a = a/100
 	editingText = true
@@ -34,10 +34,10 @@ local function UpdateColorTexts(r, g, b)
 	r = r*255 
 	g = g*255
 	b = b*255
-	ColorPPBoxR:SetText(format("%d", r))
-	ColorPPBoxG:SetText(format("%d", g))
-	ColorPPBoxB:SetText(format("%d", b))
-	ColorPPBoxH:SetText(format("%.2x", r)..format("%.2x",g)..format("%.2x", b))
+	ColorPPBoxR:SetFormattedText("%d", r)
+	ColorPPBoxG:SetFormattedText("%d", g)
+	ColorPPBoxB:SetFormattedText("%d", b)
+	ColorPPBoxH:SetFormattedText("%.2x%.2x%.2x", r ,g, b)
 end		
 
 local function UpdateColor(tbox)

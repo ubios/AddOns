@@ -495,15 +495,15 @@ function TT:GameTooltip_OnTooltipSetUnit(tt)
 		if guildName then
 			if E.db.tooltip.guildranks then
 				if UnitIsInMyGuild(unit) then
-					GameTooltipTextLeft2:SetText(("<%s%s|r> [%s%s|r]"):format(E["media"].hexvaluecolor, guildName, E["media"].hexvaluecolor, guildRankName))
+					GameTooltipTextLeft2:SetFormattedText("<%s%s|r> [%s%s|r]", E["media"].hexvaluecolor, guildName, E["media"].hexvaluecolor, guildRankName)
 				else
-					GameTooltipTextLeft2:SetText(("<|cff00ff10%s|r> [|cff00ff10%s|r]"):format(guildName, guildRankName))
+					GameTooltipTextLeft2:SetFormattedText("<|cff00ff10%s|r> [|cff00ff10%s|r]", guildName, guildRankName)
 				end
 			else
 				if UnitIsInMyGuild(unit) then
-					GameTooltipTextLeft2:SetText(("<%s%s|r>"):format(E["media"].hexvaluecolor, guildName))
+					GameTooltipTextLeft2:SetFormattedText("<%s%s|r>", E["media"].hexvaluecolor, guildName)
 				else
-					GameTooltipTextLeft2:SetText(("<|cff00ff10%s|r>"):format(guildName))
+					GameTooltipTextLeft2:SetFormattedText("<|cff00ff10%s|r>", guildName)
 				end			
 			end
 			offset = offset + 1
@@ -536,7 +536,7 @@ function TT:GameTooltip_OnTooltipSetUnit(tt)
 			if line:GetText() == PVP_ENABLED then
 				local text = _G[("GameTooltipTextLeft%d"):format(i - 1)]:GetText()
 				if text then
-					_G[("GameTooltipTextLeft%d"):format(i - 1)]:SetText(("%s (%s)"):format(text, PVP_ENABLED))
+					_G[("GameTooltipTextLeft%d"):format(i - 1)]:SetFormattedText("%s (%s)", text, PVP_ENABLED)
 				end
 			end 		
 			line:SetText()

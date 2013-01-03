@@ -40,7 +40,7 @@ local function OnEvent(self, event, ...)
 	if unavailable then
 		self.text:SetText(NOBONUSREWARDS)
 	else
-		self.text:SetText(BATTLEGROUND_HOLIDAY..": "..MakeIconString(tankReward, healerReward, dpsReward))
+		self.text:SetFormattedText("%s: %s", BATTLEGROUND_HOLIDAY, MakeIconString(tankReward, healerReward, dpsReward))
 	end
 	lastPanel = self
 end
