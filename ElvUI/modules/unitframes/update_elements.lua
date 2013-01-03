@@ -226,7 +226,7 @@ function UF:PostUpdateAura(unit, button, index, offset, filter, isDebuff, durati
 	
 	button.spell = name
 	button.isStealable = isStealable
-	if duration ~= 0 then
+	if expiration and duration ~= 0 then
 		if not button:GetScript('OnUpdate') then
 			button.expirationTime = expiration
 			button.expiration = expiration - GetTime()
@@ -238,8 +238,7 @@ function UF:PostUpdateAura(unit, button, index, offset, filter, isDebuff, durati
 			button.expiration = expiration - GetTime()
 			button.nextupdate = 0.05
 		end
-	end	
-	if duration == 0 or expiration == 0 then
+	else
 		button:SetScript('OnUpdate', nil)
 		button.text:SetText('')
 	end
