@@ -24,8 +24,6 @@ local enteredFrame = false;
 local Update, lastPanel; -- UpValue
 local localizedName, isActive, canQueue, startTime, canEnter
 local name, reset, locked, extended, isRaid, maxPlayers, difficulty, numEncounters, encounterProgress
-local quests = {}
-local updateQuestTable = false
 
 local function ValueColorUpdate(hex, r, g, b)
 	europeDisplayFormat = join("", "%02d", hex, ":|r%02d")
@@ -76,24 +74,14 @@ local function formatResetTime(sec)
 		return 'N/A'
 	end
 	
-	if d > 0 and lockoutFormatString[h>10 and 1 or 2] then 
+	if d > 0 then 
 		return format(lockoutFormatString[h>10 and 1 or 2], d, h, m)
-	end
-	if h > 0 and lockoutFormatString[h>10 and 3 or 4] then
+	elseif h > 0 then
 		return format(lockoutFormatString[h>10 and 3 or 4], h, m)
-	end
-	if m > 0 and lockoutFormatString[m>10 and 5 or 6] then 
-		return format(lockoutFormatString[m>10 and 5 or 6], m) 
-	end
-end
-
-local function OnEvent(self, event)
-	if event == "QUEST_COMPLETE" then
-		updateQuestTable = true
-	elseif (event == "QUEST_LOG_UPDATE" and updateQuestTable) or event == "ELVUI_FORCE_RUN" then
-		wipe(quests)
-		quests = GetQuestsCompleted()
-		updateQuestTable = false
+	elseif m > 0 then 
+		return format(lockoutFormatString[m>10 and 5 or 6], m)
+	else
+		return "< 1m"
 	end
 end
 
@@ -152,9 +140,8 @@ local function OnEnter(self)
 	
 	GameTooltip:AddLine(" ")
 	GameTooltip:AddLine(L["World Boss(s)"])	
-	GameTooltip:AddDoubleLine(L['Sha of Anger']..':', quests[32099] and L['Defeated'] or L['Undefeated'], 1, 1, 1, 0.8, 0.8, 0.8)
-	GameTooltip:AddDoubleLine(L['Galleon']..':', quests[32098] and L['Defeated'] or L['Undefeated'], 1, 1, 1, 0.8, 0.8, 0.8)
-	
+	GameTooltip:AddDoubleLine(L['Sha of Anger']..':', IsQuestFlaggedCompleted(32099) and L['Defeated'] or L['Undefeated'], 1, 1, 1, 0.8, 0.8, 0.8)
+	GameTooltip:AddDoubleLine(L['Galleon']..':', IsQuestFlaggedCompleted(32098) and L['Defeated'] or L['Undefeated'], 1, 1, 1, 0.8, 0.8, 0.8)
 	
 	local timeText
 	local Hr, Min, AmPm = CalculateTimeValues(true)
@@ -178,13 +165,7 @@ function Update(self, t)
 	if enteredFrame then
 		OnEnter(self)
 	end
-	
-	--[[if GameTimeFrame.flashInvite then
-		E:Flash(self, 0.53)
-	else
-		E:StopFlash(self)
-	end]]
-	
+
 	if int > 0 then return end
 	
 	local Hr, Min, AmPm = CalculateTimeValues(false)
@@ -219,4 +200,4 @@ end
 	onEnterFunc - function to fire OnEnter
 	onLeaveFunc - function to fire OnLeave, if not provided one will be set for you that hides the tooltip.
 ]]
-DT:RegisterDatatext('Time', { "QUEST_COMPLETE", "QUEST_LOG_UPDATE" }, OnEvent, Update, Click, OnEnter, OnLeave)
+DT:RegisterDatatext('Time', nil, nil, Update, Click, OnEnter, OnLeave)
