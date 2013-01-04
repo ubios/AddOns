@@ -106,7 +106,6 @@ function UF:PostUpdatePower(unit, min, max)
 		min = random(1, max)
 		pType = random(0, 4)
 		self:SetValue(min)
-		local color = ElvUF['colors'].power[tokens[pType]]
 		
 		if not self.colorClass then
 			local color = ElvUF['colors'].power[tokens[pType]]
