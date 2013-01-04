@@ -62,6 +62,7 @@ end
 
 local OnDruidManaUpdate
 do
+	local UnitPower = UnitPower
 	OnDruidManaUpdate = function(self)
 		local unit = self.__owner.unit
 		local mana = UnitPower(unit, SPELL_POWER_MANA)
