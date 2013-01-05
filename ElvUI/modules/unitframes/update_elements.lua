@@ -1091,7 +1091,7 @@ function UF:UpdateAuraWatch(frame)
 					icon.border:SetVertexColor(0, 0, 0);
 				end
 				
-				iconConfiguration[icon.style](icon, buff[i])
+				iconConfiguration[icon.style](icon, buffs[i])
 							
 				if not icon.cd then
 					icon.cd = CreateFrame("Cooldown", nil, icon)
