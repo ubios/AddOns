@@ -7,6 +7,15 @@ assert(ElvUF, "ElvUI was unable to locate oUF.")
 --	Tags
 ------------------------------------------------------------------------
 
+local GetUnitStatus = function(unit)
+	return UnitIsDead(unit) and DEAD or UnitIsGhost(unit) and L['Ghost'] or not UnitIsConnected(unit) and L['Offline']
+end
+
+local GetUnitPowerTypeAndMin = function(unit)
+		local pType = UnitPowerType(unit)
+		return pType, UnitPower(unit, pType)
+end
+
 ElvUF.Tags.Events['afk'] = 'PLAYER_FLAGS_CHANGED'
 ElvUF.Tags.Methods['afk'] = function(unit)
 	local isAFK = UnitIsAFK(unit)
@@ -29,7 +38,7 @@ end
 
 ElvUF.Tags.Events['health:current'] = 'UNIT_HEALTH_FREQUENT UNIT_MAXHEALTH UNIT_CONNECTION'
 ElvUF.Tags.Methods['health:current'] = function(unit)
-	local status = UnitIsDead(unit) and DEAD or UnitIsGhost(unit) and L['Ghost'] or not UnitIsConnected(unit) and L['Offline']
+	local status = GetUnitStatus(unit)
 	if (status) then
 		return status
 	else
@@ -39,8 +48,7 @@ end
 
 ElvUF.Tags.Events['health:deficit'] = 'UNIT_HEALTH_FREQUENT UNIT_MAXHEALTH UNIT_CONNECTION'
 ElvUF.Tags.Methods['health:deficit'] = function(unit)
-	local status = UnitIsDead(unit) and DEAD or UnitIsGhost(unit) and L['Ghost'] or not UnitIsConnected(unit) and L['Offline']
-
+	local status = GetUnitStatus(unit)
 	if (status) then
 		return status
 	else
@@ -50,8 +58,7 @@ end
 
 ElvUF.Tags.Events['health:current-percent'] = 'UNIT_HEALTH_FREQUENT UNIT_MAXHEALTH UNIT_CONNECTION'
 ElvUF.Tags.Methods['health:current-percent'] = function(unit)
-	local status = UnitIsDead(unit) and DEAD or UnitIsGhost(unit) and L['Ghost'] or not UnitIsConnected(unit) and L['Offline']
-
+	local status = GetUnitStatus(unit)
 	if (status) then
 		return status
 	else
@@ -61,8 +68,7 @@ end
 
 ElvUF.Tags.Events['health:current-max'] = 'UNIT_HEALTH_FREQUENT UNIT_MAXHEALTH UNIT_CONNECTION'
 ElvUF.Tags.Methods['health:current-max'] = function(unit)
-	local status = UnitIsDead(unit) and DEAD or UnitIsGhost(unit) and L['Ghost'] or not UnitIsConnected(unit) and L['Offline']
-
+	local status = GetUnitStatus(unit)
 	if (status) then
 		return status
 	else
@@ -72,8 +78,7 @@ end
 
 ElvUF.Tags.Events['health:current-max-percent'] = 'UNIT_HEALTH_FREQUENT UNIT_MAXHEALTH UNIT_CONNECTION'
 ElvUF.Tags.Methods['health:current-max-percent'] = function(unit)
-	local status = UnitIsDead(unit) and DEAD or UnitIsGhost(unit) and L['Ghost'] or not UnitIsConnected(unit) and L['Offline']
-
+	local status = GetUnitStatus(unit)
 	if (status) then
 		return status
 	else
@@ -90,7 +95,7 @@ end
 
 ElvUF.Tags.Events['health:percent'] = 'UNIT_HEALTH_FREQUENT UNIT_MAXHEALTH UNIT_CONNECTION'
 ElvUF.Tags.Methods['health:percent'] = function(unit)
-	local status = UnitIsDead(unit) and DEAD or UnitIsGhost(unit) and L['Ghost'] or not UnitIsConnected(unit) and L['Offline']
+	local status = GetUnitStatus(unit)
 
 	if (status) then
 		return status
@@ -114,49 +119,44 @@ end
 
 ElvUF.Tags.Events['power:current'] = 'UNIT_POWER_FREQUENT UNIT_MAXPOWER'
 ElvUF.Tags.Methods['power:current'] = function(unit)
-	local pType = UnitPowerType(unit)
-	local min = UnitPower(unit, pType)
+	local pType, min = GetUnitPowerTypeAndMin(unit)
 	
 	return min == 0 and ' ' or	E:GetFormattedText('CURRENT', min, UnitPowerMax(unit, pType))
 end
 
 ElvUF.Tags.Events['power:current-max'] = 'UNIT_POWER_FREQUENT UNIT_MAXPOWER'
 ElvUF.Tags.Methods['power:current-max'] = function(unit)
-	local pType = UnitPowerType(unit)
-	local min = UnitPower(unit, pType)
+	local pType, min = GetUnitPowerTypeAndMin(unit)
 
 	return min == 0 and ' ' or	E:GetFormattedText('CURRENT_MAX', min, UnitPowerMax(unit, pType))
 end
 
 ElvUF.Tags.Events['power:current-percent'] = 'UNIT_POWER_FREQUENT UNIT_MAXPOWER'
 ElvUF.Tags.Methods['power:current-percent'] = function(unit)
-	local pType = UnitPowerType(unit)
-	local min = UnitPower(unit, pType)
+	local pType, min = GetUnitPowerTypeAndMin(unit)
 
 	return min == 0 and ' ' or	E:GetFormattedText('CURRENT_PERCENT', min, UnitPowerMax(unit, pType))
 end
 
 ElvUF.Tags.Events['power:current-max-percent'] = 'UNIT_POWER_FREQUENT UNIT_MAXPOWER'
 ElvUF.Tags.Methods['power:current-max-percent'] = function(unit)
-	local pType = UnitPowerType(unit)
-	local min = UnitPower(unit, pType)
+	local pType, min = GetUnitPowerTypeAndMin(unit)
 
 	return min == 0 and ' ' or	E:GetFormattedText('CURRENT_MAX_PERCENT', min, UnitPowerMax(unit, pType))
 end
 
 ElvUF.Tags.Events['power:percent'] = 'UNIT_POWER_FREQUENT UNIT_MAXPOWER'
 ElvUF.Tags.Methods['power:percent'] = function(unit)
-	local pType = UnitPowerType(unit)
-	local min = UnitPower(unit, pType)
+	local pType, min = GetUnitPowerTypeAndMin(unit)
 
 	return min == 0 and ' ' or	E:GetFormattedText('PERCENT', min, UnitPowerMax(unit, pType))
 end
 
 ElvUF.Tags.Events['power:deficit'] = 'UNIT_POWER_FREQUENT UNIT_MAXPOWER'
 ElvUF.Tags.Methods['power:deficit'] = function(unit)
-	local pType = UnitPowerType(unit)
+	local pType, min = GetUnitPowerTypeAndMin(unit)
 		
-	return E:GetFormattedText('DEFICIT', UnitPower(unit, pType), UnitPowerMax(unit, pType), r, g, b)
+	return E:GetFormattedText('DEFICIT', min, UnitPowerMax(unit, pType), r, g, b)
 end
 
 ElvUF.Tags.Events['power:max'] = 'UNIT_MAXPOWER'
@@ -221,19 +221,19 @@ end
 ElvUF.Tags.Events['name:short'] = 'UNIT_NAME_UPDATE'
 ElvUF.Tags.Methods['name:short'] = function(unit)
 	local name = UnitName(unit)
-	return name ~= nil and E:ShortenString(name, 10) or ''
+	return name and E:ShortenString(name, 10) or ''
 end
 
 ElvUF.Tags.Events['name:medium'] = 'UNIT_NAME_UPDATE'
 ElvUF.Tags.Methods['name:medium'] = function(unit)
 	local name = UnitName(unit)
-	return name ~= nil and E:ShortenString(name, 15) or ''
+	return name and E:ShortenString(name, 15) or ''
 end
 
 ElvUF.Tags.Events['name:long'] = 'UNIT_NAME_UPDATE'
 ElvUF.Tags.Methods['name:long'] = function(unit)
 	local name = UnitName(unit)
-	return name ~= nil and E:ShortenString(name, 20) or ''
+	return name and E:ShortenString(name, 20) or ''
 end
 
 ElvUF.Tags.Events['threat:percent'] = 'UNIT_THREAT_LIST_UPDATE GROUP_ROSTER_UPDATE'
@@ -272,8 +272,7 @@ ElvUF.Tags.Methods['pvptimer'] = function(unit)
 
 		if timer ~= 301000 and timer ~= -1 then	
 			local mins = floor((timer / 1000) / 60)
-			local secs = floor((timer / 1000) - (mins * 60))
-			return ("%s (%01.f:%02.f)"):format(PVP, mins, secs)
+			return ("%s (%01.f:%02.f)"):format(PVP, mins, (timer / 1000) - (mins * 60))
 		else
 			return PVP
 		end
