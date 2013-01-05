@@ -25,7 +25,6 @@ end
 local createAuraIcon = function(icons, index)
 	local button = CreateFrame("Button", nil, icons)
 	button:EnableMouse(true)
-	button:RegisterForClicks'RightButtonUp'
 
 	button:SetWidth(icons.size or 16)
 	button:SetHeight(icons.size or 16)
