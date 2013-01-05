@@ -197,7 +197,7 @@ function A:UpdateReminder(event, unit)
 			button.duration = duration
 			button.nextupdate = 0
 			
-			if (duration == 0 and expirationTime == 0) or E.db.auras.consolidatedBuffs.durations ~= true then
+			if (duration == 0 and expirationTime == 0) or not E.db.auras.consolidatedBuffs.durations then
 				button.t:SetAlpha(0.3)
 				button:SetScript('OnUpdate', nil)
 				button.timer:SetText(nil)
