@@ -6,7 +6,6 @@ local LSR = LibStub("LibSpecRoster-1.0")
 
 local sub = string.sub
 local abs, random, floor, ceil = math.abs, math.random, math.floor, math.ceil
-
 local _, ns = ...
 local ElvUF = ns.oUF
 assert(ElvUF, "ElvUI was unable to locate oUF.")
@@ -117,15 +116,10 @@ function UF:PostUpdatePower(unit, min, max)
 	
 	local db = parent.db
 	if self.LowManaText and db then
-		if pType == 0 then
-			local perc = max == 0 and 0 or floor(min / max * 100)		
-			if perc <= db.lowmana and not UnitIsDeadOrGhost(unit) then
-				self.LowManaText:SetFormattedText("%s %s", LOW, MANA)
-				E:Flash(self.LowManaText, 0.6)
-			else
-				self.LowManaText:SetText()
-				E:StopFlash(self.LowManaText)
-			end
+		if pType == 0 and not UnitIsDeadOrGhost(unit)
+			and (max == 0 and 0 or floor(min / max * 100)) <= db.lowmana then
+			self.LowManaText:SetFormattedText("%s %s", LOW, MANA)
+			E:Flash(self.LowManaText, 0.6)
 		else
 			self.LowManaText:SetText()
 			E:StopFlash(self.LowManaText)
@@ -144,8 +138,8 @@ function UF:PortraitUpdate(unit)
 	
 	local portrait = db.portrait
 	if portrait.enable and portrait.overlay then
-		self:SetAlpha(0)
-		self:SetAlpha(0.35)
+		self:SetAlpha(0); 
+		self:SetAlpha(0.35);
 	else
 		self:SetAlpha(1)
 	end
@@ -237,7 +231,8 @@ function UF:PostUpdateAura(unit, button, index, offset, filter, isDebuff, durati
 			button.expiration = expiration - GetTime()
 			button.nextupdate = 0.05
 		end
-	else
+	end	
+	if duration == 0 or expiration == 0 then
 		button:SetScript('OnUpdate', nil)
 		button.text:SetText('')
 	end
@@ -300,25 +295,24 @@ function UF:SetCastTicks(frame, numTicks, extraTickRatio)
 	extraTickRatio = extraTickRatio or 0
 	UF:HideTicks()
 	if numTicks and numTicks <= 0 then return end;
-		local d = frame:GetWidth() / (numTicks + extraTickRatio)
-		for i = 1, numTicks do
-			if not ticks[i] then
-				ticks[i] = frame:CreateTexture(nil, 'OVERLAY')
-				ticks[i]:SetTexture(E["media"].normTex)
-				ticks[i]:SetVertexColor(0, 0, 0)
-				ticks[i]:SetWidth(1)
-				ticks[i]:SetHeight(frame:GetHeight())
-			end
-			ticks[i]:ClearAllPoints()
-			ticks[i]:SetPoint("CENTER", frame, "LEFT", d * i, 0)
-			ticks[i]:Show()
+	local d = frame:GetWidth() / (numTicks + extraTickRatio)
+	for i = 1, numTicks do
+		if not ticks[i] then
+			ticks[i] = frame:CreateTexture(nil, 'OVERLAY')
+			ticks[i]:SetTexture(E["media"].normTex)
+			ticks[i]:SetVertexColor(0, 0, 0)
+			ticks[i]:SetWidth(1)
+			ticks[i]:SetHeight(frame:GetHeight())
 		end
+		ticks[i]:ClearAllPoints()
+		ticks[i]:SetPoint("CENTER", frame, "LEFT", d * i, 0)
+		ticks[i]:Show()
+	end
 end
 
 function UF:PostCastStart(unit, name, rank, castid)
 	local db = self:GetParent().db
-	if not db then return end
-	
+	if not db then return; end
 	
 	if unit == "vehicle" then unit = "player" end
 	
@@ -476,8 +470,7 @@ end
 function UF:UpdateHoly(event, unit, powerType)
 	if (self.unit ~= unit or (powerType and powerType ~= 'HOLY_POWER')) then return end
 	local db = self.db
-	if not db then return end
-
+	if not db then return; end
 	local BORDER = E.Border
 	local numHolyPower = UnitPower('player', SPELL_POWER_HOLY_POWER);
 	local maxHolyPower = UnitPowerMax('player', SPELL_POWER_HOLY_POWER);	
@@ -575,12 +568,11 @@ end
 
 function UF:UpdateHarmony()
 	local frame = self:GetParent()
-
 	local db = frame.db
-	if not db then return end
+	if not db then return; end
 
 	local maxBars = self.numPoints
-
+	
 	local UNIT_WIDTH = db.width
 	local BORDER = E.Border
 	local CLASSBAR_WIDTH = db.width - (BORDER*2)
@@ -644,7 +636,6 @@ function UF:UpdateShardBar(spec)
 	local db = frame.db
 	
 	if not db then return; end
-
 	local maxBars = self.number
 	
 	for i=1, UF['classMaxResourceBar'][E.myclass] do
@@ -714,7 +705,7 @@ end
 function UF:DruidPostUpdateAltPower(unit, min, max)
 	local powerText = self:GetParent().Power.value
 	
-	if min ~= max then
+	if min == max then
 		self.Text:SetText()
 		return	
 	end
@@ -733,12 +724,12 @@ function UF:DruidPostUpdateAltPower(unit, min, max)
 		end
 	else
 		self.Text:SetPoint(powerText:GetPoint())
-		self.Text:SetFormattedText("%s%d%%|r", color, floor(min / max * 100))
+		self.Text:SetFormattedText(color.."%d%%|r", floor(min / max * 100))
 	end	
 end
 
 function UF:UpdateThreat(event, unit)
-	if not unit or (self.unit ~= unit) or not E.initialized then return end
+	if (self.unit ~= unit) or not unit or not E.initialized then return end
 	local status = UnitThreatSituation(unit)
 	
 	if status and status > 1 then
@@ -757,7 +748,8 @@ function UF:UpdateThreat(event, unit)
 		if self.Threat and self.Threat:GetBackdrop() then
 			self.Threat:Hide()
 		elseif self.Health.backdrop then
-			self.Health.backdrop:SetTemplate("Default")		
+			self.Health.backdrop:SetTemplate("Default")
+			
 			if self.Power and self.Power.backdrop then
 				self.Power.backdrop:SetTemplate("Default")
 			end
@@ -766,9 +758,9 @@ function UF:UpdateThreat(event, unit)
 end
 
 function UF:UpdateTargetGlow(event)
-	if not self.unit then return end
-
+	if not self.unit then return; end
 	local unit = self.unit
+	
 	if UnitIsUnit(unit, 'target') then
 		self.TargetGlow:Show()
 		local reaction = UnitReaction(unit, 'player')
@@ -808,7 +800,7 @@ function UF:AltPowerBarPostUpdate(min, cur, max)
 	
 	if unit == "player" and self.text then 
 		local type = select(10, UnitAlternatePowerInfo(unit))
-				
+
 		if perc > 0 then
 			self.text:SetFormattedText("%s: %d%%", type, perc)
 		else
@@ -835,8 +827,9 @@ function UF:UpdateComboDisplay(event, unit)
 	local cpoints = self.CPoints
 	local cp = (UnitHasVehicleUI("player") or UnitHasVehicleUI("vehicle")) and GetComboPoints('vehicle', 'target') or GetComboPoints('player', 'target')
 
+
 	for i=1, MAX_COMBO_POINTS do
-		if (i <= cp) then
+		if(i <= cp) then
 			cpoints[i]:SetAlpha(1)
 		else
 			cpoints[i]:SetAlpha(.15)	
@@ -877,11 +870,11 @@ end
 
 function UF:AuraFilter(unit, icon, name, rank, texture, count, dtype, duration, timeLeft, caster, isStealable, shouldConsolidate, spellID, canApplyAura, isBossDebuff)	
 	if E.global.unitframe.InvalidSpells[spellID] then
-		return false
+		return false;
 	end
 
 	local db = self:GetParent().db
-	if not db or not db[self.type] then return true end
+	if not db or not db[self.type] then return true; end
 	
 	db = db[self.type]
 
@@ -987,12 +980,12 @@ local counterOffsets = {
 	['BOTTOM'] = {0, 0},
 }
 
-local iconconfiguration = {
+local iconConfiguration = {
 	["coloredIcon"] = function (icon, buff)
 		icon.icon:SetTexture(E["media"].blankTex);
 		
 		if (buff["color"]) then
-			icon.icon:SetVertexColor(buff["color"].r, buff["color"].g, buff["color"].b)
+			icon.icon:SetVertexColor(buff.color.r, buff.color.g, buff.b)
 		else
 			icon.icon:SetVertexColor(0.8, 0.8, 0.8)
 		end		
@@ -1009,7 +1002,7 @@ local iconconfiguration = {
 	["text"] = function (icon, buff)
 		icon.icon:SetTexture(nil)
 		icon.text:Show()
-		icon.text:SetTextColor(buff["color"].r, buff["color"].g, buff["color"].b)
+		icon.text:SetTextColor(buff.color.r, buff.color.g, buff.color.b)
 		icon.border:Hide()
 	end,
 }
@@ -1021,7 +1014,7 @@ function UF:UpdateAuraWatch(frame)
 
 	if not db.enable then
 		auras:Hide()
-		return
+		return;
 	else
 		auras:Show()
 	end
@@ -1098,29 +1091,8 @@ function UF:UpdateAuraWatch(frame)
 					icon.border:SetVertexColor(0, 0, 0);
 				end
 				
-				if icon.style == 'coloredIcon' then
-					icon.icon:SetTexture(E["media"].blankTex);
-					
-					if (buffs[i]["color"]) then
-						icon.icon:SetVertexColor(buffs[i]["color"].r, buffs[i]["color"].g, buffs[i]["color"].b);
-					else
-						icon.icon:SetVertexColor(0.8, 0.8, 0.8);
-					end		
-					icon.text:Hide()
-					icon.border:Show()
-				elseif icon.style == 'texturedIcon' then
-					icon.icon:SetVertexColor(1, 1, 1)
-					icon.icon:SetTexCoord(.18, .82, .18, .82);
-					icon.icon:SetTexture(icon.image);
-					icon.text:Hide()
-					icon.border:Show()
-				else
-					icon.icon:SetTexture(nil)
-					icon.text:Show()
-					icon.text:SetTextColor(buffs[i].color.r, buffs[i].color.g, buffs[i].color.b)
-					icon.border:Hide()
-				end
-				
+				iconConfiguration[icon.style](icon, buff[i])
+							
 				if not icon.cd then
 					icon.cd = CreateFrame("Cooldown", nil, icon)
 					icon.cd:SetAllPoints(icon)
@@ -1162,8 +1134,7 @@ function UF:UpdateAuraWatch(frame)
 	buffs = nil;
 end
 
--- local role texture buffer
-local roleIconTextures = { 
+local roleIconTextures = {
 	TANK = [[Interface\AddOns\ElvUI\media\textures\tank.tga]],
 	HEALER = [[Interface\AddOns\ElvUI\media\textures\healer.tga]],
 	DAMAGER = [[Interface\AddOns\ElvUI\media\textures\dps.tga]]
@@ -1182,11 +1153,9 @@ function UF:UpdateRoleIcon()
 	local lfdrole = self.LFDRole
 	local db = self.db.roleIcon;
 	
-	self.elapsed = 0
-	
 	if not (db or db.enable) then 
 		lfdrole:Hide()
-		return 
+		return
 	end
 	
 	local role = UnitGroupRolesAssigned(self.unit)
@@ -1200,9 +1169,9 @@ function UF:UpdateRoleIcon()
 	end
 	
 	if role and role ~= 'NONE' and (self.isForced or UnitIsConnected(self.unit)) then
-		lfdrole:SetTexture(roleIconTextures[role])
-		lfdrole:Show()	
 		self:SetScript('OnUpdate', nil)
+		lfdrole:SetTexture(roleIconTextures[role])
+		lfdrole:Show()
 	else
 		lfdrole:Hide()
 		self:SetScript('OnUpdate', UF.UpdateRoleIconInterval)
@@ -1360,7 +1329,6 @@ function UF:SmartAuraDisplay()
 	local db = self.db
 	local unit = self.unit
 	if not db or not db.smartAuraDisplay or db.smartAuraDisplay == 'DISABLED' or not UnitExists(unit) then return; end
-
 	local buffs = self.Buffs
 	local debuffs = self.Debuffs
 	local auraBars = self.AuraBars

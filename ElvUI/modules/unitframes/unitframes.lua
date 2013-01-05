@@ -1,6 +1,7 @@
 local E, L, V, P, G, _ = unpack(select(2, ...)); --Inport: Engine, Locales, PrivateDB, ProfileDB, GlobalDB, Localize Underscore
 local UF = E:NewModule('UnitFrames', 'AceTimer-3.0', 'AceEvent-3.0', 'AceHook-3.0');
 local LSM = LibStub("LibSharedMedia-3.0");
+
 UF.LSM = LSM
 
 local _, ns = ...
@@ -260,9 +261,8 @@ function UF:ChangeVisibility(header, visibility)
 end
 
 function UF:Update_AllFrames()
-	if InCombatLockdown() then self:RegisterEvent('PLAYER_REGEN_ENABLED') return end
-	if E.private["unitframe"].enable ~= true then return end
-	
+	if InCombatLockdown() then self:RegisterEvent('PLAYER_REGEN_ENABLED'); return end
+	if E.private["unitframe"].enable ~= true then return; end
 	self:UpdateColors()
 	self:Update_FontStrings()
 	self:Update_StatusBars()	
@@ -289,7 +289,7 @@ function UF:Update_AllFrames()
 end
 
 function UF:CreateAndUpdateUFGroup(group, numGroup)
-	if InCombatLockdown() then self:RegisterEvent('PLAYER_REGEN_ENABLED') return end
+	if InCombatLockdown() then self:RegisterEvent('PLAYER_REGEN_ENABLED'); return end
 
 	for i=1, numGroup do
 		local unit = group..i
@@ -323,7 +323,7 @@ function UF:CreateAndUpdateUFGroup(group, numGroup)
 end
 
 function UF:CreateAndUpdateHeaderGroup(group, groupFilter, template)
-	if InCombatLockdown() then self:RegisterEvent('PLAYER_REGEN_ENABLED') return end
+	if InCombatLockdown() then self:RegisterEvent('PLAYER_REGEN_ENABLED'); return end
 
 	local db = self.db['units'][group]
 	if not self[group] then
@@ -413,7 +413,7 @@ end
 
 function UF:CreateAndUpdateUF(unit)
 	assert(unit, 'No unit provided to create or update.')
-	if InCombatLockdown() then self:RegisterEvent('PLAYER_REGEN_ENABLED') return end
+	if InCombatLockdown() then self:RegisterEvent('PLAYER_REGEN_ENABLED'); return end
 
 	local frameName = E:StringTitle(unit)
 	frameName = frameName:gsub('t(arget)', 'T%1')
@@ -470,7 +470,7 @@ function UF:UpdateAllHeaders(event)
 	if event == 'PLAYER_REGEN_ENABLED' then
 		self:UnregisterEvent('PLAYER_REGEN_ENABLED')
 	end
-	
+		
 	local _, instanceType = IsInInstance();
 	local ORD = ns.oUF_RaidDebuffs or oUF_RaidDebuffs
 	if ORD then
@@ -612,7 +612,7 @@ function ElvUF:DisableBlizzard(unit)
 end
 
 function UF:ADDON_LOADED(event, addon)
-	if addon ~= 'Blizzard_ArenaUI' then return end
+	if addon ~= 'Blizzard_ArenaUI' then return; end
 	ElvUF:DisableBlizzard('arena')
 	self:UnregisterEvent("ADDON_LOADED");
 end
@@ -754,5 +754,6 @@ function UF:MergeUnitSettings(fromUnit, toUnit)
 	E:SetupTheme(E.private.theme, true)
 	self:Update_AllFrames()
 end
+
 
 E:RegisterInitialModule(UF:GetName())
