@@ -24,6 +24,15 @@ V['bags'] = {
 	['bagBar'] = false,
 }
 
+V['equipment'] = {
+	['specialization'] ={
+		['enable'] = false,
+	},
+	['battleground'] = {
+		['enable'] = false,
+	},
+}
+
 V["nameplate"] = {
 	["enable"] = true,
 }

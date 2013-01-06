@@ -151,6 +151,28 @@ L["Y Offset"] = true;
 L['You must be at a bank.'] = true;
 L["You must be at a vendor."] = true;
 
+--Equipment
+L["Equipment"] = true
+L["EQUIPMENT_DESC"] = "Adjust the settings for switching your gear set when you change specialization or enter a battleground."
+L["No Change"] = true
+
+L["Specialization"] = true
+L["Enable/Disable the specialization switch."] = true
+
+L["Primary Talent"] = true
+L["Choose the equipment set to use for your primary specialization."] = true
+
+L["Secondary Talent"] = true
+L["Choose the equipment set to use for your secondary specialization."] = true
+
+L["Battleground"] = true
+L['Enable/Disable the battleground switch.'] = true
+
+L["Equipment Set"] = true
+L["Choose the equipment set to use when you enter a battleground."] = true
+
+L["You have equipped equipment set: "] = true
+
 --Buffs and Debuffs
 L['AURAS_DESC'] = 'Configure the aura icons that appear near the minimap.';
 L['Begin a new row or column after this many auras.'] = true;
