@@ -272,8 +272,8 @@ function AB:ReassignBindings(event)
 		
 		ClearOverrideBindings(bar)
 		for i = 1, #bar.buttons do
-			local button = (bar.bindButtons.."%d"):format(i)
-			local real_button = (bar:GetName().."Button%d"):format(i)
+			local button = ("%s%d"):format(bar.bindButtons, i)
+			local real_button = ("%sButton%d"):format(bar:GetName(), i)
 			for k=1, select('#', GetBindingKey(button)) do
 				local key = select(k, GetBindingKey(button))
 				if key and key ~= "" then
@@ -590,7 +590,7 @@ function AB:UpdateButtonConfig(bar, buttonName)
 	bar.buttonConfig.colors.hp = E:GetColorTable(self.db.noPowerColor)
 	
 	for i, button in pairs(bar.buttons) do
-		bar.buttonConfig.keyBoundTarget = format(buttonName.."%d", i)
+		bar.buttonConfig.keyBoundTarget = format("%s%d", buttonName, i)
 		button.keyBoundTarget = bar.buttonConfig.keyBoundTarget
 		button.postKeybind = AB.FixKeybindText
 		button:SetAttribute("buttonlock", true)
@@ -602,7 +602,7 @@ function AB:UpdateButtonConfig(bar, buttonName)
 end
 
 function AB:FixKeybindText(button)
-	local hotkey = _G[button:GetName()..'HotKey'];
+	local hotkey = _G[('%sHotKey'):format(button:GetName())];
 	local text = hotkey:GetText();
 	
 	if text then
@@ -634,12 +634,14 @@ end
 
 local buttons = 0
 local function SetupFlyoutButton()
+	local button
 	for i=1, buttons do
+		button = _G[("SpellFlyoutButton%d"):format(i)]
 		--prevent error if you don't have max amount of buttons
-		if _G["SpellFlyoutButton"..i] then
-			AB:StyleButton(_G["SpellFlyoutButton"..i])
-			_G["SpellFlyoutButton"..i]:StyleButton()
-			_G["SpellFlyoutButton"..i]:HookScript('OnEnter', function(self)
+		if button then
+			AB:StyleButton(button)
+			button:StyleButton()
+			button:HookScript('OnEnter', function(self)
 				local parent = self:GetParent()
 				local parentAnchorButton = select(2, parent:GetPoint())
 				if not AB["handledbuttons"][parentAnchorButton] then return end
@@ -649,7 +651,7 @@ local function SetupFlyoutButton()
 					AB:Bar_OnEnter(parentAnchorBar)
 				end
 			end)
-			_G["SpellFlyoutButton"..i]:HookScript('OnLeave', function(self)
+			button:HookScript('OnLeave', function(self)
 				local parent = self:GetParent()
 				local parentAnchorButton = select(2, parent:GetPoint())
 				if not AB["handledbuttons"][parentAnchorButton] then return end

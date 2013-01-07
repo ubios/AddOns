@@ -4,6 +4,7 @@ local DT = E:GetModule('DataTexts')
 local displayString = '';
 local lastPanel
 local join = string.join
+local bagsString = join('', L["Bags"], ': ')
 
 local function OnEvent(self, event, ...)
 	lastPanel = self
@@ -12,7 +13,7 @@ local function OnEvent(self, event, ...)
 		free, total = free + GetContainerNumFreeSlots(i), total + GetContainerNumSlots(i)
 	end
 	used = total - free
-	self.text:SetFormattedText(displayString, L["Bags"]..': ', used, total)
+	self.text:SetFormattedText(displayString, bagsString, used, total)
 end
 
 local function OnClick()

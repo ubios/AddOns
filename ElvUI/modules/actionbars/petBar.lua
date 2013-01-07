@@ -6,66 +6,66 @@ local bar = CreateFrame('Frame', 'ElvUI_BarPet', E.UIParent, 'SecureHandlerState
 
 function AB:UpdatePet()
 	for i=1, NUM_PET_ACTION_SLOTS, 1 do
-		local buttonName = "PetActionButton"..i;
-		local button = _G[buttonName];
-		local icon = _G[buttonName.."Icon"];
-		local autoCast = _G[buttonName.."AutoCastable"];
-		local shine = _G[buttonName.."Shine"];	
-		local checked = button:GetCheckedTexture();
-		local name, subtext, texture, isToken, isActive, autoCastAllowed, autoCastEnabled = GetPetActionInfo(i);
+		local buttonName = ("PetActionButton%d"):format(i)
+		local button = _G[buttonName]
+		local icon = _G[("%sIcon"):format(buttonName)]
+		local autoCast = _G[("%sAutoCastable"):format(buttonName)]
+		local shine = _G[("%sShine"):format(buttonName)]
+		local checked = button:GetCheckedTexture()
+		local name, subtext, texture, isToken, isActive, autoCastAllowed, autoCastEnabled = GetPetActionInfo(i)
 
 		if not isToken then
-			icon:SetTexture(texture);
-			button.tooltipName = name;
+			icon:SetTexture(texture)
+			button.tooltipName = name
 		else
-			icon:SetTexture(_G[texture]);
-			button.tooltipName = _G[name];
+			icon:SetTexture(_G[texture])
+			button.tooltipName = _G[name]
 		end		
 		
-		button.isToken = isToken;
-		button.tooltipSubtext = subtext;	
+		button.isToken = isToken
+		button.tooltipSubtext = subtext
 		
 		if isActive and name ~= "PET_ACTION_FOLLOW" then
-			button:SetChecked(1);
+			button:SetChecked(1)
 			if IsPetAttackAction(i) then
-				PetActionButton_StartFlash(button);
+				PetActionButton_StartFlash(button)
 			end
 		else
 			button:SetChecked(0);
 			if IsPetAttackAction(i) then
-				PetActionButton_StopFlash(button);
+				PetActionButton_StopFlash(button)
 			end			
 		end		
 		
 		if autoCastAllowed then
-			autoCast:Show();
+			autoCast:Show()
 		else
-			autoCast:Hide();
+			autoCast:Hide()
 		end		
 		
 		if autoCastEnabled then
-			AutoCastShine_AutoCastStart(shine);
+			AutoCastShine_AutoCastStart(shine)
 		else
-			AutoCastShine_AutoCastStop(shine);
+			AutoCastShine_AutoCastStop(shine)
 		end		
 		
-		button:SetAlpha(1);
+		button:SetAlpha(1)
 		
 		if texture then
 			if GetPetActionSlotUsable(i) then
-				SetDesaturation(icon, nil);
+				SetDesaturation(icon, nil)
 			else
-				SetDesaturation(icon, 1);
+				SetDesaturation(icon, 1)
 			end
-			icon:Show();
+			icon:Show()
 		else
-			icon:Hide();
+			icon:Hide()
 		end		
 		
 		if not PetHasActionBar() and texture and name ~= "PET_ACTION_FOLLOW" then
-			PetActionButton_StopFlash(button);
-			SetDesaturation(icon, 1);
-			button:SetChecked(0);
+			PetActionButton_StopFlash(button)
+			SetDesaturation(icon, 1)
+			button:SetChecked(0)
 		end		
 		
 		checked:SetAlpha(0.3)
@@ -85,49 +85,49 @@ function AB:PositionAndSizeBarPet()
 	bar.db = self.db['barPet']
 	bar.db.position = nil; --Depreciated
 	if numButtons < buttonsPerRow then
-		buttonsPerRow = numButtons;
+		buttonsPerRow = numButtons
 	end
 
 	if numColumns < 1 then
-		numColumns = 1;
+		numColumns = 1
 	end
 
-	bar:SetWidth(spacing + ((size * (buttonsPerRow * widthMult)) + ((spacing * (buttonsPerRow - 1)) * widthMult) + (spacing * widthMult)));
-	bar:SetHeight(spacing + ((size * (numColumns * heightMult)) + ((spacing * (numColumns - 1)) * heightMult) + (spacing * heightMult)));
+	bar:SetWidth(spacing + ((size * (buttonsPerRow * widthMult)) + ((spacing * (buttonsPerRow - 1)) * widthMult) + (spacing * widthMult)))
+	bar:SetHeight(spacing + ((size * (numColumns * heightMult)) + ((spacing * (numColumns - 1)) * heightMult) + (spacing * heightMult)))
 	bar.mouseover = self.db['barPet'].mouseover
 	if self.db['barPet'].enabled then
-		bar:SetScale(1);
-		bar:SetAlpha(bar.db.alpha);
+		bar:SetScale(1)
+		bar:SetAlpha(bar.db.alpha)
 	else
-		bar:SetScale(0.000001);
-		bar:SetAlpha(0);
+		bar:SetScale(0.000001)
+		bar:SetAlpha(0)
 	end
 	
 	if self.db['barPet'].backdrop == true then
-		bar.backdrop:Show();
+		bar.backdrop:Show()
 	else
-		bar.backdrop:Hide();
+		bar.backdrop:Hide()
 	end
 	
 	local horizontalGrowth, verticalGrowth;
 	if point == "TOPLEFT" or point == "TOPRIGHT" then
-		verticalGrowth = "DOWN";
+		verticalGrowth = "DOWN"
 	else
-		verticalGrowth = "UP";
+		verticalGrowth = "UP"
 	end
 	
 	if point == "BOTTOMLEFT" or point == "TOPLEFT" then
-		horizontalGrowth = "RIGHT";
+		horizontalGrowth = "RIGHT"
 	else
-		horizontalGrowth = "LEFT";
+		horizontalGrowth = "LEFT"
 	end
 	
 	local button, lastButton, lastColumnButton, autoCast; 
 	for i=1, NUM_PET_ACTION_SLOTS do
-		button = _G["PetActionButton"..i];
-		lastButton = _G["PetActionButton"..i-1];
-		autoCast = _G["PetActionButton"..i..'AutoCastable'];
-		lastColumnButton = _G["PetActionButton"..i-buttonsPerRow];
+		button = _G[("PetActionButton%d"):format(i)];
+		lastButton = _G[("PetActionButton%d"):format(i-1)];
+		autoCast = _G[("PetActionButton%dAutoCastable"):format(i)];
+		lastColumnButton = _G[("PetActionButton%d"):format(i-buttonsPerRow)];
 		button:SetParent(bar);
 		button:ClearAllPoints();
 		button:Size(size);
@@ -224,11 +224,11 @@ function AB:UpdatePetBindings()
 	for i=1, NUM_PET_ACTION_SLOTS do
 		if self.db.hotkeytext then
 			local key = GetBindingKey("BONUSACTIONBUTTON"..i)
-			_G["PetActionButton"..i.."HotKey"]:Show()
-			_G["PetActionButton"..i.."HotKey"]:SetText(key)
-			self:FixKeybindText(_G["PetActionButton"..i])
+			_G[("PetActionButton%dHotKey"):format(i)]:Show()
+			_G[("PetActionButton%dHotKey"):format(i)]:SetText(key)
+			self:FixKeybindText(_G[("PetActionButton%d"):format(i)])
 		else
-			_G["PetActionButton"..i.."HotKey"]:Hide()
+			_G[("PetActionButton%dHotKey"):format(i)]:Hide()
 		end
 	end
 end

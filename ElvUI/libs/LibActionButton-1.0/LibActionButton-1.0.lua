@@ -874,9 +874,9 @@ local function getKeys(binding, keys)
 	for i = 1, select("#", GetBindingKey(binding)) do
 		local hotKey = select(i, GetBindingKey(binding))
 		if keys ~= "" then
-			keys = keys .. ", "
+			keys = ("%s, "):format(keys)
 		end
-		keys = keys .. GetBindingText(hotKey, "KEY_")
+		keys = ("%s%s"):format(keys, GetBindingText(hotKey, "KEY_"))
 	end
 	return keys
 end
@@ -888,7 +888,7 @@ function Generic:GetBindings()
 		keys = getKeys(self.config.keyBoundTarget)
 	end
 
-	keys = getKeys("CLICK "..self:GetName()..":LeftButton")
+	keys = getKeys(("CLICK %s:LeftButton"):format(self:GetName()))
 
 	return keys
 end
@@ -911,7 +911,7 @@ function Generic:ClearBindings()
 	if self.config.keyBoundTarget then
 		clearBindings(self.config.keyBoundTarget)
 	end
-	clearBindings("CLICK "..self:GetName()..":LeftButton")
+	clearBindings(("CLICK %s:LeftButton"):format(self:GetName()))
 end
 
 -----------------------------------------------------------
