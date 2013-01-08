@@ -96,7 +96,8 @@ function UF:PostNamePosition(frame, unit)
 	end
 end
 
-local tokens = { [0] = "MANA", "RAGE", "FOCUS", "ENERGY", "RUNIC_POWER" }
+local tokens = { [0] = "MANA", "RAGE", "FOCUS", "ENERGY", [6] = "RUNIC_POWER" }
+
 function UF:PostUpdatePower(unit, min, max)
 	local pType, _, altR, altG, altB = UnitPowerType(unit)
 	local parent = self:GetParent()

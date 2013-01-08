@@ -104,7 +104,7 @@ ElvUF.Tags.Methods['health:percent'] = function(unit)
 	end
 end
 
-local tokens = { [0] = "MANA", "RAGE", "FOCUS", "ENERGY", "RUNIC_POWER" }
+local tokens = { [0] = "MANA", "RAGE", "FOCUS", "ENERGY", [6] = "RUNIC_POWER" }
 
 ElvUF.Tags.Events['powercolor'] = 'UNIT_POWER_FREQUENT UNIT_MAXPOWER'
 ElvUF.Tags.Methods['powercolor'] = function(unit)
