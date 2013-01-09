@@ -318,7 +318,7 @@ function UF:PostCastStart(unit, name, rank, castid)
 	if unit == "vehicle" then unit = "player" end
 	
 	if db.castbar.displayTarget and self.curTarget then
-		self.Text:SetText(sub(name..' --> '..self.curTarget, 0, floor((((32/245) * self:GetWidth()) / E.db['unitframe'].fontSize) * 12)))
+		self.Text:SetText(sub(('%s --> %s'):format(name, self.curTarget), 0, floor((((32/245) * self:GetWidth()) / E.db['unitframe'].fontSize) * 12)))
 	else
 		self.Text:SetText(sub(name, 0, floor((((32/245) * self:GetWidth()) / E.db['unitframe'].fontSize) * 12)))
 	end
@@ -711,7 +711,7 @@ function UF:DruidPostUpdateAltPower(unit, min, max)
 		return	
 	end
 	
-	local color = ElvUF['colors'].power['MANA']
+	local color = ElvUF['colors'].power[tokens[0]]
 	color = E:RGBToHex(color[1], color[2], color[3])
 	
 	self.Text:ClearAllPoints()
@@ -725,7 +725,7 @@ function UF:DruidPostUpdateAltPower(unit, min, max)
 		end
 	else
 		self.Text:SetPoint(powerText:GetPoint())
-		self.Text:SetFormattedText(color.."%d%%|r", floor(min / max * 100))
+		self.Text:SetFormattedText("%s%d%%|r", color, floor(min / max * 100))
 	end	
 end
 
