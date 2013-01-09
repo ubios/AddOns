@@ -1,7 +1,6 @@
 local E, L, V, P, G, _ = unpack(select(2, ...)); --Inport: Engine, Locales, PrivateDB, ProfileDB, GlobalDB, Localize Underscore
 local UF = E:GetModule('UnitFrames');
 local LSM = LibStub("LibSharedMedia-3.0");
-local LSR = LibStub("LibSpecRoster-1.0")
 
 local format = string.format
 
