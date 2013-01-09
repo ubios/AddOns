@@ -671,8 +671,7 @@ function NP:UpdateIcon(frame, texture, expiration, stacks)
 		frame.Icon:SetTexture(texture)
 		
 		-- Stacks
-		if stacks > 1 then frame.Stacks:SetText(stacks)
-		else frame.Stacks:SetText("") end
+		frame.Stacks:SetText(stacks > 1 and stacks or '')
 		
 		-- Expiration
 		NP:UpdateAuraTime(frame, expiration)
