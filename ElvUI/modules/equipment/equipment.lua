@@ -42,8 +42,14 @@ function EQ:CheckForGearChange()
 end
 
 function EQ:UpdateTalentConfiguration()
-	E.Options.args.equipment.args.specialization.args.primary.name = select(2, GetSpecializationInfo(GetSpecialization(false, false, 1))) or L["Primary Talent"]
-	E.Options.args.equipment.args.specialization.args.secondary.name = select(2, GetSpecializationInfo(GetSpecialization(false, false, 2))) or L["Secondary Talent"]
+	local specialization = GetSpecialization(false, false, 1)
+	if (specialization) then
+		E.Options.args.equipment.args.specialization.args.primary.name = select(2, GetSpecializationInfo(specialization)) or L["Primary Talent"]
+	end
+	specialization = GetSpecialization(false, false, 2)
+	if (specialization) then
+		E.Options.args.equipment.args.specialization.args.secondary.name = select(2, GetSpecializationInfo(specialization)) or L["Secondary Talent"]
+	end
 end
 
 function EQ:EquipmentSwapFinished()

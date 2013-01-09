@@ -31,6 +31,9 @@ V['equipment'] = {
 	['battleground'] = {
 		['enable'] = false,
 	},
+	['primary'] = 'none',
+	['secondary'] = 'none',
+	['equipmentset'] = 'none',
 }
 
 V["nameplate"] = {
