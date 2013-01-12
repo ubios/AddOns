@@ -104,6 +104,7 @@ function UF:PostUpdatePower(unit, min, max)
 	if parent.isForced then
 		min = random(1, max)
 		pType = random(0, 4)
+		pType = pType == 4 and 6 or pType
 		self:SetValue(min)
 		
 		if not self.colorClass then
