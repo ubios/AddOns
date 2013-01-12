@@ -6,6 +6,8 @@ local OVERLAY = [=[Interface\TargetingFrame\UI-TargetingFrame-Flash]=]
 local numChildren = -1
 local backdrop
 
+local bgMult, good, bad, transition, transition2, combat, goodscale, badscale
+
 NP.Handled = {} --Skinned Nameplates
 NP.BattleGroundHealers = {};
 
@@ -39,7 +41,6 @@ function NP:Initialize()
 		end	
 		
 		NP:ForEachPlate(NP.InvalidCastCheck)
-		NP:ForEachPlate(NP.CheckFilter)
 		NP:ForEachPlate(NP.UpdateColoring)	
 
 		if(self.elapsed and self.elapsed > 0.2) then
@@ -55,6 +56,18 @@ function NP:Initialize()
 	end)	
 
 	self:UpdateAllPlates()
+	
+	self:RegisterEvent("GROUP_ROSTER_UPDATE", "UpdateRoster")
+	self:RegisterEvent("PARTY_CONVERTED_TO_RAID", "UpdateRoster")
+	self:RegisterEvent('UPDATE_MOUSEOVER_UNIT', 'UpdateCastInfo')
+	self:RegisterEvent('PLAYER_TARGET_CHANGED', 'UpdateCastInfo')
+	self:RegisterEvent('COMBAT_LOG_EVENT_UNFILTERED')
+	self:RegisterEvent('PLAYER_ENTERING_WORLD')
+	self:RegisterEvent('PLAYER_REGEN_ENABLED')
+	self:RegisterEvent('PLAYER_REGEN_DISABLED')
+	self:RegisterEvent('UNIT_TARGET')
+	self:RegisterEvent('UNIT_AURA')	
+	self:PLAYER_ENTERING_WORLD()
 end
 
 function NP:QueueObject(frame, object)
@@ -221,12 +234,7 @@ end
 function NP:Colorize(frame, r, g, b)
 	frame.hp.originalr, frame.hp.originalg, frame.hp.originalb = r, g, b
 	for class, _ in pairs(RAID_CLASS_COLORS) do
-		local bb = b
-		if class == 'MONK' then
-			bb = bb - 0.01
-		end
-		
-		if RAID_CLASS_COLORS[class].r == r and RAID_CLASS_COLORS[class].g == g and RAID_CLASS_COLORS[class].b == bb then
+		if RAID_CLASS_COLORS[class].r == r and RAID_CLASS_COLORS[class].g == g and RAID_CLASS_COLORS[class].b == (class == 'MONK' and b - 0.01 or b) then
 			frame.hasClass = class
 			frame.isFriendly = false
 			frame.hp:SetStatusBarColor(RAID_CLASS_COLORS[class].r, RAID_CLASS_COLORS[class].g, RAID_CLASS_COLORS[class].b)
@@ -234,38 +242,33 @@ function NP:Colorize(frame, r, g, b)
 			return
 		end
 	end
-	--fix this
+
+	frame.hasClass = nil
+	frame.isFriendly = false
 	frame.isPlayer = nil
-	frame.isTagged = nil;
-	local color
+	frame.isTagged = nil
 	
 	if (r + b + b) > 2 then -- tapped
-		r,g,b = 0.6, 0.6, 0.6
-		frame.isFriendly = false	
+		frame.hp.rcolor, frame.hp.gcolor, frame.hp.bcolor = 0.6, 0.6, 0.6
 		frame.isTagged = true;
 	elseif g+b == 0 then -- hostile
 		color = self.db.enemy
-		r,g,b = color.r, color.g, color.b
-		frame.isFriendly = false
+		frame.hp.rcolor, frame.hp.gcolor, frame.hp.bcolor = color.r, color.g, color.b
 	elseif r+b == 0 then -- friendly npc
 		color = self.db.friendlynpc
-		r,g,b = color.r, color.g, color.b
+		frame.hp.rcolor, frame.hp.gcolor, frame.hp.bcolor = color.r, color.g, color.b
 		frame.isFriendly = true
 	elseif r+g > 1.95 then -- neutral
 		color = self.db.neutral
-		r,g,b = color.r, color.g, color.b
-		frame.isFriendly = false
+		frame.hp.rcolor, frame.hp.gcolor, frame.hp.bcolor = color.r, color.g, color.b
 	elseif r+g == 0 then -- friendly player
 		color = self.db.friendlyplayer
-		r,g,b = color.r, color.g, color.b
+		frame.hp.rcolor, frame.hp.gcolor, frame.hp.bcolor = color.r, color.g, color.b
 		frame.isFriendly = true
-	else -- enemy player
-		frame.isFriendly = false
 	end
 	
-	frame.hasClass = nil
-	frame.hp.rcolor, frame.hp.gcolor, frame.hp.bcolor = r, g, b
-	frame.hp:SetStatusBarColor(r,g,b)
+	frame.hp:SetStatusBarColor(frame.hp.rcolor, frame.hp.gcolor, frame.hp.bcolor)
+	frame.hp.hpbg:SetTexture(frame.hp.rcolor, frame.hp.gcolor, frame.hp.bcolor, 0.25)
 end
 
 function NP:UpdateColoring(frame)
@@ -284,7 +287,7 @@ function NP:HealthBar_OnShow(frame)
 	frame.hp:Size(self.db.width, self.db.height)	
 	frame.hp:SetPoint('BOTTOM', frame, 'BOTTOM', 0, 5)
 	frame.hp:GetStatusBarTexture():SetHorizTile(true)
-
+	
 	self:HealthBar_ValueChanged(frame.oldhp)
 	
 	if not E.PixelMode and frame.hp.backdrop then
@@ -294,8 +297,6 @@ function NP:HealthBar_OnShow(frame)
 	
 	local r, g, b = NP:RoundColors(frame.oldhp:GetStatusBarColor())
 	NP:Colorize(frame, r, g, b)
-	frame.hp.hpbg:SetTexture(frame.hp.rcolor, frame.hp.gcolor, frame.hp.bcolor, 0.25)
-	
 	
 	if frame.hasClass and self.db.classIcons then
 		local tCoords = CLASS_BUTTONS[frame.hasClass]
@@ -556,7 +557,7 @@ function NP:SkinPlate(frame, nameFrame)
 			end
 		end
 	end
-		
+	
 	--Hide Old Stuff
 	self:QueueObject(frame, oldhp)
 	self:QueueObject(frame, oldlevel)
@@ -581,18 +582,31 @@ function NP:SkinPlate(frame, nameFrame)
 	NP.Handled[frame:GetParent():GetName()] = true
 end
 
+function NP:UpdateColorAndSize(frame, threatColor, threatScale, threatStatus)
+		NP:UpdateColor(frame, threatColor)
 
-local good, bad, transition, transition2, combat, goodscale, badscale
+		frame.threatStatus = threatStatus	
+		if frame.customScale then return end
+		
+		if threatScale ~= 1 then
+			frame.hp:Height(self.db.height * threatScale)
+			frame.hp:Width(self.db.width * threatScale)
+		else
+			frame.hp:Height(self.db.height)
+			frame.hp:Width(self.db.width)
+		end
+end
+
+function NP:UpdateColor(frame, threatColor)
+		if frame.customColor then return end
+		
+		frame.hp:SetStatusBarColor(threatColor.r, threatColor.g, threatColor.b)
+		frame.hp.hpbg:SetTexture(threatColor.r, threatColor.g, threatColor.b, bgMult)
+end
+
 function NP:UpdateThreat(frame)
 	if frame.hasClass or frame.isTagged then return end
 	combat = InCombatLockdown()
-	good = self.db.goodcolor
-	bad = self.db.badcolor
-	goodscale = self.db.goodscale
-	badscale = self.db.badscale
-	transition = self.db.goodtransitioncolor
-	transition2 = self.db.badtransitioncolor
-	local bgMult = self.db.bgMult
 	if self.db.enhancethreat ~= true then
 		if(frame.threat:IsShown()) then
 			local _, val = frame.threat:GetVertexColor()
@@ -620,109 +634,23 @@ function NP:UpdateThreat(frame)
 	else
 		if not frame.threat:IsShown() then
 			if combat and frame.isFriendly ~= true then
-				--No Threat
-				if E.role == "Tank" then
-					if not frame.customColor then
-						frame.hp:SetStatusBarColor(bad.r, bad.g, bad.b)
-						frame.hp.hpbg:SetTexture(bad.r, bad.g, bad.b, bgMult)
-					end
-
-					if not frame.customScale and badscale ~= 1 then
-						frame.hp:Height(self.db.height * badscale)
-						frame.hp:Width(self.db.width * badscale)
-					end								
-					frame.threatStatus = "BAD"
-				else
-					if not frame.customColor then
-						frame.hp:SetStatusBarColor(good.r, good.g, good.b)
-						frame.hp.hpbg:SetTexture(good.r, good.g, good.b, bgMult)
-					end
-					
-					if not frame.customScale and goodscale ~= 1 then
-						frame.hp:Height(self.db.height * goodscale)
-						frame.hp:Width(self.db.width * goodscale)
-					end					
-					frame.threatStatus = "GOOD"
-				end		
+				NP:UpdateColorAndSize(frame, E.role == "Tank" and bad or good, E.role == "Tank" and badscale or goodscale, E.role == "Tank" and false or true)
 			else
-				--Set colors to their original, not in combat
-				if not frame.customColor then
-					frame.hp:SetStatusBarColor(frame.hp.rcolor, frame.hp.gcolor, frame.hp.bcolor)
-					frame.hp.hpbg:SetTexture(frame.hp.rcolor, frame.hp.gcolor, frame.hp.bcolor, bgMult)
-				end
-				
-				if not frame.customScale and (goodscale ~= 1 or badscale ~= 1) then
-					frame.hp:Height(self.db.height)
-					frame.hp:Width(self.db.width)
-				end			
-				frame.threatStatus = nil
+				NP:UpdateColorAndSize(frame, { r = frame.hp.rcolor, g = frame.hp.gcolor, b = frame.hp.bcolor }, 1, nil)
 			end
 		else
 			--Ok we either have threat or we're losing/gaining it
 			local r, g, b = frame.threat:GetVertexColor()
 			if g + b == 0 then
-				--Have Threat
-				if E.role == "Tank" then
-					if not frame.customColor then
-						frame.hp:SetStatusBarColor(good.r, good.g, good.b)
-						frame.hp.hpbg:SetTexture(good.r, good.g, good.b, bgMult)
-					end
-					
-					if not frame.customScale and goodscale ~= 1 then
-						frame.hp:Height(self.db.height * goodscale)
-						frame.hp:Width(self.db.width * goodscale)
-					end
-					
-					frame.threatStatus = "GOOD"
-				else
-					if not frame.customColor then
-						frame.hp:SetStatusBarColor(bad.r, bad.g, bad.b)
-						frame.hp.hpbg:SetTexture(bad.r, bad.g, bad.b, bgMult)
-					end
-					
-					if not frame.customScale and badscale ~= 1 then
-						frame.hp:Height(self.db.height * badscale)
-						frame.hp:Width(self.db.width * badscale)
-					end					
-					frame.threatStatus = "BAD"
-				end
+				NP:UpdateColorAndSize(frame, E.role == "Tank" and good or bad, E.role == "Tank" and goodscale or badscale, E.role == "Tank" and true or false)
 			else
-				--Losing/Gaining Threat
-				
+				--Losing/Gaining Threat			
 				if not frame.customScale and (goodscale ~= 1 or badscale ~= 1) then
 					frame.hp:Height(self.db.height)
 					frame.hp:Width(self.db.width)
 				end	
 				
-				if E.role == "Tank" then
-					if frame.threatStatus == "GOOD" then
-						--Losing Threat
-						if not frame.customColor then
-							frame.hp:SetStatusBarColor(transition2.r, transition2.g, transition2.b)	
-							frame.hp.hpbg:SetTexture(transition2.r, transition2.g, transition2.b, bgMult)
-						end
-					else
-						--Gaining Threat
-						if not frame.customColor then
-							frame.hp:SetStatusBarColor(transition.r, transition.g, transition.b)	
-							frame.hp.hpbg:SetTexture(transition.r, transition.g, transition.b, bgMult)
-						end
-					end
-				else
-					if frame.threatStatus == "GOOD" then
-						--Losing Threat
-						if not frame.customColor then
-							frame.hp:SetStatusBarColor(transition.r, transition.g, transition.b)	
-							frame.hp.hpbg:SetTexture(transition.r, transition.g, transition.b, bgMult)
-						end
-					else
-						--Gaining Threat
-						if not frame.customColor then
-							frame.hp:SetStatusBarColor(transition2.r, transition2.g, transition2.b)	
-							frame.hp.hpbg:SetTexture(transition2.r, transition2.g, transition2.b, bgMult)
-						end
-					end				
-				end
+				NP:UpdateColor(frame, E.role == tank and (frame.threatStatus and transition2 or transition) or (frame.threatStatus and transition or transition2))
 			end
 		end
 		
@@ -878,22 +806,19 @@ end
 
 function NP:UpdateAllPlates()
 	if E.private["nameplate"].enable ~= true then return end
+	
+	good = self.db.goodcolor
+	bad = self.db.badcolor
+	goodscale = self.db.goodscale
+	badscale = self.db.badscale
+	transition = self.db.goodtransitioncolor
+	transition2 = self.db.badtransitioncolor
+	bgMult = self.db.bgMult
+
 	for frame, _ in pairs(self.Handled) do
 		frame = _G[frame]
 		self:SkinPlate(frame:GetChildren())
 	end
-
-	self:RegisterEvent("GROUP_ROSTER_UPDATE", "UpdateRoster")
-	self:RegisterEvent("PARTY_CONVERTED_TO_RAID", "UpdateRoster")
-	self:RegisterEvent('UPDATE_MOUSEOVER_UNIT', 'UpdateCastInfo')
-	self:RegisterEvent('PLAYER_TARGET_CHANGED', 'UpdateCastInfo')
-	self:RegisterEvent('COMBAT_LOG_EVENT_UNFILTERED')
-	self:RegisterEvent('PLAYER_ENTERING_WORLD')
-	self:RegisterEvent('PLAYER_REGEN_ENABLED')
-	self:RegisterEvent('PLAYER_REGEN_DISABLED')
-	self:RegisterEvent('UNIT_TARGET')
-	self:RegisterEvent('UNIT_AURA')	
-	self:PLAYER_ENTERING_WORLD()
 end
 
 function NP:HookFrames(...)
