@@ -582,26 +582,26 @@ function NP:SkinPlate(frame, nameFrame)
 	NP.Handled[frame:GetParent():GetName()] = true
 end
 
-function NP:UpdateColorAndSize(frame, threatColor, threatScale, threatStatus)
-		NP:UpdateColor(frame, threatColor)
+function NP:UpdateColorAndSize(frame, color, scale, status)
+		NP:UpdateColor(frame, color)
 
-		frame.threatStatus = threatStatus	
+		frame.threatStatus = status
 		if frame.customScale then return end
 		
-		if threatScale ~= 1 then
-			frame.hp:Height(self.db.height * threatScale)
-			frame.hp:Width(self.db.width * threatScale)
+		if scale ~= 1 then
+			frame.hp:Height(self.db.height * scale)
+			frame.hp:Width(self.db.width * scale)
 		else
 			frame.hp:Height(self.db.height)
 			frame.hp:Width(self.db.width)
 		end
 end
 
-function NP:UpdateColor(frame, threatColor)
+function NP:UpdateColor(frame, color)
 		if frame.customColor then return end
 		
-		frame.hp:SetStatusBarColor(threatColor.r, threatColor.g, threatColor.b)
-		frame.hp.hpbg:SetTexture(threatColor.r, threatColor.g, threatColor.b, bgMult)
+		frame.hp:SetStatusBarColor(color.r, color.g, color.b)
+		frame.hp.hpbg:SetTexture(color.r, color.g, color.b, bgMult)
 end
 
 function NP:UpdateThreat(frame)
