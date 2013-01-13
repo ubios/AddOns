@@ -6,7 +6,7 @@ local ElvUF = ns.oUF
 assert(ElvUF, "ElvUI was unable to locate oUF.")
 local tinsert = table.insert
 for i=10, 40, 15 do
-	UF['Construct_Raid'..i..'Frames'] = function (self, unitGroup)
+	UF[('Construct_Raid%dFrames'):format(i)] = function (self, unitGroup)
 		self:RegisterForClicks("AnyUp")
 		self:SetScript('OnEnter', UnitFrame_OnEnter)
 		self:SetScript('OnLeave', UnitFrame_OnLeave)	
@@ -42,14 +42,14 @@ for i=10, 40, 15 do
 		self.ReadyCheck = UF:Construct_ReadyCheckIcon(self)	
 		self.HealPrediction = UF:Construct_HealComm(self)
 		
-		UF['Update_Raid'..i..'Frames'](UF, self, E.db['unitframe']['units']['raid'..i])
+		UF[('Update_Raid%dFrames'):format(i)](UF, self, E.db['unitframe']['units'][('raid%d'):format(i)])
 		UF:Update_StatusBars()
 		UF:Update_FontStrings()	
 		
 		return self
 	end
 
-	UF['Raid'..i..'SmartVisibility'] = function (self, event)	
+	UF[('Raid%dSmartVisibility'):format(i)] = function (self, event)	
 		if not self.db or not self.SetAttribute or (self.db and not self.db.enable) or (UF.db and not UF.db.smartRaidFilter) or self.isForced then return; end
 		local inInstance, instanceType = IsInInstance()
 		local _, _, _, _, maxPlayers, _, _ = GetInstanceInfo()
@@ -60,7 +60,7 @@ for i=10, 40, 15 do
 			elseif inInstance and instanceType == "raid" then
 				RegisterAttributeDriver(self, 'state-visibility', 'hide')
 			elseif self.db.visibility then
-				UF:ChangeVisibility(self, 'custom '..self.db.visibility)
+				UF:ChangeVisibility(self, ('custom %s'):format(self.db.visibility))
 			end
 		else
 			self:RegisterEvent("PLAYER_REGEN_ENABLED")
@@ -68,7 +68,7 @@ for i=10, 40, 15 do
 		end
 	end
 
-	UF['Update_Raid'..i..'Header'] = function (self, header, db)
+	UF[('Update_Raid%dHeader'):format(i)] = function (self, header, db)
 		if not header.isForced then
 			header:Hide()
 			header:SetAttribute('oUF-initialConfigFunction', ([[self:SetWidth(%d); self:SetHeight(%d); self:SetFrameLevel(5)]]):format(db.width, db.height))
@@ -85,7 +85,7 @@ for i=10, 40, 15 do
 		
 		
 		if not header.isForced then	
-			self:ChangeVisibility(header, 'custom '..db.visibility)
+			self:ChangeVisibility(header, ('custom %s'):format(db.visibility))
 		end
 		
 		UF['headerGroupBy'][db.groupBy](header)
@@ -126,14 +126,14 @@ for i=10, 40, 15 do
 			
 			header:RegisterEvent("PLAYER_ENTERING_WORLD")
 			header:RegisterEvent("ZONE_CHANGED_NEW_AREA")
-			header:HookScript("OnEvent", UF['Raid'..i..'SmartVisibility'])
+			header:HookScript("OnEvent", UF[('Raid%dSmartVisibility'):format(i)])
 			header.positioned = true;
 		end
 			
-		UF['Raid'..i..'SmartVisibility'](header)
+		UF[('Raid%dSmartVisibility'):format(i)](header)
 	end
 
-	UF['Update_Raid'..i..'Frames'] = function (self, frame, db)
+	UF[('Update_Raid%dFrames'):format(i)] = function (self, frame, db)
 		frame.db = db
 		local BORDER = E.Border;
 		local SPACING = E.Spacing;
@@ -518,5 +518,5 @@ for i=10, 40, 15 do
 		end
 	end
 
-	UF['headerstoload']['raid'..i] = true
+	UF['headerstoload'][('raid%d'):format(i)] = true
 end

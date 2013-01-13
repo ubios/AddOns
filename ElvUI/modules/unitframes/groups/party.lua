@@ -73,7 +73,7 @@ function UF:Update_PartyHeader(header, db)
 	
 	
 	if not header.isForced then	
-		self:ChangeVisibility(header, 'custom '..db.visibility)
+		self:ChangeVisibility(header, ('custom %s'):format(db.visibility))
 	end
 	
 	UF['headerGroupBy'][db.groupBy](header)
@@ -108,7 +108,7 @@ function UF:Update_PartyHeader(header, db)
 		header:ClearAllPoints()
 		header:Point("BOTTOMLEFT", E.UIParent, "BOTTOMLEFT", 4, 195)
 		
-		E:CreateMover(header, header:GetName()..'Mover', L['Party Frames'], nil, nil, nil, 'ALL,PARTY,ARENA')
+		E:CreateMover(header, ('%sMover'):format(header:GetName()), L['Party Frames'], nil, nil, nil, 'ALL,PARTY,ARENA')
 		
 		header:SetAttribute('minHeight', header.dirtyHeight)
 		header:SetAttribute('minWidth', header.dirtyWidth)
@@ -130,7 +130,7 @@ function UF:PartySmartVisibility(event)
 		if inInstance and instanceType == "raid" then
 			RegisterAttributeDriver(self, 'state-visibility', 'hide')
 		elseif self.db.visibility then
-			UF:ChangeVisibility(self, 'custom '..self.db.visibility)
+			UF:ChangeVisibility(self, ('custom %s'):format(self.db.visibility))
 		end
 	else
 		self:RegisterEvent("PLAYER_REGEN_ENABLED")
@@ -169,7 +169,7 @@ function UF:Update_PartyFrames(frame, db)
 
 	if frame.isChild then
 		local childDB = db.petsGroup
-		if frame == _G[frame.originalParent:GetName()..'Target'] then
+		if frame == _G[('%sTarget'):format(frame.originalParent:GetName())] then
 			childDB = db.targetsGroup
 		end
 		

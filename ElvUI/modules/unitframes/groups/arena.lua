@@ -27,7 +27,7 @@ function UF:Construct_ArenaFrames(frame)
 
 	
 	if not frame.PrepFrame then
-		frame.prepFrame = CreateFrame('Frame', frame:GetName()..'PrepFrame', UIParent)
+		frame.prepFrame = CreateFrame('Frame', ('%sPrepFrame'):format(frame:GetName()), UIParent)
 		frame.prepFrame:SetFrameStrata('BACKGROUND')
 		frame.prepFrame:SetAllPoints(frame)
 		frame.prepFrame.Health = CreateFrame('StatusBar', nil, frame.prepFrame)
@@ -52,7 +52,7 @@ function UF:Construct_ArenaFrames(frame)
 	end
 	
 	ArenaHeader:Point('BOTTOMRIGHT', E.UIParent, 'RIGHT', -105, -165) 
-	E:CreateMover(ArenaHeader, ArenaHeader:GetName()..'Mover', L['Arena Frames'], nil, nil, nil, 'ALL,ARENA')	
+	E:CreateMover(ArenaHeader, ('%sMover'):format(ArenaHeader:GetName()), L['Arena Frames'], nil, nil, nil, 'ALL,ARENA')	
 end
 
 function UF:Update_ArenaFrames(frame, db)
@@ -378,9 +378,9 @@ function UF:Update_ArenaFrames(frame, db)
 		end
 	else
 		if db.growthDirection == 'UP' then
-			frame:Point('BOTTOMRIGHT', _G['ElvUF_Arena'..INDEX-1], 'TOPRIGHT', 0, 12 + db.castbar.height)
+			frame:Point('BOTTOMRIGHT', _G[('ElvUF_Arena%d'):format(INDEX-1)], 'TOPRIGHT', 0, 12 + db.castbar.height)
 		else
-			frame:Point('TOPRIGHT', _G['ElvUF_Arena'..INDEX-1], 'BOTTOMRIGHT', 0, -(12 + db.castbar.height))
+			frame:Point('TOPRIGHT', _G[('ElvUF_Arena%d'):format(INDEX-1)], 'BOTTOMRIGHT', 0, -(12 + db.castbar.height))
 		end
 	end	
 
@@ -393,7 +393,7 @@ end
 function UF:UpdatePrep(event)
 	if event == "ARENA_OPPONENT_UPDATE" then
 		for i=1, 5 do
-			local f = _G["ElvUF_PrepArena"..i]
+			local f = _G[("ElvUF_PrepArena%d"):format(i)]
 			if f then
 				f:Hide()
 			end
@@ -402,8 +402,10 @@ function UF:UpdatePrep(event)
 		local numOpps = GetNumArenaOpponentSpecs()
 
 		if numOpps > 0 then
+			local arenaFrame
 			for i=1, 5 do
-				if not _G["ElvUF_Arena"..i] then return; end
+				arenaFrame = _G[("ElvUF_Arena%d"):format(i)]
+				if not arenaFrame then return end
 				local s = GetArenaOpponentSpec(i)
 				local _, spec, class, texture = nil, "UNKNOWN", "UNKNOWN", [[INTERFACE\ICONS\INV_MISC_QUESTIONMARK]]
 
@@ -414,19 +416,20 @@ function UF:UpdatePrep(event)
 				if (i <= numOpps) then
 					if class and spec then
 						local color = RAID_CLASS_COLORS[class]
-						_G["ElvUF_Arena"..i].prepFrame.SpecClass:SetFormattedText("%s  -  %s", spec, LOCALIZED_CLASS_NAMES_MALE[class])
-						_G["ElvUF_Arena"..i].prepFrame.Health:SetStatusBarColor(color.r, color.g, color.b)
-						_G["ElvUF_Arena"..i].prepFrame.Icon:SetTexture(texture)
-						_G["ElvUF_Arena"..i].prepFrame:Show()
+						arenaFrame.prepFrame.SpecClass:SetFormattedText("%s  -  %s", spec, LOCALIZED_CLASS_NAMES_MALE[class])
+						arenaFrame.prepFrame.Health:SetStatusBarColor(color.r, color.g, color.b)
+						arenaFrame.prepFrame.Icon:SetTexture(texture)
+						arenaFrame.prepFrame:Show()
 					end
 				else
-					_G["ElvUF_Arena"..i].prepFrame:Hide()
+					arenaFrame.prepFrame:Hide()
 				end
 			end
 		else
 			for i=1, 5 do
-				if not _G["ElvUF_Arena"..i] then return; end
-				_G["ElvUF_Arena"..i].prepFrame:Hide()
+				arenaFrame = _G[("ElvUF_Arena%d"):format(i)]
+				if not arenaFrame then return end
+				arenaFrame.prepFrame:Hide()
 			end
 		end
 	end
