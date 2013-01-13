@@ -575,7 +575,7 @@ function TT:GameTooltipStatusBar_OnValueChanged(tt, value)
 			if UnitIsDeadOrGhost(unit) then
 				tt.text:SetText(DEAD)
 			else
-				tt.text:SetText("%s / %s", E:ShortValue(UnitHealth(unit)), E:ShortValue(UnitHealthMax(unit)))
+				tt.text:SetFormattedText("%s / %s", E:ShortValue(UnitHealth(unit)), E:ShortValue(UnitHealthMax(unit)))
 			end
 			tt.text:Show()
 		else
