@@ -7,6 +7,8 @@ local format			= string.format
 local incpat 			= gsub(gsub(FACTION_STANDING_INCREASED, "(%%s)", "(.+)"), "(%%d)", "(.+)")
 local changedpat	= gsub(gsub(FACTION_STANDING_CHANGED, "(%%s)", "(.+)"), "(%%d)", "(.+)")
 local decpat			= gsub(gsub(FACTION_STANDING_DECREASED, "(%%s)", "(.+)"), "(%%d)", "(.+)")
+local standing    = ('%s:'):format(STANDING)
+local reputation  = ('%s:'):format(REPUTATION)
 
 FACTION_STANDING_LABEL100 = UNKNOWN
 
@@ -14,7 +16,7 @@ function M:UpdateExpRepAnchors()
 	local repBar = ReputationBarMover
 	local expBar = ExperienceBarMover
 
-	if (E:HasMoverBeenMoved('ExperienceBarMover') or E:HasMoverBeenMoved('ReputationBarMover')) or not repBar or not expBar then return; end
+	if (E:HasMoverBeenMoved('ExperienceBarMover') or E:HasMoverBeenMoved('ReputationBarMover')) or not repBar or not expBar then return end
 	repBar:ClearAllPoints()
 	expBar:ClearAllPoints()
 	
@@ -28,14 +30,6 @@ function M:UpdateExpRepAnchors()
 	end
 end
 
-function M:GetXP(unit)
-	if(unit == 'pet') then
-		return GetPetExperience()
-	else
-		return UnitXP(unit), UnitXPMax(unit)
-	end
-end
-
 function M:UpdateExperience(event)
 	local bar = self.expBar
 
@@ -44,7 +38,7 @@ function M:UpdateExperience(event)
 	else
 		bar:Show()
 		
-		local cur, max = self:GetXP('player')
+		local cur, max = UnitXP(unit), UnitXPMax(unit)
 		bar.statusBar:SetMinMaxValues(0, max)
 		bar.statusBar:SetValue(cur - 1 >= 0 and cur - 1 or 0)
 		bar.statusBar:SetValue(cur)
@@ -115,11 +109,11 @@ function M:UpdateReputation(event)
 
 		local textFormat = E.db.general.reputation.textFormat		
 		if textFormat == 'PERCENT' then
-			bar.text:SetFormattedText('%s: %d%% [%s]', name, ((barValue - barMin) / (barMax - barMin) * 100), _G['FACTION_STANDING_LABEL'..standingID])
+			bar.text:SetFormattedText('%s: %d%% [%s]', name, ((barValue - barMin) / (barMax - barMin) * 100), _G[('FACTION_STANDING_LABEL%d'):format(standingID)])
 		elseif textFormat == 'CURMAX' then
-			bar.text:SetFormattedText('%s: %s - %s [%s]', name, E:ShortValue(barValue - barMin), E:ShortValue(barMax - barMin), _G['FACTION_STANDING_LABEL'..standingID])
+			bar.text:SetFormattedText('%s: %s - %s [%s]', name, E:ShortValue(barValue - barMin), E:ShortValue(barMax - barMin), _G[('FACTION_STANDING_LABEL%d'):format(standingID)])
 		elseif textFormat == 'CURPERC' then
-			bar.text:SetFormattedText('%s: %s - %d%% [%s]', name, E:ShortValue(barValue - barMin), ((barValue - barMin) / (barMax - barMin) * 100), _G['FACTION_STANDING_LABEL'..standingID])
+			bar.text:SetFormattedText('%s: %s - %d%% [%s]', name, E:ShortValue(barValue - barMin), ((barValue - barMin) / (barMax - barMin) * 100), _G[('FACTION_STANDING_LABEL%d'):format(standingID)])
 		end					
 	end
 	
@@ -130,13 +124,13 @@ local function ExperienceBar_OnEnter(self)
 	GameTooltip:ClearLines()
 	GameTooltip:SetOwner(self, 'ANCHOR_BOTTOM', 0, -4)
 	
-	local curValue, maxValue = M:GetXP('player')
+	local curValue, maxValue = UnitXP(unit), UnitXPMax(unit)
 	local rested = GetXPExhaustion()
 	GameTooltip:AddLine(L['Experience'])
 	GameTooltip:AddLine(' ')
 	
 	GameTooltip:AddDoubleLine(L['XP:'], format(' %d / %d (%d%%)', curValue, maxValue, curValue/maxValue * 100), 1, 1, 1)
-	GameTooltip:AddDoubleLine(L['Remaining:'], format(' %d (%d%% - %d '..L['Bars']..')', maxValue - curValue, (maxValue - curValue) / maxValue * 100, 20 * (maxValue - curValue) / maxValue), 1, 1, 1)	
+	GameTooltip:AddDoubleLine(L['Remaining:'], format(' %d (%d%% - %d %s)', maxValue - curValue, (maxValue - curValue) / maxValue * 100, 20 * (maxValue - curValue) / maxValue, L['Bars']), 1, 1, 1)	
 	
 	if rested then
 		GameTooltip:AddDoubleLine(L['Rested:'], format('+%d (%d%%)', rested, rested / maxValue * 100), 1, 1, 1)	
@@ -154,8 +148,8 @@ local function ReputationBar_OnEnter(self)
 		GameTooltip:AddLine(name)
 		GameTooltip:AddLine(' ')
 		
-		GameTooltip:AddDoubleLine(STANDING..':', _G['FACTION_STANDING_LABEL'..standingID], 1, 1, 1)
-		GameTooltip:AddDoubleLine(REPUTATION..':', format('%d / %d (%d%%)', barValue - barMin, barMax - barMin, (barValue - barMin) / (barMax - barMin) * 100), 1, 1, 1)
+		GameTooltip:AddDoubleLine(standing, _G[('FACTION_STANDING_LABEL%d'):format(standingID)], 1, 1, 1)
+		GameTooltip:AddDoubleLine(reputation, format('%d / %d (%d%%)', barValue - barMin, barMax - barMin, (barValue - barMin) / (barMax - barMin) * 100), 1, 1, 1)
 	end
 	GameTooltip:Show()
 end
