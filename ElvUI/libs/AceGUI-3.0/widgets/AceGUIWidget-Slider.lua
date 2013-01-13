@@ -22,8 +22,11 @@ local CreateFrame, UIParent = CreateFrame, UIParent
 Support functions
 -------------------------------------------------------------------------------]]
 local function UpdateText(self)
-	if self.editbox then
-		self.editbox:SetText(format(self.ispercent and "%.0f%%" or "%.0f", ((self.value or 0) * (self.ispercent and 1000 or 100) + 0.5) / 10))
+	local value = self.value or 0
+	if self.ispercent then
+		self.editbox:SetText(("%s%%"):format(floor(value * 1000 + 0.5) / 10))
+	else
+		self.editbox:SetText(floor(value * 100 + 0.5) / 100)
 	end
 end
 
