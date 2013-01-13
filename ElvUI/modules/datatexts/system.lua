@@ -22,15 +22,13 @@ local kiloByteString = "%d kb"
 local megaByteString = "%.2f mb"
 local totalMemory = 0
 local bandwidth = 0
+local mult = 10^1
 
 local function formatMem(memory)
-	local mult = 10^1
 	if memory > 999 then
-		local mem = ((memory/1024) * mult) / mult
-		return format(megaByteString, mem)
+		return format(megaByteString, ((memory/1024) * mult) / mult)
 	else
-		local mem = (memory * mult) / mult
-		return format(kiloByteString, mem)
+		return format(kiloByteString, (memory * mult) / mult)
 	end
 end
 
