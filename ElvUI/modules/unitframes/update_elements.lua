@@ -174,7 +174,7 @@ function UF:PostUpdateAura(unit, button, index, offset, filter, isDebuff, durati
 	
 	if db and db[self.type] then
 		unitframeFont = unitframeFont or LSM:Fetch("font", E.db['unitframe'].font)
-	
+
 		button.text:FontTemplate(unitframeFont, db[self.type].fontSize, 'OUTLINE')
 		button.count:FontTemplate(unitframeFont, db[self.type].fontSize, 'OUTLINE')
 		
@@ -203,7 +203,7 @@ function UF:PostUpdateAura(unit, button, index, offset, filter, isDebuff, durati
 		if (isStealable) and not isFriend then
 			button:SetBackdropBorderColor(237/255, 234/255, 142/255)
 		else
-			button:SetBackdropBorderColor(unpack(E["media"].bordercolor, 1, 3))		
+			button:SetBackdropBorderColor(unpack(E["media"].bordercolor))		
 		end	
 	end
 
@@ -226,7 +226,8 @@ function UF:PostUpdateAura(unit, button, index, offset, filter, isDebuff, durati
 			button.expiration = expiration - GetTime()
 			button.nextupdate = 0.05
 		end
-	else
+	end	
+	if duration == 0 or expiration == 0 then
 		button:SetScript('OnUpdate', nil)
 		if button.text:GetFont() then
 			button.text:SetText('')
@@ -565,10 +566,9 @@ end
 function UF:UpdateHarmony()
 	local frame = self:GetParent()
 	local db = frame.db
-	if not db then return; end
+	if not db then return end
 
 	local maxBars = self.numPoints
-	
 	local UNIT_WIDTH = db.width
 	local BORDER = E.Border
 	local CLASSBAR_WIDTH = db.width - (BORDER*2)
@@ -753,20 +753,27 @@ function UF:UpdateThreat(event, unit)
 end
 
 function UF:UpdateTargetGlow(event)
-	if not self.unit then return end
+	if not self.unit then return; end
 	local unit = self.unit
 	
 	if UnitIsUnit(unit, 'target') then
-		local color	
-		if UnitIsPlayer(unit) then
-			local class = select(2, UnitClass(unit))
-			if class then color = RAID_CLASS_COLORS[class] end
-		else
-			local reaction = UnitReaction(unit, 'player')
-			 if reaction then color = FACTION_BAR_COLORS[reaction] end
-		end
-		self.TargetGlow:SetBackdropBorderColor(unpack(color or E.KnownColors.White, 1, 3))
 		self.TargetGlow:Show()
+		local reaction = UnitReaction(unit, 'player')
+		
+		if UnitIsPlayer(unit) then
+			local _, class = UnitClass(unit)
+			if class then
+				local color = RAID_CLASS_COLORS[class]
+				self.TargetGlow:SetBackdropBorderColor(color.r, color.g, color.b)
+			else
+				self.TargetGlow:SetBackdropBorderColor(1, 1, 1)
+			end
+		elseif reaction then
+			local color = FACTION_BAR_COLORS[reaction]
+			self.TargetGlow:SetBackdropBorderColor(color.r, color.g, color.b)
+		else
+			self.TargetGlow:SetBackdropBorderColor(1, 1, 1)
+		end
 	else
 		self.TargetGlow:Hide()
 	end
@@ -776,9 +783,16 @@ function UF:AltPowerBarPostUpdate(min, cur, max)
 	local perc = floor((cur/max)*100)
 	local parent = self:GetParent()
 	
-	self:SetStatusBarColor(unpack(perc < 35 and E.KnownColors.Green or perc < 70 and E.KnownColors.Yellow or E.KnownColors.Red, 1, 3)) 
+	if perc < 35 then
+		self:SetStatusBarColor(0, 1, 0)
+	elseif perc < 70 then
+		self:SetStatusBarColor(1, 1, 0)
+	else
+		self:SetStatusBarColor(1, 0, 0)
+	end
 	
-	local unit = parent.unit	
+	local unit = parent.unit
+	
 	if unit == "player" and self.text then 
 		local type = select(10, UnitAlternatePowerInfo(unit))
 
@@ -935,7 +949,6 @@ function UF:AuraFilter(unit, icon, name, rank, texture, count, dtype, duration, 
 	if db.useFilter and useFilter then
 		local type = useFilter.type
 		local spellList = useFilter.spells
-
 		if type == 'Whitelist' then
 			if spellList[name] and spellList[name].enable then
 				returnValue = true	
@@ -1073,7 +1086,7 @@ function UF:UpdateAuraWatch(frame)
 				end
 				
 				iconConfiguration[icon.style](icon, buffs[i])
-							
+				
 				if not icon.cd then
 					icon.cd = CreateFrame("Cooldown", nil, icon)
 					icon.cd:SetAllPoints(icon)
