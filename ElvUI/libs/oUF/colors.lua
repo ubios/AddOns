@@ -43,12 +43,7 @@ end
 
 -- http://www.wowwiki.com/ColorGradient
 local ColorGradient = function(a, b, ...)
-	local perc
-	if(b == 0) then
-		perc = 0
-	else
-		perc = a / b
-	end
+	local perc = (b == 0 and 0 or a / b)
 
 	if perc >= 1 then
 		local r, g, b = select(select('#', ...) - 2, ...)

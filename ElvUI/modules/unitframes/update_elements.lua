@@ -41,41 +41,37 @@ function UF:PostUpdateHealth(unit, min, max)
 		parent.ResurrectIcon:SetAlpha(min == 0 and 1 or 0)
 	end
 	
-	local r, g, b = self:GetStatusBarColor()
-	local colors = E.db['unitframe']['colors']
-	local mu = self.bg.multiplier or 1
-	
+	local colors = E.db['unitframe']['colors']	
 	if (colors.healthclass and colors.colorhealthbyvalue) or (colors.colorhealthbyvalue and parent.isForced) and not (UnitIsTapped(unit) and not UnitIsTappedByPlayer(unit)) then
+		local r, g, b = self:GetStatusBarColor()
 		r, g, b = ElvUF.ColorGradient(min, max, 1, 0, 0, 1, 1, 0, r, g, b)
 		self:SetStatusBarColor(r, g, b)
+		local mu = self.bg.multiplier or 1
+		self.bg:SetVertexColor(r * mu, g * mu, b * mu)
 	end
 
 	if colors.classbackdrop then
 		if UnitIsPlayer(unit) then
-			r, g, b = unpack(parent.colors.class[select(2, UnitClass(unit))], 1, 3)
+			self.bg:SetVertexColor(unpack(ElvUF.colors.class[select(2, UnitClass(unit))], 1, 3))
 		else
 			local reaction = UnitReaction(unit, 'player')
 		 	if reaction then
-				r, g, b = unpack(parent.colors.reaction[reaction], 1, 3)
+				self.bg:SetVertexColor(unpack(ElvUF.colors.reaction[reaction], 1, 3))
 			end
 		end
 	end
 	
 	--Backdrop
 	if colors.customhealthbackdrop then
-		r, g, b = colors.health_backdrop.r, colors.health_backdrop.g, colors.health_backdrop.b
+		self.bg:SetVertexColor(colors.health_backdrop.r, colors.health_backdrop.g, colors.health_backdrop.b)		
 	end	
-	
-	self.bg:SetVertexColor(r * mu, g * mu, b * mu)
 end
 
 function UF:PostNamePosition(frame, unit)
 	if not frame.Power.value:IsShown() then return end
 	
 	if UnitIsPlayer(unit) then
-		local db = frame.db
-		
-		local position = db.name.position
+		local position = frame.db.name.position
 		local x, y = self:GetPositionOffset(position)
 		frame.Power.value:SetAlpha(1)
 		
@@ -92,7 +88,7 @@ end
 local tokens = { [0] = "MANA", "RAGE", "FOCUS", "ENERGY", [6] = "RUNIC_POWER" }
 
 function UF:PostUpdatePower(unit, min, max)
-	local pType, _, altR, altG, altB = UnitPowerType(unit)
+	local pType = UnitPowerType(unit)
 	local parent = self:GetParent()
 	
 	if parent.isForced then
@@ -100,14 +96,14 @@ function UF:PostUpdatePower(unit, min, max)
 		pType = random(0, 4)
 		pType = pType == 4 and 6 or pType
 		self:SetValue(min)
-		
-		if not self.colorClass then
-			local color = ElvUF['colors'].power[tokens[pType]]
-			self:SetStatusBarColor(color[1], color[2], color[3])
-			local mu = self.bg.multiplier or 1
-			self.bg:SetVertexColor(color[1] * mu, color[2] * mu, color[3] * mu)
-		end
 	end	
+		
+	if not self.colorClass then
+		local color = ElvUF.colors.power[tokens[pType]]
+		self:SetStatusBarColor(color[1], color[2], color[3])
+		local mu = self.bg.multiplier or 1
+		self.bg:SetVertexColor(color[1] * mu, color[2] * mu, color[3] * mu)
+	end
 	
 	if parent.db then
 		if self.LowManaText then
@@ -133,8 +129,8 @@ function UF:PortraitUpdate(unit)
 	
 	local portrait = db.portrait
 	if portrait.enable and portrait.overlay then
-		self:SetAlpha(0); 
-		self:SetAlpha(0.35);
+		self:SetAlpha(0)
+		self:SetAlpha(0.35)
 	else
 		self:SetAlpha(1)
 	end
@@ -706,7 +702,7 @@ function UF:DruidPostUpdateAltPower(unit, min, max)
 		return	
 	end
 	
-	local color = E:RGBToHex(unpack(ElvUF['colors'].power[tokens[0]], 1, 3))
+	local color = E:RGBToHex(unpack(ElvUF.colors.power[tokens[0]], 1, 3))
 	
 	self.Text:ClearAllPoints()
 	if powerText:GetText() then
@@ -757,23 +753,18 @@ function UF:UpdateTargetGlow(event)
 	local unit = self.unit
 	
 	if UnitIsUnit(unit, 'target') then
-		self.TargetGlow:Show()
-		local reaction = UnitReaction(unit, 'player')
+		local r, g, b = unpack(E.KnownColors.White, 1, 3)
 		
 		if UnitIsPlayer(unit) then
-			local _, class = UnitClass(unit)
-			if class then
-				local color = RAID_CLASS_COLORS[class]
-				self.TargetGlow:SetBackdropBorderColor(color.r, color.g, color.b)
-			else
-				self.TargetGlow:SetBackdropBorderColor(1, 1, 1)
-			end
-		elseif reaction then
-			local color = FACTION_BAR_COLORS[reaction]
-			self.TargetGlow:SetBackdropBorderColor(color.r, color.g, color.b)
+			r, g, b = unpack(ElvUF.colors.class[select(2, UnitClass(unit))], 1, 3)
 		else
-			self.TargetGlow:SetBackdropBorderColor(1, 1, 1)
+			local reaction = UnitReaction(unit, 'player')
+			if reaction then
+				r, g, b = unpack(ElvUF.colors.reaction[reaction], 1, 3)
+			end
 		end
+		self.TargetGlow:SetBackdropBorderColor(r, g, b)
+		self.TargetGlow:Show()
 	else
 		self.TargetGlow:Hide()
 	end

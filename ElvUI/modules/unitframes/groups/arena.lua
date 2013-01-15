@@ -415,7 +415,7 @@ function UF:UpdatePrep(event)
 
 				if (i <= numOpps) then
 					if class and spec then
-						local color = RAID_CLASS_COLORS[class]
+						local color = ElvUF.colors.class[class]
 						arenaFrame.prepFrame.SpecClass:SetFormattedText("%s  -  %s", spec, LOCALIZED_CLASS_NAMES_MALE[class])
 						arenaFrame.prepFrame.Health:SetStatusBarColor(color.r, color.g, color.b)
 						arenaFrame.prepFrame.Icon:SetTexture(texture)
