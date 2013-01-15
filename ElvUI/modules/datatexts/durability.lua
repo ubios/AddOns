@@ -1,7 +1,8 @@
 local E, L, V, P, G, _ = unpack(select(2, ...)); --Inport: Engine, Locales, PrivateDB, ProfileDB, GlobalDB, Localize Underscore
 local DT = E:GetModule('DataTexts')
 
-local join = string.join
+local join, format = string.join, string.format
+local pairs = pairs
 
 local displayString = ""
 local tooltipString = "%d%%"

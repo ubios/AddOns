@@ -1,8 +1,10 @@
 local E, L, DF = unpack(select(2, ...)) -- Import Functions/Constants, Config, Locales
 
-
 local _, ns = ...
 local oUF = ns.oUF or oUF
+
+local abs = math.abs
+local pairs, type, select = pairs, type, select
 
 local addon = {}
 ns.oUF_RaidDebuffs = addon
@@ -150,7 +152,6 @@ local function formatTime(s)
 	end
 end
 
-local abs = math.abs
 local function OnUpdate(self, elapsed)
 	self.elapsed = (self.elapsed or 0) + elapsed
 	if self.elapsed < 0.1 then return end

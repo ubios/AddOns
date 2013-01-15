@@ -7,6 +7,7 @@ local iconSize = 30;
 
 local max = math.max
 local tinsert = table.insert
+local pairs = pairs
 
 local sq, ss, sn
 local OnEnter = function(self)

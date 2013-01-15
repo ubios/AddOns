@@ -10,6 +10,7 @@ local LSM = LibStub("LibSharedMedia-3.0")
 local gsub = string.gsub
 local format = string.format
 local split = string.split
+local pairs, select, unpack = pairs, select, unpack
 
 E.ActionBars = AB
 AB["handledBars"] = {} --List of all bars

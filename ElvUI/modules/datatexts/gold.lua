@@ -5,6 +5,7 @@ local abs = math.abs
 local floor = math.floor
 local join = string.join
 local format = string.format
+local pairs = pairs
 
 local defaultColor = { 1, 1, 1 }
 local Profit	= 0

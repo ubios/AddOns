@@ -3,6 +3,7 @@ local B = E:NewModule('Bags', 'AceHook-3.0', 'AceEvent-3.0', 'AceTimer-3.0');
 
 local len, sub, find, format, floor = string.len, string.sub, string.find, string.format, math.floor
 local tinsert = table.insert
+local pairs, ipairs, type, unpack = pairs, ipairs, type, unpack
 
 B.ProfessionColors = {
 	[0x0008] = {224/255, 187/255, 74/255}, -- Leatherworking

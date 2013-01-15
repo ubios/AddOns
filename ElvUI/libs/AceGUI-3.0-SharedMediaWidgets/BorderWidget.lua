@@ -9,13 +9,14 @@ local AGSMW = LibStub("AceGUISharedMediaWidgets-1.0")
 do
 	local widgetType = "LSM30_Border"
 	local widgetVersion = 9
+	local tinsert = table.insert
 
 	local contentFrameCache = {}
 	local function ReturnSelf(self)
 		self:ClearAllPoints()
 		self:Hide()
 		self.check:Hide()
-		table.insert(contentFrameCache, self)
+		tinsert(contentFrameCache, self)
 	end
 
 	local function ContentOnClick(this, button)

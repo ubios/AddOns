@@ -14,6 +14,7 @@ end
 LoadAddOn("LibSharedMedia-3.0")
 local AceGUI = LibStub("AceGUI-3.0")
 local Media = LibStub("LibSharedMedia-3.0")
+local tinsert = table.insert
 
 AGSMW = AGSMW or {}
 
@@ -261,7 +262,7 @@ do
 		frame:Hide()
 		frame:SetBackdrop(frameBackdrop)
 		frame.bgTex:SetTexture(nil)
-		table.insert(DropDownCache, frame)
+		tinsert(DropDownCache, frame)
 		return nil
 	end
 end

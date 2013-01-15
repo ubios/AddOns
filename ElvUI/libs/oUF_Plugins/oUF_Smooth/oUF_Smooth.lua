@@ -2,6 +2,8 @@ local _, ns = ...
 local oUF = ns.oUF or oUF
 if not oUF then return end
 
+local pairs = pairs
+
 local smoothing = {}
 local function Smooth(self, value)
 	if value ~= self:GetValue() or value == 0 then

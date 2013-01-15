@@ -6,7 +6,9 @@ local ElvUF = ns.oUF
 local find = string.find
 local split = string.split
 local match = string.match
-local wipe = table.wipe
+local twipe = table.wipe
+local pairs, select, type, tonumber = pairs, select, type, tonumber
+
 
 --Constants
 _, E.myclass = UnitClass("player");
@@ -604,7 +606,7 @@ end
 
 function E:RefreshModulesDB()
 	local UF = self:GetModule('UnitFrames')
-	wipe(UF.db)
+	twipe(UF.db)
 	UF.db = self.db.unitframe
 end
 
@@ -626,9 +628,9 @@ function E:DBConversions()
 end
 
 function E:Initialize()
-	wipe(self.db)
-	wipe(self.global)
-	wipe(self.private)
+	twipe(self.db)
+	twipe(self.global)
+	twipe(self.private)
 	
 	self.data = LibStub("AceDB-3.0"):New("ElvDB", self.DF);
 	self.data.RegisterCallback(self, "OnProfileChanged", "UpdateAll")

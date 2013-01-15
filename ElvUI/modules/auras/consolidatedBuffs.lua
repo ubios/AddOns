@@ -5,7 +5,8 @@ local LSM = LibStub("LibSharedMedia-3.0")
 local max = math.max
 local format = string.format
 local join = string.join
-local wipe = table.wipe
+local twipe = table.wipe
+local pairs, select, unpack = pairs, select, unpack
 
 A.Stats = {
 	[90363] = 'HUNTER', -- Embrace of the Shale Spider
@@ -217,7 +218,7 @@ function A:UpdateReminder(event, unit)
 		end
 	end
 	
-	wipe(buffs)
+	twipe(buffs)
 	buffs = nil
 end
 

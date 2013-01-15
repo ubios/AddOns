@@ -10,6 +10,7 @@ local MIN_DURATION = 2.5 --the minimum duration to show cooldown text for
 
 local floor = math.floor
 local min = math.min
+local pairs, type = pairs, type
 local GetTime = GetTime
 
 local cooldown = getmetatable(ActionButton1Cooldown).__index

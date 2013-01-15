@@ -1,4 +1,3 @@
-
 assert(LibStub, "LibDataBroker-1.1 requires LibStub")
 assert(LibStub:GetLibrary("CallbackHandler-1.0", true), "LibDataBroker-1.1 requires CallbackHandler-1.0")
 
@@ -6,6 +5,7 @@ local lib, oldminor = LibStub:NewLibrary("LibDataBroker-1.1", 4)
 if not lib then return end
 oldminor = oldminor or 0
 
+local pairs, type, next = pairs, type, next
 
 lib.callbacks = lib.callbacks or LibStub:GetLibrary("CallbackHandler-1.0"):New(lib)
 lib.attributestorage, lib.namestorage, lib.proxystorage = lib.attributestorage or {}, lib.namestorage or {}, lib.proxystorage or {}
@@ -26,9 +26,9 @@ if oldminor < 3 then
 		local name = namestorage[self]
 		if not name then return end
 		callbacks:Fire("LibDataBroker_AttributeChanged", name, key, value, self)
-		callbacks:Fire("LibDataBroker_AttributeChanged_"..name, name, key, value, self)
-		callbacks:Fire("LibDataBroker_AttributeChanged_"..name.."_"..key, name, key, value, self)
-		callbacks:Fire("LibDataBroker_AttributeChanged__"..key, name, key, value, self)
+		callbacks:Fire(("LibDataBroker_AttributeChanged_%s"):format(name), name, key, value, self)
+		callbacks:Fire(("LibDataBroker_AttributeChanged_%s_%s"):format(name, key), name, key, value, self)
+		callbacks:Fire(("LibDataBroker_AttributeChanged__%s"):format(key), name, key, value, self)
 	end
 end
 

@@ -5,6 +5,7 @@ local LSM = LibStub("LibSharedMedia-3.0")
 local find = string.find
 local format = string.format
 local join = string.join
+local pairs, unpack = pairs, unpack
 
 function A:UpdateTime(elapsed)
 	self.expiration = self.expiration - elapsed

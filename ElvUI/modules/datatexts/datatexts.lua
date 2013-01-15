@@ -4,6 +4,7 @@ local LDB = LibStub:GetLibrary("LibDataBroker-1.1");
 local LSM = LibStub("LibSharedMedia-3.0")
 
 local len = string.len
+local pairs, type = pairs, type
 
 function DT:Initialize()
 	--if E.db["datatexts"].enable ~= true then return end

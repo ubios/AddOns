@@ -3,6 +3,7 @@ local parent, ns = ...
 local oUF = ns.oUF
 local frames, allFrames = {}, {}
 local showStatus
+local pairs, type, unpack = pairs, type, unpack
 
 local CheckForReset = function()
 	for frame, unit in pairs(allFrames) do

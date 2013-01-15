@@ -6,6 +6,7 @@ local match = string.match
 local gmatch = string.gmatch
 local floor = math.floor
 local tinsert, tremove, tsort = table.insert, table.remove, table.sort
+local pairs, ipairs, select, unpack, tonumber = pairs, ipairs, select, unpack, tonumber
 
 for i = NUM_BAG_SLOTS + 1, NUM_BAG_SLOTS + NUM_BANKBAGSLOTS do
 	tinsert(bankBags, i)

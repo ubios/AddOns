@@ -2,6 +2,7 @@
 -- LibStub is hereby placed in the Public Domain Credits: Kaelten, Cladhaire, ckknight, Mikk, Ammo, Nevcairiel, joshborke
 local LIBSTUB_MAJOR, LIBSTUB_MINOR = "LibStub", 2  -- NEVER MAKE THIS AN SVN REVISION! IT NEEDS TO BE USABLE IN ALL REPOS!
 local LibStub = _G[LIBSTUB_MAJOR]
+local pairs, tonumber, tostring = pairs, tonumber, tostring
 
 if not LibStub or LibStub.minor < LIBSTUB_MINOR then
 	LibStub = LibStub or {libs = {}, minors = {} }

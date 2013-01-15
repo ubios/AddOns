@@ -4,7 +4,7 @@ E.Minimap = M
 
 local gsub = string.gsub
 local upper = string.upper
-
+local pairs = pairs
 local calendar_string = gsub(SLASH_CALENDAR1, "/", "")
 calendar_string = gsub(calendar_string, "^%l", upper)
 

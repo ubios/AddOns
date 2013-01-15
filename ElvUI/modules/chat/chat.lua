@@ -15,6 +15,7 @@ local cvars = {
 
 local len, gsub, find, sub, gmatch, format, random = string.len, string.gsub, string.find, string.sub, string.gmatch, string.format, math.random
 local tinsert, tremove, tsort, twipe, tconcat = table.insert, table.remove, table.sort, table.wipe, table.concat
+local pairs, select, unpack = pairs, select, unpack
 
 local TIMESTAMP_FORMAT
 local DEFAULT_STRINGS = {

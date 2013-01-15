@@ -12,6 +12,7 @@ local error = Private.error
 
 local upper = string.upper
 local split = string.split
+local pairs, select, type, next = pairs, select, type, next
 local tinsert, tremove = table.insert, table.remove
 
 local styles, style = {}
@@ -441,7 +442,7 @@ do
 	local initialConfigFunction = [[
 		local header = self:GetParent()
 		local frames = table.new()
-		table.insert(frames, self)
+		tinsert(frames, self)
 		self:GetChildList(frames)
 		for i=1, #frames do
 			local frame = frames[i]

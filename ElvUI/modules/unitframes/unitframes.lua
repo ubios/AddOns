@@ -70,6 +70,7 @@ UF['headerGroupBy'] = {
 local find, gsub, split, format = string.find, string.gsub, string.split, string.format
 local min = math.min
 local tremove, tinsert = table.remove, table.insert
+local pairs, type, unpack, select = pairs, type, unpack, select
 
 function UF:Construct_UF(frame, unit)
 	frame:RegisterForClicks("AnyUp")

@@ -5,6 +5,7 @@ E.RaidUtility = RU
 
 local PANEL_HEIGHT = 125
 local find = string.find
+local pairs, unpack, tonumber = pairs, unpack, tonumber
 
 --Check if We are Raid Leader or Raid Officer
 local function CheckRaidStatus()

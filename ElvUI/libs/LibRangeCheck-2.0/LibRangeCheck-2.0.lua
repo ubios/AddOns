@@ -50,6 +50,7 @@ end
 
 -- << STATIC CONFIG
 
+local tinsert = tinsert
 local UpdateDelay = .5
 local ItemRequestTimeout = 10.0
 
@@ -325,9 +326,7 @@ local tostring = tostring
 local print = print
 local next = next
 local type = type
-local wipe = wipe
-local tinsert = tinsert
-local tremove = tremove
+local twipe, tremove = table.wipe, table.remove
 local BOOKTYPE_SPELL = BOOKTYPE_SPELL
 local GetSpellInfo = GetSpellInfo
 local GetSpellBookItemName = GetSpellBookItemName
@@ -535,13 +534,13 @@ end
 
 local function updateCheckers(origList, newList)
     if #origList ~= #newList then
-        wipe(origList)
+        twipe(origList)
         copyTable(newList, origList)
         return true
     end
     for i = 1, #origList do
         if origList[i].range ~= newList[i].range or origList[i].checker ~= newList[i].checker then
-            wipe(origList)
+            twipe(origList)
             copyTable(newList, origList)
             return true
         end

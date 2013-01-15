@@ -2,6 +2,7 @@ local E, L, V, P, G, _ = unpack(select(2, ...)); --Inport: Engine, Locales, Priv
 local DT = E:GetModule('DataTexts')
 
 local datatexts = {}
+local pairs, type = pairs, type
 
 function DT:PanelLayoutOptions()	
 	for name, _ in pairs(DT.RegisteredDataTexts) do

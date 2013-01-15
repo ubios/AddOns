@@ -3,11 +3,13 @@ local UF = E:GetModule('UnitFrames');
 local LSM = LibStub("LibSharedMedia-3.0");
 local LSR = LibStub("LibSpecRoster-1.0")
 
-local sub = string.sub
-local abs, random, floor, ceil = math.abs, math.random, math.floor, math.ceil
 local _, ns = ...
 local ElvUF = ns.oUF
 assert(ElvUF, "ElvUI was unable to locate oUF.")
+
+local sub = string.sub
+local abs, random, floor, ceil = math.abs, math.random, math.floor, math.ceil
+local pairs, type, select, unpack = pairs, type, select, unpack
 
 local unitframeFont
 
@@ -72,11 +74,10 @@ function UF:PostNamePosition(frame, unit)
 	
 	if UnitIsPlayer(unit) then
 		local position = frame.db.name.position
-		local x, y = self:GetPositionOffset(position)
 		frame.Power.value:SetAlpha(1)
 		
 		frame.Name:ClearAllPoints()
-		frame.Name:Point(position, frame.Health, position, x, y)	
+		frame.Name:Point(position, frame.Health, position, self:GetPositionOffset(position))	
 	else
 		frame.Power.value:SetAlpha(0)
 		

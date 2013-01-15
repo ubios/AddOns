@@ -52,10 +52,8 @@ lib.messages = LibStub("CallbackHandler-1.0"):New(lib, "RegisterMessage", "Unreg
 -- ***** LUA library functions made local **********
 local math, max
       = math, math.max
-local table, tinsert, tremove
-      = table, tinsert, tremove
-local pairs, ipairs, next, select, type, tostring
-      = pairs, ipairs, next, select, type, tostring
+local table, tinsert, tremove = table, tinsert, tremove
+local pairs, ipairs, next, select, type, tostring = pairs, ipairs, next, select, type, tostring
 local S = tostring
 
 -- ***** API functions made local **********

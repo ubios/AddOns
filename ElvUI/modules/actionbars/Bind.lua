@@ -2,8 +2,10 @@ local E, L, V, P, G, _ = unpack(select(2, ...)); --Inport: Engine, Locales, Priv
 local AB = E:GetModule('ActionBars');
 
 local bind = CreateFrame("Frame", "ElvUI_KeyBinder", E.UIParent);
-local find = string.find;
-local _G = getfenv(0);
+local find = string.find
+local pairs, select = pairs, select
+local floor = math.floor
+local _G = getfenv(0)
 
 function AB:ActivateBindMode()
 	bind.active = true;

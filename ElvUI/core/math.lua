@@ -8,6 +8,9 @@ local upper = string.upper
 local modf = math.modf
 local ceil = math.ceil
 local floor = math.floor
+local tonumber = tonumber
+
+local tinsert, tremove, unpack = table.insert, table.remove, unpack
 
 --Return short value of a number
 function E:ShortValue(v)

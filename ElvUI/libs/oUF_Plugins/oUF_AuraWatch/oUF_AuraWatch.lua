@@ -112,6 +112,8 @@ assert(oUF, "oUF_AuraWatch cannot find an instance of oUF. If your oUF is embedd
 
 local UnitBuff, UnitDebuff, UnitGUID = UnitBuff, UnitDebuff, UnitGUID
 local GUIDs = {}
+local pairs, next = pairs, next
+local format = string.format
 
 local PLAYER_UNITS = {
 	player = true,
@@ -351,7 +353,7 @@ local function setupIcons(self)
 
 			if watch.PostCreateIcon then watch:PostCreateIcon(icon, icon.spellID, name, self) end
 		else
-			print("oUF_AuraWatch error: no spell with "..tostring(icon.spellID).." spell ID exists")
+			print(format("oUF_AuraWatch error: no spell with %d spell ID exists", icon.spellID))
 		end
 	end
 end

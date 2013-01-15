@@ -36,6 +36,8 @@ assert(LibStub, MAJOR.." requires LibStub")
 local lib, minor = LibStub:NewLibrary(MAJOR, MINOR)
 if not lib then return end
 
+local pairs, type, next = pairs, type, next
+
 -- ----------------------------------------------------------------------------
 -- Library data
 -- ----------------------------------------------------------------------------

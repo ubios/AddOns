@@ -7,6 +7,7 @@ local selectedSpell;
 local selectedFilter;
 local filters;
 local tinsert = table.insert
+local pairs, tonumber = pairs, tonumber
 function UF:CreateCustomTextGroup(unit, objectName)
 	if E.Options.args.unitframe.args[unit].args[objectName] then return end
 	

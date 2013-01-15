@@ -5,6 +5,7 @@ local AceGUI = LibStub("AceGUI-3.0")
 local Media = LibStub("LibSharedMedia-3.0")
 
 local AGSMW = LibStub("AceGUISharedMediaWidgets-1.0")
+local tinsert = table.insert
 
 do
 	local widgetType = "LSM30_Statusbar"
@@ -15,7 +16,7 @@ do
 		self:ClearAllPoints()
 		self:Hide()
 		self.check:Hide()
-		table.insert(contentFrameCache, self)
+		tinsert(contentFrameCache, self)
 	end
 
 	local function ContentOnClick(this, button)

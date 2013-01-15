@@ -1,6 +1,8 @@
 local E, L, DF = unpack(select(2, ...))
 local B = E:GetModule('Blizzard');
 
+local pairs = pairs
+
 local AlertFrameHolder = CreateFrame("Frame", "AlertFrameHolder", E.UIParent)
 AlertFrameHolder:SetWidth(180)
 AlertFrameHolder:SetHeight(20)
@@ -104,7 +106,7 @@ end
 function B:AlertFrame_SetAchievementAnchors(alertAnchor)
 	if ( AchievementAlertFrame1 ) then
 		for i = 1, MAX_ACHIEVEMENT_ALERTS do
-			local frame = _G["AchievementAlertFrame"..i];
+			local frame = _G[("AchievementAlertFrame%d"):format(i)];
 			if ( frame and frame:IsShown() ) then
 				frame:ClearAllPoints()
 				frame:SetPoint(POSITION, alertAnchor, ANCHOR_POINT, 0, YOFFSET);
@@ -117,7 +119,7 @@ end
 function B:AlertFrame_SetCriteriaAnchors(alertAnchor)
 	if ( CriteriaAlertFrame1 ) then
 		for i = 1, MAX_ACHIEVEMENT_ALERTS do
-			local frame = _G["CriteriaAlertFrame"..i];
+			local frame = _G[("CriteriaAlertFrame%d"):format(i)];
 			if ( frame and frame:IsShown() ) then
 				frame:ClearAllPoints()
 				frame:SetPoint(POSITION, alertAnchor, ANCHOR_POINT, 0, YOFFSET);

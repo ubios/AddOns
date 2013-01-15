@@ -1,6 +1,13 @@
 local E, L, V, P, G, _ = unpack(select(2, ...)); --Inport: Engine, Locales, PrivateDB, ProfileDB, GlobalDB, Localize Underscore
 local DT = E:GetModule('DataTexts')
 
+-- localized references for global functions (about 50% faster)
+local join 			= string.join
+local find			= string.find
+local format		= string.format
+local sort			= table.sort
+local pairs, type, select = pairs, type, select
+
 -- create a popup
 E.PopupDialogs.SET_BN_BROADCAST = {
 	text = BN_BROADCAST_TOOLTIP,
@@ -20,12 +27,6 @@ E.PopupDialogs.SET_BN_BROADCAST = {
 	hideOnEscape = 1,
 	preferredIndex = 3
 }
-
--- localized references for global functions (about 50% faster)
-local join 			= string.join
-local find			= string.find
-local format		= string.format
-local sort			= table.sort
 
 local menuFrame = CreateFrame("Frame", "FriendDatatextRightClickMenu", E.UIParent, "UIDropDownMenuTemplate")
 local menuList = {

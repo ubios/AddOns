@@ -23,6 +23,8 @@ NP.Healers = {
 }
 
 local twipe = table.wipe
+local floor = math.floor
+local pairs, ipairs, type, select, unpack = pairs, ipairs, type, select, unpack
 
 function NP:Initialize()
 	self.db = E.db["nameplate"]

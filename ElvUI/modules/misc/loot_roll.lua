@@ -7,6 +7,7 @@ local FRAME_WIDTH, FRAME_HEIGHT = 328, 28
 M.RollBars = {}
 
 local tinsert = table.insert
+local pairs, ipairs, tonumber = pairs, ipairs, tonumber
 
 local function ClickRoll(frame)
 	RollOnLoot(frame.parent.rollID, frame.rolltype)

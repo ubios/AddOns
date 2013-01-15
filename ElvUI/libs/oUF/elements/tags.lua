@@ -7,10 +7,10 @@ local oUF = ns.oUF
 
 local format = string.format
 local tinsert, tremove = table.insert, table.remove
+local floor, abs = math.floor, math.abs
+local pairs, next, type, unpack = pairs, next, type, unpack
 local _PATTERN = '%[..-%]+'
 
-local floor = math.floor
-local insert, remove = table.insert, table.remove
 
 local _ENV = {
 	Hex = function(r, g, b)
@@ -270,7 +270,7 @@ local tagStrings = {
 		if(m == 0) then
 			return 0
 		else
-			return math.abs(UnitPower('player', SPELL_POWER_ECLIPSE)/m*100)
+			return abs(UnitPower('player', SPELL_POWER_ECLIPSE)/m*100)
 		end
 	end]],
 
