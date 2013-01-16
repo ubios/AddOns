@@ -5,7 +5,7 @@ local E, L, DF = unpack(select(2, ...))
 local B = E:GetModule('Blizzard');
 local S = E:GetModule('Skins');
 
-local format, floor = string.format, math.floor
+local format, floor, tonumber = string.format, math.floor, tonumber
 local initialized = nil
 local colorBuffer = {}
 local editingText

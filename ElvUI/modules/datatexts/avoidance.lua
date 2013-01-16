@@ -2,12 +2,13 @@ local E, L, V, P, G, _ = unpack(select(2, ...)); --Inport: Engine, Locales, Priv
 local DT = E:GetModule('DataTexts')
 
 local displayString, lastPanel
-local format = string.format
-local join = string.join
+local format, join = string.format, string.join
+local select = select
 local targetlv, playerlv
 local basemisschance, leveldifference, dodge, parry, block, avoidance, unhittable, avoided, blocked, numAvoidances, unhittableMax
 local chanceString = "%.2f%%"
-local modifierString = join("", "%d (+", chanceString, ")")
+local unhittableString = "+%.2f%%"
+local modifierString = "%d (+%.2f%%)"
 
 function IsWearingShield()
 	local slotID = GetInventorySlotInfo("SecondaryHandSlot")
@@ -96,7 +97,7 @@ local function OnEnter(self)
 	
 	
 	if unhittable > 0 then
-		GameTooltip:AddDoubleLine(L['Unhittable:'], '+'..format(chanceString, unhittable), 1, 1, 1, 0, 1, 0)
+		GameTooltip:AddDoubleLine(L['Unhittable:'], format(unhittableString, unhittable), 1, 1, 1, 0, 1, 0)
 	else
 		GameTooltip:AddDoubleLine(L['Unhittable:'], format(chanceString, unhittable), 1, 1, 1, 1, 0, 0)
 	end

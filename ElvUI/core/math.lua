@@ -1,15 +1,7 @@
 local E, L, V, P, G, _ = unpack(select(2, ...)); --Inport: Engine, Locales, PrivateDB, ProfileDB, GlobalDB, Localize Underscore
 
-
-local format = string.format
-local sub = string.sub
-local upper = string.upper
-
-local modf = math.modf
-local ceil = math.ceil
-local floor = math.floor
-local tonumber = tonumber
-
+local format, sub, upper, join = string.format, string.sub, string.upper, string.join
+local modf, ceil, floor, tonumber = math.modf, math.ceil, math.floor, tonumber
 local tinsert, tremove, unpack = table.insert, table.remove, unpack
 
 --Return short value of a number
@@ -129,7 +121,7 @@ local styles = {
 }
 
 function E:GetFormattedText(style, min, max)
-	assert(styles[style], 'Invalid format style: '..style)
+	assert(styles[style], format('Invalid format style: %s', style))
 	assert(min, 'You need to provide a current value. Usage: E:GetFormattedText(style, min, max)')
 	assert(max, 'You need to provide a maximum value. Usage: E:GetFormattedText(style, min, max)')
 	
@@ -182,7 +174,7 @@ function E:ShortenString(string, numChars, dots)
 		end
 
 		if (len == numChars and pos <= bytes) then
-			return string:sub(1, pos - 1)..(dots and '...' or '')
+			return join('', string:sub(1, pos - 1), (dots and '...' or ''))
 		else
 			return string
 		end

@@ -77,7 +77,7 @@ end
 
 local function createSlot(id)
 	local iconsize = iconSize-2
-	local frame = CreateFrame("Button", 'ElvLootSlot'..id, lootFrame)
+	local frame = CreateFrame("Button", ('ElvLootSlot%d'):format(id), lootFrame)
 	frame:Point("LEFT", 8, 0)
 	frame:Point("RIGHT", -8, 0)
 	frame:Height(iconsize)

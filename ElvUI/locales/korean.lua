@@ -108,7 +108,7 @@ L['Confused.. Try Again!'] = true;
 L["copperabbrev"] = "|cffeda55fc|r" --Also used in gold datatext
 L['Currency Format'] = true;
 L["Delete Grays"] = "회색템 삭제"
-L["Deleted %d gray items. Total Worth: %s"] = [=[%d개의 회색 아이템을 삭제했습니다. 환산: %s:]=]
+L["Deleted %d gray items. Total Worth: %s."] = [=[%d개의 회색 아이템을 삭제했습니다. 환산: %s:]=]
 L["Descending"] = true;
 L["Direction the bag sorting will use to allocate the items."] = "방향 가방 정렬이 항목을 할당하는 데 사용합니다."
 L["Enable/Disable the all-in-one bag."] = "통합가방 사용/중지"

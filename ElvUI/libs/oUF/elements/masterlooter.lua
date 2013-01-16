@@ -19,10 +19,10 @@ local Update = function(self, event)
 			if(pid == 0) then
 				mlUnit = 'player'
 			else
-				mlUnit = 'party'..pid
+				mlUnit = ('party%d'):format(pid)
 			end
 		elseif(rid) then
-			mlUnit = 'raid'..rid
+			mlUnit = ('raid%d'):format(rid)
 		end
 
 		if(UnitIsUnit(unit, mlUnit)) then

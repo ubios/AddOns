@@ -298,7 +298,7 @@ function UF:CreateAndUpdateUFGroup(group, numGroup)
 		frameName = frameName:gsub('t(arget)', 'T%1')		
 		if not self[unit] then
 			self['groupunits'][unit] = group;	
-			self[unit] = ElvUF:Spawn(unit, 'ElvUF_'..frameName)
+			self[unit] = ElvUF:Spawn(unit, ('ElvUF_%s'):format(frameName))
 			self[unit].index = i
 			self[unit]:SetParent(ElvUF_Parent)
 			self[unit]:SetID(i)
@@ -307,7 +307,7 @@ function UF:CreateAndUpdateUFGroup(group, numGroup)
 		local frameName = E:StringTitle(group)
 		frameName = frameName:gsub('t(arget)', 'T%1')		
 		self[unit].Update = function()
-			UF["Update_"..E:StringTitle(frameName).."Frames"](self, self[unit], self.db['units'][group])	
+			UF[("Update_%sFrames"):format(E:StringTitle(frameName))](self, self[unit], self.db['units'][group])	
 		end
 		
 		if self.db['units'][group].enable then
@@ -419,7 +419,7 @@ function UF:CreateAndUpdateUF(unit)
 	local frameName = E:StringTitle(unit)
 	frameName = frameName:gsub('t(arget)', 'T%1')
 	if not self[unit] then
-		self[unit] = ElvUF:Spawn(unit, 'ElvUF_'..frameName)
+		self[unit] = ElvUF:Spawn(unit, ('ElvUF_%s'):format(frameName))
 		self['units'][unit] = unit
 	end
 
@@ -599,9 +599,9 @@ function ElvUF:DisableBlizzard(unit)
 		local id = unit:match'arena(%d)'
 
 		if(id) then
-			HandleFrame('ArenaEnemyFrame' .. id)
-			HandleFrame('ArenaPrepFrame'..id)
-			HandleFrame('ArenaEnemyFrame'..id..'PetFrame')
+			HandleFrame(('ArenaEnemyFrame%d'):format(id))
+			HandleFrame(('ArenaPrepFrame%d'):format(id))
+			HandleFrame(('ArenaEnemyFrame%dPetFrame'):format(id))
 		else
 			for i=1, 5 do
 				HandleFrame(('ArenaEnemyFrame%d'):format(i))

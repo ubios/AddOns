@@ -8,7 +8,7 @@ local LAB = LibStub("LibActionButton-1.0")
 local LSM = LibStub("LibSharedMedia-3.0")
 
 local gsub = string.gsub
-local format = string.format
+local format, join = string.format, string.join
 local split = string.split
 local pairs, select, unpack = pairs, select, unpack
 
@@ -205,21 +205,21 @@ function AB:PositionAndSizeBar(barName)
 	end 
 	
 	
-	E:SetMoverSnapOffset('ElvAB_'..bar.id, bar.db.buttonspacing / 2)
+	E:SetMoverSnapOffset(('ElvAB_%d'):format(bar.id), bar.db.buttonspacing / 2)
 end
 
 function AB:CreateBar(id)
-	local bar = CreateFrame('Frame', 'ElvUI_Bar'..id, E.UIParent, 'SecureHandlerStateTemplate');
+	local bar = CreateFrame('Frame', ('ElvUI_Bar%d'):format(id), E.UIParent, 'SecureHandlerStateTemplate');
 	local point, anchor, attachTo, x, y = split(',', self['barDefaults']['bar'..id].position)
 	bar:Point(point, anchor, attachTo, x, y)
 	bar.id = id
 	bar:CreateBackdrop('Default');
 	bar.backdrop:SetAllPoints();
 	bar.buttons = {}
-	bar.bindButtons = self['barDefaults']['bar'..id].bindButtons
+	bar.bindButtons = self['barDefaults'][('bar%d'):format(id)].bindButtons
 	
 	for i=1, 12 do
-		bar.buttons[i] = LAB:CreateButton(i, format(bar:GetName().."Button%d", i), bar, nil)
+		bar.buttons[i] = LAB:CreateButton(i, format("%sButton%d", bar:GetName(), i), bar, nil)
 		bar.buttons[i]:SetState(0, "action", i)
 		for k = 1, 14 do
 			bar.buttons[i]:SetState(k, "action", (k - 1) * 12 + i)
@@ -237,9 +237,9 @@ function AB:CreateBar(id)
 	]]);
 	
 	
-	self["handledBars"]['bar'..id] = bar;
-	self:PositionAndSizeBar('bar'..id);
-	E:CreateMover(bar, 'ElvAB_'..id, L['Bar ']..id, nil, nil, nil,'ALL,ACTIONBARS')
+	self["handledBars"][('bar%d'):format(id)] = bar;
+	self:PositionAndSizeBar(('bar%d'):format(id));
+	E:CreateMover(bar, ('ElvAB_%d'):format(id), join('', L['Bar '], id), nil, nil, nil,'ALL,ACTIONBARS')
 	return bar
 end
 
@@ -361,23 +361,23 @@ function AB:GetPage(bar, defaultPage, condition)
 	if not condition then condition = '' end
 	if not page then page = '' end
 	if page then
-		condition = condition.." "..page
+		condition = join('', condition, " ", page)
 	end
-	condition = condition.." "..defaultPage
+	condition = join('', condition, " ", defaultPage)
 	return condition
 end
 
 function AB:StyleButton(button, noBackdrop)	
 	local name = button:GetName();
-	local icon = _G[name.."Icon"];
-	local count = _G[name.."Count"];
-	local flash	 = _G[name.."Flash"];
-	local hotkey = _G[name.."HotKey"];
-	local border  = _G[name.."Border"];
-	local macroName = _G[name.."Name"];
-	local normal  = _G[name.."NormalTexture"];
+	local icon = _G[("%sIcon"):format(name)]
+	local count = _G[("%sCount"):format(name)]
+	local flash	 = _G[("%sFlash"):format(name)]
+	local hotkey = _G[("%sHotKey"):format(name)]
+	local border  = _G[("%sBorder"):format(name)]
+	local macroName = _G[("%sName"):format(name)]
+	local normal  = _G[("%sNormalTexture"):format(name)]
 	local normal2 = button:GetNormalTexture()
-	local shine = _G[name.."Shine"];
+	local shine = _G[("%sShine"):format(name)]
 	local combat = InCombatLockdown()
 
 	if flash then flash:SetTexture(nil); end

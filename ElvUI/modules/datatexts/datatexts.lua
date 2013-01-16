@@ -3,7 +3,7 @@ local DT = E:NewModule('DataTexts', 'AceTimer-3.0', 'AceHook-3.0', 'AceEvent-3.0
 local LDB = LibStub:GetLibrary("LibDataBroker-1.1");
 local LSM = LibStub("LibSharedMedia-3.0")
 
-local len = string.len
+local len, format = string.len, string.format
 local pairs, type = pairs, type
 
 function DT:Initialize()
@@ -75,9 +75,9 @@ function DT:RegisterLDB()
 		
 		local function OnEvent(self)
 			curFrame = self
-			LDB:RegisterCallback("LibDataBroker_AttributeChanged_"..name.."_text", textUpdate)
-			LDB:RegisterCallback("LibDataBroker_AttributeChanged_"..name.."_value", textUpdate)					
-			LDB.callbacks:Fire("LibDataBroker_AttributeChanged_"..name.."_text", name, nil, obj.text, obj)	
+			LDB:RegisterCallback(("LibDataBroker_AttributeChanged_%s_text"):format(name), textUpdate)
+			LDB:RegisterCallback(("LibDataBroker_AttributeChanged_%s_value"):format(name), textUpdate)					
+			LDB.callbacks:Fire(("LibDataBroker_AttributeChanged_%s_text"):format(name), name, nil, obj.text, obj)	
 		end
 
 		self:RegisterDatatext(name, {'PLAYER_ENTER_WORLD'}, OnEvent, nil, OnClick, OnEnter, OnLeave)
@@ -138,7 +138,7 @@ function DT:RegisterPanel(panel, numPoints, anchor, xOff, yOff)
 	for i=1, numPoints do
 		local pointIndex = DT.PointLocation[i]
 		if not panel.dataPanels[pointIndex] then
-			panel.dataPanels[pointIndex] = CreateFrame('Button', 'DataText'..i, panel)
+			panel.dataPanels[pointIndex] = CreateFrame('Button', ('DataText'):format(i), panel)
 			panel.dataPanels[pointIndex]:RegisterForClicks("AnyUp")
 			panel.dataPanels[pointIndex].text = panel.dataPanels[pointIndex]:CreateFontString(nil, 'OVERLAY')
 			panel.dataPanels[pointIndex].text:SetAllPoints()
