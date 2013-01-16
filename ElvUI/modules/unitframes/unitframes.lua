@@ -67,7 +67,7 @@ UF['headerGroupBy'] = {
 	end,
 }
 
-local find, gsub, split, format = string.find, string.gsub, string.split, string.format
+local find, gsub, split, format, join = string.find, string.gsub, string.split, string.format, string.join
 local min = math.min
 local tremove, tinsert = table.remove, table.insert
 local pairs, type, unpack, select = pairs, type, unpack, select
@@ -89,9 +89,9 @@ function UF:Construct_UF(frame, unit)
 		if stringTitle:find('target') then
 			stringTitle = gsub(stringTitle, 'target', 'Target')
 		end
-		self["Construct_"..stringTitle.."Frame"](self, frame, unit)
+		self[("Construct_%sFrame"):format(stringTitle)](self, frame, unit)
 	else
-		UF["Construct_"..E:StringTitle(self['groupunits'][unit]).."Frames"](self, frame, unit)
+		UF[("Construct_%sFrames"):format(E:StringTitle(self['groupunits'][unit]))](self, frame, unit)
 	end
 	
 	self:Update_StatusBars()
@@ -292,9 +292,10 @@ end
 function UF:CreateAndUpdateUFGroup(group, numGroup)
 	if InCombatLockdown() then self:RegisterEvent('PLAYER_REGEN_ENABLED'); return end
 
+	local unit, frameName
 	for i=1, numGroup do
-		local unit = group..i
-		local frameName = E:StringTitle(unit)
+		unit = join('', group, i)
+		frameName = E:StringTitle(unit)
 		frameName = frameName:gsub('t(arget)', 'T%1')		
 		if not self[unit] then
 			self['groupunits'][unit] = group;	
@@ -304,7 +305,7 @@ function UF:CreateAndUpdateUFGroup(group, numGroup)
 			self[unit]:SetID(i)
 		end
 		
-		local frameName = E:StringTitle(group)
+		frameName = E:StringTitle(group)
 		frameName = frameName:gsub('t(arget)', 'T%1')		
 		self[unit].Update = function()
 			UF[("Update_%sFrames"):format(E:StringTitle(frameName))](self, self[unit], self.db['units'][group])	
@@ -328,8 +329,8 @@ function UF:CreateAndUpdateHeaderGroup(group, groupFilter, template)
 
 	local db = self.db['units'][group]
 	if not self[group] then
-		ElvUF:RegisterStyle("ElvUF_"..E:StringTitle(group), UF["Construct_"..E:StringTitle(group).."Frames"])
-		ElvUF:SetActiveStyle("ElvUF_"..E:StringTitle(group))
+		ElvUF:RegisterStyle(("ElvUF_%s"):format(E:StringTitle(group)), UF[("Construct_%sFrames"):format(E:StringTitle(group))])
+		ElvUF:SetActiveStyle(("ElvUF_%s"):format(E:StringTitle(group)))
 
 		local maxUnits, startingIndex = MAX_RAID_MEMBERS, -1
 		if db.maxColumns and db.unitsPerColumn then
@@ -337,7 +338,7 @@ function UF:CreateAndUpdateHeaderGroup(group, groupFilter, template)
 		end
 
 		if template then
-			self[group] = ElvUF:SpawnHeader("ElvUF_"..E:StringTitle(group), nil, 'raid', 
+			self[group] = ElvUF:SpawnHeader(("ElvUF_%s"):format(E:StringTitle(group)), nil, 'raid', 
 				'point', self.db['units'][group].point, 
 				'oUF-initialConfigFunction', ([[self:SetWidth(%d); self:SetHeight(%d); self:SetFrameLevel(5)]]):format(db.width, db.height), 
 				'template', template, 
@@ -351,7 +352,7 @@ function UF:CreateAndUpdateHeaderGroup(group, groupFilter, template)
 				'startingIndex', startingIndex,
 				'groupFilter', groupFilter)
 		else
-			self[group] = ElvUF:SpawnHeader("ElvUF_"..E:StringTitle(group), nil, 'raid', 
+			self[group] = ElvUF:SpawnHeader(("ElvUF_%s"):format(E:StringTitle(group)), nil, 'raid', 
 				'point', self.db['units'][group].point, 
 				'oUF-initialConfigFunction', ([[self:SetWidth(%d); self:SetHeight(%d); self:SetFrameLevel(5)]]):format(db.width, db.height), 
 				'columnAnchorPoint', db.columnAnchorPoint,
@@ -388,18 +389,21 @@ function UF:CreateAndUpdateHeaderGroup(group, groupFilter, template)
 			self[group]:SetAttribute("showSolo", false)			
 			return
 		end
-		UF["Update_"..E:StringTitle(group).."Header"](self, self[group], db)
+		UF[("Update_%sHeader"):format(E:StringTitle(group))](self, self[group], db)
 		
+		local child, pet, target
 		for i=1, self[group]:GetNumChildren() do
-			local child = select(i, self[group]:GetChildren())
-			UF["Update_"..E:StringTitle(group).."Frames"](self, child, self.db['units'][group])
+			child = select(i, self[group]:GetChildren())
+			UF[("Update_%sFrames"):format(E:StringTitle(group))](self, child, self.db['units'][group])
 
-			if _G[child:GetName()..'Pet'] then
-				UF["Update_"..E:StringTitle(group).."Frames"](self, _G[child:GetName()..'Pet'], self.db['units'][group])
+			pet = _G[('%sPet'):format(child:GetName())]
+			if pet then
+				UF[("Update_%sFrames"):format(E:StringTitle(group))](self, pet, self.db['units'][group])
 			end
 			
-			if _G[child:GetName()..'Target'] then
-				UF["Update_"..E:StringTitle(group).."Frames"](self, _G[child:GetName()..'Target'], self.db['units'][group])
+			target = _G[('%sTarget'):format(child:GetName())]
+			if target then
+				UF[("Update_%sFrames"):format(E:StringTitle(group))](self, target, self.db['units'][group])
 			end			
 		end			
 	end	
@@ -424,7 +428,7 @@ function UF:CreateAndUpdateUF(unit)
 	end
 
 	self[unit].Update = function()
-		UF["Update_"..frameName.."Frame"](self, self[unit], self.db['units'][unit])
+		UF[("Update_%sFrame"):format(frameName)](self, self[unit], self.db['units'][unit])
 	end
 
 	if self.db['units'][unit].enable then
@@ -580,7 +584,7 @@ function ElvUF:DisableBlizzard(unit)
 	elseif(unit:match'(boss)%d?$' == 'boss') then
 		local id = unit:match'boss(%d)'
 		if(id) then
-			HandleFrame('Boss' .. id .. 'TargetFrame')
+			HandleFrame(('Boss%dTargetFrame'):format(id))
 		else
 			for i=1, 4 do
 				HandleFrame(('Boss%dTargetFrame'):format(i))
@@ -589,7 +593,7 @@ function ElvUF:DisableBlizzard(unit)
 	elseif(unit:match'(party)%d?$' == 'party') then
 		local id = unit:match'party(%d)'
 		if(id) then
-			HandleFrame('PartyMemberFrame' .. id)
+			HandleFrame(('PartyMemberFrame%d'):format(id))
 		else
 			for i=1, 4 do
 				HandleFrame(('PartyMemberFrame%d'):format(i))
@@ -718,10 +722,10 @@ end
 
 function UF:ToggleForceShowGroupFrames(unitGroup, numGroup)
 	for i=1, numGroup do
-		if self[unitGroup..i] and not self[unitGroup..i].isForced then
-			UF:ForceShow(self[unitGroup..i])
-		elseif self[unitGroup..i] then
-			UF:UnforceShow(self[unitGroup..i])
+		if self[unitGroup:format(i)] and not self[unitGroup:format(i)].isForced then
+			UF:ForceShow(self[unitGroup:format(i)])
+		elseif self[unitGroup:format(i)] then
+			UF:UnforceShow(self[unitGroup:format(i)])
 		end
 	end
 end

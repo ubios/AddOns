@@ -306,7 +306,7 @@ function CH:StyleChat(frame)
 			if id == 0 then
 				editbox:SetBackdropBorderColor(unpack(E.media.bordercolor))
 			else
-				editbox:SetBackdropBorderColor(ChatTypeInfo[type..id].r,ChatTypeInfo[type..id].g,ChatTypeInfo[type..id].b)
+				editbox:SetBackdropBorderColor(ChatTypeInfo[("%s%d"):format(type, id)].r,ChatTypeInfo[("%s%d"):format(type, id)].g,ChatTypeInfo[("%s%d"):format(type, id)].b)
 			end
 		elseif type then
 			editbox:SetBackdropBorderColor(ChatTypeInfo[type].r,ChatTypeInfo[type].g,ChatTypeInfo[type].b)
@@ -718,7 +718,7 @@ function CH:ChatFrame_MessageEventHandler(event, ...)
 					-- arg9 is the channel name without the number in front...
 					if ( ((arg7 > 0) and (self.zoneChannelList[index] == arg7)) or (strupper(value) == strupper(arg9)) ) then
 						found = 1;
-						infoType = "CHANNEL"..arg8;
+						infoType = ("CHANNEL%s"):format(arg8)
 						info = ChatTypeInfo[infoType];
 						if ( (type == "CHANNEL_NOTICE") and (arg1 == "YOU_LEFT") ) then
 							self.channelList[index] = nil;
@@ -800,9 +800,9 @@ function CH:ChatFrame_MessageEventHandler(event, ...)
 		elseif ( strsub(type,1,10) == "BG_SYSTEM_" ) then
 			self:AddMessage(CH:ConcatenateTimeStamp(arg1), info.r, info.g, info.b, info.id);
 		elseif ( strsub(type,1,11) == "ACHIEVEMENT" ) then
-			self:AddMessage(format(CH:ConcatenateTimeStamp(arg1), "|Hplayer:"..arg2.."|h".."["..coloredName.."]".."|h"), info.r, info.g, info.b, info.id);
+			self:AddMessage(format(CH:ConcatenateTimeStamp(arg1), ("|Hplayer:%s|h[%s]|h"):format(arg2, coloredName), info.r, info.g, info.b, info.id))
 		elseif ( strsub(type,1,18) == "GUILD_ACHIEVEMENT" ) then
-			self:AddMessage(format(CH:ConcatenateTimeStamp(arg1), "|Hplayer:"..arg2.."|h".."["..coloredName.."]".."|h"), info.r, info.g, info.b, info.id);
+			self:AddMessage(format(CH:ConcatenateTimeStamp(arg1), ("|Hplayer:%s|h[%s]|h"):format(arg2, coloredName), info.r, info.g, info.b, info.id))
 		elseif ( type == "IGNORED" ) then
 			self:AddMessage(format(CH:ConcatenateTimeStamp(CHAT_IGNORED), arg2), info.r, info.g, info.b, info.id);
 		elseif ( type == "FILTERED" ) then
@@ -994,11 +994,10 @@ function CH:ChatFrame_MessageEventHandler(event, ...)
 			end
 			
 			if ( (strlen(arg3) > 0) and (arg3 ~= self.defaultLanguage) ) then
-				local languageHeader = "["..arg3.."] ";
 				if ( showLink and (strlen(arg2) > 0) ) then
-					body = format(join('', _G[("CHAT_%s_GET"):format(type)], languageHeader, message), join('', pflag, playerLink, "[", coloredName, "]", "|h"))
+					body = format(join('', _G[("CHAT_%s_GET"):format(type)], ("[%s] "):format(arg3), message), ("%s%s[%s]|h"):format(pflag, playerLink, coloredName))
 				else
-					body = format(join('', _G[("CHAT_%s_GET"):format(type)], languageHeader, message), join('', pflag, arg2))
+					body = format(join('', _G[("CHAT_%s_GET"):format(type)], ("[%s] "):format(arg3), message), join('', pflag, arg2))
 				end
 			else
 				if ( not showLink or strlen(arg2) == 0 ) then
@@ -1009,11 +1008,11 @@ function CH:ChatFrame_MessageEventHandler(event, ...)
 					end
 				else
 					if ( type == "EMOTE" ) then
-						body = format(join('', _G[("CHAT_%s_GET"):format(type)], message), join('', pflag, playerLink, coloredName, "|h"))
+						body = format(join('', _G[("CHAT_%s_GET"):format(type)], message), ("%s%s%s|h"):format(pflag, playerLink, coloredName))
 					elseif ( type == "TEXT_EMOTE") then
-						body = gsub(message, arg2, pflag..playerLink..coloredName.."|h", 1);
+						body = gsub(message, arg2, ("%s%s%s|h"):format(pflag, playerLink, coloredName), 1);
 					else
-						body = format(join('', _G[("CHAT_%s_GET"):format(type)], message), join('', pflag, playerLink, "[", coloredName, "]|h"))
+						body = format(join('', _G[("CHAT_%s_GET"):format(type)], message), ("%s%s[%s]|h"):format(pflag, playerLink, coloredName))
 					end
 				end
 			end
@@ -1031,12 +1030,12 @@ function CH:ChatFrame_MessageEventHandler(event, ...)
 			if CH.db.shortChannels then
 				body = body:gsub("|Hchannel:(.-)|h%[(.-)%]|h", CH.ShortChannel)
 				body = body:gsub('CHANNEL:', '')
-				body = body:gsub("^(.-|h) "..L['whispers'], "%1")
-				body = body:gsub("^(.-|h) "..L['says'], "%1")
-				body = body:gsub("^(.-|h) "..L['yells'], "%1")
-				body = body:gsub("<"..AFK..">", "[|cffFF0000"..L['AFK'].."|r] ")
-				body = body:gsub("<"..DND..">", "[|cffE7E716"..L['DND'].."|r] ")
-				body = body:gsub("%[BN_CONVERSATION:", '%['..L["BN:"])			
+				body = body:gsub(("^(.-|h) %s"):format(L['whispers']), "%1")
+				body = body:gsub(("^(.-|h) %s"):format(L['says']), "%1")
+				body = body:gsub(("^(.-|h) %s"):format(L['yells']), "%1")
+				body = body:gsub(("<%s>"):format(AFK), ("[|cffFF0000%s|r] "):format(L['AFK']))
+				body = body:gsub(("<%s>"):format(DND), ("[|cffE7E716%s|r] "):format(L['DND']))
+				body = body:gsub("%[BN_CONVERSATION:", '%['..L["BN:"])
 				body = body:gsub("^%["..RAID_WARNING.."%]", '['..L['RW']..']')	
 			end
 			self:AddMessage(CH:ConcatenateTimeStamp(body), info.r, info.g, info.b, info.id, false, accessID, typeID);
@@ -1128,7 +1127,7 @@ function CH:SetupChat(event, ...)
 			end
 		end)
 	
-		if not _G[frameName.."Tab"].glow.anim then
+		if not _G[("%sTab"):format(frameName)].glow.anim then
 			E:SetUpAnimGroup(_G[("%sTab"):format(frameName)].glow)
 		end
 	end	
@@ -1157,7 +1156,7 @@ local sizes = {
 }
 
 local function PrepareMessage(author, message)
-	return author:upper() .. message
+	return format("%s%s", author:upper(), message)
 end
 
 function CH:ChatThrottleHandler(event, ...)
@@ -1282,10 +1281,10 @@ function CH:CheckKeyword(message)
 	for word, replaceWord in pairs(replaceWords) do
 		if message == word then
 			message = message:gsub(word, replaceWord)
-		elseif message:find(' '..word) then
-			message = message:gsub(' '..word, ' '..replaceWord)
-		elseif message:find(word..' ') then
-			message = message:gsub(word..' ', replaceWord..' ')
+		elseif message:find((' %s'):format(word)) then
+			message = message:gsub((' %s'):format(word), (' %s'):format(replaceWord))
+		elseif message:find(('%s '):format(word)) then
+			message = message:gsub(('%s '):format(word), ('%s '):format(replaceWord))
 		end
 	end
 	
@@ -1640,7 +1639,7 @@ function CH:Initialize()
 		local text = self:GetText()
 		
 		for _, size in pairs(sizes) do
-			if find(text, size) and not find(text, size.."]") then
+			if find(text, size) and not find(text, ("%s]"):format(size)) then
 				if size == ':13:22' then
 					self:SetText(gsub(text, size, ":12:20"))
 				else

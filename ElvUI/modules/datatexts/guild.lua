@@ -166,7 +166,7 @@ end
 
 local function whisperClick(self, playerName)
 	menuFrame:Hide()
-	SetItemRef( "player:"..playerName, ("|Hplayer:%1$s|h[%1$s]|h"):format(playerName), "LeftButton" )
+	SetItemRef(("player:%s"):format(playerName), ("|Hplayer:%1$s|h[%1$s]|h"):format(playerName), "LeftButton" )
 end
 
 local function ToggleGuildFrame()

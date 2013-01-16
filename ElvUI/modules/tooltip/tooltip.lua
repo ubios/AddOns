@@ -675,8 +675,7 @@ end
 
 function TT:GameTooltip_ShowStatusBar(tt, min, max, value, text)
 	local index = tt.shownStatusBars;
-	local name = tt:GetName().."StatusBar"..index;
-	local statusBar = _G[name];
+	local statusBar = _G[("%sStatusBar%d"):format(tt:GetName(), index)]
 	if statusBar and not statusBar.skinned then
 		statusBar:StripTextures()
 		statusBar:SetStatusBarTexture(E['media'].normTex)

@@ -59,7 +59,7 @@ local function whisperClick(self, name, battleNet)
 	if battleNet then
 		ChatFrame_SendSmartTell(name)
 	else
-		SetItemRef( "player:"..name, ("|Hplayer:%1$s|h[%1$s]|h"):format(name), "LeftButton" )		 
+		SetItemRef( ("player:%s"):format(name), ("|Hplayer:%1$s|h[%1$s]|h"):format(name), "LeftButton" )		 
 	end
 end
 
