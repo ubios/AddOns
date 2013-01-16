@@ -113,14 +113,13 @@ local function OnEnter(self)
 		GameTooltip:AddDoubleLine(L['Total CPU:'], format(homeLatencyString, totalCPU), 0.69, 0.31, 0.31,0.84, 0.75, 0.65)
 	end
 	
-	local red, green
+	local red
 	if IsShiftKeyDown() or not cpuProfiling then
 		GameTooltip:AddLine(" ")
 		for i = 1, #memoryTable do
 			if (memoryTable[i][4]) then
 				red = memoryTable[i][3] / totalMemory
-				green = 1 - red
-				GameTooltip:AddDoubleLine(memoryTable[i][2], formatMem(memoryTable[i][3]), 1, 1, 1, red, green + .5, 0)
+				GameTooltip:AddDoubleLine(memoryTable[i][2], formatMem(memoryTable[i][3]), 1, 1, 1, red, 1 - red + .5, 0)
 			end						
 		end
 	end
@@ -130,8 +129,7 @@ local function OnEnter(self)
 		for i = 1, #cpuTable do
 			if (cpuTable[i][4]) then
 				red = cpuTable[i][3] / totalCPU
-				green = 1 - red
-				GameTooltip:AddDoubleLine(cpuTable[i][2], format(homeLatencyString, cpuTable[i][3]), 1, 1, 1, red, green + .5, 0)
+				GameTooltip:AddDoubleLine(cpuTable[i][2], format(homeLatencyString, cpuTable[i][3]), 1, 1, 1, red, 1 - red + .5, 0)
 			end						
 		end
 		GameTooltip:AddLine(" ")
