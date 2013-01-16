@@ -2,6 +2,7 @@ local E, L, V, P, G, _ = unpack(select(2, ...)); --Inport: Engine, Locales, Priv
 local EQ = E:NewModule('Equipment', 'AceHook-3.0', 'AceEvent-3.0');
 
 local changingEquipmentSet = nil
+local join = string.join
 
 local function GetCurrentEquipmentSet()
 	if GetNumEquipmentSets() == 0 then return false end
@@ -54,7 +55,7 @@ end
 
 function EQ:EquipmentSwapFinished()
 	if changingEquipmentSet then
-		E:Print(L["You have equipped equipment set: "]..changingEquipmentSet)
+		E:Print(join('', L["You have equipped equipment set: "], changingEquipmentSet))
 		changingEquipmentSet = nil
 	end
 end

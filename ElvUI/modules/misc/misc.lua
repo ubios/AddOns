@@ -2,10 +2,11 @@ local E, L, V, P, G, _ = unpack(select(2, ...)); --Inport: Engine, Locales, Priv
 local M = E:NewModule('Misc', 'AceEvent-3.0', 'AceTimer-3.0');
 
 E.Misc = M;
-local UIErrorsFrame = UIErrorsFrame;
-local interruptMsg = INTERRUPTED.." %s's \124cff71d5ff\124Hspell:%d\124h[%s]\124h\124r!"
+
 local floor = math.floor
-local format = string.format
+local format, join = string.format, string.join
+local UIErrorsFrame = UIErrorsFrame;
+local interruptMsg = join('', INTERRUPTED, " %s's \124cff71d5ff\124Hspell:%d\124h[%s]\124h\124r!")
 
 function M:ErrorFrameToggle(event)
 	if event == 'PLAYER_REGEN_DISABLED' then
@@ -52,12 +53,11 @@ function M:MERCHANT_SHOW()
 	if cost > 0 then
 		if possible then
 			RepairAllItems(autoRepair == 'GUILD')
-			local c, s, g = cost%100, floor((cost%10000)/100), floor(cost/10000)
 			
 			if autoRepair == 'GUILD' then
-				E:Print(L['Your items have been repaired using guild bank funds for: ']..GetCoinTextureString(cost, 12))
+				E:Print(join('', L['Your items have been repaired using guild bank funds for: '], GetCoinTextureString(cost, 12)))
 			else
-				E:Print(L['Your items have been repaired for: ']..GetCoinTextureString(cost, 12))
+				E:Print(join('', L['Your items have been repaired for: '], GetCoinTextureString(cost, 12)))
 			end
 		else
 			E:Print(L["You don't have enough money to repair."])

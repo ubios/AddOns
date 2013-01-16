@@ -7,7 +7,7 @@ local self = lastPanel
 local vengeance = GetSpellInfo(93098) or GetSpellInfo(76691)
 local value, tooltip, tooltiptext
 tooltip = CreateFrame("GameTooltip", "VengeanceTooltip", E.UIParent, "GameTooltipTemplate")
-tooltiptext = _G[tooltip:GetName().."TextLeft2"]
+tooltiptext = _G[("%sTextLeft2"):format(tooltip:GetName())]
 tooltip:SetOwner(E.UIParent, "ANCHOR_NONE")
 tooltiptext:SetText("")
 
@@ -17,7 +17,7 @@ local match = string.match
 local function calculate(self, event, ...)
 
 	if VengeanceTooltip and not VengeanceTooltip:IsShown() then
-	tooltiptext = _G[tooltip:GetName().."TextLeft2"]
+	tooltiptext = _G[("%sTextLeft2"):format(tooltip:GetName())]
 	tooltip:SetOwner(E.UIParent, "ANCHOR_NONE")
 	tooltiptext:SetText("")
 	end

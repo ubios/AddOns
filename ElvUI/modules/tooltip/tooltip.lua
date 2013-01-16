@@ -512,7 +512,7 @@ function TT:GameTooltip_OnTooltipSetUnit(tt)
 		for i= offset, lines do
 			local line = _G[("GameTooltipTextLeft%d"):format(i)]
 			if line and line:GetText() and (line:GetText():find(("^%s"):format(LEVEL))) then
-				line:SetFormattedText("|cff%02x%02x%02x%s|r |cff%02x%02x%02x%s|r %s%s", r*255, g*255, b*255, level > 0 and level or "??", factionColorR, factionColorG, factionColorB, race, color, class.."|r")
+				line:SetFormattedText("|cff%02x%02x%02x%s|r |cff%02x%02x%02x%s|r %s%s|r", r*255, g*255, b*255, level > 0 and level or "??", factionColorR, factionColorG, factionColorB, race, color, class)
 				break
 			end
 		end

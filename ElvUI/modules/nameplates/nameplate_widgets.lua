@@ -6,7 +6,7 @@ local GetTime = GetTime
 local ceil = math.ceil
 local twipe = table.wipe
 local band = bit.band
-local format = string.format
+local format, join = string.format, string.join
 local pairs, select, tonumber, unpack = pairs, select, tonumber, unpack
 
 --[[
@@ -657,7 +657,7 @@ end
 
 function NP:GetAuraInstance(guid, aura_id)
 	if guid and aura_id then
-		local aura_instance_id = guid..aura_id
+		local aura_instance_id = join('', guid, aura_id)
 		return self.Aura_Spellid[aura_instance_id], self.Aura_Expiration[aura_instance_id], self.Aura_Stacks[aura_instance_id], self.Aura_Caster[aura_instance_id], self.Aura_Duration[aura_instance_id], self.Aura_Texture[aura_instance_id], self.Aura_Type[aura_instance_id], self.Aura_Target[aura_instance_id]
 	end
 end

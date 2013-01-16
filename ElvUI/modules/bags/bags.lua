@@ -595,7 +595,7 @@ function B:ContructContainerFrame(name, isBank)
 	f.BagIDs = isBank and {-1, 5, 6, 7, 8, 9, 10, 11} or {0, 1, 2, 3, 4};
 	f.Bags = {};
 	
-	f.closeButton = CreateFrame('Button', name..'CloseButton', f, 'UIPanelCloseButton');
+	f.closeButton = CreateFrame('Button', ('%sCloseButton'):format(name), f, 'UIPanelCloseButton');
 	f.closeButton:Point('TOPRIGHT', -4, -4);
 
 	E:GetModule('Skins'):HandleCloseButton(f.closeButton);
@@ -604,7 +604,7 @@ function B:ContructContainerFrame(name, isBank)
 	f.holderFrame:Point('TOP', f, 'TOP', 0, -f.topOffset);
 	f.holderFrame:Point('BOTTOM', f, 'BOTTOM', 0, 8);
 	
-	f.ContainerHolder = CreateFrame('Button', name..'ContainerHolder', f)
+	f.ContainerHolder = CreateFrame('Button', ('%sContainerHolder'):format(name), f)
 	f.ContainerHolder:Point('BOTTOMLEFT', f, 'TOPLEFT', 0, 1)
 	f.ContainerHolder:SetTemplate('Transparent')
 	f.ContainerHolder:Hide()
@@ -693,7 +693,7 @@ function B:ContructContainerFrame(name, isBank)
 		f.goldText:SetJustifyH("RIGHT")
 		
 		--Search
-		f.editBox = CreateFrame('EditBox', name..'EditBox', f);
+		f.editBox = CreateFrame('EditBox', ('%sEditBox'):format(name), f);
 		f.editBox:SetFrameLevel(f.editBox:GetFrameLevel() + 2);
 		f.editBox:CreateBackdrop('Default', true);
 		f.editBox:Height(15);

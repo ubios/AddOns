@@ -23,7 +23,7 @@ function UF:Construct_PetFrame(frame)
 	frame.AuraWatch = UF:Construct_AuraWatch(frame)
 
 	frame:Point('BOTTOM', E.UIParent, 'BOTTOM', 0, 118)
-	E:CreateMover(frame, frame:GetName()..'Mover', L['Pet Frame'], nil, nil, nil, 'ALL,SOLO')
+	E:CreateMover(frame, ('%sMover'):format(frame:GetName()), L['Pet Frame'], nil, nil, nil, 'ALL,SOLO')
 end
 
 function UF:Update_PetFrame(frame, db)
@@ -44,7 +44,7 @@ function UF:Update_PetFrame(frame, db)
 	
 	frame.colors = ElvUF.colors
 	frame:Size(UNIT_WIDTH, UNIT_HEIGHT)
-	_G[frame:GetName()..'Mover']:Size(frame:GetSize())
+	_G[('%sMover'):format(frame:GetName())]:Size(frame:GetSize())
 	
 	--Adjust some variables
 	do

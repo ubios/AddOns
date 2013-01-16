@@ -2,11 +2,11 @@ local E, L, V, P, G, _ = unpack(select(2, ...)); --Inport: Engine, Locales, Priv
 local DT = E:GetModule('DataTexts')
 
 local lastPanel
-local armorString = ARMOR..": "
-local chanceString = "%.2f%%";
+local armorString = ("%s: "):format(ARMOR)
+local chanceString = "%.2f%%"
 local format = string.format
 local join = string.join
-local displayString = ''; 
+local displayString = '';
 local baseArmor, effectiveArmor, armor, posBuff, negBuff
 	
 local function OnEvent(self, event, unit)

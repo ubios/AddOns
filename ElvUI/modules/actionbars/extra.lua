@@ -12,19 +12,21 @@ function AB:SetupExtraButton()
 		
 	ExtraActionBarFrame.ignoreFramePositionManager  = true
 	
+	local button
 	for i=1, ExtraActionBarFrame:GetNumChildren() do
-		if _G["ExtraActionButton"..i] then
-			_G["ExtraActionButton"..i].noResize = true;
-			_G["ExtraActionButton"..i].pushed = true
-			_G["ExtraActionButton"..i].checked = true
+		button = _G[("ExtraActionButton%d"):format(i)]
+		if button then
+			button.noResize = true;
+			button.pushed = true
+			button.checked = true
 			
-			self:StyleButton(_G["ExtraActionButton"..i], true)
-			_G["ExtraActionButton"..i]:SetTemplate()
-			_G["ExtraActionButton"..i..'Icon']:SetDrawLayer('ARTWORK')
-			local tex = _G["ExtraActionButton"..i]:CreateTexture(nil, 'OVERLAY')
+			self:StyleButton(button, true)
+			button:SetTemplate()
+			_G[("ExtraActionButton%dIcon"):format(i)]:SetDrawLayer('ARTWORK')
+			local tex = button:CreateTexture(nil, 'OVERLAY')
 			tex:SetTexture(0.9, 0.8, 0.1, 0.3)
 			tex:SetInside()
-			_G["ExtraActionButton"..i]:SetCheckedTexture(tex)
+			button:SetCheckedTexture(tex)
 		end
 	end
 	

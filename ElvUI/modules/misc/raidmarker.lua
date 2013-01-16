@@ -68,10 +68,10 @@ function M:LoadRaidMarker()
 	marker:SetFrameStrata("DIALOG");
 
 	for i = 1, 8 do
-		local button = CreateFrame("Button", "RaidMarkIconButton"..i, marker);
+		local button = CreateFrame("Button", ("RaidMarkIconButton%d"):format(i), marker);
 		button:Size(40);
 		button:SetID(i);
-		button.Texture = button:CreateTexture(button:GetName().."NormalTexture", "ARTWORK");
+		button.Texture = button:CreateTexture(("%sNormalTexture"):format(button:GetName()), "ARTWORK");
 		button.Texture:SetTexture([[Interface\TargetingFrame\UI-RaidTargetingIcons]]);
 		button.Texture:SetAllPoints();
 		SetRaidTargetIconTexture(button.Texture, i);

@@ -15,7 +15,7 @@ local function OnLeave()
 end
 
 function B:SkinBag(bag)
-	local icon = _G[bag:GetName().."IconTexture"]
+	local icon = _G[("%sIconTexture"):format(bag:GetName())]
 	bag.oldTex = icon:GetTexture()
 	
 	bag:StripTextures()
@@ -108,7 +108,7 @@ function B:LoadBagBar()
 	self:SkinBag(MainMenuBarBackpackButton)
 
 	for i=0, NUM_BAG_FRAMES-1 do
-		local b = _G["CharacterBag"..i.."Slot"]
+		local b = _G[("CharacterBag%dSlot"):format(i)]
 		b:SetParent(ElvUIBags)
 		b.SetParent = E.dummy
 		b:HookScript('OnEnter', OnEnter)

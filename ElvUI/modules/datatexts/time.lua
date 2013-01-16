@@ -140,8 +140,8 @@ local function OnEnter(self)
 	
 	GameTooltip:AddLine(" ")
 	GameTooltip:AddLine(L["World Boss(s)"])	
-	GameTooltip:AddDoubleLine(L['Sha of Anger']..':', IsQuestFlaggedCompleted(32099) and L['Defeated'] or L['Undefeated'], 1, 1, 1, 0.8, 0.8, 0.8)
-	GameTooltip:AddDoubleLine(L['Galleon']..':', IsQuestFlaggedCompleted(32098) and L['Defeated'] or L['Undefeated'], 1, 1, 1, 0.8, 0.8, 0.8)
+	GameTooltip:AddDoubleLine(('%s:'):format(L['Sha of Anger']), IsQuestFlaggedCompleted(32099) and L['Defeated'] or L['Undefeated'], 1, 1, 1, 0.8, 0.8, 0.8)
+	GameTooltip:AddDoubleLine(('%s:'):format(L['Galleon']), IsQuestFlaggedCompleted(32098) and L['Defeated'] or L['Undefeated'], 1, 1, 1, 0.8, 0.8, 0.8)
 	
 	local timeText
 	local Hr, Min, AmPm = CalculateTimeValues(true)

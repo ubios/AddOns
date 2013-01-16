@@ -9,7 +9,7 @@ local timeStamp = 0
 local lastSegment = 0
 local lastPanel
 local displayString = '';
-local hpsInfoString = L["HPS"]..': '
+local hpsInfoString = ('%s: '):format(L["HPS"])
 
 local join = string.join
 local max = math.max

@@ -17,7 +17,7 @@ function UF:Construct_TargetTargetFrame(frame)
 	frame.Debuffs = self:Construct_Debuffs(frame)
 		
 	frame:Point('BOTTOM', E.UIParent, 'BOTTOM', 0, 75) --Set to default position
-	E:CreateMover(frame, frame:GetName()..'Mover', L['TargetTarget Frame'], nil, nil, nil, 'ALL,SOLO')
+	E:CreateMover(frame, ('%sMover'):format(frame:GetName()), L['TargetTarget Frame'], nil, nil, nil, 'ALL,SOLO')
 end
 
 function UF:Update_TargetTargetFrame(frame, db)
@@ -38,7 +38,7 @@ function UF:Update_TargetTargetFrame(frame, db)
 	
 	frame.colors = ElvUF.colors
 	frame:Size(UNIT_WIDTH, UNIT_HEIGHT)
-	_G[frame:GetName()..'Mover']:Size(frame:GetSize())
+	_G[('%sMover'):format(frame:GetName())]:Size(frame:GetSize())
 	
 	--Adjust some variables
 	do
@@ -278,7 +278,7 @@ function UF:Update_TargetTargetFrame(frame, db)
 		end
 	end
 
-	E:SetMoverSnapOffset(frame:GetName()..'Mover', -(12 + self.db['units'].player.castbar.height))
+	E:SetMoverSnapOffset(('%sMover'):format(frame:GetName()), -(12 + self.db['units'].player.castbar.height))
 	frame:UpdateAllElements()
 end
 

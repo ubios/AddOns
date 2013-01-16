@@ -36,7 +36,7 @@ function UF:Construct_TargetFrame(frame)
 	frame.AuraBars = self:Construct_AuraBarHeader(frame)
 	
 	frame:Point('BOTTOMRIGHT', E.UIParent, 'BOTTOM', 413, 68)
-	E:CreateMover(frame, frame:GetName()..'Mover', L['Target Frame'], nil, nil, nil, 'ALL,SOLO')
+	E:CreateMover(frame, ('%sMover'):format(frame:GetName()), L['Target Frame'], nil, nil, nil, 'ALL,SOLO')
 end
 
 function UF:Update_TargetFrame(frame, db)
@@ -74,7 +74,7 @@ function UF:Update_TargetFrame(frame, db)
 	
 	frame.colors = ElvUF.colors
 	frame:Size(UNIT_WIDTH, UNIT_HEIGHT)
-	_G[frame:GetName()..'Mover']:Size(frame:GetSize())
+	_G[('%sMover'):format(frame:GetName())]:Size(frame:GetSize())
 	
 	--Adjust some variables
 	do
@@ -558,8 +558,8 @@ function UF:Update_TargetFrame(frame, db)
 			end			
 			
 			auraBars:ClearAllPoints()
-			auraBars:SetPoint(anchorPoint..'LEFT', attachTo, anchorTo..'LEFT', attachTo == frame and -POWERBAR_OFFSET * (anchorTo == 'BOTTOM' and 0 or -1) or 0, db.aurabar.attachTo == 'PLAYER_AURABARS' and 5 or yOffset)
-			auraBars:SetPoint(anchorPoint..'RIGHT', attachTo, anchorTo..'RIGHT', (attachTo == frame and anchorTo == 'BOTTOM') and -POWERBAR_OFFSET or 0, db.aurabar.attachTo == 'PLAYER_AURABARS' and 5 or yOffset)			
+			auraBars:SetPoint(('%sLEFT'):format(anchorPoint), attachTo, ('%sLEFT'):format(anchorTo), attachTo == frame and -POWERBAR_OFFSET * (anchorTo == 'BOTTOM' and 0 or -1) or 0, db.aurabar.attachTo == 'PLAYER_AURABARS' and 5 or yOffset)
+			auraBars:SetPoint(('%sRIGHT'):format(anchorPoint), attachTo, ('%sRIGHT'):format(anchorTo), (attachTo == frame and anchorTo == 'BOTTOM') and -POWERBAR_OFFSET or 0, db.aurabar.attachTo == 'PLAYER_AURABARS' and 5 or yOffset)			
 
 			auraBars.buffColor = {buffColor.r, buffColor.g, buffColor.b}
 			if UF.db.colors.auraBarByType then
@@ -598,7 +598,7 @@ function UF:Update_TargetFrame(frame, db)
 		end
 	end
 	
-	E:SetMoverSnapOffset(frame:GetName()..'Mover', -(12 + db.castbar.height))
+	E:SetMoverSnapOffset(('%sMover'):format(frame:GetName()), -(12 + db.castbar.height))
 	frame:UpdateAllElements()
 end
 

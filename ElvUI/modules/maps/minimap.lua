@@ -387,7 +387,7 @@ function M:Initialize()
 	--PET JOURNAL TAINT FIX AS OF 5.1
 	local info = UIPanelWindows['PetJournalParent'];
 	for name, value in pairs(info) do
-		PetJournalParent:SetAttribute("UIPanelLayout-"..name, value);
+		PetJournalParent:SetAttribute(("UIPanelLayout-%s"):format(name), value);
 	end	
 
 	PetJournalParent:SetAttribute("UIPanelLayout-defined", true);	

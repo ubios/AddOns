@@ -27,7 +27,7 @@ function UF:Construct_FocusFrame(frame)
 	frame:RegisterEvent('PLAYER_FOCUS_CHANGED', UF.SmartAuraDisplay)	
 	
 	frame:Point('BOTTOMRIGHT', ElvUF_Target, 'TOPRIGHT', 0, 220)
-	E:CreateMover(frame, frame:GetName()..'Mover', L['Focus Frame'], nil, nil, nil, 'ALL,SOLO')
+	E:CreateMover(frame, ('%sMover'):format(frame:GetName()), L['Focus Frame'], nil, nil, nil, 'ALL,SOLO')
 end
 
 function UF:Update_FocusFrame(frame, db)
@@ -48,7 +48,7 @@ function UF:Update_FocusFrame(frame, db)
 	
 	frame.colors = ElvUF.colors
 	frame:Size(UNIT_WIDTH, UNIT_HEIGHT)
-	_G[frame:GetName()..'Mover']:Size(frame:GetSize())
+	_G[('%sMover'):format(frame:GetName())]:Size(frame:GetSize())
 	
 	--Adjust some variables
 	do
@@ -375,8 +375,8 @@ function UF:Update_FocusFrame(frame, db)
 			end
 
 			auraBars:ClearAllPoints()
-			auraBars:SetPoint(anchorPoint..'LEFT', attachTo, anchorTo..'LEFT', POWERBAR_OFFSET, yOffset)
-			auraBars:SetPoint(anchorPoint..'RIGHT', attachTo, anchorTo..'RIGHT', -POWERBAR_OFFSET, yOffset)
+			auraBars:SetPoint(('%sLEFT'):format(anchorPoint), attachTo, ('%sLEFT'):format(anchorTo), POWERBAR_OFFSET, yOffset)
+			auraBars:SetPoint(('%sRIGHT'):format(anchorPoint), attachTo, ('%sRIGHT'):format(anchorTo), -POWERBAR_OFFSET, yOffset)
 
 			auraBars.buffColor = {buffColor.r, buffColor.g, buffColor.b}
 			if UF.db.colors.auraBarByType then

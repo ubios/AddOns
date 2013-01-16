@@ -9,7 +9,7 @@ local timeStamp = 0
 local lastSegment = 0
 local lastPanel
 local displayString = '';
-local dpsInfoString = L["DPS"]..': '
+local dpsInfoString = ('%s: '):format(L["DPS"])
 local join = string.join
 
 local function Reset()

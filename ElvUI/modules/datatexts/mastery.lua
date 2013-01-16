@@ -4,13 +4,12 @@ local DT = E:GetModule('DataTexts')
 local lastPanel
 local displayString = '';
 local join = string.join
+local masteryTag = ("%s: "):format(STAT_MASTERY)
 
 local function OnEvent(self, event)
 	lastPanel = self
 	--STAT_MASTERY
-	local masteryspell, masteryTag
 	if GetCombatRating(CR_MASTERY) ~= 0 and GetSpecialization() then
-		masteryTag = STAT_MASTERY..": "
 		self.text:SetFormattedText(displayString, masteryTag, GetMasteryEffect())
 	end
 end

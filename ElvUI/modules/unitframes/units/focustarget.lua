@@ -17,7 +17,7 @@ function UF:Construct_FocusTargetFrame(frame)
 	frame.Debuffs = self:Construct_Debuffs(frame)
 	
 	frame:Point('BOTTOM', ElvUF_Focus, 'TOP', 0, 7) --Set to default position
-	E:CreateMover(frame, frame:GetName()..'Mover', L['FocusTarget Frame'], nil, -7, nil, 'ALL,SOLO')
+	E:CreateMover(frame, ('%sMover'):format(frame:GetName()), L['FocusTarget Frame'], nil, -7, nil, 'ALL,SOLO')
 end
 
 function UF:Update_FocusTargetFrame(frame, db)
@@ -38,7 +38,7 @@ function UF:Update_FocusTargetFrame(frame, db)
 	
 	frame.colors = ElvUF.colors
 	frame:Size(UNIT_WIDTH, UNIT_HEIGHT)
-	_G[frame:GetName()..'Mover']:Size(frame:GetSize())
+	_G[('%sMover'):format(frame:GetName())]:Size(frame:GetSize())
 	
 	--Adjust some variables
 	do

@@ -8,6 +8,7 @@ local iconSize = 30;
 local max = math.max
 local tinsert = table.insert
 local pairs = pairs
+local join = string.join
 
 local sq, ss, sn
 local OnEnter = function(self)
@@ -291,7 +292,7 @@ function M:LoadLoot()
 
 	function _G.GroupLootDropDown_GiveLoot(self)
 		if ( sq >= MASTER_LOOT_THREHOLD ) then
-			local dialog = E:StaticPopup_Show("CONFIRM_LOOT_DISTRIBUTION", ITEM_QUALITY_COLORS[sq].hex..sn..FONT_COLOR_CODE_CLOSE, self:GetText())
+			local dialog = E:StaticPopup_Show("CONFIRM_LOOT_DISTRIBUTION", join('', ITEM_QUALITY_COLORS[sq].hex, sn, FONT_COLOR_CODE_CLOSE), self:GetText())
 			if (dialog) then
 				dialog.data = self.value
 			end
