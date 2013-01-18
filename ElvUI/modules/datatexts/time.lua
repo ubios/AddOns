@@ -90,7 +90,7 @@ local function Click()
 end
 
 local function OnLeave(self)
-	GameTooltip:Hide();
+	DT.tooltip:Hide();
 	enteredFrame = false;
 end
 
@@ -98,7 +98,7 @@ local function OnEnter(self)
 	DT:SetupTooltip(self)
 	enteredFrame = true;
 	
-	GameTooltip:AddLine(VOICE_CHAT_BATTLEGROUND);
+	DT.tooltip:AddLine(VOICE_CHAT_BATTLEGROUND);
 	for i = 1, GetNumWorldPVPAreas() do
 		_, localizedName, isActive, canQueue, startTime, canEnter = GetWorldPVPAreaInfo(i)
 		if canEnter then
@@ -114,7 +114,7 @@ local function OnEnter(self)
 					startTime = format(timerShortFormat, m, s)
 				end
 			end
-			GameTooltip:AddDoubleLine(format(formatBattleGroundInfo, localizedName), startTime, 1, 1, 1, lockoutColorNormal.r, lockoutColorNormal.g, lockoutColorNormal.b)	
+			DT.tooltip:AddDoubleLine(format(formatBattleGroundInfo, localizedName), startTime, 1, 1, 1, lockoutColorNormal.r, lockoutColorNormal.g, lockoutColorNormal.b)	
 		end
 	end	
 
@@ -124,38 +124,39 @@ local function OnEnter(self)
 		if isRaid and (locked or extended) and name then
 			local tr,tg,tb,diff
 			if not oneraid then
-				GameTooltip:AddLine(" ")
-				GameTooltip:AddLine(L["Saved Raid(s)"])
+				DT.tooltip:AddLine(" ")
+				DT.tooltip:AddLine(L["Saved Raid(s)"])
 				oneraid = true
 			end
 			if extended then lockoutColor = lockoutColorExtended else lockoutColor = lockoutColorNormal end
 			
 			if (numEncounters and numEncounters > 0) and (encounterProgress and encounterProgress > 0) then
-				GameTooltip:AddDoubleLine(format(lockoutInfoFormat, maxPlayers, (difficulty:match("Normal") and "N" or "H"), name, encounterProgress, numEncounters), formatResetTime(reset), 1,1,1, lockoutColor.r,lockoutColor.g,lockoutColor.b)
+				DT.tooltip:AddDoubleLine(format(lockoutInfoFormat, maxPlayers, (difficulty:match("Normal") and "N" or "H"), name, encounterProgress, numEncounters), formatResetTime(reset), 1,1,1, lockoutColor.r,lockoutColor.g,lockoutColor.b)
 			else
-				GameTooltip:AddDoubleLine(format(lockoutInfoFormatNoEnc, maxPlayers, (difficulty:match("Normal") and "N" or "H"), name), formatResetTime(reset), 1,1,1, lockoutColor.r,lockoutColor.g,lockoutColor.b)
+				DT.tooltip:AddDoubleLine(format(lockoutInfoFormatNoEnc, maxPlayers, (difficulty:match("Normal") and "N" or "H"), name), formatResetTime(reset), 1,1,1, lockoutColor.r,lockoutColor.g,lockoutColor.b)
 			end
 		end
 	end	
 	
-	GameTooltip:AddLine(" ")
-	GameTooltip:AddLine(L["World Boss(s)"])	
-	GameTooltip:AddDoubleLine(('%s:'):format(L['Sha of Anger']), IsQuestFlaggedCompleted(32099) and L['Defeated'] or L['Undefeated'], 1, 1, 1, 0.8, 0.8, 0.8)
-	GameTooltip:AddDoubleLine(('%s:'):format(L['Galleon']), IsQuestFlaggedCompleted(32098) and L['Defeated'] or L['Undefeated'], 1, 1, 1, 0.8, 0.8, 0.8)
-	
+	DT.tooltip:AddLine(" ")
+	DT.tooltip:AddLine(L["World Boss(s)"])	
+	DT.tooltip:AddDoubleLine(('%s:'):format(L['Sha of Anger']), IsQuestFlaggedCompleted(32099) and L['Defeated'] or L['Undefeated'], 1, 1, 1, 0.8, 0.8, 0.8)
+	DT.tooltip:AddDoubleLine(('%s:'):format(L['Galleon']), IsQuestFlaggedCompleted(32098) and L['Defeated'] or L['Undefeated'], 1, 1, 1, 0.8, 0.8, 0.8)
+
+
 	local timeText
 	local Hr, Min, AmPm = CalculateTimeValues(true)
 
-	GameTooltip:AddLine(" ")
+	DT.tooltip:AddLine(" ")
 	if AmPm == -1 then
-		GameTooltip:AddDoubleLine(E.db.datatexts.localtime and TIMEMANAGER_TOOLTIP_REALMTIME or TIMEMANAGER_TOOLTIP_LOCALTIME, 
+		DT.tooltip:AddDoubleLine(E.db.datatexts.localtime and TIMEMANAGER_TOOLTIP_REALMTIME or TIMEMANAGER_TOOLTIP_LOCALTIME, 
 			format(europeDisplayFormat_nocolor, Hr, Min), 1, 1, 1, lockoutColorNormal.r, lockoutColorNormal.g, lockoutColorNormal.b)
 	else
-		GameTooltip:AddDoubleLine(E.db.datatexts.localtime and TIMEMANAGER_TOOLTIP_REALMTIME or TIMEMANAGER_TOOLTIP_LOCALTIME,
+		DT.tooltip:AddDoubleLine(E.db.datatexts.localtime and TIMEMANAGER_TOOLTIP_REALMTIME or TIMEMANAGER_TOOLTIP_LOCALTIME,
 			format(ukDisplayFormat_nocolor, Hr, Min, APM[AmPm]), 1, 1, 1, lockoutColorNormal.r, lockoutColorNormal.g, lockoutColorNormal.b)
 	end	
 	
-	GameTooltip:Show()
+	DT.tooltip:Show()
 end
 
 local int = 3

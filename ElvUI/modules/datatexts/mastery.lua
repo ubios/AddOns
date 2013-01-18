@@ -16,7 +16,7 @@ end
 
 local function OnEnter(self)
 	DT:SetupTooltip(self)
-	GameTooltip:ClearLines()
+	DT.tooltip:ClearLines()
 
 	local primaryTalentTree = GetSpecialization();
 	
@@ -25,10 +25,10 @@ local function OnEnter(self)
 		local masteryKnown = IsSpellKnown(masterySpell);
 		
 		if (masteryKnown) then
-			GameTooltip:AddSpellByID(masterySpell);
+			DT.tooltip:AddSpellByID(masterySpell);
 		end
 	end
-	GameTooltip:Show()
+	DT.tooltip:Show()
 end
 
 local function ValueColorUpdate(hex, r, g, b)

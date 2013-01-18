@@ -181,7 +181,7 @@ local function OnEvent(self, event, ...)
 end
 
 local function Click(self, btn)
-	GameTooltip:Hide()
+	DT.tooltip:Hide()
 
 	if btn == "RightButton" then
 		local menuCountWhispers = 0
@@ -254,10 +254,10 @@ local function OnEnter(self)
 
 	local totalfriends = numberOfFriends + totalBNet
 	local zonec, classc, levelc, realmc, info, grouped
-	GameTooltip:AddDoubleLine(L['Friends List'], format(totalOnlineString, totalonline, totalfriends),tthead.r,tthead.g,tthead.b,tthead.r,tthead.g,tthead.b)
+	DT.tooltip:AddDoubleLine(L['Friends List'], format(totalOnlineString, totalonline, totalfriends),tthead.r,tthead.g,tthead.b,tthead.r,tthead.g,tthead.b)
 	if onlineFriends > 0 then
-		GameTooltip:AddLine(' ')
-		GameTooltip:AddLine(worldOfWarcraftString)
+		DT.tooltip:AddLine(' ')
+		DT.tooltip:AddLine(worldOfWarcraftString)
 		for i = 1, #friendTable do
 			info = friendTable[i]
 			if info[5] then
@@ -266,7 +266,7 @@ local function OnEnter(self)
 				classc = classc or GetQuestDifficultyColor(info[2])
 				
 				if UnitInParty(info[1]) or UnitInRaid(info[1]) then grouped = 1 else grouped = 2 end
-				GameTooltip:AddDoubleLine(format(levelNameClassString,levelc.r*255,levelc.g*255,levelc.b*255,info[2],info[1],groupedTable[grouped]," "..info[6]),info[4],classc.r,classc.g,classc.b,zonec.r,zonec.g,zonec.b)
+				DT.tooltip:AddDoubleLine(format(levelNameClassString,levelc.r*255,levelc.g*255,levelc.b*255,info[2],info[1],groupedTable[grouped]," "..info[6]),info[4],classc.r,classc.g,classc.b,zonec.r,zonec.g,zonec.b)
 			end
 		end
 	end
@@ -286,14 +286,14 @@ local function OnEnter(self)
 							classc = classc or GetQuestDifficultyColor(info[15])
 							
 							if UnitInParty(info[4]) or UnitInRaid(info[4]) then grouped = 1 else grouped = 2 end
-							GameTooltip:AddDoubleLine(format(levelNameString,levelc.r*255,levelc.g*255,levelc.b*255,info[15],classc.r*255,classc.g*255,classc.b*255,info[3],groupedTable[grouped], 255, 0, 0, statusTable[status]),info[2],238,238,238,238,238,238)
+							DT.tooltip:AddDoubleLine(format(levelNameString,levelc.r*255,levelc.g*255,levelc.b*255,info[15],classc.r*255,classc.g*255,classc.b*255,info[3],groupedTable[grouped], 255, 0, 0, statusTable[status]),info[2],238,238,238,238,238,238)
 							if IsShiftKeyDown() then
 								if GetRealZoneText() == info[14] then zonec = activezone else zonec = inactivezone end
 								if GetRealmName() == info[10] then realmc = activezone else realmc = inactivezone end
-								GameTooltip:AddDoubleLine(info[14], info[10], zonec.r, zonec.g, zonec.b, realmc.r, realmc.g, realmc.b)
+								DT.tooltip:AddDoubleLine(info[14], info[10], zonec.r, zonec.g, zonec.b, realmc.r, realmc.g, realmc.b)
 							end
 						else
-							GameTooltip:AddDoubleLine(info[3], info[2], .9, .9, .9, .9, .9, .9)
+							DT.tooltip:AddDoubleLine(info[3], info[2], .9, .9, .9, .9, .9, .9)
 						end
 					end
 				end
@@ -301,7 +301,7 @@ local function OnEnter(self)
 		end
 	end	
 	
-	GameTooltip:Show()
+	DT.tooltip:Show()
 end
 
 local function ValueColorUpdate(hex, r, g, b)

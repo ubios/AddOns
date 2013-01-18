@@ -19,6 +19,7 @@ local removeMenuOptions = {
 	["CLEAR_FOCUS"] = true,
 	["MOVE_PLAYER_FRAME"] = true,
 	["MOVE_TARGET_FRAME"] = true,
+	["PVP_REPORT_AFK"] = true,
 	["PET_DISMISS"] = E.myclass == 'HUNTER',
 }
 
