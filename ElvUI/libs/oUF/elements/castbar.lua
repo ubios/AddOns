@@ -29,7 +29,7 @@ local UNIT_SPELLCAST_SENT = function (self, event, unit, spell, rank, target)
 end
 
 local UNIT_SPELLCAST_START = function(self, event, unit, spell)
-	if(self.unit ~= unit) or not unit then return end
+	if (self.unit ~= unit) then return end
 
 	local castbar = self.Castbar
 	local name, _, text, texture, startTime, endTime, _, castid, interrupt = UnitCastingInfo(unit)
@@ -79,7 +79,7 @@ local UNIT_SPELLCAST_START = function(self, event, unit, spell)
 end
 
 local UNIT_SPELLCAST_FAILED = function(self, event, unit, spellname, _, castid)
-	if (self.unit ~= unit) or not unit then return end
+	if (self.unit ~= unit) then return end
 
 	local castbar = self.Castbar
 	if (castbar.castid ~= castid) then	return end
@@ -95,7 +95,7 @@ local UNIT_SPELLCAST_FAILED = function(self, event, unit, spellname, _, castid)
 end
 
 local UNIT_SPELLCAST_INTERRUPTED = function(self, event, unit, spellname, _, castid)
-	if(self.unit ~= unit) or not unit then return end
+	if(self.unit ~= unit) then return end
 
 	local castbar = self.Castbar
 	if (castbar.castid ~= castid) then	return end
@@ -112,7 +112,7 @@ local UNIT_SPELLCAST_INTERRUPTED = function(self, event, unit, spellname, _, cas
 end
 
 local UNIT_SPELLCAST_INTERRUPTIBLE = function(self, event, unit)
-	if(self.unit ~= unit) or not unit then return end
+	if(self.unit ~= unit) then return end
 
 	local shield = self.Castbar.Shield
 	if(shield) then
@@ -126,7 +126,7 @@ local UNIT_SPELLCAST_INTERRUPTIBLE = function(self, event, unit)
 end
 
 local UNIT_SPELLCAST_NOT_INTERRUPTIBLE = function(self, event, unit)
-	if(self.unit ~= unit) or not unit then return end
+	if(self.unit ~= unit) then return end
 
 	local shield = self.Castbar.Shield
 	if(shield) then
@@ -140,7 +140,7 @@ local UNIT_SPELLCAST_NOT_INTERRUPTIBLE = function(self, event, unit)
 end
 
 local UNIT_SPELLCAST_DELAYED = function(self, event, unit, spellname, _, castid)
-	if(self.unit ~= unit) or not unit then return end
+	if(self.unit ~= unit) then return end
 
 	local castbar = self.Castbar
 	local name, _, text, texture, startTime, endTime = UnitCastingInfo(unit)
@@ -160,7 +160,7 @@ local UNIT_SPELLCAST_DELAYED = function(self, event, unit, spellname, _, castid)
 end
 
 local UNIT_SPELLCAST_STOP = function(self, event, unit, spellname, _, castid)
-	if (self.unit ~= unit) or not unit then return end
+	if (self.unit ~= unit) then return end
 
 	local castbar = self.Castbar
 	if (castbar.castid ~= castid) then return end
@@ -176,7 +176,7 @@ local UNIT_SPELLCAST_STOP = function(self, event, unit, spellname, _, castid)
 end
 
 local UNIT_SPELLCAST_CHANNEL_START = function(self, event, unit, spellname)
-	if (self.unit ~= unit) or not unit then return end
+	if (self.unit ~= unit) then return end
 
 	local castbar = self.Castbar
 	local name, _, text, texture, startTime, endTime, isTrade, interrupt = UnitChannelInfo(unit)
@@ -230,7 +230,7 @@ local UNIT_SPELLCAST_CHANNEL_START = function(self, event, unit, spellname)
 end
 
 local UNIT_SPELLCAST_CHANNEL_UPDATE = function(self, event, unit, spellname)
-	if(self.unit ~= unit) or not unit then return end
+	if(self.unit ~= unit) then return end
 
 	local castbar = self.Castbar
 	local name, _, text, texture, startTime, endTime, oldStart = UnitChannelInfo(unit)
@@ -256,7 +256,7 @@ local UNIT_SPELLCAST_CHANNEL_UPDATE = function(self, event, unit, spellname)
 end
 
 local UNIT_SPELLCAST_CHANNEL_STOP = function(self, event, unit, spellname)
-	if(self.unit ~= unit) or not unit then return end
+	if(self.unit ~= unit) then return end
 
 	local castbar = self.Castbar
 	if(castbar:IsShown()) then

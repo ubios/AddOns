@@ -9,7 +9,7 @@ local SPELL_POWER_ECLIPSE = SPELL_POWER_ECLIPSE
 local MOONKIN_FORM = MOONKIN_FORM
 
 local UNIT_POWER = function(self, event, unit, powerType)
-	if(self.unit ~= unit or (event == 'UNIT_POWER' and powerType ~= 'ECLIPSE')) then return end
+	if (self.unit ~= unit) or (event == 'UNIT_POWER' and powerType ~= 'ECLIPSE') then return end
 
 	local eb = self.EclipseBar
 
@@ -66,7 +66,7 @@ local UPDATE_VISIBILITY = function(self, event)
 end
 
 local UNIT_AURA = function(self, event, unit)
-	if(self.unit ~= unit) or not unit then return end
+	if(self.unit ~= unit) then return end
 
 	local i = 1
 	local hasSolarEclipse, hasLunarEclipse

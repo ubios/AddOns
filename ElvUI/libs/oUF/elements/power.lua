@@ -19,7 +19,7 @@ local GetDisplayPower = function(power, unit)
 end
 
 local Update = function(self, event, unit)
-	if(self.unit ~= unit) or not unit then return end
+	if(self.unit ~= unit) then return end
 	local power = self.Power
 
 	if(power.PreUpdate) then power:PreUpdate(unit) end

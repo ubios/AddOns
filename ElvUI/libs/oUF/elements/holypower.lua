@@ -7,7 +7,7 @@ local SPELL_POWER_HOLY_POWER = SPELL_POWER_HOLY_POWER
 local MAX_HOLY_POWER = MAX_HOLY_POWER
 
 local Update = function(self, event, unit, powerType)
-	if(self.unit ~= unit or (powerType and powerType ~= 'HOLY_POWER')) then return end
+	if (self.unit ~= unit or powerType ~= 'HOLY_POWER') then return end
 
 	local hp = self.HolyPower
 	if(hp.PreUpdate) then hp:PreUpdate() end

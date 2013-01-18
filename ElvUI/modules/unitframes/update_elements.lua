@@ -462,7 +462,7 @@ function UF:PostCastNotInterruptible(unit)
 end
 
 function UF:UpdateHoly(event, unit, powerType)
-	if (self.unit ~= unit or (powerType and powerType ~= 'HOLY_POWER')) then return end
+	if (self.unit ~= unit or powerType ~= 'HOLY_POWER') then return end
 	local db = self.db
 	if not db then return; end
 	local BORDER = E.Border
@@ -721,7 +721,7 @@ function UF:DruidPostUpdateAltPower(unit, min, max)
 end
 
 function UF:UpdateThreat(event, unit)
-	if (self.unit ~= unit) or not unit or not E.initialized then return end
+	if (self.unit ~= unit) or not E.initialized then return end
 	local status = UnitThreatSituation(unit)
 	
 	if status and status > 1 then

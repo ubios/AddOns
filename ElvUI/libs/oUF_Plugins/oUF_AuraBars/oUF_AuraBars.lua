@@ -186,7 +186,7 @@ end
 
 
 local function Update(self, event, unit)
-	if self.unit ~= unit then return end
+	if (self.unit ~= unit) then return end
 	local auraBars = self.AuraBars
 	local helpOrHarm
 	local isFriend = UnitIsFriend('player', unit)
