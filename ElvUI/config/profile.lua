@@ -1018,7 +1018,7 @@ P['unitframe'] = {
 				['text_format'] = '[healthcolor][health:current-percent]',
 				['position'] = 'TOPRIGHT',
 				['orientation'] = 'HORIZONTAL',
-				['frequentUpdates'] = false,
+				['frequentUpdates'] = true,
 			},
 			['power'] = {
 				['enable'] = true,
@@ -1127,7 +1127,7 @@ P['unitframe'] = {
 				['text_format'] = '[healthcolor][health:deficit]',
 				['position'] = 'BOTTOM',
 				['orientation'] = 'HORIZONTAL',
-				['frequentUpdates'] = false,
+				['frequentUpdates'] = true,
 			},
 			['power'] = {
 				['enable'] = true,
@@ -1226,7 +1226,7 @@ P['unitframe'] = {
 				['text_format'] = '[healthcolor][health:deficit]',
 				['position'] = 'BOTTOM',
 				['orientation'] = 'HORIZONTAL',
-				['frequentUpdates'] = false,
+				['frequentUpdates'] = true,
 			},
 			['power'] = {
 				['enable'] = true,
@@ -1323,7 +1323,7 @@ P['unitframe'] = {
 				['text_format'] = '',
 				['position'] = 'BOTTOM',
 				['orientation'] = 'HORIZONTAL',
-				['frequentUpdates'] = false,
+				['frequentUpdates'] = true,
 			},
 			['power'] = {
 				['enable'] = false,

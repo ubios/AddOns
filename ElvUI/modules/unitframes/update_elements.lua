@@ -54,7 +54,10 @@ function UF:PostUpdateHealth(unit, min, max)
 
 	if colors.classbackdrop then
 		if UnitIsPlayer(unit) then
-			self.bg:SetVertexColor(unpack(ElvUF.colors.class[select(2, UnitClass(unit))], 1, 3))
+			local class = select(2, UnitClass(unit))
+			if class then
+				self.bg:SetVertexColor(unpack(ElvUF.colors.class[class], 1, 3))
+			end
 		else
 			local reaction = UnitReaction(unit, 'player')
 		 	if reaction then
@@ -315,61 +318,60 @@ function UF:PostCastStart(unit, name, rank, castid)
 	else
 		self.Text:SetText(sub(name, 0, floor((((32/245) * self:GetWidth()) / E.db['unitframe'].fontSize) * 12)))
 	end
-
 	self.Spark:Height(self:GetHeight() * 2)
-		
-	self.unit = unit
 
-	if db.castbar.ticks and unit == "player" then
-		local unitframe = E.global.unitframe
-		local baseTicks = unitframe.ChannelTicks[name]
-		
-        -- Detect channeling spell and if it's the same as the previously channeled one
-        if baseTicks and name == prevSpellCast then
-            self.chainChannel = true
-        elseif baseTicks then
-            self.chainChannel = nil
-            self.prevSpellCast = name
-        end
-		
-		if baseTicks and unitframe.ChannelTicksSize[name] and unitframe.HastedChannelTicks[name] then
-			local tickIncRate = 1 / baseTicks
-			local curHaste = UnitSpellHaste("player") * 0.01
-			local firstTickInc = tickIncRate / 2
-			local bonusTicks = 0
-			if curHaste >= firstTickInc then
-				bonusTicks = bonusTicks + 1
-			end
+	if unit == "player" then
+		if not db.castbar.ticks then
+			UF:HideTicks()
+		else
+			local unitframe = E.global.unitframe
+			local baseTicks = unitframe.ChannelTicks[name]
 			
-			local x = tonumber(E:Round(firstTickInc + tickIncRate, 2))
-			while curHaste >= x do
-				x = tonumber(E:Round(firstTickInc + (tickIncRate * bonusTicks), 2))
-				if curHaste >= x then
+	        -- Detect channeling spell and if it's the same as the previously channeled one
+	        if baseTicks and name == prevSpellCast then
+	            self.chainChannel = true
+	        elseif baseTicks then
+	            self.chainChannel = nil
+	            self.prevSpellCast = name
+	        end
+			
+			if baseTicks and unitframe.ChannelTicksSize[name] and unitframe.HastedChannelTicks[name] then
+				local tickIncRate = 1 / baseTicks
+				local curHaste = UnitSpellHaste("player") * 0.01
+				local firstTickInc = tickIncRate / 2
+				local bonusTicks = 0
+				if curHaste >= firstTickInc then
 					bonusTicks = bonusTicks + 1
 				end
+				
+				local x = tonumber(E:Round(firstTickInc + tickIncRate, 2))
+				while curHaste >= x do
+					x = tonumber(E:Round(firstTickInc + (tickIncRate * bonusTicks), 2))
+					if curHaste >= x then
+						bonusTicks = bonusTicks + 1
+					end
+				end
+	
+	            local baseTickSize = unitframe.ChannelTicksSize[name]
+	            local hastedTickSize = baseTickSize / (1 + curHaste)
+	            local extraTick = self.max - hastedTickSize * (baseTicks + bonusTicks)
+	            local extraTickRatio = extraTick / hastedTickSize
+	
+				UF:SetCastTicks(self, baseTicks + bonusTicks, extraTickRatio)
+			elseif baseTicks and unitframe.ChannelTicksSize[name] then
+				local curHaste = UnitSpellHaste("player") * 0.01
+	            local baseTickSize = unitframe.ChannelTicksSize[name]
+	            local hastedTickSize = baseTickSize / (1 +  curHaste)
+	            local extraTick = self.max - hastedTickSize * (baseTicks)
+	            local extraTickRatio = extraTick / hastedTickSize
+	
+				UF:SetCastTicks(self, baseTicks, extraTickRatio)
+			elseif baseTicks then
+				UF:SetCastTicks(self, baseTicks)
+			else
+				UF:HideTicks()
 			end
-
-            local baseTickSize = unitframe.ChannelTicksSize[name]
-            local hastedTickSize = baseTickSize / (1 + curHaste)
-            local extraTick = self.max - hastedTickSize * (baseTicks + bonusTicks)
-            local extraTickRatio = extraTick / hastedTickSize
-
-			UF:SetCastTicks(self, baseTicks + bonusTicks, extraTickRatio)
-		elseif baseTicks and unitframe.ChannelTicksSize[name] then
-			local curHaste = UnitSpellHaste("player") * 0.01
-            local baseTickSize = unitframe.ChannelTicksSize[name]
-            local hastedTickSize = baseTickSize / (1 +  curHaste)
-            local extraTick = self.max - hastedTickSize * (baseTicks)
-            local extraTickRatio = extraTick / hastedTickSize
-
-			UF:SetCastTicks(self, baseTicks, extraTickRatio)
-		elseif baseTicks then
-			UF:SetCastTicks(self, baseTicks)
-		else
-			UF:HideTicks()
 		end
-	elseif unit == 'player' then
-		UF:HideTicks()			
 	end	
 	
 	local colors = ElvUF.colors
