@@ -16,11 +16,13 @@ local GetUnitPowerTypeAndMin = function(unit)
 		return pType, UnitPower(unit, pType)
 end
 
-ElvUF.Tags.Events['afk'] = 'PLAYER_FLAGS_CHANGED'
+ElvUF.Tags.Events['afk'] = 'PLAYER_FLAGS_CHANGED UNIT_DYNAMIC_FLAGS'
 ElvUF.Tags.Methods['afk'] = function(unit)
-	local isAFK = UnitIsAFK(unit)
+	local isAFK, isDND = UnitIsAFK(unit), UnitIsDND(unit)
 	if isAFK then
 		return ('|cffFFFFFF[|r|cffFF0000%s|r|cFFFFFFFF]|r'):format(DEFAULT_AFK_MESSAGE)
+	elseif isDND then
+		return ('|cffFFFFFF[|r|cffFF0000%s|r|cFFFFFFFF]|r'):format(DEFAULT_DND_MESSAGE)
 	else
 		return ''
 	end
