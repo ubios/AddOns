@@ -10,35 +10,15 @@ local pairs = pairs
 local defaultColor = { 1, 1, 1 }
 local Profit	= 0
 local Spent		= 0
-local copperFormatter = join("", "%d", L.copperabbrev)
-local silverFormatter = join("", "%d", L.silverabbrev, " %.2d", L.copperabbrev)
-local goldFormatter =  join("", "%s", L.goldabbrev, " %.2d", L.silverabbrev, " %.2d", L.copperabbrev)
-local resetInfoFormatter = join("", "|cffaaaaaa", L["Reset Data: Hold Shift + Right Click"], "|r")
-
-local function FormatMoney(money)
-	local gold, silver, copper = floor(abs(money / 10000)), abs(mod(money / 100, 100)), abs(mod(money, 100))
-	if gold ~= 0 then
-		return format(goldFormatter, BreakUpLargeNumbers(gold), silver, copper)
-	elseif silver ~= 0 then
-		return format(silverFormatter, silver, copper)
-	else
-		return format(copperFormatter, copper)
-	end
-end
-
-local function FormatTooltipMoney(money)
-	if not money then return end
-	local gold, silver, copper = floor(abs(money / 10000)), abs(mod(money / 100, 100)), abs(mod(money, 100))
-	return format(goldFormatter, BreakUpLargeNumbers(gold), silver, copper)
-end
+local resetInfoFormatter = ("|cffaaaaaa%s|r"):format(L["Reset Data: Hold Shift + Right Click"])
 
 local function OnEvent(self, event, ...)
 	if not IsLoggedIn() then return end
-	local NewMoney = GetMoney();
-	ElvDB = ElvDB or { };
-	ElvDB['gold'] = ElvDB['gold'] or {};
-	ElvDB['gold'][E.myrealm] = ElvDB['gold'][E.myrealm] or {};
-	ElvDB['gold'][E.myrealm][E.myname] = ElvDB['gold'][E.myrealm][E.myname] or NewMoney;
+	local NewMoney = GetMoney()
+	ElvDB = ElvDB or { }
+	ElvDB['gold'] = ElvDB['gold'] or {}
+	ElvDB['gold'][E.myrealm] = ElvDB['gold'][E.myrealm] or {}
+	ElvDB['gold'][E.myrealm][E.myname] = ElvDB['gold'][E.myrealm][E.myname] or NewMoney
 
 	local OldMoney = ElvDB['gold'][E.myrealm][E.myname] or NewMoney
 
@@ -49,7 +29,7 @@ local function OnEvent(self, event, ...)
 		Profit = Profit + Change
 	end
 
-	self.text:SetText(FormatMoney(NewMoney))
+	self.text:SetText(GetCoinTextureString(NewMoney, E.db.datatexts.fontSize))
 
 	ElvDB['gold'][E.myrealm][E.myname] = NewMoney
 end
@@ -68,12 +48,12 @@ local function OnEnter(self)
 	DT:SetupTooltip(self)
 
 	DT.tooltip:AddLine(L['Session:'])
-	DT.tooltip:AddDoubleLine(L["Earned:"], FormatMoney(Profit), 1, 1, 1, 1, 1, 1)
-	DT.tooltip:AddDoubleLine(L["Spent:"], FormatMoney(Spent), 1, 1, 1, 1, 1, 1)
+	DT.tooltip:AddDoubleLine(L["Earned:"], GetCoinTextureString(Profit, E.db.datatexts.fontSize), 1, 1, 1, 1, 1, 1)
+	DT.tooltip:AddDoubleLine(L["Spent:"], GetCoinTextureString(Spent, E.db.datatexts.fontSize), 1, 1, 1, 1, 1, 1)
 	if Profit < Spent then
-		DT.tooltip:AddDoubleLine(L["Deficit:"], FormatMoney(Profit-Spent), 1, 0, 0, 1, 1, 1)
+		DT.tooltip:AddDoubleLine(L["Deficit:"], GetCoinTextureString(abs(Profit-Spent), E.db.datatexts.fontSize), 1, 0, 0, 1, 1, 1)
 	elseif (Profit-Spent)>0 then
-		DT.tooltip:AddDoubleLine(L["Profit:"	], FormatMoney(Profit-Spent), 0, 1, 0, 1, 1, 1)
+		DT.tooltip:AddDoubleLine(L["Profit:"	], GetCoinTextureString(abs(Profit-Spent), E.db.datatexts.fontSize), 0, 1, 0, 1, 1, 1)
 	end
 	DT.tooltip:AddLine' '
 
@@ -82,14 +62,14 @@ local function OnEnter(self)
 
 	for k,_ in pairs(ElvDB['gold'][E.myrealm]) do
 		if ElvDB['gold'][E.myrealm][k] then
-			DT.tooltip:AddDoubleLine(k, FormatTooltipMoney(ElvDB['gold'][E.myrealm][k]), 1, 1, 1, 1, 1, 1)
+			DT.tooltip:AddDoubleLine(k, GetCoinTextureString(ElvDB['gold'][E.myrealm][k], E.db.datatexts.fontSize), 1, 1, 1, 1, 1, 1)
 			totalGold=totalGold+ElvDB['gold'][E.myrealm][k]
 		end
 	end
 
 	DT.tooltip:AddLine' '
 	DT.tooltip:AddLine(L["Server: "])
-	DT.tooltip:AddDoubleLine(L["Total: "], FormatTooltipMoney(totalGold), 1, 1, 1, 1, 1, 1)
+	DT.tooltip:AddDoubleLine(L["Total: "], GetCoinTextureString(totalGold, E.db.datatexts.fontSize), 1, 1, 1, 1, 1, 1)
 
 	for i = 1, MAX_WATCHED_TOKENS do
 		local name, count, extraCurrencyType, icon, itemID = GetBackpackCurrencyInfo(i)

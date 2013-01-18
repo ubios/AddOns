@@ -5,8 +5,6 @@ local len, sub, find, format, join, floor = string.len, string.sub, string.find,
 local tinsert = table.insert
 local pairs, ipairs, type, unpack = pairs, ipairs, type, unpack
 
-local moneyString = join("", " |cffffffff%d", L.goldabbrev, " |cffffffff%d", L.silverabbrev, " |cffffffff%d", L.copperabbrev)
-
 B.ProfessionColors = {
 	[0x0008] = {224/255, 187/255, 74/255}, -- Leatherworking
 	[0x0010] = {74/255, 77/255, 224/255}, -- Inscription
@@ -501,7 +499,7 @@ function B:Token_OnClick()
 end
 
 function B:UpdateGoldText()
-	self.BagFrame.goldText:SetText(GetCoinTextureString(GetMoney(), 12))
+	self.BagFrame.goldText:SetText(GetCoinTextureString(GetMoney(), E.db.datatexts.fontSize))
 end
 
 function B:VendorGrays(delete, nomsg)
@@ -537,13 +535,11 @@ function B:VendorGrays(delete, nomsg)
 	end
 	
 	if c>0 and not delete then
-		local g, s, c = floor(c/10000) or 0, floor((c%10000)/100) or 0, c%100
-		E:Print(join('', L['Vendored gray items for:'], format(moneyString, g, s, c), "."))
+		E:Print(join('', L['Vendored gray items for: '], GetCoinTextureString(c, E.db.datatexts.fontSize), "."))
 	elseif not delete and not nomsg then
 		E:Print(L['No gray items to sell.'])
 	elseif count > 0 then
-		local g, s, c = floor(c/10000) or 0, floor((c%10000)/100) or 0, c%100
-		E:Print(format(L['Deleted %d gray items. Total Worth: %s.'], count, format(moneyString, g, s, c)))
+		E:Print(format(L['Deleted %d gray items. Total Worth: %s.'], count, GetCoinTextureString(c, E.db.datatexts.fontSize)))
 	elseif not nomsg then
 		E:Print(L['No gray items to delete.'])
 	end
