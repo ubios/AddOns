@@ -657,7 +657,8 @@ local TESTERS = {
 	'Kurhyus',
 	'BuG',
 	'Yachanay',
-	'Catok'
+	'Catok',
+	'KkthnxbyeGaming.'
 }
 
 tsort(DONATORS, function(a,b) return a < b end) --Alphabetize
