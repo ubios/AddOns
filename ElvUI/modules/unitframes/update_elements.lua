@@ -34,21 +34,22 @@ end
 
 function UF:PostUpdateHealth(unit, min, max)
 	local parent = self:GetParent()
-
-	local colors = E.db['unitframe']['colors']	
 	if parent.isForced then
 		min = random(1, max)
-		self:SetValue(min)	
-		if colors.colorhealthbyvalue then
-			local r, g, b = ElvUF.ColorGradient(min, max, 1, 0, 0, 1, 1, 0, 0, 1, 0)
-			self:SetStatusBarColor(r, g, b)
-			local mu = self.bg.multiplier or 1
-			self.bg:SetVertexColor(r * mu, g * mu, b * mu)
-		end
+		self:SetValue(min)
 	end
 
 	if parent.ResurrectIcon then
 		parent.ResurrectIcon:SetAlpha(min == 0 and 1 or 0)
+	end
+	
+	local colors = E.db['unitframe']['colors']	
+	if ((colors.healthclass and colors.colorhealthbyvalue) or (colors.colorhealthbyvalue and parent.isForced)) and not (UnitIsTapped(unit) or UnitIsTappedByPlayer(unit) or not UnitIsConnected(unit) or UnitIsTappedByAllThreatList(unit)) then
+		local r, g, b = self:GetStatusBarColor()
+		r, g, b = ElvUF.ColorGradient(min, max, 1, 0, 0, 1, 1, 0, r, g, b)
+		self:SetStatusBarColor(r, g, b)
+		local mu = self.bg.multiplier or 1
+		self.bg:SetVertexColor(r * mu, g * mu, b * mu)
 	end
 
 	if colors.classbackdrop then
