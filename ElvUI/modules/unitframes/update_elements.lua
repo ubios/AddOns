@@ -43,25 +43,30 @@ function UF:PostUpdateHealth(unit, min, max)
 		parent.ResurrectIcon:SetAlpha(min == 0 and 1 or 0)
 	end
 	
+	local r, g, b
+	local mu
 	local colors = E.db['unitframe']['colors']	
 	if ((colors.healthclass and colors.colorhealthbyvalue) or (colors.colorhealthbyvalue and parent.isForced)) and not (UnitIsTapped(unit) or UnitIsTappedByPlayer(unit) or not UnitIsConnected(unit) or UnitIsTappedByAllThreatList(unit)) then
-		local r, g, b = self:GetStatusBarColor()
+		r, g, b = self:GetStatusBarColor()
 		r, g, b = ElvUF.ColorGradient(min, max, 1, 0, 0, 1, 1, 0, r, g, b)
 		self:SetStatusBarColor(r, g, b)
-		local mu = self.bg.multiplier or 1
+		mu = self.bg.multiplier or 1
 		self.bg:SetVertexColor(r * mu, g * mu, b * mu)
 	end
 
 	if colors.classbackdrop then
+		mu = colors.usebackdropalpha and (self.bg.multiplier or 1) or 1 
 		if UnitIsPlayer(unit) then
 			local class = select(2, UnitClass(unit))
 			if class then
-				self.bg:SetVertexColor(unpack(ElvUF.colors.class[class], 1, 3))
+				r,g,b = unpack(ElvUF.colors.class[class])
+				self.bg:SetVertexColor(r * mu, g * mu, b * mu)
 			end
 		else
 			local reaction = UnitReaction(unit, 'player')
 		 	if reaction then
-				self.bg:SetVertexColor(unpack(ElvUF.colors.reaction[reaction], 1, 3))
+		 		r, g, b = unpack(ElvUF.colors.reaction[reaction])
+				self.bg:SetVertexColor(r * mu, g * mu, b * mu)
 			end
 		end
 	end

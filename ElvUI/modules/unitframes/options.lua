@@ -948,6 +948,14 @@ E.Options.args.unitframe = {
 									get = function(info) return E.db.unitframe.colors[ info[#info] ] end,
 									set = function(info, value) E.db.unitframe.colors[ info[#info] ] = value; UF:Update_AllFrames() end,										
 								},								
+								usebackdropalpha = {
+									order = 6,
+									type = 'toggle',
+									name = L['Backdrop Alpha'],
+									desc = L['Use backdrop alpha setting for Custom Health or Class Backdrop.'],
+									get = function(info) return E.db.unitframe.colors[ info[#info] ] end,
+									set = function(info, value) E.db.unitframe.colors[ info[#info] ] = value; UF:Update_AllFrames() end,									
+								},
 								health = {
 									order = 10,
 									type = 'color',
