@@ -124,7 +124,7 @@ local function ExperienceBar_OnEnter(self)
 	GameTooltip:ClearLines()
 	GameTooltip:SetOwner(self, 'ANCHOR_BOTTOM', 0, -4)
 	
-	local curValue, maxValue = UnitXP(unit), UnitXPMax(unit)
+	local curValue, maxValue = UnitXP('player'), UnitXPMax('player')
 	local rested = GetXPExhaustion()
 	GameTooltip:AddLine(L['Experience'])
 	GameTooltip:AddLine(' ')
