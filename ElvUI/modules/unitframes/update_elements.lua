@@ -1153,7 +1153,6 @@ function UF:UpdateRoleIcon()
 	end
 	
 	if role and role ~= 'NONE' and (self.isForced or UnitIsConnected(self.unit)) then
-		self:SetScript('OnUpdate', nil)
 		lfdrole:SetTexture(roleIconTextures[role])
 		lfdrole:Show()
 		self:UnregisterEvent('INSPECT_READY')
