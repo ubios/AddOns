@@ -51,7 +51,6 @@ end
 -- << STATIC CONFIG
 
 local tinsert = tinsert
-local UpdateDelay = .5
 local ItemRequestTimeout = 10.0
 
 -- interact distance based checks. ranges are based on my own measurements (thanks for all the folks who helped me with this)
@@ -993,9 +992,7 @@ function lib:activate()
     self.frame:SetScript("OnEvent", function(frame, ...) self:OnEvent(...) end)
     self.frame:SetScript("OnUpdate", function(frame, elapsed)
         lastUpdate = lastUpdate + elapsed
-        if lastUpdate < UpdateDelay then
-            return
-        end
+        if lastUpdate < .5 then return end
         lastUpdate = 0
         self:initialOnUpdate()
     end)

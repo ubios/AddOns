@@ -1133,15 +1133,6 @@ local roleIconTextures = {
 	DAMAGER = [[Interface\AddOns\ElvUI\media\textures\dps.tga]]
 }
 
-function UF:UpdateRoleIconInterval(elapsed)
-	if not self then return end
-	
-	self.elapsed = (self.elapsed or 0) + elapsed
-	if (self.elapsed < 2) then return end
-
-	UF.UpdateRoleIcon(self)
-end
-
 function UF:UpdateRoleIcon()
 	local lfdrole = self.LFDRole
 	local db = self.db.roleIcon;
@@ -1165,9 +1156,10 @@ function UF:UpdateRoleIcon()
 		self:SetScript('OnUpdate', nil)
 		lfdrole:SetTexture(roleIconTextures[role])
 		lfdrole:Show()
+		self:UnregisterEvent('INSPECT_READY')
 	else
 		lfdrole:Hide()
-		self:SetScript('OnUpdate', UF.UpdateRoleIconInterval)
+		self:RegisterEvent('INSPECT_READY', UF.UpdateRoleIcon)
 	end	
 end
 
