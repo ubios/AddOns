@@ -26,6 +26,8 @@ local dataStrings = {
 	[11] = SHOW_COMBAT_HEALING,
 }
 
+DT.bgstats = {}
+
 local WSG = 443
 local TP = 626
 local AV = 401
@@ -37,18 +39,22 @@ local AB = 461
 local TOK = 856
 local SSM = 860
 
-local name
+local pointIndex
+local currentStat
 
 function DT:UPDATE_BATTLEFIELD_SCORE()
 	lastPanel = self
-	local pointIndex = dataLayout[self:GetParent():GetName()][self.pointIndex]
+	pointIndex = dataLayout[self:GetParent():GetName()][self.pointIndex]
 	for i=1, GetNumBattlefieldScores() do
-		name = GetBattlefieldScore(i)
-		if name == E.myname then
-			if pointIndex == 10 or pointIndex == 11 then
-				self.text:SetFormattedText(displayString, dataStrings[pointIndex], E:ShortValue(select(pointIndex, GetBattlefieldScore(i))))
-			else
-				self.text:SetFormattedText(displayString, dataStrings[pointIndex], select(pointIndex, GetBattlefieldScore(i)))
+		if select(1, GetBattlefieldScore(i)) == E.myname then
+			currentStat = select(pointIndex, GetBattlefieldScore(i))
+			if currentStat ~= DT.bgstats[pointIndex] then
+				DT.bgstats[pointIndex] = currentStat
+				if pointIndex == 10 or pointIndex == 11 then
+					self.text:SetFormattedText(displayString, dataStrings[pointIndex], E:ShortValue(DT.bgstats[pointIndex]))
+				else
+					self.text:SetFormattedText(displayString, dataStrings[pointIndex], DT.bgstats[pointIndex])
+				end
 			end
 			break	
 		end
@@ -59,9 +65,8 @@ function DT:BattlegroundStats()
 	DT:SetupTooltip(self)
 	local CurrentMapID = GetCurrentMapAreaID()
 	for index=1, GetNumBattlefieldScores() do
-		name = GetBattlefieldScore(index)
-		if name and name == E.myname then
-			DT.tooltip:AddDoubleLine(L['Stats For:'], name, 1,1,1, classColor.r, classColor.g, classColor.b)
+		if select(1, GetBattlefieldScore(index)) == E.myname then
+			DT.tooltip:AddDoubleLine(L['Stats For:'], E.myname, 1,1,1, classColor.r, classColor.g, classColor.b)
 			DT.tooltip:AddLine(" ")
 
 			--Add extra statistics to watch based on what BG you are in.

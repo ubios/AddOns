@@ -1,8 +1,7 @@
 local E, L, V, P, G, _ = unpack(select(2, ...)); --Inport: Engine, Locales, PrivateDB, ProfileDB, GlobalDB, Localize Underscore
 
-local format = string.format
-local lower = string.lower
-local split = string.split
+local format, lower, split = string.format, string.lower, string.split
+local twipe = table.wipe
 
 function E:EnableAddon(addon)
 	local _, _, _, _, _, reason, _ = GetAddOnInfo(addon)
@@ -108,6 +107,7 @@ end
 function E:BGStats()
 	local DT = E:GetModule('DataTexts')
 	DT.ForceHideBGStats = nil;
+	twipe(DT.bgstats)
 	DT:LoadDataTexts()
 	
 	E:Print(L['Battleground datatexts will now show again if you are inside a battleground.'])
