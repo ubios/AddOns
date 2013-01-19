@@ -792,28 +792,28 @@ function CH:ChatFrame_MessageEventHandler(event, ...)
 	
 		if ( type == "SYSTEM" or type == "SKILL" or type == "LOOT" or type == "CURRENCY" or type == "MONEY" or
 		     type == "OPENING" or type == "TRADESKILLS" or type == "PET_INFO" or type == "TARGETICONS" or type == "BN_WHISPER_PLAYER_OFFLINE") then
-			self:AddMessage(CH:ConcatenateTimeStamp(arg1), info.r, info.g, info.b, info.id);
+			self:AddMessage(CH:ConcatenateTimeStamp(arg1), info.r, info.g, info.b, info.id)
 		elseif ( strsub(type,1,7) == "COMBAT_" ) then
-			self:AddMessage(CH:ConcatenateTimeStamp(arg1), info.r, info.g, info.b, info.id);
+			self:AddMessage(CH:ConcatenateTimeStamp(arg1), info.r, info.g, info.b, info.id)
 		elseif ( strsub(type,1,6) == "SPELL_" ) then
-			self:AddMessage(CH:ConcatenateTimeStamp(arg1), info.r, info.g, info.b, info.id);
+			self:AddMessage(CH:ConcatenateTimeStamp(arg1), info.r, info.g, info.b, info.id)
 		elseif ( strsub(type,1,10) == "BG_SYSTEM_" ) then
-			self:AddMessage(CH:ConcatenateTimeStamp(arg1), info.r, info.g, info.b, info.id);
+			self:AddMessage(CH:ConcatenateTimeStamp(arg1), info.r, info.g, info.b, info.id)
 		elseif ( strsub(type,1,11) == "ACHIEVEMENT" ) then
-			self:AddMessage(format(CH:ConcatenateTimeStamp(arg1), ("|Hplayer:%s|h[%s]|h"):format(arg2, coloredName), info.r, info.g, info.b, info.id))
+			self:AddMessage(format(CH:ConcatenateTimeStamp(arg1), ("|Hplayer:%s|h[%s]|h"):format(arg2, coloredName)), info.r, info.g, info.b, info.id)
 		elseif ( strsub(type,1,18) == "GUILD_ACHIEVEMENT" ) then
-			self:AddMessage(format(CH:ConcatenateTimeStamp(arg1), ("|Hplayer:%s|h[%s]|h"):format(arg2, coloredName), info.r, info.g, info.b, info.id))
+			self:AddMessage(format(CH:ConcatenateTimeStamp(arg1), ("|Hplayer:%s|h[%s]|h"):format(arg2, coloredName)), info.r, info.g, info.b, info.id)
 		elseif ( type == "IGNORED" ) then
-			self:AddMessage(format(CH:ConcatenateTimeStamp(CHAT_IGNORED), arg2), info.r, info.g, info.b, info.id);
+			self:AddMessage(format(CH:ConcatenateTimeStamp(CHAT_IGNORED), arg2), info.r, info.g, info.b, info.id)
 		elseif ( type == "FILTERED" ) then
-			self:AddMessage(format(CH:ConcatenateTimeStamp(CHAT_FILTERED), arg2), info.r, info.g, info.b, info.id);
+			self:AddMessage(format(CH:ConcatenateTimeStamp(CHAT_FILTERED), arg2), info.r, info.g, info.b, info.id)
 		elseif ( type == "RESTRICTED" ) then
-			self:AddMessage(CH:ConcatenateTimeStamp(CHAT_RESTRICTED), info.r, info.g, info.b, info.id);
+			self:AddMessage(CH:ConcatenateTimeStamp(CHAT_RESTRICTED), info.r, info.g, info.b, info.id)
 		elseif ( type == "CHANNEL_LIST") then
 			if(channelLength > 0) then
-				self:AddMessage(format(CH:ConcatenateTimeStamp(_G["CHAT_CHANNEL_LIST_GET"]..arg1), tonumber(arg8), arg4), info.r, info.g, info.b, info.id);
+				self:AddMessage(format(CH:ConcatenateTimeStamp(_G["CHAT_CHANNEL_LIST_GET"]..arg1), tonumber(arg8), arg4), info.r, info.g, info.b, info.id)
 			else
-				self:AddMessage(CH:ConcatenateTimeStamp(arg1), info.r, info.g, info.b, info.id);
+				self:AddMessage(CH:ConcatenateTimeStamp(arg1), info.r, info.g, info.b, info.id)
 			end
 		elseif (type == "CHANNEL_NOTICE_USER") then
 			local globalstring = _G[("CHAT_%s_NOTICE_BN"):format(arg1)] or _G[("CHAT_%s_NOTICE"):format(arg1)]			
