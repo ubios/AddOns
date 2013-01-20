@@ -214,7 +214,8 @@ function DT:LoadDataTexts()
 			panel.dataPanels[pointIndex].text:SetText(nil)
 			panel.dataPanels[pointIndex].pointIndex = pointIndex
 			
-			if (panelName == 'LeftChatDataPanel' or panelName == 'RightChatDataPanel') and (inInstance and (instanceType == "pvp")) and not DT.ForceHideBGStats and E.db.datatexts.battleground then
+			if E.db.datatexts.battleground and not DT.ForceHideBGStats and (inInstance and (instanceType == "pvp")) 
+				and (panelName == 'LeftChatDataPanel' or panelName == 'RightChatDataPanel') then
 				panel.dataPanels[pointIndex]:RegisterEvent('UPDATE_BATTLEFIELD_SCORE')
 				panel.dataPanels[pointIndex]:SetScript('OnEvent', DT.UPDATE_BATTLEFIELD_SCORE)
 				panel.dataPanels[pointIndex]:SetScript('OnEnter', DT.BattlegroundStats)
