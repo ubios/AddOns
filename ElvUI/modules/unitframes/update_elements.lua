@@ -2,16 +2,46 @@ local E, L, V, P, G, _ = unpack(select(2, ...)); --Inport: Engine, Locales, Priv
 local UF = E:GetModule('UnitFrames');
 local LSM = LibStub("LibSharedMedia-3.0");
 local LSR = LibStub("LibSpecRoster-1.0")
+local MAP = LibStub("LibMapData-1.0")
 
 local _, ns = ...
 local ElvUF = ns.oUF
 assert(ElvUF, "ElvUI was unable to locate oUF.")
 
 local sub = string.sub
-local abs, random, floor, ceil = math.abs, math.random, math.floor, math.ceil
+local abs, atan2, cos, sin, sqrt2, random, floor, ceil = math.abs, math.atan2, math.cos, math.sin, math.sqrt(2), math.random, math.floor, math.ceil
 local pairs, type, select, unpack = pairs, type, select, unpack
-
+local GetPlayerMapPosition, GetPlayerFacing = GetPlayerMapPosition, GetPlayerFacing
+local mapfile, mapfloor
 local unitframeFont
+
+-- Register callback for changing map and floor (GPS)
+MAP:RegisterCallback("MapChanged", function (event, map, floor, w, h)
+	mapfile = map
+	mapfloor = floor
+end)
+
+local function GetBearing(unit)
+  local tx, ty = GetPlayerMapPosition(unit)
+  if tx == 0 and ty == 0 then
+    return 999
+  end
+  local px, py = GetPlayerMapPosition("player")
+  return -GetPlayerFacing() - atan2(tx - px, py - ty), px, py, tx, ty
+end
+
+local function CalculateCorner(r)
+	return 0.5 + cos(r) / sqrt2, 0.5 + sin(r) / sqrt2;
+end
+
+local function RotateTexture(texture, angle)
+	local LRx, LRy = CalculateCorner(angle + 0.785398163);
+	local LLx, LLy = CalculateCorner(angle + 2.35619449);
+	local ULx, ULy = CalculateCorner(angle + 3.92699082);
+	local URx, URy = CalculateCorner(angle - 0.785398163);
+	
+	texture:SetTexCoord(ULx, ULy, LLx, LLy, URx, URy, LRx, LRy);
+end
 
 local function CheckFilter(filterType, isFriend)
 	local FRIENDLY_CHECK, ENEMY_CHECK = false, false
@@ -153,6 +183,33 @@ function UF:PortraitUpdate(unit)
 		self:SetCamDistanceScale(portrait.camDistanceScale - 0.01 >= 0.01 and portrait.camDistanceScale - 0.01 or 0.01) --Blizzard bug fix
 		self:SetCamDistanceScale(portrait.camDistanceScale)
 	end
+end
+
+function UF:UpdateGPS(frame)
+	local unit = frame.unit
+	local gps = frame.gps
+
+	-- GPS Disabled or not GPS parent frame visible or not in Party or Raid, Hide gps
+	if not (E.db.unitframe.units[unit].gps.enable and (UnitInParty(unit) or UnitInRaid(unit))) then
+		if gps:IsShown() then gps:Hide() end
+		return
+	end
+	
+	local angle, px, py, tx, ty = GetBearing(unit)
+	if angle == 999 then
+		-- no bearing show - to indicate we are lost :)
+		gps.Text:SetText("-")
+		if gps.Texture:IsShown() then gps.Texture:Hide() end
+		if not gps:IsShown() then gps:Show() end
+		return
+	end
+	
+	RotateTexture(gps.Texture, angle)
+	if not gps.Texture:IsShown() then gps.Texture:Show() end
+
+	local distance = MAP:Distance(mapfile, mapfloor, px, py, tx, ty)
+	gps.Text:SetFormattedText("%d", distance)
+	if not gps:IsShown() then gps:Show() end
 end
 
 function UF:UpdateAuraTimer(elapsed)	

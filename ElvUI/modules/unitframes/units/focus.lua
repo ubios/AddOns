@@ -14,6 +14,8 @@ function UF:Construct_FocusFrame(frame)
 	frame.Name = self:Construct_NameText(frame)
 	
 	frame.Buffs = self:Construct_Buffs(frame)
+
+	frame.GPS = self:Construct_GPS(frame, 'target')
 	
 	frame.Castbar = self:Construct_Castbar(frame, 'LEFT', L['Focus Castbar'])
 	frame.Castbar.SafeZone = nil
@@ -162,6 +164,25 @@ function UF:Update_FocusFrame(frame, db)
 		elseif frame:IsElementEnabled('Power') then
 			frame:DisableElement('Power')
 			power:Hide()	
+		end
+	end
+	
+	do
+		local gps = frame.GPS
+	
+		if db.gps.enable then
+			if not frame:IsElementEnabled('GPS') then
+				frame:EnableElement('GPS')
+			end
+
+			local x, y = self:GetPositionOffset(db.gps.position)		
+			gps:ClearAllPoints()
+			gps:Point(db.gps.position, frame.Health, db.gps.position, x, y)
+			gps:SetFrameStrata("MEDIUM")
+			gps:Show()
+		elseif frame:IsElementEnabled('GPS') then
+			frame:DisableElement('GPS')
+			gps:Hide()
 		end
 	end
 	

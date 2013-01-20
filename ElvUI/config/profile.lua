@@ -432,7 +432,7 @@ P['unitframe'] = {
 				['width'] = 45,
 				['overlay'] = false,
 				['camDistanceScale'] = 1,
-				['style'] = '3D'
+				['style'] = '3D',
 			},
 			['buffs'] = {
 				['enable'] = true,
@@ -495,7 +495,11 @@ P['unitframe'] = {
 				['useFilter'] = '',
 				['friendlyAuraType'] = 'HELPFUL',
 				['enemyAuraType'] = 'HARMFUL'				
-			},	
+			},
+			['gps'] = {
+				['enable'] = true,
+				['position'] = 'BOTTOMRIGHT',
+			},
 			['raidicon'] = {
 				['enable'] = true,
 				['size'] = 18,
@@ -647,7 +651,11 @@ P['unitframe'] = {
 				['useFilter'] = '',
 				['friendlyAuraType'] = 'HELPFUL',
 				['enemyAuraType'] = 'HARMFUL'				
-			},	
+			},
+			['gps'] = {
+				['enable'] = true,
+				['position'] = 'BOTTOMLEFT',
+			},			
 			['raidicon'] = {
 				['enable'] = true,
 				['size'] = 18,
