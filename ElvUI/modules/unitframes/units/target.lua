@@ -276,17 +276,12 @@ function UF:Update_TargetFrame(frame, db)
 		local gps = frame.GPS
 	
 		if db.gps.enable then
-			if not frame:IsElementEnabled('GPS') then
-				frame:EnableElement('GPS')
-			end
-
 			local x, y = self:GetPositionOffset(db.gps.position)		
 			gps:ClearAllPoints()
 			gps:Point(db.gps.position, frame.Health, db.gps.position, x, y)
 			gps:SetFrameStrata("MEDIUM")
 			gps:Show()
-		elseif frame:IsElementEnabled('GPS') then
-			frame:DisableElement('GPS')
+		else
 			gps:Hide()
 		end
 	end

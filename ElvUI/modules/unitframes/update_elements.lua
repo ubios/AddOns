@@ -186,11 +186,13 @@ function UF:PortraitUpdate(unit)
 end
 
 function UF:UpdateGPS(frame)
+	if not frame.db.enable then return end
+
 	local unit = frame.unit
 	local gps = frame.gps
 
 	-- GPS Disabled or not GPS parent frame visible or not in Party or Raid, Hide gps
-	if not (E.db.unitframe.units[unit].gps.enable and (UnitInParty(unit) or UnitInRaid(unit))) then
+	if not (UnitInParty(unit) or UnitInRaid(unit)) then
 		if gps:IsShown() then gps:Hide() end
 		return
 	end

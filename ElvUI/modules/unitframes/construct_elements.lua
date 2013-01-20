@@ -170,8 +170,9 @@ function UF:Construct_GPS(frame, unit)
 
 	frame.gps = gps
 	frame.unit = unit
+	frame.db = E.db.unitframe.units[unit].gps
 
-	self:ScheduleRepeatingTimer("UpdateGPS", 0.1, frame)
+	self:ScheduleRepeatingTimer("UpdateGPS", 0.2, frame)
 
 	return gps
 end

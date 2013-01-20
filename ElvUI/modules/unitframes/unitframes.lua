@@ -115,7 +115,7 @@ function UF:GetPositionOffset(position, offset)
 		y = offset
 	end
 	
-	return x, y
+	return E:Scale(x), E:Scale(y)
 end
 
 function UF:GetAuraOffset(p1, p2)
