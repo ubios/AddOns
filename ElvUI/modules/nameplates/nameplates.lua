@@ -2,6 +2,7 @@ local E, L, V, P, G, _ = unpack(select(2, ...)); --Inport: Engine, Locales, Priv
 local NP = E:NewModule('NamePlates', 'AceHook-3.0', 'AceEvent-3.0', 'AceTimer-3.0')
 local LSM = LibStub("LibSharedMedia-3.0")
 
+local CPOINT_TEX = [=[Interface\AddOns\ElvUI\media\textures\bubbleTex.tga]=]
 local OVERLAY = [=[Interface\TargetingFrame\UI-TargetingFrame-Flash]=]
 local numChildren = -1
 local backdrop
@@ -58,6 +59,7 @@ function NP:Initialize()
 	end)	
 
 	self:UpdateAllPlates()
+	self:ToggleCPoints()
 	
 	self:RegisterEvent("GROUP_ROSTER_UPDATE", "UpdateRoster")
 	self:RegisterEvent("PARTY_CONVERTED_TO_RAID", "UpdateRoster")
@@ -283,6 +285,7 @@ end
 
 function NP:HealthBar_OnShow(frame)
 	frame = frame:GetParent()
+	
 	local noscalemult = E.mult * UIParent:GetScale()
 	--Have to reposition this here so it doesnt resize after being hidden
 	frame.hp:ClearAllPoints()
@@ -377,6 +380,9 @@ function NP:OnHide(frame)
 		end
 	end
 
+	for i=1, MAX_COMBO_POINTS do
+		frame.cpoints[i]:Hide()
+	end
 end
 
 function NP:SkinPlate(frame, nameFrame)
@@ -414,6 +420,27 @@ function NP:SkinPlate(frame, nameFrame)
 	end
 	frame.hp:SetStatusBarTexture(E["media"].normTex)
 	self:SetVirtualBackdrop(frame.hp, unpack(E["media"].backdropcolor))
+		
+	if not frame.cpoints then
+		frame.cpoints = CreateFrame("Frame", nil, frame.hp)
+		frame.cpoints:Point("CENTER", frame.hp, "BOTTOM")
+		frame.cpoints:Height(1)
+		frame.cpoints:Width(68)
+		
+		for i=1, MAX_COMBO_POINTS do
+			frame.cpoints[i] = frame.cpoints:CreateTexture(nil, 'OVERLAY')
+			frame.cpoints[i]:SetTexture(CPOINT_TEX)
+			frame.cpoints[i]:Size(12)
+			
+			if i == 1 then
+				frame.cpoints[i]:SetPoint("LEFT", frame.cpoints, "TOPLEFT")
+			else
+				frame.cpoints[i]:SetPoint("LEFT", frame.cpoints[i-1], "RIGHT", 2, 0)
+			end
+			
+			frame.cpoints[i]:Hide()
+		end
+	end
 		
 	if not frame.overlay then
 		overlay:SetTexture(1, 1, 1, 0.35)
@@ -693,6 +720,17 @@ function NP:ScanHealth()
 	end
 end
 
+function NP:GetTargetNameplate()
+	if not UnitExists("target") then return end
+	
+	for frame, _ in pairs(NP.Handled) do
+		frame = _G[frame]:GetChildren()
+		if frame.guid == UnitGUID("target") then
+			return frame
+		end
+	end
+end
+
 --Scan all visible nameplate for a known unit.
 function NP:CheckUnit_Guid(frame, ...)
 	if UnitExists("target") and frame:GetParent():GetAlpha() == 1 and UnitName("target") == frame.hp.name:GetText() then
@@ -700,15 +738,22 @@ function NP:CheckUnit_Guid(frame, ...)
 		frame.unit = "target"
 		NP:UpdateAurasByUnitID("target")
 		frame.hp.shadow:SetAlpha(1)
+		NP:UpdateCPoints(frame)
 	elseif frame.overlay:IsShown() and UnitExists("mouseover") and UnitName("mouseover") == frame.hp.name:GetText() then
 		frame.guid = UnitGUID("mouseover")
 		frame.unit = "mouseover"
 		NP:UpdateAurasByUnitID("mouseover")
 		frame.hp.shadow:SetAlpha(0)
+		
+		local cpoints = GetComboPoints('player', 'mouseover')
+		if cpoints and cpoints > 0 then
+			NP:UpdateCPoints(frame, true)
+		end
 	else
 		frame.unit = nil
 		frame.hp.shadow:SetAlpha(0)
 	end	
+
 	--[[if not frame.test then
 		frame.test = frame:CreateFontString(nil, 'OVERLAY')
 		frame.test:Point('TOP', frame, 'TOP')
