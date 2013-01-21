@@ -188,16 +188,15 @@ end
 function UF:UpdateGPS(frame)
 	if not frame.db.enable then return end
 
-	local unit = frame.unit
 	local gps = frame.gps
-
+	
 	-- GPS Disabled or not GPS parent frame visible or not in Party or Raid, Hide gps
-	if not (UnitInParty(unit) or UnitInRaid(unit)) then
+	if not (UnitInParty(frame.unit) or UnitInRaid(frame.unit)) then
 		if gps:IsShown() then gps:Hide() end
 		return
 	end
 	
-	local angle, px, py, tx, ty = GetBearing(unit)
+	local angle, px, py, tx, ty = GetBearing(frame.unit)
 	if angle == 999 then
 		-- no bearing show - to indicate we are lost :)
 		gps.Text:SetText("-")
