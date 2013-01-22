@@ -918,23 +918,13 @@ function NP:ToggleCPoints()
 end
 
 function NP:HideCPoints(frame)
-	if not frame.cpoints[1]:IsShown() then return end
 	for i=1, MAX_COMBO_POINTS do
+		if not frame.cpoints[i]:IsShown() then break end
 		frame.cpoints[i]:Hide()
 	end
 end
 
 function NP:UpdateCPoints(frame, isMouseover)
-	local unit = "target"
-	if isMouseover == true then
-		unit = "mouseover"
-	end
-	
-	--[[if not UnitExists(unit) then 
-		self:ForEachPlate(self.HideCPoints)
-		return; 
-	end]]
-	
 	if type(frame) ~= "table" then
 		frame = self:GetTargetNameplate()
 		if frame then
@@ -942,15 +932,9 @@ function NP:UpdateCPoints(frame, isMouseover)
 		end
 	end
 	
-	if not frame then return; end
-
-	local cp
-	if(UnitHasVehicleUI'player') then
-		cp = GetComboPoints('vehicle', unit)
-	else
-		cp = GetComboPoints('player', unit)
-	end
-
+	if not frame then return end
+	
+	local cp = GetComboPoints(UnitHasVehicleUI('player') and 'vehicle' or 'player', isMouseover and "mouseover" or "target")
 	for i=1, MAX_COMBO_POINTS do
 		if(i <= cp) then
 			frame.cpoints[i]:Show()

@@ -743,10 +743,8 @@ function NP:CheckUnit_Guid(frame, ...)
 		frame.guid = UnitGUID("mouseover")
 		frame.unit = "mouseover"
 		NP:UpdateAurasByUnitID("mouseover")
-		frame.hp.shadow:SetAlpha(0)
-		
-		local cpoints = GetComboPoints('player', 'mouseover')
-		if cpoints and cpoints > 0 then
+		frame.hp.shadow:SetAlpha(0)		
+		if GetComboPoints('player', 'mouseover') > 0 then
 			NP:UpdateCPoints(frame, true)
 		end
 	else
