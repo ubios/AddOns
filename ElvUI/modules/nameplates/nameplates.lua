@@ -897,12 +897,12 @@ function NP:UpdateAllPlates()
 end
 
 function NP:HookFrames(...)
+	local frame, name
 	for index = 1, select('#', ...) do
-		local frame = select(index, ...)
-		local region = frame:GetRegions()
-		local name = frame:GetName()
+		frame = select(index, ...)
+		name = frame:GetName()
 		
-		if(not NP.Handled[name] and (name and name:find("NamePlate%d"))) then
+		if (not NP.Handled[name] and (name and name:find("NamePlate%d"))) then
 			NP:SkinPlate(frame:GetChildren())
 		end
 	end

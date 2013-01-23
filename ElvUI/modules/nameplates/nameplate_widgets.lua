@@ -113,9 +113,7 @@ do
 	end
 	
 	function PolledHideIn(frame, expiration)
-	
 		if expiration == 0 then 
-			
 			frame:Hide()
 			Framelist[frame] = nil
 		else
