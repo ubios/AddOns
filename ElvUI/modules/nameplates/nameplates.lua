@@ -44,7 +44,8 @@ function NP:Initialize()
 		end	
 		
 		NP:ForEachPlate(NP.InvalidCastCheck)
-		NP:ForEachPlate(NP.UpdateColoring)	
+		NP:ForEachPlate(NP.CheckHealerIcon)
+		NP:ForEachPlate(NP.UpdateColoring)
 
 		if(self.elapsed and self.elapsed > 0.2) then
 			NP:ForEachPlate(NP.UpdateThreat)
@@ -772,7 +773,7 @@ function NP:TogglePlate(frame, hide)
 end
 
 --Create our blacklist for nameplates, so prevent a certain nameplate from ever showing
-function NP:CheckFilter(frame, ...)
+function NP:CheckFilter(frame)
 	local name = frame.hp.oldname:GetText()
 	local db = E.global.nameplate["filter"][name]
 
@@ -800,25 +801,28 @@ function NP:CheckFilter(frame, ...)
 		end
 	else
 		self:TogglePlate(frame, false)
-	end
-	
+	end	
+end
+
+function NP:CheckHealerIcon(frame)
 	--Check For Healers
-	if self.Healers[name] then
+	if self.Healers[frame.hp.oldname:GetText()] then
 		frame.healerIcon:Show()
 	else
 		frame.healerIcon:Hide()
 	end
 end
 
+local name, faction, talentSpec
 function NP:CheckBGHealers()
 	for i = 1, GetNumBattlefieldScores() do
-		local name, _, _, _, _, faction, _, _, _, _, _, _, _, _, _, talentSpec = GetBattlefieldScore(i);
+		name, _, _, _, _, faction, _, _, _, _, _, _, _, _, _, talentSpec = GetBattlefieldScore(i);
 		if name then
 			name = name:match("(.+)%-.+") or name
 			if name and self.HealerSpecs[talentSpec] and self.factionOpposites[self.PlayerFaction] == faction then
 				self.Healers[name] = talentSpec
 			elseif name and self.Healers[name] then
-				self.Healers[name] = nil;
+				self.Healers[name] = nil
 			end
 		end
 	end
@@ -859,7 +863,7 @@ function NP:PLAYER_ENTERING_WORLD()
 	twipe(self.Healers)
 	local inInstance, instanceType = IsInInstance()
 	if inInstance and instanceType == 'pvp' and self.db.markHealers then
-		self.CheckHealerTimer = self:ScheduleRepeatingTimer("CheckBGHealers", 3)
+		self.CheckHealerTimer = self:ScheduleRepeatingTimer("CheckBGHealers", 5)
 		self:CheckBGHealers()
 	elseif inInstance and instanceType == 'arena' and self.db.markHealers then
 		self:RegisterEvent('UNIT_NAME_UPDATE', 'CheckArenaHealers')
