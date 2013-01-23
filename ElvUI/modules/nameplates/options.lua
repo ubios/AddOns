@@ -277,7 +277,7 @@ E.Options.args.nameplate = {
 							values = function()
 								filters = {}
 								filters[''] = NONE
-								for filter in pairs(E.global['unitframe']['aurafilters']) do
+								for filter in pairs(E.global.unitframe.aurafilters) do
 									filters[filter] = filter
 								end
 								return filters

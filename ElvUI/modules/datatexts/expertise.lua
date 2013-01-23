@@ -79,7 +79,7 @@ local function ValueColorUpdate(hex, r, g, b)
 		OnEvent(lastPanel, 2000)
 	end
 end
-E['valueColorUpdateFuncs'][ValueColorUpdate] = true
+E.valueColorUpdateFuncs[ValueColorUpdate] = true
 --[[
 	DT:RegisterDatatext(name, events, eventFunc, updateFunc, clickFunc, onEnterFunc)
 

@@ -293,7 +293,7 @@ local function ValueColorUpdate(hex, r, g, b)
 		OnEvent(lastPanel, 'ELVUI_COLOR_UPDATE')
 	end
 end
-E['valueColorUpdateFuncs'][ValueColorUpdate] = true
+E.valueColorUpdateFuncs[ValueColorUpdate] = true
 
 --[[
 	DT:RegisterDatatext(name, events, eventFunc, updateFunc, clickFunc, onEnterFunc, onLeaveFunc)

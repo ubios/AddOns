@@ -16,7 +16,7 @@ local function LoadSkin()
 	LossOfControlFrame.AbilityName:ClearAllPoints()
 	LossOfControlFrame:Size(LossOfControlFrame.Icon:GetWidth() + 50)
 
-	local font = E["media"].normFont
+	local font = E.media.normFont
 	hooksecurefunc("LossOfControlFrame_SetUpDisplay", function(self, ...)	
 		self.Icon:ClearAllPoints()
 		self.Icon:SetPoint("CENTER", self, "CENTER", 0, 0)

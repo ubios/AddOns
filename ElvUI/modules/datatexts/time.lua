@@ -33,7 +33,7 @@ local function ValueColorUpdate(hex, r, g, b)
 		Update(lastPanel, 20000)
 	end
 end
-E['valueColorUpdateFuncs'][ValueColorUpdate] = true
+E.valueColorUpdateFuncs[ValueColorUpdate] = true
 
 local function ConvertTime(h, m)
 	local AmPm

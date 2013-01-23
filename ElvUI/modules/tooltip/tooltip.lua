@@ -281,7 +281,7 @@ function TT:Colorize(tt)
 			local r, g, b = GetItemQualityColor(quality)
 			tt:SetBackdropBorderColor(r, g, b)
 		else
-			local r, g, b = unpack(E["media"].bordercolor)
+			local r, g, b = unpack(E.media.bordercolor)
 			tt:SetBackdropBorderColor(r, g, b)
 			if E.PixelMode then
 				r, g, b = 0.3, 0.3, 0.3
@@ -501,13 +501,13 @@ function TT:GameTooltip_OnTooltipSetUnit(tt)
 		if guildName then
 			if E.db.tooltip.guildranks then
 				if UnitIsInMyGuild(unit) then
-					GameTooltipTextLeft2:SetFormattedText("<%s%s|r> [%s%s|r]", E["media"].hexvaluecolor, guildName, E["media"].hexvaluecolor, guildRankName)
+					GameTooltipTextLeft2:SetFormattedText("<%s%s|r> [%s%s|r]", E.media.hexvaluecolor, guildName, E.media.hexvaluecolor, guildRankName)
 				else
 					GameTooltipTextLeft2:SetFormattedText("<|cff00ff10%s|r> [|cff00ff10%s|r]", guildName, guildRankName)
 				end
 			else
 				if UnitIsInMyGuild(unit) then
-					GameTooltipTextLeft2:SetFormattedText("<%s%s|r>", E["media"].hexvaluecolor, guildName)
+					GameTooltipTextLeft2:SetFormattedText("<%s%s|r>", E.media.hexvaluecolor, guildName)
 				else
 					GameTooltipTextLeft2:SetFormattedText("<|cff00ff10%s|r>", guildName)
 				end			
@@ -600,8 +600,8 @@ end
 
 function TT:GameTooltip_OnUpdate(tt)
 	if (tt.needRefresh and tt:GetAnchorType() == 'ANCHOR_CURSOR' and E.db.tooltip.anchor ~= 'CURSOR') then
-		tt:SetBackdropColor(unpack(E["media"].backdropfadecolor))
-		tt:SetBackdropBorderColor(unpack(E["media"].bordercolor))
+		tt:SetBackdropColor(unpack(E.media.backdropfadecolor))
+		tt:SetBackdropBorderColor(unpack(E.media.bordercolor))
 		tt.needRefresh = nil
 	end
 end
@@ -688,7 +688,7 @@ function TT:GameTooltip_ShowStatusBar(tt, min, max, value, text)
 	local statusBar = _G[("%sStatusBar%d"):format(tt:GetName(), index)]
 	if statusBar and not statusBar.skinned then
 		statusBar:StripTextures()
-		statusBar:SetStatusBarTexture(E['media'].normTex)
+		statusBar:SetStatusBarTexture(E.media.normTex)
 		statusBar:CreateBackdrop('Default')
 		statusBar.skinned = true;
 	end
@@ -713,7 +713,7 @@ function TT:Initialize()
 	GameTooltipStatusBar:Height(self.db.healthHeight)
 	GameTooltipStatusBar:Point("TOPLEFT", GameTooltipStatusBar:GetParent(), "BOTTOMLEFT", 2, -5)
 	GameTooltipStatusBar:Point("TOPRIGHT", GameTooltipStatusBar:GetParent(), "BOTTOMRIGHT", -2, -5)
-	GameTooltipStatusBar:SetStatusBarTexture(E["media"].normTex)
+	GameTooltipStatusBar:SetStatusBarTexture(E.media.normTex)
 	GameTooltipStatusBar:CreateBackdrop('Transparent')
 	GameTooltipStatusBar.ColorBar = GameTooltipStatusBar.SetStatusBarColor
 	GameTooltipStatusBar.SetStatusBarColor = E.noop

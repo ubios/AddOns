@@ -22,7 +22,7 @@ function UF:Construct_AssistFrames(unitGroup)
 	
 	self.RaidIcon = UF:Construct_RaidIcon(self)
 	
-	UF:Update_AssistFrames(self, E.db['unitframe']['units']['assist'])
+	UF:Update_AssistFrames(self, E.db.unitframe['units']['assist'])
 	UF:Update_StatusBars()
 	UF:Update_FontStrings()	
 	
@@ -108,8 +108,8 @@ function UF:Update_AssistFrames(frame, db)
 		health.colorHealth = nil
 		health.colorClass = nil
 		health.colorReaction = nil
-		if self.db['colors'].healthclass ~= true then
-			if self.db['colors'].colorhealthbyvalue == true then
+		if self.db.colors.healthclass ~= true then
+			if self.db.colors.colorhealthbyvalue == true then
 				health.colorSmooth = true
 			else
 				health.colorHealth = true

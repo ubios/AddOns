@@ -42,7 +42,7 @@ for i=10, 40, 15 do
 		self.ReadyCheck = UF:Construct_ReadyCheckIcon(self)	
 		self.HealPrediction = UF:Construct_HealComm(self)
 		
-		UF[('Update_Raid%dFrames'):format(i)](UF, self, E.db['unitframe']['units'][('raid%d'):format(i)])
+		UF[('Update_Raid%dFrames'):format(i)](UF, self, E.db.unitframe['units'][('raid%d'):format(i)])
 		UF:Update_StatusBars()
 		UF:Update_FontStrings()	
 		
@@ -183,8 +183,8 @@ for i=10, 40, 15 do
 			health.colorHealth = nil
 			health.colorClass = nil
 			health.colorReaction = nil
-			if self.db['colors'].healthclass ~= true then
-				if self.db['colors'].colorhealthbyvalue == true then
+			if self.db.colors.healthclass ~= true then
+				if self.db.colors.colorhealthbyvalue == true then
 					health.colorSmooth = true
 				else
 					health.colorHealth = true
@@ -238,7 +238,7 @@ for i=10, 40, 15 do
 				power.colorClass = nil
 				power.colorReaction = nil	
 				power.colorPower = nil
-				if self.db['colors'].powerclass then
+				if self.db.colors.powerclass then
 					power.colorClass = true
 					power.colorReaction = true
 				else

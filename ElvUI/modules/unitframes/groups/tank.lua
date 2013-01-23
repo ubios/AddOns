@@ -22,7 +22,7 @@ function UF:Construct_TankFrames(unitGroup)
 	
 	self.RaidIcon = UF:Construct_RaidIcon(self)
 	
-	UF:Update_TankFrames(self, E.db['unitframe']['units']['tank'])
+	UF:Update_TankFrames(self, E.db.unitframe['units']['tank'])
 	UF:Update_StatusBars()
 	UF:Update_FontStrings()	
 	
@@ -109,8 +109,8 @@ function UF:Update_TankFrames(frame, db)
 		health.colorHealth = nil
 		health.colorClass = nil
 		health.colorReaction = nil
-		if self.db['colors'].healthclass ~= true then
-			if self.db['colors'].colorhealthbyvalue == true then
+		if self.db.colors.healthclass ~= true then
+			if self.db.colors.colorhealthbyvalue == true then
 				health.colorSmooth = true
 			else
 				health.colorHealth = true

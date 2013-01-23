@@ -93,8 +93,8 @@ function UF:Update_BossFrames(frame, db)
 		health.colorHealth = nil
 		health.colorClass = nil
 		health.colorReaction = nil
-		if self.db['colors'].healthclass ~= true then
-			if self.db['colors'].colorhealthbyvalue == true then
+		if self.db.colors.healthclass ~= true then
+			if self.db.colors.colorhealthbyvalue == true then
 				health.colorSmooth = true
 			else
 				health.colorHealth = true
@@ -160,7 +160,7 @@ function UF:Update_BossFrames(frame, db)
 			power.colorClass = nil
 			power.colorReaction = nil	
 			power.colorPower = nil
-			if self.db['colors'].powerclass then
+			if self.db.colors.powerclass then
 				power.colorClass = true
 				power.colorReaction = true
 			else
@@ -455,4 +455,4 @@ function UF:Update_BossFrames(frame, db)
 	frame:UpdateAllElements()
 end
 
-UF['unitgroupstoload']['boss'] = MAX_BOSS_FRAMES
+UF.unitgroupstoload['boss'] = MAX_BOSS_FRAMES

@@ -12,16 +12,16 @@ local function GetTemplate(t)
 	if t == "ClassColor" then
 		borderr, borderg, borderb = RAID_CLASS_COLORS[E.myclass].r, RAID_CLASS_COLORS[E.myclass].g, RAID_CLASS_COLORS[E.myclass].b
 		if t ~= "Transparent" then
-			backdropr, backdropg, backdropb = unpack(E["media"].backdropcolor)
+			backdropr, backdropg, backdropb = unpack(E.media.backdropcolor)
 		else
-			backdropr, backdropg, backdropb, backdropa = unpack(E["media"].backdropfadecolor)
+			backdropr, backdropg, backdropb, backdropa = unpack(E.media.backdropfadecolor)
 		end
 	elseif t == "Transparent" then
-		borderr, borderg, borderb = unpack(E["media"].bordercolor)
-		backdropr, backdropg, backdropb, backdropa = unpack(E["media"].backdropfadecolor)
+		borderr, borderg, borderb = unpack(E.media.bordercolor)
+		backdropr, backdropg, backdropb, backdropa = unpack(E.media.backdropfadecolor)
 	else
-		borderr, borderg, borderb = unpack(E["media"].bordercolor)
-		backdropr, backdropg, backdropb = unpack(E["media"].backdropcolor)
+		borderr, borderg, borderb = unpack(E.media.bordercolor)
+		backdropr, backdropg, backdropb = unpack(E.media.backdropcolor)
 	end
 end
 
@@ -83,15 +83,15 @@ local function SetTemplate(f, t, glossTex, ignoreUpdates)
 	
 	if E.private.general.pixelPerfect then
 		f:SetBackdrop({
-		  bgFile = E["media"].blankTex, 
-		  edgeFile = E["media"].blankTex, 
+		  bgFile = E.media.blankTex, 
+		  edgeFile = E.media.blankTex, 
 		  tile = false, tileSize = 0, edgeSize = E.mult, 
 		  insets = { left = 0, right = 0, top = 0, bottom = 0}
 		})	
 	else
 		f:SetBackdrop({
-		  bgFile = E["media"].blankTex, 
-		  edgeFile = E["media"].blankTex, 
+		  bgFile = E.media.blankTex, 
+		  edgeFile = E.media.blankTex, 
 		  tile = false, tileSize = 0, edgeSize = E.mult, 
 		  insets = { left = -E.mult, right = -E.mult, top = -E.mult, bottom = -E.mult}
 		})
@@ -108,7 +108,7 @@ local function SetTemplate(f, t, glossTex, ignoreUpdates)
 			local border = CreateFrame("Frame", nil, f)
 			border:SetInside(f, E.mult, E.mult)
 			border:SetBackdrop({
-				edgeFile = E["media"].blankTex, 
+				edgeFile = E.media.blankTex, 
 				edgeSize = E.mult, 
 				insets = { left = E.mult, right = E.mult, top = E.mult, bottom = E.mult }
 			})
@@ -120,7 +120,7 @@ local function SetTemplate(f, t, glossTex, ignoreUpdates)
 			border:SetOutside(f, E.mult, E.mult)
 			border:SetFrameLevel(f:GetFrameLevel() + 1)
 			border:SetBackdrop({
-				edgeFile = E["media"].blankTex, 
+				edgeFile = E.media.blankTex, 
 				edgeSize = E.mult, 
 				insets = { left = E.mult, right = E.mult, top = E.mult, bottom = E.mult }
 			})
@@ -134,9 +134,9 @@ local function SetTemplate(f, t, glossTex, ignoreUpdates)
 		f.backdropTexture:SetVertexColor(backdropr, backdropg, backdropb)
 		f.backdropTexture:SetAlpha(backdropa)
 		if glossTex then
-			f.backdropTexture:SetTexture(E["media"].glossTex)
+			f.backdropTexture:SetTexture(E.media.glossTex)
 		else
-			f.backdropTexture:SetTexture(E["media"].blankTex)
+			f.backdropTexture:SetTexture(E.media.blankTex)
 		end
 		
 		f.backdropTexture:SetInside(f)
@@ -145,7 +145,7 @@ local function SetTemplate(f, t, glossTex, ignoreUpdates)
 	f:SetBackdropBorderColor(borderr, borderg, borderb)
 	
 	if not ignoreUpdates then
-		E["frames"][f] = true
+		E.frames[f] = true
 	end
 	
 	frame = nil;
@@ -219,7 +219,7 @@ local function FontTemplate(fs, font, fontSize, fontStyle)
 	fs.fontSize = fontSize
 	fs.fontStyle = fontStyle
 	
-	if not font then font = LSM:Fetch("font", E.db['general'].font) end
+	if not font then font = LSM:Fetch("font", E.db.general.font) end
 	if not fontSize then fontSize = E.db.general.fontSize end
 	if fontStyle == 'OUTLINE' and E.db.general.font:lower():find('pixel') then
 		if (fontSize > 10 and not fs.fontSize) then
@@ -236,7 +236,7 @@ local function FontTemplate(fs, font, fontSize, fontStyle)
 	end
 	fs:SetShadowOffset((E.mult or 1), -(E.mult or 1))
 	
-	E["texts"][fs] = true
+	E.texts[fs] = true
 end
 
 local function StyleButton(button)
@@ -258,7 +258,7 @@ local function StyleButton(button)
 	
 	if button.SetCheckedTexture and not button.checked then
 		local checked = button:CreateTexture("frame", nil, self)
-		checked:SetTexture(unpack(E["media"].rgbvaluecolor))
+		checked:SetTexture(unpack(E.media.rgbvaluecolor))
 		checked:SetInside()
 		checked:SetAlpha(0.3)
 		button.checked = checked

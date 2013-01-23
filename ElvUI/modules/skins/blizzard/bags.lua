@@ -7,7 +7,7 @@ local function LoadSkin()
 	local QUEST_ITEM_STRING = select(10, GetAuctionItemClasses())
 	
 	local function UpdateBorderColors(button)
-		button:SetBackdropBorderColor(unpack(E['media'].bordercolor))
+		button:SetBackdropBorderColor(unpack(E.media.bordercolor))
 		
 		if button.type and button.type == QUEST_ITEM_STRING then
 			button:SetBackdropBorderColor(1, 0.2, 0.2)
@@ -172,10 +172,10 @@ local function LoadSkin()
 		
 		local highlight = _G[button:GetName().."HighlightFrameTexture"]
 		if highlight and not highlight.skinned then
-			highlight:SetTexture(unpack(E["media"].rgbvaluecolor), 0.3)
+			highlight:SetTexture(unpack(E.media.rgbvaluecolor), 0.3)
 			hooksecurefunc(highlight, "SetTexture", function(self, r, g, b, a)
 				if a ~= 0.3 then
-					highlight:SetTexture(unpack(E["media"].rgbvaluecolor), 0.3)
+					highlight:SetTexture(unpack(E.media.rgbvaluecolor), 0.3)
 				end
 			end)
 			highlight:SetInside()

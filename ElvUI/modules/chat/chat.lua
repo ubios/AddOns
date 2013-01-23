@@ -222,9 +222,9 @@ function CH:StyleChat(frame)
 	end)
 
 	tab.text = _G[("%sTabText"):format(name)]
-	tab.text:SetTextColor(unpack(E["media"].rgbvaluecolor))
+	tab.text:SetTextColor(unpack(E.media.rgbvaluecolor))
 	hooksecurefunc(tab.text, "SetTextColor", function(t, r, g, b, a)
-		local rR, gG, bB = unpack(E["media"].rgbvaluecolor)
+		local rR, gG, bB = unpack(E.media.rgbvaluecolor)
 
 		if r ~= rR or g ~= gG or b ~= bB then
 			t:SetTextColor(rR, gG, bB)
@@ -540,7 +540,7 @@ local function UpdateChatTabColor(hex, r, g, b)
 		_G[('ChatFrame%dTabText'):format(i)]:SetTextColor(r, g, b)
 	end
 end
-E['valueColorUpdateFuncs'][UpdateChatTabColor] = true
+E.valueColorUpdateFuncs[UpdateChatTabColor] = true
 
 function CH:ScrollToBottom(frame)
 	frame:ScrollToBottom()

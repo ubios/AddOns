@@ -153,7 +153,7 @@ function NP:CreateAuraIcon(parent)
 	if E.PixelMode then
 		button.bord = button:CreateTexture(nil, "BACKGROUND")
 		button.bord:SetDrawLayer('BACKGROUND', 2)
-		button.bord:SetTexture(unpack(E["media"].bordercolor))
+		button.bord:SetTexture(unpack(E.media.bordercolor))
 		button.bord:SetPoint("TOPLEFT",button,"TOPLEFT", noscalemult,-noscalemult)
 		button.bord:SetPoint("BOTTOMRIGHT",button,"BOTTOMRIGHT",-noscalemult,noscalemult)
 		
@@ -168,7 +168,7 @@ function NP:CreateAuraIcon(parent)
 		
 		button.bord = button:CreateTexture(nil, "BACKGROUND")
 		button.bord:SetDrawLayer('BACKGROUND', 2)
-		button.bord:SetTexture(unpack(E["media"].bordercolor))
+		button.bord:SetTexture(unpack(E.media.bordercolor))
 		button.bord:SetPoint("TOPLEFT",button,"TOPLEFT", noscalemult,-noscalemult)
 		button.bord:SetPoint("BOTTOMRIGHT",button,"BOTTOMRIGHT",-noscalemult,noscalemult)
 		
@@ -328,7 +328,7 @@ function NP:SetAuraInstance(guid, spellid, expiration, stacks, caster, duration,
 		filter = true;
 	end
 	
-	local trackFilter = E.global['unitframe']['aurafilters'][self.db.trackfilter]
+	local trackFilter = E.global.unitframe.aurafilters[self.db.trackfilter]
 	if self.db.trackfilter and #self.db.trackfilter > 1 and trackFilter then
 		local name = GetSpellInfo(spellid)
 		local spellList = trackFilter.spells
@@ -866,7 +866,7 @@ function NP:CastBar_OnShow(frame)
 	frame:ClearAllPoints()
 	frame:SetSize(frame:GetParent().hp:GetWidth(), self.db.cbheight)
 	frame:SetPoint('TOP', frame:GetParent().hp, 'BOTTOM', 0, -8)
-	frame:SetStatusBarTexture(E["media"].normTex)
+	frame:SetStatusBarTexture(E.media.normTex)
 	frame:GetStatusBarTexture():SetHorizTile(true)
 	if(frame.shield:IsShown()) then
 		frame:SetStatusBarColor(0.78, 0.25, 0.25, 1)
@@ -884,12 +884,12 @@ function NP:CastBar_OnShow(frame)
 		frame:Width(frame:GetWidth() * frame:GetParent():GetEffectiveScale())
 	end
 		
-	self:SetVirtualBorder(frame, unpack(E["media"].bordercolor))
-	self:SetVirtualBackdrop(frame, unpack(E["media"].backdropcolor))	
+	self:SetVirtualBorder(frame, unpack(E.media.bordercolor))
+	self:SetVirtualBackdrop(frame, unpack(E.media.backdropcolor))	
 	
 	frame.icon:Size(self.db.cbheight + frame:GetParent().hp:GetHeight() + 8)
-	self:SetVirtualBorder(frame.icon, unpack(E["media"].bordercolor))
-	self:SetVirtualBackdrop(frame.icon, unpack(E["media"].backdropcolor))		
+	self:SetVirtualBorder(frame.icon, unpack(E.media.bordercolor))
+	self:SetVirtualBackdrop(frame.icon, unpack(E.media.backdropcolor))		
 end
 
 function NP:CastBar_OnValueChanged(frame)

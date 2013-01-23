@@ -84,7 +84,7 @@ end
 local function ValueColorUpdate(newHex)
 	hex = newHex
 end
-E['valueColorUpdateFuncs'][ValueColorUpdate] = true
+E.valueColorUpdateFuncs[ValueColorUpdate] = true
 
 function DT:GetDataPanelPoint(panel, i, numPoints)
 	if numPoints == 1 then

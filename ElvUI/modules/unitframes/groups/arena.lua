@@ -43,7 +43,7 @@ function UF:Construct_ArenaFrames(frame)
 		frame.prepFrame.Icon:SetParent(frame.prepFrame.Icon.bg)
 		frame.prepFrame.Icon:SetTexCoord(unpack(E.TexCoords))
 		frame.prepFrame.Icon:SetInside(frame.prepFrame.Icon.bg)
-		UF['statusbars'][frame.prepFrame.Health] = true;
+		UF.statusbars[frame.prepFrame.Health] = true;
 		
 		frame.prepFrame.SpecClass = frame.prepFrame.Health:CreateFontString(nil, "OVERLAY")
 		frame.prepFrame.SpecClass:SetPoint("CENTER")
@@ -103,8 +103,8 @@ function UF:Update_ArenaFrames(frame, db)
 		health.colorHealth = nil
 		health.colorClass = nil
 		health.colorReaction = nil
-		if self.db['colors'].healthclass ~= true then
-			if self.db['colors'].colorhealthbyvalue == true then
+		if self.db.colors.healthclass ~= true then
+			if self.db.colors.colorhealthbyvalue == true then
 				health.colorSmooth = true
 			else
 				health.colorHealth = true
@@ -164,7 +164,7 @@ function UF:Update_ArenaFrames(frame, db)
 			power.colorClass = nil
 			power.colorReaction = nil	
 			power.colorPower = nil
-			if self.db['colors'].powerclass then
+			if self.db.colors.powerclass then
 				power.colorClass = true
 				power.colorReaction = true
 			else
@@ -435,4 +435,4 @@ function UF:UpdatePrep(event)
 	end
 end
 
-UF['unitgroupstoload']['arena'] = 5
+UF.unitgroupstoload['arena'] = 5

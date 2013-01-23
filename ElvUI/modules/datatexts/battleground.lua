@@ -112,4 +112,4 @@ local function ValueColorUpdate(hex, r, g, b)
 		DT.UPDATE_BATTLEFIELD_SCORE(lastPanel)
 	end
 end
-E['valueColorUpdateFuncs'][ValueColorUpdate] = true
+E.valueColorUpdateFuncs[ValueColorUpdate] = true

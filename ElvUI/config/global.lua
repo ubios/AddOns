@@ -1,15 +1,15 @@
 ﻿local E, L, V, P, G, _ = unpack(select(2, ...)); --Inport: Engine, Locales, PrivateDB, ProfileDB, GlobalDB, Localize Underscore
 
 --Global Settings
-G['general'] = {
+G.general = {
 	["autoScale"] = true,
 }
 
-G['classtimer'] = {}
+G.classtimer = {}
 
-G["nameplate"] = {}
+G.nameplate = {}
 
-G['unitframe'] = {
+G.unitframe = {
 	['aurafilters'] = {},
 	['buffwatch'] = {},
 }

@@ -49,7 +49,7 @@ function UF:Construct_PartyFrames(unitGroup)
 	end
 	
 	
-	UF:Update_PartyFrames(self, E.db['unitframe']['units']['party'])
+	UF:Update_PartyFrames(self, E.db.unitframe['units']['party'])
 	UF:Update_StatusBars()
 	UF:Update_FontStrings()	
 
@@ -200,8 +200,8 @@ function UF:Update_PartyFrames(frame, db)
 			health.colorHealth = nil
 			health.colorClass = nil
 			health.colorReaction = nil
-			if self.db['colors'].healthclass ~= true then
-				if self.db['colors'].colorhealthbyvalue == true then
+			if self.db.colors.healthclass ~= true then
+				if self.db.colors.colorhealthbyvalue == true then
 					health.colorSmooth = true
 				else
 					health.colorHealth = true
@@ -246,8 +246,8 @@ function UF:Update_PartyFrames(frame, db)
 			health.colorHealth = nil
 			health.colorClass = nil
 			health.colorReaction = nil
-			if self.db['colors'].healthclass ~= true then
-				if self.db['colors'].colorhealthbyvalue == true then
+			if self.db.colors.healthclass ~= true then
+				if self.db.colors.colorhealthbyvalue == true then
 					health.colorSmooth = true
 				else
 					health.colorHealth = true
@@ -302,7 +302,7 @@ function UF:Update_PartyFrames(frame, db)
 				power.colorClass = nil
 				power.colorReaction = nil	
 				power.colorPower = nil
-				if self.db['colors'].powerclass then
+				if self.db.colors.powerclass then
 					power.colorClass = true
 					power.colorReaction = true
 				else

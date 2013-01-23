@@ -14,12 +14,12 @@ local find = string.find
 
 local function SetModifiedBackdrop(self)
 	if self.backdrop then self = self.backdrop end
-	self:SetBackdropBorderColor(unpack(E["media"].rgbvaluecolor))	
+	self:SetBackdropBorderColor(unpack(E.media.rgbvaluecolor))	
 end
 
 local function SetOriginalBackdrop(self)
 	if self.backdrop then self = self.backdrop end
-	self:SetBackdropBorderColor(unpack(E["media"].bordercolor))	
+	self:SetBackdropBorderColor(unpack(E.media.bordercolor))	
 end
 
 function S:HandleButton(f, strip)
@@ -360,7 +360,7 @@ function S:HandleSliderFrame(frame)
 			frame:SetBackdrop(nil)
 		end
 	end)
-	frame:SetThumbTexture(E["media"].blankTex)
+	frame:SetThumbTexture(E.media.blankTex)
 	frame:GetThumbTexture():SetVertexColor(0.3, 0.3, 0.3)
 	frame:GetThumbTexture():Size(SIZE-2,SIZE-2)
 	if orientation == 'VERTICAL' then

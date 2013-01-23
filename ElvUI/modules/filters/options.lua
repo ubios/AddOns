@@ -41,8 +41,8 @@ local function UpdateFilterGroup()
 					type = 'input',
 					get = function(info) return "" end,
 					set = function(info, value) 
-						if G['unitframe'].AuraBarColors[value] then
-							G['unitframe'].AuraBarColors[value] = false;
+						if G.unitframe.AuraBarColors[value] then
+							G.unitframe.AuraBarColors[value] = false;
 							E:Print(L['You may not remove a spell from a default filter that is not customly added. Setting spell to false instead.'])
 						else
 							E.global.unitframe.AuraBarColors[value] = nil;
@@ -533,7 +533,7 @@ local function UpdateFilterGroup()
 	
 		buffs = nil;
 	else
-		if not selectedFilter or not E.global.unitframe['aurafilters'][selectedFilter] then
+		if not selectedFilter or not E.global.unitframe.aurafilters[selectedFilter] then
 			E.Options.args.filters.args.filterGroup = nil
 			E.Options.args.filters.args.spellGroup = nil
 			return
@@ -552,8 +552,8 @@ local function UpdateFilterGroup()
 					type = 'input',
 					get = function(info) return "" end,
 					set = function(info, value) 
-						if not E.global.unitframe['aurafilters'][selectedFilter]['spells'][value] then
-							E.global.unitframe['aurafilters'][selectedFilter]['spells'][value] = { 
+						if not E.global.unitframe.aurafilters[selectedFilter]['spells'][value] then
+							E.global.unitframe.aurafilters[selectedFilter]['spells'][value] = { 
 								['enable'] = true,
 								['priority'] = 0,
 							}
@@ -569,15 +569,15 @@ local function UpdateFilterGroup()
 					type = 'input',
 					get = function(info) return "" end,
 					set = function(info, value) 
-						if G['unitframe']['aurafilters'][selectedFilter] then
-							if G['unitframe']['aurafilters'][selectedFilter]['spells'][value] then
-								E.global.unitframe['aurafilters'][selectedFilter]['spells'][value].enable = false;
+						if G.unitframe['aurafilters'][selectedFilter] then
+							if G.unitframe['aurafilters'][selectedFilter]['spells'][value] then
+								E.global.unitframe.aurafilters[selectedFilter]['spells'][value].enable = false;
 								E:Print(L['You may not remove a spell from a default filter that is not customly added. Setting spell to false instead.'])
 							else
-								E.global.unitframe['aurafilters'][selectedFilter]['spells'][value] = nil;
+								E.global.unitframe.aurafilters[selectedFilter]['spells'][value] = nil;
 							end
 						else
-							E.global.unitframe['aurafilters'][selectedFilter]['spells'][value] = nil;
+							E.global.unitframe.aurafilters[selectedFilter]['spells'][value] = nil;
 						end
 						
 						UpdateFilterGroup();
@@ -593,8 +593,8 @@ local function UpdateFilterGroup()
 						['Whitelist'] = L['Whitelist'],
 						['Blacklist'] = L['Blacklist'],
 					},
-					get = function() return E.global.unitframe['aurafilters'][selectedFilter].type end,
-					set = function(info, value) E.global.unitframe['aurafilters'][selectedFilter].type = value; UF:Update_AllFrames(); end,
+					get = function() return E.global.unitframe.aurafilters[selectedFilter].type end,
+					set = function(info, value) E.global.unitframe.aurafilters[selectedFilter].type = value; UF:Update_AllFrames(); end,
 				},	
 				selectSpell = {
 					name = L["Select Spell"],
@@ -606,7 +606,7 @@ local function UpdateFilterGroup()
 					values = function()
 						local filters = {}
 						filters[''] = NONE
-						for filter in pairs(E.global.unitframe['aurafilters'][selectedFilter]['spells']) do
+						for filter in pairs(E.global.unitframe.aurafilters[selectedFilter]['spells']) do
 							filters[filter] = filter
 						end
 
@@ -616,7 +616,7 @@ local function UpdateFilterGroup()
 			},	
 		}
 	
-		if not selectedSpell or not E.global.unitframe['aurafilters'][selectedFilter]['spells'][selectedSpell] then
+		if not selectedSpell or not E.global.unitframe.aurafilters[selectedFilter]['spells'][selectedSpell] then
 			E.Options.args.filters.args.spellGroup = nil
 			return
 		end
@@ -634,10 +634,10 @@ local function UpdateFilterGroup()
 						if selectedFolder or not selectedSpell then
 							return false
 						else
-							return E.global.unitframe['aurafilters'][selectedFilter]['spells'][selectedSpell].enable
+							return E.global.unitframe.aurafilters[selectedFilter]['spells'][selectedSpell].enable
 						end
 					end,
-					set = function(info, value) E.global.unitframe['aurafilters'][selectedFilter]['spells'][selectedSpell].enable = value; UpdateFilterGroup(); UF:Update_AllFrames(); end
+					set = function(info, value) E.global.unitframe.aurafilters[selectedFilter]['spells'][selectedSpell].enable = value; UpdateFilterGroup(); UF:Update_AllFrames(); end
 				},
 				priority = {
 					name = L["Priority"],
@@ -646,10 +646,10 @@ local function UpdateFilterGroup()
 						if selectedFolder or not selectedSpell then
 							return 0
 						else
-							return E.global.unitframe['aurafilters'][selectedFilter]['spells'][selectedSpell].priority
+							return E.global.unitframe.aurafilters[selectedFilter]['spells'][selectedSpell].priority
 						end
 					end,
-					set = function(info, value) E.global.unitframe['aurafilters'][selectedFilter]['spells'][selectedSpell].priority = value; UpdateFilterGroup(); UF:Update_AllFrames(); end,
+					set = function(info, value) E.global.unitframe.aurafilters[selectedFilter]['spells'][selectedSpell].priority = value; UpdateFilterGroup(); UF:Update_AllFrames(); end,
 					min = 0, max = 10, step = 1,
 					desc = L["Set the priority order of the spell, please note that prioritys are only used for the raid debuff module, not the standard buff/debuff module. If you want to disable set to zero."],
 				},			
@@ -673,8 +673,8 @@ E.Options.args.filters = {
 			type = 'input',
 			get = function(info) return "" end,
 			set = function(info, value) 
-				E.global.unitframe['aurafilters'][value] = {};
-				E.global.unitframe['aurafilters'][value]['spells'] = {};
+				E.global.unitframe.aurafilters[value] = {};
+				E.global.unitframe.aurafilters[value]['spells'] = {};
 			end,					
 		},
 		deleteFilter = {
@@ -684,10 +684,10 @@ E.Options.args.filters = {
 			desc = L['Delete a created filter, you cannot delete pre-existing filters, only custom ones.'],
 			get = function(info) return "" end,
 			set = function(info, value) 
-				if G['unitframe']['aurafilters'][value] then
+				if G.unitframe['aurafilters'][value] then
 					E:Print(L["You can't remove a pre-existing filter."])
 				else
-					E.global.unitframe['aurafilters'][value] = nil;
+					E.global.unitframe.aurafilters[value] = nil;
 					selectedFilter = nil;
 					selectedSpell = nil;
 					E.Options.args.filters.args.filterGroup = nil;
@@ -703,7 +703,7 @@ E.Options.args.filters = {
 			values = function()
 				filters = {}
 				filters[''] = NONE
-				for filter in pairs(E.global.unitframe['aurafilters']) do
+				for filter in pairs(E.global.unitframe.aurafilters) do
 					filters[filter] = filter
 				end
 				

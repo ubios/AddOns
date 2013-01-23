@@ -12,11 +12,11 @@ local function SkinIt(bar)
 		end
 	end
 	
-	bar:SetStatusBarTexture(E["media"].normTex)
+	bar:SetStatusBarTexture(E.media.normTex)
 	if E.PixelMode then
 		bar:SetStatusBarColor(.31, .31, .31)
 	else
-		bar:SetStatusBarColor(unpack(E["media"].bordercolor))
+		bar:SetStatusBarColor(unpack(E.media.bordercolor))
 	end
 	
 	if not bar.backdrop then

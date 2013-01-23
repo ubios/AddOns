@@ -19,13 +19,13 @@ E.screenheight = tonumber(match(E.resolution, "%d+x(%d+)"))
 E.screenwidth = tonumber(match(E.resolution, "(%d+)x+%d"))
 
 --Tables
-E["media"] = {};
-E["frames"] = {};
-E["texts"] = {};
-E['snapBars'] = {}
-E["RegisteredModules"] = {}
-E['RegisteredInitialModules'] = {}
-E['valueColorUpdateFuncs'] = {};
+E.media = {};
+E.frames = {};
+E.texts = {};
+E.snapBars = {}
+E.RegisteredModules = {}
+E.RegisteredInitialModules = {}
+E.valueColorUpdateFuncs = {};
 E.TexCoords = {.08, .92, .08, .92}
 E.FrameLocks = {}
 E.CreditsList = {};
@@ -132,7 +132,7 @@ E.KnownColors = {
 E.noop = function() end;
 
 function E:Print(msg)
-	print(('%sElvUI:|r'):format(self["media"].hexvaluecolor), msg)
+	print(('%sElvUI:|r'):format(self.media.hexvaluecolor), msg)
 end
 
 --Basically check if another class border is being used on a class that doesn't match. And then return true if a match is found.
@@ -164,43 +164,43 @@ end
 
 function E:UpdateMedia()	
 	--Fonts
-	self["media"].normFont = LSM:Fetch("font", self.db['general'].font)
-	self["media"].combatFont = LSM:Fetch("font", self.db['general'].dmgfont)
+	self.media.normFont = LSM:Fetch("font", self.db.general.font)
+	self.media.combatFont = LSM:Fetch("font", self.db.general.dmgfont)
 	
 
 	--Textures
-	self["media"].blankTex = LSM:Fetch("background", "ElvUI Blank")
-	self["media"].normTex = LSM:Fetch("statusbar", self.private['general'].normTex)
-	self["media"].glossTex = LSM:Fetch("statusbar", self.private['general'].glossTex)
+	self.media.blankTex = LSM:Fetch("background", "ElvUI Blank")
+	self.media.normTex = LSM:Fetch("statusbar", self.private.general.normTex)
+	self.media.glossTex = LSM:Fetch("statusbar", self.private.general.glossTex)
 
 	--Border Color
-	local border = E.db['general'].bordercolor
+	local border = E.db.general.bordercolor
 	if CheckClassColor(border.r, border.g, border.b) then
 		border = RAID_CLASS_COLORS[E.myclass]
-		E.db['general'].bordercolor.r = RAID_CLASS_COLORS[E.myclass].r
-		E.db['general'].bordercolor.g = RAID_CLASS_COLORS[E.myclass].g
-		E.db['general'].bordercolor.b = RAID_CLASS_COLORS[E.myclass].b	
+		E.db.general.bordercolor.r = RAID_CLASS_COLORS[E.myclass].r
+		E.db.general.bordercolor.g = RAID_CLASS_COLORS[E.myclass].g
+		E.db.general.bordercolor.b = RAID_CLASS_COLORS[E.myclass].b	
 	elseif E.PixelMode then
 		border = {r = 0, g = 0, b = 0}
 	end
-	self["media"].bordercolor = {border.r, border.g, border.b}
+	self.media.bordercolor = {border.r, border.g, border.b}
 
 	--Backdrop Color
-	self["media"].backdropcolor = E:GetColorTable(self.db['general'].backdropcolor)
+	self.media.backdropcolor = E:GetColorTable(self.db.general.backdropcolor)
 
 	--Backdrop Fade Color
-	self["media"].backdropfadecolor = E:GetColorTable(self.db['general'].backdropfadecolor)
+	self.media.backdropfadecolor = E:GetColorTable(self.db.general.backdropfadecolor)
 	
 	--Value Color
-	local value = self.db['general'].valuecolor
+	local value = self.db.general.valuecolor
 	if CheckClassColor(value.r, value.g, value.b) then
 		value = RAID_CLASS_COLORS[E.myclass]
-		self.db['general'].valuecolor.r = RAID_CLASS_COLORS[E.myclass].r
-		self.db['general'].valuecolor.g = RAID_CLASS_COLORS[E.myclass].g
-		self.db['general'].valuecolor.b = RAID_CLASS_COLORS[E.myclass].b		
+		self.db.general.valuecolor.r = RAID_CLASS_COLORS[E.myclass].r
+		self.db.general.valuecolor.g = RAID_CLASS_COLORS[E.myclass].g
+		self.db.general.valuecolor.b = RAID_CLASS_COLORS[E.myclass].b		
 	end
-	self["media"].hexvaluecolor = self:RGBToHex(value.r, value.g, value.b)
-	self["media"].rgbvaluecolor = {value.r, value.g, value.b}
+	self.media.hexvaluecolor = self:RGBToHex(value.r, value.g, value.b)
+	self.media.rgbvaluecolor = {value.r, value.g, value.b}
 	
 	if LeftChatPanel and LeftChatPanel.tex and RightChatPanel and RightChatPanel.tex then
 		LeftChatPanel.tex:SetTexture(E.db.chat.panelBackdropNameLeft)
@@ -237,46 +237,46 @@ end
 
 function E:ValueFuncCall()
 	for func, _ in pairs(self['valueColorUpdateFuncs']) do
-		func(self["media"].hexvaluecolor, unpack(self["media"].rgbvaluecolor))
+		func(self.media.hexvaluecolor, unpack(self.media.rgbvaluecolor))
 	end
 end
 
 function E:UpdateFrameTemplates()
-	for frame, _ in pairs(self["frames"]) do
+	for frame, _ in pairs(self.frames) do
 		if frame and frame.template  then
 			frame:SetTemplate(frame.template, frame.glossTex);
 		else
-			self["frames"][frame] = nil;
+			self.frames[frame] = nil;
 		end
 	end
 end
 
 function E:UpdateBorderColors()
-	for frame, _ in pairs(self["frames"]) do
+	for frame, _ in pairs(self.frames) do
 		if frame and not frame.ignoreUpdates then
 			if frame.template == 'Default' or frame.template == 'Transparent' or frame.template == nil then
-				frame:SetBackdropBorderColor(unpack(self['media'].bordercolor))
+				frame:SetBackdropBorderColor(unpack(self.media.bordercolor))
 			end
 		else
-			self["frames"][frame] = nil;
+			self.frames[frame] = nil;
 		end
 	end
 end	
 
 function E:UpdateBackdropColors()
-	for frame, _ in pairs(self["frames"]) do
+	for frame, _ in pairs(self.frames) do
 		if frame then
 			if frame.template == 'Default' or frame.template == nil then
 				if frame.backdropTexture then
-					frame.backdropTexture:SetVertexColor(unpack(self['media'].backdropcolor))
+					frame.backdropTexture:SetVertexColor(unpack(self.media.backdropcolor))
 				else
-					frame:SetBackdropColor(unpack(self['media'].backdropcolor))				
+					frame:SetBackdropColor(unpack(self.media.backdropcolor))				
 				end
 			elseif frame.template == 'Transparent' then
-				frame:SetBackdropColor(unpack(self['media'].backdropfadecolor))
+				frame:SetBackdropColor(unpack(self.media.backdropfadecolor))
 			end
 		else
-			self["frames"][frame] = nil;
+			self.frames[frame] = nil;
 		end
 	end
 end	
@@ -296,7 +296,7 @@ E.UIParent = CreateFrame('Frame', 'ElvUIParent', UIParent);
 E.UIParent:SetFrameLevel(UIParent:GetFrameLevel());
 E.UIParent:SetPoint('CENTER', UIParent, 'CENTER');
 E.UIParent:SetSize(UIParent:GetSize());
-E['snapBars'][#E['snapBars'] + 1] = E.UIParent
+E.snapBars[#E.snapBars + 1] = E.UIParent
 
 E.HiddenFrame = CreateFrame('Frame')
 E.HiddenFrame:Hide()
@@ -370,7 +370,7 @@ end
 
 function E:IncompatibleAddOn(addon, module)
 	E.PopupDialogs['INCOMPATIBLE_ADDON'].button1 = addon
-	E.PopupDialogs['INCOMPATIBLE_ADDON'].button2 = 'ElvUI '..module
+	E.PopupDialogs['INCOMPATIBLE_ADDON'].button2 = ('ElvUI %s'):format(module)
 	E.PopupDialogs['INCOMPATIBLE_ADDON'].addon = addon
 	E.PopupDialogs['INCOMPATIBLE_ADDON'].module = module
 	E:StaticPopup_Show('INCOMPATIBLE_ADDON', addon, module)
@@ -581,16 +581,16 @@ function E:RegisterModule(name)
 	if self.initialized then
 		self:GetModule(name):Initialize()
 	else
-		self['RegisteredModules'][#self['RegisteredModules'] + 1] = name
+		self.RegisteredModules[#self.RegisteredModules + 1] = name
 	end
 end
 
 function E:RegisterInitialModule(name)
-	self['RegisteredInitialModules'][#self['RegisteredInitialModules'] + 1] = name
+	self.RegisteredInitialModules[#self.RegisteredInitialModules + 1] = name
 end
 
 function E:InitializeInitialModules()
-	for _, module in pairs(E['RegisteredInitialModules']) do
+	for _, module in pairs(E.RegisteredInitialModules) do
 		local module = self:GetModule(module, true)
 		if module and module.Initialize then
 			local _, catch = pcall(module.Initialize, module)
@@ -608,7 +608,7 @@ function E:RefreshModulesDB()
 end
 
 function E:InitializeModules()	
-	for _, module in pairs(E['RegisteredModules']) do
+	for _, module in pairs(E.RegisteredModules) do
 		local module = self:GetModule(module)
 		if module.Initialize then
 			local _, catch = pcall(module.Initialize, module)
@@ -689,6 +689,6 @@ function E:Initialize()
 	collectgarbage("collect");
 	
 	if self.db.general.loginmessage then
-		print(select(2, E:GetModule('Chat'):FindURL("CHAT_MSG_DUMMY", format(L['LOGIN_MSG'], self["media"].hexvaluecolor, self["media"].hexvaluecolor, self.version)))..'.')
+		print(select(2, E:GetModule('Chat'):FindURL("CHAT_MSG_DUMMY", format(L['LOGIN_MSG'], self.media.hexvaluecolor, self.media.hexvaluecolor, self.version)))..'.')
 	end	
 end

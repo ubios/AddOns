@@ -273,7 +273,7 @@ function E:SetupTheme(theme, noDisplayMsg)
 	end
 
 	if InstallStatus then
-		InstallStatus:SetStatusBarColor(unpack(E['media'].rgbvaluecolor))
+		InstallStatus:SetStatusBarColor(unpack(E.media.rgbvaluecolor))
 		
 		if InstallStepComplete and not noDisplayMsg then
 			InstallStepComplete.message = L["Theme Set"]
@@ -848,8 +848,8 @@ function E:Install()
 		f.Status = CreateFrame("StatusBar", "InstallStatus", f)
 		f.Status:SetFrameLevel(f.Status:GetFrameLevel() + 2)
 		f.Status:CreateBackdrop("Default")
-		f.Status:SetStatusBarTexture(E["media"].normTex)
-		f.Status:SetStatusBarColor(unpack(E["media"].rgbvaluecolor))
+		f.Status:SetStatusBarTexture(E.media.normTex)
+		f.Status:SetStatusBarColor(unpack(E.media.rgbvaluecolor))
 		f.Status:SetMinMaxValues(0, MAX_PAGE)
 		f.Status:Point("TOPLEFT", f.Prev, "TOPRIGHT", 6, -2)
 		f.Status:Point("BOTTOMRIGHT", f.Next, "BOTTOMLEFT", -6, 2)

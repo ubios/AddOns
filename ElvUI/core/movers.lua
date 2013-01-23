@@ -79,7 +79,7 @@ local function CreateMover(parent, name, text, overlay, snapOffset, postdrag)
 	f.snapOffset = snapOffset or -2
 	E.CreatedMovers[name].mover = f
 	
-	E['snapBars'][#E['snapBars'] + 1] = f
+	E.snapBars[#E.snapBars + 1] = f
 	
 	if overlay == true then
 		f:SetFrameStrata("DIALOG")
@@ -105,8 +105,8 @@ local function CreateMover(parent, name, text, overlay, snapOffset, postdrag)
 	f:SetScript("OnDragStart", function(self) 
 		if InCombatLockdown() then E:Print(ERR_NOT_IN_COMBAT) return end	
 
-		if E.db['general'].stickyFrames then
-			Sticky:StartMoving(self, E['snapBars'], f.snapOffset, f.snapOffset, f.snapOffset, f.snapOffset)
+		if E.db.general.stickyFrames then
+			Sticky:StartMoving(self, E.snapBars, f.snapOffset, f.snapOffset, f.snapOffset, f.snapOffset)
 		else
 			self:StartMoving() 
 		end
@@ -120,7 +120,7 @@ local function CreateMover(parent, name, text, overlay, snapOffset, postdrag)
 	f:SetScript("OnDragStop", function(self) 
 		if InCombatLockdown() then E:Print(ERR_NOT_IN_COMBAT) return end
 		isDragging = false;
-		if E.db['general'].stickyFrames then
+		if E.db.general.stickyFrames then
 			Sticky:StopMoving(self)
 		else
 			self:StopMovingOrSizing()
@@ -194,7 +194,7 @@ local function CreateMover(parent, name, text, overlay, snapOffset, postdrag)
 	fs:SetJustifyH("CENTER")
 	fs:SetPoint("CENTER")
 	fs:SetText(text or name)
-	fs:SetTextColor(unpack(E["media"].rgbvaluecolor))
+	fs:SetTextColor(unpack(E.media.rgbvaluecolor))
 	f:SetFontString(fs)
 	f.text = fs
 		
@@ -208,10 +208,10 @@ local function CreateMover(parent, name, text, overlay, snapOffset, postdrag)
 	end)
 	f:SetScript("OnLeave", function(self)
 		if isDragging then return end
-		self.text:SetTextColor(unpack(E["media"].rgbvaluecolor))
+		self.text:SetTextColor(unpack(E.media.rgbvaluecolor))
 	end)
 	f:SetScript('OnShow', function(self)
-		self:SetBackdropBorderColor(unpack(E["media"].rgbvaluecolor))
+		self:SetBackdropBorderColor(unpack(E.media.rgbvaluecolor))
 	end)
 	
 	f:SetMovable(true)

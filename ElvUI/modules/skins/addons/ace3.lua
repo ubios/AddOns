@@ -8,12 +8,12 @@ if not AceGUI then return end
 
 local function SetModifiedBackdrop(self)
 	if self.backdrop then self = self.backdrop end
-	self:SetBackdropBorderColor(unpack(E['media'].rgbvaluecolor))
+	self:SetBackdropBorderColor(unpack(E.media.rgbvaluecolor))
 end
 
 local function SetOriginalBackdrop(self)
 	if self.backdrop then self = self.backdrop end
-	self:SetBackdropBorderColor(unpack(E['media'].bordercolor))
+	self:SetBackdropBorderColor(unpack(E.media.bordercolor))
 end
 
 local function SkinScrollBar(frame, thumbTrim)
@@ -217,7 +217,7 @@ local function SkinAce3()
 			frame:StripTextures()
 			frame:SetTemplate('Default')
 			frame:Height(HEIGHT)
-			frame:SetThumbTexture(E["media"].blankTex)
+			frame:SetThumbTexture(E.media.blankTex)
 			frame:GetThumbTexture():SetVertexColor(0.3, 0.3, 0.3)
 			frame:GetThumbTexture():Size(HEIGHT-2,HEIGHT+2)
 			

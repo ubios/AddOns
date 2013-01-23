@@ -28,8 +28,8 @@ local floor = math.floor
 local pairs, ipairs, type, select, unpack = pairs, ipairs, type, select, unpack
 
 function NP:Initialize()
-	self.db = E.db["nameplate"]
-	if E.private["nameplate"].enable ~= true then return end
+	self.db = E.db.nameplate
+	if E.private.nameplate.enable ~= true then return end
 	E.NamePlates = NP
 	
 	if type(self.db.healthtext) == 'Boolean' then
@@ -94,35 +94,35 @@ function NP:CreateVirtualFrame(parent, point)
 	point.backdrop2 = parent:CreateTexture(nil, "BORDER")
 	point.backdrop2:SetDrawLayer("BORDER", -4)
 	point.backdrop2:SetAllPoints(point)
-	point.backdrop2:SetTexture(unpack(E["media"].backdropcolor))		
+	point.backdrop2:SetTexture(unpack(E.media.backdropcolor))		
 	
 	if E.PixelMode then 
 		point.bordertop = parent:CreateTexture(nil, "BORDER")
 		point.bordertop:SetPoint("TOPLEFT", point, "TOPLEFT", -noscalemult, noscalemult)
 		point.bordertop:SetPoint("TOPRIGHT", point, "TOPRIGHT", noscalemult, noscalemult)
 		point.bordertop:SetHeight(noscalemult)
-		point.bordertop:SetTexture(unpack(E["media"].bordercolor))	
+		point.bordertop:SetTexture(unpack(E.media.bordercolor))	
 		point.bordertop:SetDrawLayer("BORDER", -7)
 		
 		point.borderbottom = parent:CreateTexture(nil, "BORDER")
 		point.borderbottom:SetPoint("BOTTOMLEFT", point, "BOTTOMLEFT", -noscalemult, -noscalemult)
 		point.borderbottom:SetPoint("BOTTOMRIGHT", point, "BOTTOMRIGHT", noscalemult, -noscalemult)
 		point.borderbottom:SetHeight(noscalemult)
-		point.borderbottom:SetTexture(unpack(E["media"].bordercolor))	
+		point.borderbottom:SetTexture(unpack(E.media.bordercolor))	
 		point.borderbottom:SetDrawLayer("BORDER", -7)
 		
 		point.borderleft = parent:CreateTexture(nil, "BORDER")
 		point.borderleft:SetPoint("TOPLEFT", point, "TOPLEFT", -noscalemult, noscalemult)
 		point.borderleft:SetPoint("BOTTOMLEFT", point, "BOTTOMLEFT", noscalemult, -noscalemult)
 		point.borderleft:SetWidth(noscalemult)
-		point.borderleft:SetTexture(unpack(E["media"].bordercolor))	
+		point.borderleft:SetTexture(unpack(E.media.bordercolor))	
 		point.borderleft:SetDrawLayer("BORDER", -7)
 		
 		point.borderright = parent:CreateTexture(nil, "BORDER")
 		point.borderright:SetPoint("TOPRIGHT", point, "TOPRIGHT", noscalemult, noscalemult)
 		point.borderright:SetPoint("BOTTOMRIGHT", point, "BOTTOMRIGHT", -noscalemult, -noscalemult)
 		point.borderright:SetWidth(noscalemult)
-		point.borderright:SetTexture(unpack(E["media"].bordercolor))	
+		point.borderright:SetTexture(unpack(E.media.bordercolor))	
 		point.borderright:SetDrawLayer("BORDER", -7)			
 	else
 		point.backdrop = parent:CreateTexture(nil, "BORDER")
@@ -135,28 +135,28 @@ function NP:CreateVirtualFrame(parent, point)
 		point.bordertop:SetPoint("TOPLEFT", point, "TOPLEFT", -noscalemult*2, noscalemult*2)
 		point.bordertop:SetPoint("TOPRIGHT", point, "TOPRIGHT", noscalemult*2, noscalemult*2)
 		point.bordertop:SetHeight(noscalemult)
-		point.bordertop:SetTexture(unpack(E["media"].bordercolor))	
+		point.bordertop:SetTexture(unpack(E.media.bordercolor))	
 		point.bordertop:SetDrawLayer("BORDER", -7)
 		
 		point.borderbottom = parent:CreateTexture(nil, "BORDER")
 		point.borderbottom:SetPoint("BOTTOMLEFT", point, "BOTTOMLEFT", -noscalemult*2, -noscalemult*2)
 		point.borderbottom:SetPoint("BOTTOMRIGHT", point, "BOTTOMRIGHT", noscalemult*2, -noscalemult*2)
 		point.borderbottom:SetHeight(noscalemult)
-		point.borderbottom:SetTexture(unpack(E["media"].bordercolor))	
+		point.borderbottom:SetTexture(unpack(E.media.bordercolor))	
 		point.borderbottom:SetDrawLayer("BORDER", -7)
 		
 		point.borderleft = parent:CreateTexture(nil, "BORDER")
 		point.borderleft:SetPoint("TOPLEFT", point, "TOPLEFT", -noscalemult*2, noscalemult*2)
 		point.borderleft:SetPoint("BOTTOMLEFT", point, "BOTTOMLEFT", noscalemult*2, -noscalemult*2)
 		point.borderleft:SetWidth(noscalemult)
-		point.borderleft:SetTexture(unpack(E["media"].bordercolor))	
+		point.borderleft:SetTexture(unpack(E.media.bordercolor))	
 		point.borderleft:SetDrawLayer("BORDER", -7)
 		
 		point.borderright = parent:CreateTexture(nil, "BORDER")
 		point.borderright:SetPoint("TOPRIGHT", point, "TOPRIGHT", noscalemult*2, noscalemult*2)
 		point.borderright:SetPoint("BOTTOMRIGHT", point, "BOTTOMRIGHT", -noscalemult*2, -noscalemult*2)
 		point.borderright:SetWidth(noscalemult)
-		point.borderright:SetTexture(unpack(E["media"].bordercolor))	
+		point.borderright:SetTexture(unpack(E.media.bordercolor))	
 		point.borderright:SetDrawLayer("BORDER", -7)
 	end
 end
@@ -373,8 +373,8 @@ function NP:OnHide(frame)
 	frame.hp.originalb = nil
 	frame.isTagged = nil
 	frame.hp.shadow:SetAlpha(0)
-	self:SetVirtualBackdrop(frame.hp, unpack(E["media"].backdropcolor))
-	self:SetVirtualBorder(frame.hp, unpack(E["media"].bordercolor))
+	self:SetVirtualBackdrop(frame.hp, unpack(E.media.backdropcolor))
+	self:SetVirtualBorder(frame.hp, unpack(E.media.bordercolor))
 	if frame.icons then
 		for _,icon in ipairs(frame.icons) do
 			icon:Hide()
@@ -419,8 +419,8 @@ function NP:SkinPlate(frame, nameFrame)
 		frame.hp.hpbg:SetAllPoints(frame.hp)
 		frame.hp.hpbg:SetTexture(1,1,1,0.25) 	
 	end
-	frame.hp:SetStatusBarTexture(E["media"].normTex)
-	self:SetVirtualBackdrop(frame.hp, unpack(E["media"].backdropcolor))
+	frame.hp:SetStatusBarTexture(E.media.normTex)
+	self:SetVirtualBackdrop(frame.hp, unpack(E.media.backdropcolor))
 		
 	if not frame.cpoints then
 		frame.cpoints = CreateFrame("Frame", nil, frame.hp)
@@ -654,7 +654,7 @@ function NP:UpdateThreat(frame)
 				end						
 			end
 		else
-			self:SetVirtualBorder(frame.hp, unpack(E["media"].bordercolor))
+			self:SetVirtualBorder(frame.hp, unpack(E.media.bordercolor))
 			if not frame.customScale and goodscale ~= 1 then
 				frame.hp:Height(self.db.height * goodscale)
 				frame.hp:Width(self.db.width * goodscale)
@@ -714,10 +714,10 @@ function NP:ScanHealth()
 		elseif(d < (threshold / 2)) then
 			NP:SetVirtualBorder(frame.hp, 1, 0, 0)
 		else
-			NP:SetVirtualBorder(frame.hp, unpack(E["media"].bordercolor))
+			NP:SetVirtualBorder(frame.hp, unpack(E.media.bordercolor))
 		end
 	elseif (frame.hasClass ~= true and frame.isFriendly ~= true) or NP.db.lowHealthWarning == 'ALL' then
-		NP:SetVirtualBorder(frame.hp, unpack(E["media"].bordercolor))
+		NP:SetVirtualBorder(frame.hp, unpack(E.media.bordercolor))
 	end
 end
 
@@ -775,7 +775,7 @@ end
 --Create our blacklist for nameplates, so prevent a certain nameplate from ever showing
 function NP:CheckFilter(frame)
 	local name = frame.hp.oldname:GetText()
-	local db = E.global.nameplate["filter"][name]
+	local db = E.global.nameplate.filter[name]
 
 	if db and db.enable then
 		if db.hide then
@@ -880,7 +880,7 @@ function NP:PLAYER_ENTERING_WORLD()
 end
 
 function NP:UpdateAllPlates()
-	if E.private["nameplate"].enable ~= true then return end
+	if E.private.nameplate.enable ~= true then return end
 	
 	good = self.db.goodcolor
 	bad = self.db.badcolor

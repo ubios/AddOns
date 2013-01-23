@@ -24,15 +24,15 @@ local removeMenuOptions = {
 }
 
 UF['headerstoload'] = {}
-UF['unitgroupstoload'] = {}
-UF['unitstoload'] = {}
+UF.unitgroupstoload = {}
+UF.unitstoload = {}
 
 UF['headers'] = {}
 UF['groupunits'] = {}
 UF['units'] = {}
 
-UF['statusbars'] = {}
-UF['fontstrings'] = {}
+UF.statusbars = {}
+UF.fontstrings = {}
 UF['badHeaderPoints'] = {
 	['TOP'] = 'BOTTOM',
 	['LEFT'] = 'RIGHT',
@@ -40,7 +40,7 @@ UF['badHeaderPoints'] = {
 	['RIGHT'] = 'LEFT',
 }
 
-UF['classMaxResourceBar'] = {
+UF.classMaxResourceBar = {
 	['DEATHKNIGHT'] = 6,
 	['PALADIN'] = 5,
 	['WARLOCK'] = 4,
@@ -226,7 +226,7 @@ end
 
 function UF:Update_StatusBars()
 	local statusBarTexture = LSM:Fetch("statusbar", self.db.statusbar)
-	for statusbar in pairs(UF['statusbars']) do
+	for statusbar in pairs(UF.statusbars) do
 		if statusbar and statusbar:GetObjectType() == 'StatusBar' then
 			statusbar:SetStatusBarTexture(statusBarTexture)
 		end
@@ -243,13 +243,13 @@ end
 
 function UF:Update_FontStrings()
 	local stringFont = LSM:Fetch("font", self.db.font)
-	for font in pairs(UF['fontstrings']) do
+	for font in pairs(UF.fontstrings) do
 		font:FontTemplate(stringFont, self.db.fontSize, self.db.fontOutline)
 	end
 end
 
 function UF:Configure_FontString(obj)
-	UF['fontstrings'][obj] = true
+	UF.fontstrings[obj] = true
 	obj:FontTemplate() --This is temporary.
 end
 
@@ -648,7 +648,7 @@ end
 
 CompactUnitFrameProfiles:UnregisterEvent('VARIABLES_LOADED') 	--Re-Register this event only if disableblizzard is turned off.
 function UF:Initialize()	
-	self.db = E.db["unitframe"]
+	self.db = E.db.unitframe
 	
 	CompactUnitFrameProfiles:RegisterEvent('VARIABLES_LOADED')
 	if E.private["unitframe"].enable ~= true then return; end

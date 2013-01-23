@@ -61,7 +61,7 @@ local function Spawn(type)
 
 	local bg = frame:CreateTexture(nil, 'BACKGROUND')
 	bg:SetAllPoints(frame)
-	bg:SetTexture(E["media"].blankTex)
+	bg:SetTexture(E.media.blankTex)
 	bg:SetVertexColor(r, g, b)
 	bg:SetAlpha(0.2)
 	
@@ -83,7 +83,7 @@ local function Spawn(type)
 
 	frame:Size(222, 18)
 
-	frame:SetStatusBarTexture(E['media'].normTex)
+	frame:SetStatusBarTexture(E.media.normTex)
 	frame:SetStatusBarColor(r, g, b)
 
 	frame.type = type

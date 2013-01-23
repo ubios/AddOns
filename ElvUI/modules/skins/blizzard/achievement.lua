@@ -73,7 +73,7 @@ local function LoadSkin()
 	
 	local function SkinStatusBar(bar)
 		bar:StripTextures()
-		bar:SetStatusBarTexture(E["media"].normTex)
+		bar:SetStatusBarTexture(E.media.normTex)
 		bar:SetStatusBarColor(4/255, 179/255, 30/255)
 		bar:CreateBackdrop("Default")
 		
@@ -170,8 +170,8 @@ local function LoadSkin()
 		if not E.PixelMode then
 			frame.bg1 = frame:CreateTexture(nil, "BACKGROUND")
 			frame.bg1:SetDrawLayer("BACKGROUND", 4)
-			frame.bg1:SetTexture(E["media"].normTex) --Default TukUI users this is normTex, normTex doesn't exist
-			frame.bg1:SetVertexColor(unpack(E['media'].backdropcolor))
+			frame.bg1:SetTexture(E.media.normTex) --Default TukUI users this is normTex, normTex doesn't exist
+			frame.bg1:SetVertexColor(unpack(E.media.backdropcolor))
 			frame.bg1:Point("TOPLEFT", E.mult*4, -E.mult*4)
 			frame.bg1:Point("BOTTOMRIGHT", -E.mult*4, E.mult*4)				
 			
@@ -183,7 +183,7 @@ local function LoadSkin()
 		
 			frame.bg3 = frame:CreateTexture(nil, "BACKGROUND")
 			frame.bg3:SetDrawLayer("BACKGROUND", 2)
-			frame.bg3:SetTexture(unpack(E['media'].bordercolor))
+			frame.bg3:SetTexture(unpack(E.media.bordercolor))
 			frame.bg3:Point("TOPLEFT", E.mult*2, -E.mult*2)
 			frame.bg3:Point("BOTTOMRIGHT", -E.mult*2, E.mult*2)			
 
@@ -195,14 +195,14 @@ local function LoadSkin()
 		else
 			frame.bg1 = frame:CreateTexture(nil, "BACKGROUND")
 			frame.bg1:SetDrawLayer("BACKGROUND", 4)
-			frame.bg1:SetTexture(E["media"].normTex) --Default TukUI users this is normTex, normTex doesn't exist
-			frame.bg1:SetVertexColor(unpack(E['media'].backdropcolor))
+			frame.bg1:SetTexture(E.media.normTex) --Default TukUI users this is normTex, normTex doesn't exist
+			frame.bg1:SetVertexColor(unpack(E.media.backdropcolor))
 			frame.bg1:Point("TOPLEFT", E.mult, -E.mult)
 			frame.bg1:Point("BOTTOMRIGHT", -E.mult, E.mult)
 		
 			frame.bg3 = frame:CreateTexture(nil, "BACKGROUND")
 			frame.bg3:SetDrawLayer("BACKGROUND", 2)
-			frame.bg3:SetTexture(unpack(E['media'].bordercolor))
+			frame.bg3:SetTexture(unpack(E.media.bordercolor))
 			frame.bg3:SetOutside(E.mult)			
 		end
 
@@ -274,8 +274,8 @@ local function LoadSkin()
 			--Initiate fucked up method of creating a backdrop
 			_G[frame].bg1 = _G[frame]:CreateTexture(nil, "BACKGROUND")
 			_G[frame].bg1:SetDrawLayer("BACKGROUND", 4)
-			_G[frame].bg1:SetTexture(E["media"].normTex) --Default TukUI users this is normTex, normTex doesn't exist
-			_G[frame].bg1:SetVertexColor(unpack(E['media'].backdropcolor))
+			_G[frame].bg1:SetTexture(E.media.normTex) --Default TukUI users this is normTex, normTex doesn't exist
+			_G[frame].bg1:SetVertexColor(unpack(E.media.backdropcolor))
 			_G[frame].bg1:Point("TOPLEFT", E.mult*4, -E.mult*4)
 			_G[frame].bg1:Point("BOTTOMRIGHT", -E.mult*4, E.mult*4)				
 			
@@ -287,7 +287,7 @@ local function LoadSkin()
 			
 			_G[frame].bg3 = _G[frame]:CreateTexture(nil, "BACKGROUND")
 			_G[frame].bg3:SetDrawLayer("BACKGROUND", 2)
-			_G[frame].bg3:SetTexture(unpack(E['media'].bordercolor))
+			_G[frame].bg3:SetTexture(unpack(E.media.bordercolor))
 			_G[frame].bg3:Point("TOPLEFT", E.mult*2, -E.mult*2)
 			_G[frame].bg3:Point("BOTTOMRIGHT", -E.mult*2, E.mult*2)			
 
@@ -360,7 +360,7 @@ local function LoadSkin()
 		if frame then
 			if not frame.skinned then
 				frame:StripTextures()
-				frame:SetStatusBarTexture(E["media"].normTex)
+				frame:SetStatusBarTexture(E.media.normTex)
 				frame:SetStatusBarColor(4/255, 179/255, 30/255)
 				frame:SetFrameLevel(frame:GetFrameLevel() + 3)
 				
@@ -370,32 +370,32 @@ local function LoadSkin()
 				if not E.PixelMode then
 					frame.bg1 = frame:CreateTexture(nil, "BACKGROUND")
 					frame.bg1:SetDrawLayer("BACKGROUND", -7)
-					frame.bg1:SetTexture(E["media"].normTex) --Default TukUI users this is normTex, normTex doesn't exist
-					frame.bg1:SetVertexColor(unpack(E['media'].backdropcolor))
+					frame.bg1:SetTexture(E.media.normTex) --Default TukUI users this is normTex, normTex doesn't exist
+					frame.bg1:SetVertexColor(unpack(E.media.backdropcolor))
 					frame.bg1:Point("TOPLEFT", -E.mult*3, E.mult*3)
 					frame.bg1:Point("BOTTOMRIGHT", E.mult*3, -E.mult*3)				
 					
 					frame.bg2 = frame:CreateTexture(nil, "BACKGROUND")
 					frame.bg2:SetDrawLayer("BACKGROUND", -6)
-					frame.bg2:SetTexture(unpack(E['media'].bordercolor))
+					frame.bg2:SetTexture(unpack(E.media.bordercolor))
 					frame.bg2:Point("TOPLEFT", -E.mult*2, E.mult*2)
 					frame.bg2:Point("BOTTOMRIGHT", E.mult*2, -E.mult*2)
 				
 					frame.bg3 = frame:CreateTexture(nil, "BACKGROUND")
 					frame.bg3:SetDrawLayer("BACKGROUND", -5)
-					frame.bg3:SetTexture(unpack(E['media'].backdropcolor))
+					frame.bg3:SetTexture(unpack(E.media.backdropcolor))
 					frame.bg3:Point("TOPLEFT", -E.mult, E.mult)
 					frame.bg3:Point("BOTTOMRIGHT", E.mult, -E.mult)			
 				else
 					frame.bg1 = frame:CreateTexture(nil, "BACKGROUND")
 					frame.bg1:SetDrawLayer("BACKGROUND", 4)
-					frame.bg1:SetTexture(E["media"].normTex) --Default TukUI users this is normTex, normTex doesn't exist
-					frame.bg1:SetVertexColor(unpack(E['media'].backdropcolor))
+					frame.bg1:SetTexture(E.media.normTex) --Default TukUI users this is normTex, normTex doesn't exist
+					frame.bg1:SetVertexColor(unpack(E.media.backdropcolor))
 					frame.bg1:SetAllPoints()
 				
 					frame.bg3 = frame:CreateTexture(nil, "BACKGROUND")
 					frame.bg3:SetDrawLayer("BACKGROUND", 2)
-					frame.bg3:SetTexture(unpack(E['media'].bordercolor))
+					frame.bg3:SetTexture(unpack(E.media.bordercolor))
 					frame.bg3:Point("TOPLEFT", -E.mult, E.mult)
 					frame.bg3:Point("BOTTOMRIGHT", E.mult, -E.mult)				
 				end

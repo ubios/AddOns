@@ -32,7 +32,7 @@ local function LoadSkin()
 	LFGDungeonReadyStatus:SetTemplate("Transparent")
 
 	hooksecurefunc(LFGDungeonReadyDialog, "SetBackdrop", function(self, backdrop)
-		if backdrop.bgFile ~= E["media"].blankTex then
+		if backdrop.bgFile ~= E.media.blankTex then
 			self:SetTemplate("Transparent")
 		end
 	end)

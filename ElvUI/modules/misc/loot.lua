@@ -96,7 +96,7 @@ local function createSlot(id)
 	iconFrame:Width(iconsize)
 	iconFrame:SetPoint("RIGHT", frame)
 	iconFrame:SetTemplate("Default")
-	E["frames"][iconFrame] = nil;
+	E.frames[iconFrame] = nil;
 
 	local icon = iconFrame:CreateTexture(nil, "ARTWORK")
 	icon:SetTexCoord(unpack(E.TexCoords))
@@ -276,7 +276,7 @@ function M:LoadLoot()
 		StaticPopup_Hide"CONFIRM_LOOT_DISTRIBUTION"
 		CloseLoot()
 	end)
-	E["frames"][lootFrame] = nil;
+	E.frames[lootFrame] = nil;
 
 	self:RegisterEvent("LOOT_OPENED")
 	self:RegisterEvent("LOOT_SLOT_CLEARED")

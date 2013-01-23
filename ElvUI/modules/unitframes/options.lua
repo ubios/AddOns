@@ -943,7 +943,7 @@ E.Options.args.unitframe.args.player = {
 							values = function()
 								filters = {}
 								filters[''] = NONE
-								for filter in pairs(E.global.unitframe['aurafilters']) do
+								for filter in pairs(E.global.unitframe.aurafilters) do
 									filters[filter] = filter
 								end
 								return filters
@@ -1069,7 +1069,7 @@ E.Options.args.unitframe.args.player = {
 							values = function()
 								filters = {}
 								filters[''] = NONE
-								for filter in pairs(E.global.unitframe['aurafilters']) do
+								for filter in pairs(E.global.unitframe.aurafilters) do
 									filters[filter] = filter
 								end
 								return filters
@@ -1275,7 +1275,7 @@ E.Options.args.unitframe.args.player = {
 							values = function()
 								filters = {}
 								filters[''] = NONE
-								for filter in pairs(E.global.unitframe['aurafilters']) do
+								for filter in pairs(E.global.unitframe.aurafilters) do
 									filters[filter] = filter
 								end
 								return filters
@@ -1837,7 +1837,7 @@ E.Options.args.unitframe.args.target = {
 							values = function()
 								filters = {}
 								filters[''] = NONE
-								for filter in pairs(E.global.unitframe['aurafilters']) do
+								for filter in pairs(E.global.unitframe.aurafilters) do
 									filters[filter] = filter
 								end
 								return filters
@@ -2054,7 +2054,7 @@ E.Options.args.unitframe.args.target = {
 							values = function()
 								filters = {}
 								filters[''] = NONE
-								for filter in pairs(E.global.unitframe['aurafilters']) do
+								for filter in pairs(E.global.unitframe.aurafilters) do
 									filters[filter] = filter
 								end
 								return filters
@@ -2354,7 +2354,7 @@ E.Options.args.unitframe.args.target = {
 							values = function()
 								filters = {}
 								filters[''] = NONE
-								for filter in pairs(E.global.unitframe['aurafilters']) do
+								for filter in pairs(E.global.unitframe.aurafilters) do
 									filters[filter] = filter
 								end
 								return filters
@@ -2868,7 +2868,7 @@ E.Options.args.unitframe.args.targettarget = {
 							values = function()
 								filters = {}
 								filters[''] = NONE
-								for filter in pairs(E.global.unitframe['aurafilters']) do
+								for filter in pairs(E.global.unitframe.aurafilters) do
 									filters[filter] = filter
 								end
 								return filters
@@ -3084,7 +3084,7 @@ E.Options.args.unitframe.args.targettarget = {
 							values = function()
 								filters = {}
 								filters[''] = NONE
-								for filter in pairs(E.global.unitframe['aurafilters']) do
+								for filter in pairs(E.global.unitframe.aurafilters) do
 									filters[filter] = filter
 								end
 								return filters
@@ -3574,7 +3574,7 @@ E.Options.args.unitframe.args.focus = {
 							values = function()
 								filters = {}
 								filters[''] = NONE
-								for filter in pairs(E.global.unitframe['aurafilters']) do
+								for filter in pairs(E.global.unitframe.aurafilters) do
 									filters[filter] = filter
 								end
 								return filters
@@ -3790,7 +3790,7 @@ E.Options.args.unitframe.args.focus = {
 							values = function()
 								filters = {}
 								filters[''] = NONE
-								for filter in pairs(E.global.unitframe['aurafilters']) do
+								for filter in pairs(E.global.unitframe.aurafilters) do
 									filters[filter] = filter
 								end
 								return filters
@@ -4061,7 +4061,7 @@ E.Options.args.unitframe.args.focus = {
 							values = function()
 								filters = {}
 								filters[''] = NONE
-								for filter in pairs(E.global.unitframe['aurafilters']) do
+								for filter in pairs(E.global.unitframe.aurafilters) do
 									filters[filter] = filter
 								end
 								return filters
@@ -4576,7 +4576,7 @@ E.Options.args.unitframe.args.focustarget = {
 							values = function()
 								filters = {}
 								filters[''] = NONE
-								for filter in pairs(E.global.unitframe['aurafilters']) do
+								for filter in pairs(E.global.unitframe.aurafilters) do
 									filters[filter] = filter
 								end
 								return filters
@@ -4792,7 +4792,7 @@ E.Options.args.unitframe.args.focustarget = {
 							values = function()
 								filters = {}
 								filters[''] = NONE
-								for filter in pairs(E.global.unitframe['aurafilters']) do
+								for filter in pairs(E.global.unitframe.aurafilters) do
 									filters[filter] = filter
 								end
 								return filters
@@ -5164,7 +5164,7 @@ E.Options.args.unitframe.args.pet = {
 							values = function()
 								filters = {}
 								filters[''] = NONE
-								for filter in pairs(E.global.unitframe['aurafilters']) do
+								for filter in pairs(E.global.unitframe.aurafilters) do
 									filters[filter] = filter
 								end
 								return filters
@@ -5290,7 +5290,7 @@ E.Options.args.unitframe.args.pet = {
 							values = function()
 								filters = {}
 								filters[''] = NONE
-								for filter in pairs(E.global.unitframe['aurafilters']) do
+								for filter in pairs(E.global.unitframe.aurafilters) do
 									filters[filter] = filter
 								end
 								return filters
@@ -5753,7 +5753,7 @@ E.Options.args.unitframe.args.pettarget = {
 							values = function()
 								filters = {}
 								filters[''] = NONE
-								for filter in pairs(E.global.unitframe['aurafilters']) do
+								for filter in pairs(E.global.unitframe.aurafilters) do
 									filters[filter] = filter
 								end
 								return filters
@@ -5969,7 +5969,7 @@ E.Options.args.unitframe.args.pettarget = {
 							values = function()
 								filters = {}
 								filters[''] = NONE
-								for filter in pairs(E.global.unitframe['aurafilters']) do
+								for filter in pairs(E.global.unitframe.aurafilters) do
 									filters[filter] = filter
 								end
 								return filters
@@ -6352,7 +6352,7 @@ E.Options.args.unitframe.args.boss = {
 							values = function()
 								filters = {}
 								filters[''] = NONE
-								for filter in pairs(E.global.unitframe['aurafilters']) do
+								for filter in pairs(E.global.unitframe.aurafilters) do
 									filters[filter] = filter
 								end
 								return filters
@@ -6478,7 +6478,7 @@ E.Options.args.unitframe.args.boss = {
 							values = function()
 								filters = {}
 								filters[''] = NONE
-								for filter in pairs(E.global.unitframe['aurafilters']) do
+								for filter in pairs(E.global.unitframe.aurafilters) do
 									filters[filter] = filter
 								end
 								return filters
@@ -7024,7 +7024,7 @@ E.Options.args.unitframe.args.arena = {
 							values = function()
 								filters = {}
 								filters[''] = NONE
-								for filter in pairs(E.global.unitframe['aurafilters']) do
+								for filter in pairs(E.global.unitframe.aurafilters) do
 									filters[filter] = filter
 								end
 								return filters
@@ -7241,7 +7241,7 @@ E.Options.args.unitframe.args.arena = {
 							values = function()
 								filters = {}
 								filters[''] = NONE
-								for filter in pairs(E.global.unitframe['aurafilters']) do
+								for filter in pairs(E.global.unitframe.aurafilters) do
 									filters[filter] = filter
 								end
 								return filters
@@ -7772,7 +7772,7 @@ E.Options.args.unitframe.args.party = {
 							values = function()
 								filters = {}
 								filters[''] = NONE
-								for filter in pairs(E.global.unitframe['aurafilters']) do
+								for filter in pairs(E.global.unitframe.aurafilters) do
 									filters[filter] = filter
 								end
 								return filters
@@ -7898,7 +7898,7 @@ E.Options.args.unitframe.args.party = {
 							values = function()
 								filters = {}
 								filters[''] = NONE
-								for filter in pairs(E.global.unitframe['aurafilters']) do
+								for filter in pairs(E.global.unitframe.aurafilters) do
 									filters[filter] = filter
 								end
 								return filters
@@ -8531,7 +8531,7 @@ for i=10, 40, 15 do
 							values = function()
 								filters = {}
 								filters[''] = NONE
-								for filter in pairs(E.global.unitframe['aurafilters']) do
+								for filter in pairs(E.global.unitframe.aurafilters) do
 									filters[filter] = filter
 								end
 								return filters
@@ -8657,7 +8657,7 @@ for i=10, 40, 15 do
 							values = function()
 								filters = {}
 								filters[''] = NONE
-								for filter in pairs(E.global.unitframe['aurafilters']) do
+								for filter in pairs(E.global.unitframe.aurafilters) do
 									filters[filter] = filter
 								end
 								return filters

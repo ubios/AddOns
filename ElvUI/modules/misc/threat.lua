@@ -51,7 +51,7 @@ function THREAT:Initialize()
 	self.db = E.db.general.threat
 	
 	self.bar = CreateFrame('StatusBar', 'ElvUI_ThreatBar', UIParent)
-	self.bar:SetStatusBarTexture(E['media'].normTex)
+	self.bar:SetStatusBarTexture(E.media.normTex)
 	self.bar:SetMinMaxValues(0, 100)
 	self.bar:CreateBackdrop('Default')
 	

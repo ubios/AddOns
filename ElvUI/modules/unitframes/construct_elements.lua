@@ -45,7 +45,7 @@ end
 
 function UF:Construct_HealthBar(frame, bg, text, textPos)
 	local health = CreateFrame('StatusBar', nil, frame)	
-	UF['statusbars'][health] = true
+	UF.statusbars[health] = true
 	
 	health:SetFrameStrata("LOW")
 	health.PostUpdate = self.PostUpdateHealth
@@ -53,7 +53,7 @@ function UF:Construct_HealthBar(frame, bg, text, textPos)
 	if bg then
 		health.bg = health:CreateTexture(nil, 'BORDER')
 		health.bg:SetAllPoints()
-		health.bg:SetTexture(E["media"].blankTex)
+		health.bg:SetTexture(E.media.blankTex)
 		health.bg.multiplier = 0.25
 	end
 	
@@ -79,7 +79,7 @@ end
 
 function UF:Construct_PowerBar(frame, bg, text, textPos, lowtext)
 	local power = CreateFrame('StatusBar', nil, frame)
-	UF['statusbars'][power] = true
+	UF.statusbars[power] = true
 	
 	--power.frequentUpdates = true
 	power:SetFrameStrata("LOW")
@@ -88,7 +88,7 @@ function UF:Construct_PowerBar(frame, bg, text, textPos, lowtext)
 	if bg then
 		power.bg = power:CreateTexture(nil, 'BORDER')
 		power.bg:SetAllPoints()
-		power.bg:SetTexture(E["media"].blankTex)
+		power.bg:SetTexture(E.media.blankTex)
 		power.bg.multiplier = 0.2
 	end
 	
@@ -165,7 +165,7 @@ function UF:Construct_GPS(frame, unit)
 	gps.Texture:SetPoint("LEFT", gps, "LEFT", 0, 0)
 
 	gps.Text = gps:CreateFontString(nil, "OVERLAY")
-	UF['fontstrings'][gps.Text] = true
+	UF.fontstrings[gps.Text] = true
 	gps.Text:SetPoint("RIGHT", gps, "RIGHT", 0 , 0)
 
 	frame.gps = gps
@@ -207,7 +207,7 @@ function UF:Construct_AuraIcon(button)
 		
 		if auraName then
 			E:Print(format(L['The spell "%s" has been added to the Blacklist unitframe aura filter.'], auraName))
-			E.global['unitframe']['aurafilters']['Blacklist']['spells'][auraName] = {
+			E.global.unitframe.aurafilters['Blacklist']['spells'][auraName] = {
 				['enable'] = true,
 				['priority'] = 0,			
 			}
@@ -241,7 +241,7 @@ end
 
 function UF:Construct_Castbar(self, direction, moverName)
 	local castbar = CreateFrame("StatusBar", nil, self)
-	UF['statusbars'][castbar] = true
+	UF.statusbars[castbar] = true
 	castbar.CustomDelayText = UF.CustomCastDelayText
 	castbar.CustomTimeText = UF.CustomTimeText
 	castbar.PostCastStart = UF.PostCastStart
@@ -271,7 +271,7 @@ function UF:Construct_Castbar(self, direction, moverName)
 
 	--Set to castbar.SafeZone
 	castbar.LatencyTexture = castbar:CreateTexture(nil, "OVERLAY")
-	castbar.LatencyTexture:SetTexture(E['media'].blankTex)
+	castbar.LatencyTexture:SetTexture(E.media.blankTex)
 	castbar.LatencyTexture:SetVertexColor(0.69, 0.31, 0.31, 0.75)	
 
 	local button = CreateFrame("Frame", nil, castbar)
@@ -309,11 +309,11 @@ function UF:Construct_PaladinResourceBar(frame)
 	local bars = CreateFrame("Frame", nil, frame)
 	bars:CreateBackdrop('Default')
 
-	for i = 1, UF['classMaxResourceBar'][E.myclass] do					
+	for i = 1, UF.classMaxResourceBar[E.myclass] do					
 		bars[i] = CreateFrame("StatusBar", nil, bars)
-		bars[i]:SetStatusBarTexture(E['media'].blankTex) --Dummy really, this needs to be set so we can change the color
+		bars[i]:SetStatusBarTexture(E.media.blankTex) --Dummy really, this needs to be set so we can change the color
 		bars[i]:GetStatusBarTexture():SetHorizTile(false)
-		UF['statusbars'][bars[i]] = true
+		UF.statusbars[bars[i]] = true
 
 		bars[i]:CreateBackdrop('Default')
 		bars[i].backdrop:SetParent(bars)
@@ -328,11 +328,11 @@ function UF:Construct_MonkResourceBar(frame)
 	local bars = CreateFrame("Frame", nil, frame)
 	bars:CreateBackdrop('Default')
 
-	for i = 1, UF['classMaxResourceBar'][E.myclass] do					
+	for i = 1, UF.classMaxResourceBar[E.myclass] do					
 		bars[i] = CreateFrame("StatusBar", nil, bars)
-		bars[i]:SetStatusBarTexture(E['media'].blankTex) --Dummy really, this needs to be set so we can change the color
+		bars[i]:SetStatusBarTexture(E.media.blankTex) --Dummy really, this needs to be set so we can change the color
 		bars[i]:GetStatusBarTexture():SetHorizTile(false)
-		UF['statusbars'][bars[i]] = true
+		UF.statusbars[bars[i]] = true
 
 		bars[i]:CreateBackdrop('Default')
 		bars[i].backdrop:SetParent(bars)
@@ -347,14 +347,14 @@ function UF:Construct_MageResourceBar(frame)
 	local bars = CreateFrame("Frame", nil, frame)
 	bars:CreateBackdrop('Default')
 
-	for i = 1, UF['classMaxResourceBar'][E.myclass] do					
+	for i = 1, UF.classMaxResourceBar[E.myclass] do					
 		bars[i] = CreateFrame("StatusBar", nil, bars)
-		bars[i]:SetStatusBarTexture(E['media'].blankTex) --Dummy really, this needs to be set so we can change the color
+		bars[i]:SetStatusBarTexture(E.media.blankTex) --Dummy really, this needs to be set so we can change the color
 		bars[i]:GetStatusBarTexture():SetHorizTile(false)
 		
 		bars[i].bg = bars[i]:CreateTexture(nil, 'ARTWORK')
 		
-		UF['statusbars'][bars[i]] = true
+		UF.statusbars[bars[i]] = true
 
 		bars[i]:CreateBackdrop('Default')
 		bars[i].backdrop:SetParent(bars)
@@ -369,12 +369,12 @@ function UF:Construct_WarlockResourceBar(frame)
 	local bars = CreateFrame("Frame", nil, frame)
 	bars:CreateBackdrop('Default')
 
-	for i = 1, UF['classMaxResourceBar'][E.myclass] do					
+	for i = 1, UF.classMaxResourceBar[E.myclass] do					
 		bars[i] = CreateFrame("StatusBar", nil, bars)
-		bars[i]:SetStatusBarTexture(E['media'].blankTex) --Dummy really, this needs to be set so we can change the color
+		bars[i]:SetStatusBarTexture(E.media.blankTex) --Dummy really, this needs to be set so we can change the color
 		bars[i]:GetStatusBarTexture():SetHorizTile(false)
 		bars[i].bg = bars[i]:CreateTexture(nil, 'ARTWORK')
-		UF['statusbars'][bars[i]] = true
+		UF.statusbars[bars[i]] = true
 
 		bars[i]:CreateBackdrop('Default')		
 		bars[i].backdrop:SetParent(bars)
@@ -389,11 +389,11 @@ function UF:Construct_PriestResourceBar(frame)
 	local bars = CreateFrame("Frame", nil, frame)
 	bars:CreateBackdrop('Default')
 
-	for i = 1, UF['classMaxResourceBar'][E.myclass] do					
+	for i = 1, UF.classMaxResourceBar[E.myclass] do					
 		bars[i] = CreateFrame("StatusBar", nil, bars)
-		bars[i]:SetStatusBarTexture(E['media'].blankTex) --Dummy really, this needs to be set so we can change the color
+		bars[i]:SetStatusBarTexture(E.media.blankTex) --Dummy really, this needs to be set so we can change the color
 		bars[i]:GetStatusBarTexture():SetHorizTile(false)
-		UF['statusbars'][bars[i]] = true
+		UF.statusbars[bars[i]] = true
 
 		bars[i]:CreateBackdrop('Default')		
 		bars[i].backdrop:SetParent(bars)
@@ -408,10 +408,10 @@ function UF:Construct_DeathKnightResourceBar(frame)
 	local runes = CreateFrame("Frame", nil, frame)
 	runes:CreateBackdrop('Default')
 	
-	for i = 1, UF['classMaxResourceBar'][E.myclass] do
+	for i = 1, UF.classMaxResourceBar[E.myclass] do
 		runes[i] = CreateFrame("StatusBar", nil, runes)
-		UF['statusbars'][runes[i]] = true
-		runes[i]:SetStatusBarTexture(E['media'].blankTex)
+		UF.statusbars[runes[i]] = true
+		runes[i]:SetStatusBarTexture(E.media.blankTex)
 		runes[i]:GetStatusBarTexture():SetHorizTile(false)
 		
 		runes[i]:CreateBackdrop('Default')
@@ -419,7 +419,7 @@ function UF:Construct_DeathKnightResourceBar(frame)
 		
 		runes[i].bg = runes[i]:CreateTexture(nil, 'BORDER')
 		runes[i].bg:SetAllPoints()
-		runes[i].bg:SetTexture(E['media'].blankTex)
+		runes[i].bg:SetTexture(E.media.blankTex)
 		runes[i].bg.multiplier = 0.2
 	end
 	
@@ -435,14 +435,14 @@ function UF:Construct_DruidResourceBar(frame)
 	
 	local lunarBar = CreateFrame('StatusBar', nil, eclipseBar)
 	lunarBar:SetPoint('LEFT', eclipseBar)
-	lunarBar:SetStatusBarTexture(E['media'].blankTex)
-	UF['statusbars'][lunarBar] = true
+	lunarBar:SetStatusBarTexture(E.media.blankTex)
+	UF.statusbars[lunarBar] = true
 	eclipseBar.LunarBar = lunarBar
 
 	local solarBar = CreateFrame('StatusBar', nil, eclipseBar)
 	solarBar:SetPoint('LEFT', lunarBar:GetStatusBarTexture(), 'RIGHT')
-	solarBar:SetStatusBarTexture(E['media'].blankTex)
-	UF['statusbars'][solarBar] = true
+	solarBar:SetStatusBarTexture(E.media.blankTex)
+	UF.statusbars[solarBar] = true
 	eclipseBar.SolarBar = solarBar
 	
 	eclipseBar.Text = lunarBar:CreateFontString(nil, 'OVERLAY')
@@ -464,13 +464,13 @@ function UF:Construct_DruidAltManaBar(frame)
 	dpower.PostUpdatePower = UF.DruidPostUpdateAltPower
 	
 	dpower.ManaBar = CreateFrame('StatusBar', nil, dpower)
-	UF['statusbars'][dpower.ManaBar] = true
-	dpower.ManaBar:SetStatusBarTexture(E["media"].blankTex)
+	UF.statusbars[dpower.ManaBar] = true
+	dpower.ManaBar:SetStatusBarTexture(E.media.blankTex)
 	dpower.ManaBar:SetInside(dpower)
 	
 	dpower.bg = dpower:CreateTexture(nil, "BORDER")
 	dpower.bg:SetAllPoints(dpower.ManaBar)
-	dpower.bg:SetTexture(E["media"].blankTex)
+	dpower.bg:SetTexture(E.media.blankTex)
 	dpower.bg.multiplier = 0.3
 
 	dpower.Text = dpower:CreateFontString(nil, 'OVERLAY')
@@ -505,8 +505,8 @@ end
 
 function UF:Construct_AltPowerBar(frame)
 	local altpower = CreateFrame("StatusBar", nil, frame)
-	altpower:SetStatusBarTexture(E['media'].blankTex)
-	UF['statusbars'][altpower] = true
+	altpower:SetStatusBarTexture(E.media.blankTex)
+	UF.statusbars[altpower] = true
 	altpower:GetStatusBarTexture():SetHorizTile(false)
 
 	altpower:SetFrameStrata("MEDIUM")
@@ -537,8 +537,8 @@ function UF:Construct_Combobar(frame)
 
 	for i = 1, MAX_COMBO_POINTS do
 		CPoints[i] = CreateFrame("StatusBar", nil, CPoints)
-		UF['statusbars'][CPoints[i]] = true
-		CPoints[i]:SetStatusBarTexture(E['media'].blankTex)
+		UF.statusbars[CPoints[i]] = true
+		CPoints[i]:SetStatusBarTexture(E.media.blankTex)
 		CPoints[i]:GetStatusBarTexture():SetHorizTile(false)
 		
 		CPoints[i]:CreateBackdrop('Default')
@@ -574,7 +574,7 @@ function UF:Construct_RaidDebuffs(frame)
 		rdebuff.border = rdebuff:CreateTexture(nil, "BACKGROUND");
 		rdebuff.border:Point("TOPLEFT", -E.mult, E.mult);
 		rdebuff.border:Point("BOTTOMRIGHT", E.mult, -E.mult);
-		rdebuff.border:SetTexture(E["media"].blankTex);
+		rdebuff.border:SetTexture(E.media.blankTex);
 		rdebuff.border:SetVertexColor(0, 0, 0);
 	end	
 	
@@ -598,7 +598,7 @@ end
 function UF:Construct_DebuffHighlight(frame)
 	local dbh = frame:CreateTexture(nil, "OVERLAY")
 	dbh:SetInside(frame.Health.backdrop)
-	dbh:SetTexture(E['media'].blankTex)
+	dbh:SetTexture(E.media.blankTex)
 	dbh:SetVertexColor(0, 0, 0, 0)
 	dbh:SetBlendMode("ADD")
 	frame.DebuffHighlightFilter = true
@@ -672,13 +672,13 @@ end
 
 function UF:Construct_HealComm(frame)
 	local mhpb = CreateFrame('StatusBar', nil, frame)
-	mhpb:SetStatusBarTexture(E["media"].blankTex)
+	mhpb:SetStatusBarTexture(E.media.blankTex)
 	mhpb:SetStatusBarColor(0, 1, 0.5, 0.25)
 	mhpb:SetFrameLevel(frame.Health:GetFrameLevel() - 2)
 	mhpb:Hide()
 	
 	local ohpb = CreateFrame('StatusBar', nil, frame)
-	ohpb:SetStatusBarTexture(E["media"].blankTex)
+	ohpb:SetStatusBarTexture(E.media.blankTex)
 	ohpb:SetStatusBarColor(0, 1, 0, 0.25)
 	mhpb:SetFrameLevel(mhpb:GetFrameLevel())	
 	ohpb:Hide()
@@ -720,7 +720,7 @@ function UF:Construct_AuraBars()
 	self:SetTemplate('Default')
 
 	bar:SetInside(self)
-	UF['statusbars'][bar] = true
+	UF.statusbars[bar] = true
 	UF:Update_StatusBar(bar)
 		
 	UF:Configure_FontString(bar.spelltime)
@@ -744,7 +744,7 @@ function UF:Construct_AuraBars()
 		
 		if auraName then
 			E:Print(format(L['The spell "%s" has been added to the Blacklist unitframe aura filter.'], auraName))
-			E.global['unitframe']['aurafilters']['Blacklist']['spells'][auraName] = {
+			E.global.unitframe.aurafilters['Blacklist']['spells'][auraName] = {
 				['enable'] = true,
 				['priority'] = 0,			
 			}

@@ -60,7 +60,7 @@ function UF:Construct_PlayerFrame(frame)
 end
 
 function UF:UpdatePlayerFrameAnchors(frame, isShown)
-	local db = E.db['unitframe']['units'].player
+	local db = E.db.unitframe['units'].player
 	local health = frame.Health
 	local threat = frame.Threat
 	local power = frame.Power
@@ -305,8 +305,8 @@ function UF:Update_PlayerFrame(frame, db)
 		health.colorHealth = nil
 		health.colorClass = nil
 		health.colorReaction = nil
-		if self.db['colors'].healthclass ~= true then
-			if self.db['colors'].colorhealthbyvalue == true then
+		if self.db.colors.healthclass ~= true then
+			if self.db.colors.colorhealthbyvalue == true then
 				health.colorSmooth = true
 			else
 				health.colorHealth = true
@@ -405,7 +405,7 @@ function UF:Update_PlayerFrame(frame, db)
 			power.colorClass = nil
 			power.colorReaction = nil	
 			power.colorPower = nil
-			if self.db['colors'].powerclass then
+			if self.db.colors.powerclass then
 				power.colorClass = true
 				power.colorReaction = true
 			else
@@ -735,7 +735,7 @@ function UF:Update_PlayerFrame(frame, db)
 			frame.ClassBar = bars
 			bars:ClearAllPoints()
 			if USE_MINI_CLASSBAR then
-				CLASSBAR_WIDTH = CLASSBAR_WIDTH * (UF['classMaxResourceBar'][E.myclass] - 1) / UF['classMaxResourceBar'][E.myclass]
+				CLASSBAR_WIDTH = CLASSBAR_WIDTH * (UF.classMaxResourceBar[E.myclass] - 1) / UF.classMaxResourceBar[E.myclass]
 				bars:Point("CENTER", frame.Health.backdrop, "TOP", -(BORDER*3 + 12), 0)
 				bars:SetFrameStrata("MEDIUM")
 			else
@@ -746,9 +746,9 @@ function UF:Update_PlayerFrame(frame, db)
 			bars:Width(CLASSBAR_WIDTH)
 			bars:Height(CLASSBAR_HEIGHT - (E.PixelMode and 1 or 4))
 
-			for i = 1, UF['classMaxResourceBar'][E.myclass] do
+			for i = 1, UF.classMaxResourceBar[E.myclass] do
 				bars[i]:SetHeight(bars:GetHeight())	
-				bars[i]:SetWidth((bars:GetWidth() - (E.PixelMode and 5 or 2))/UF['classMaxResourceBar'][E.myclass])	
+				bars[i]:SetWidth((bars:GetWidth() - (E.PixelMode and 5 or 2))/UF.classMaxResourceBar[E.myclass])	
 
 				bars[i]:GetStatusBarTexture():SetHorizTile(false)
 				bars[i]:ClearAllPoints()
@@ -1080,4 +1080,4 @@ function UF:Update_PlayerFrame(frame, db)
 	frame:UpdateAllElements()
 end
 
-tinsert(UF['unitstoload'], 'player')
+tinsert(UF.unitstoload, 'player')
