@@ -103,7 +103,8 @@ function UF:PostUpdateHealth(unit, min, max)
 	
 	--Backdrop
 	if colors.customhealthbackdrop then
-		self.bg:SetVertexColor(colors.health_backdrop.r, colors.health_backdrop.g, colors.health_backdrop.b)		
+		mu = colors.usebackdropalpha and (self.bg.multiplier or 1) or 1 
+		self.bg:SetVertexColor(colors.health_backdrop.r * mu, colors.health_backdrop.g * mu, colors.health_backdrop.b * mu)		
 	end	
 end
 
