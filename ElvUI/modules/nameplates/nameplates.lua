@@ -739,7 +739,10 @@ function NP:CheckUnit_Guid(frame, ...)
 		frame.unit = "target"
 		NP:UpdateAurasByUnitID("target")
 		frame.hp.shadow:SetAlpha(1)
+		
+		if self.db.comboPoints then
 		NP:UpdateCPoints(frame)
+		end
 	elseif frame.overlay:IsShown() and UnitExists("mouseover") and UnitName("mouseover") == frame.hp.name:GetText() then
 		frame.guid = UnitGUID("mouseover")
 		frame.unit = "mouseover"
@@ -747,6 +750,7 @@ function NP:CheckUnit_Guid(frame, ...)
 		frame.hp.shadow:SetAlpha(0)		
 		if GetComboPoints('player', 'mouseover') > 0 then
 			NP:UpdateCPoints(frame, true)
+		end
 		end
 	else
 		frame.unit = nil
