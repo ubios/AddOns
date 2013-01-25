@@ -751,7 +751,6 @@ function NP:CheckUnit_Guid(frame, ...)
 		if GetComboPoints('player', 'mouseover') > 0 then
 			NP:UpdateCPoints(frame, true)
 		end
-		end
 	else
 		frame.unit = nil
 		frame.hp.shadow:SetAlpha(0)
