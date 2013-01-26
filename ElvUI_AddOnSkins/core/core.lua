@@ -175,7 +175,7 @@ function AS:SkinIconButton(self, strip, style, shrinkIcon)
 	elseif self:GetName() and _G[self:GetName().."Icon"] then
 		icon = _G[self:GetName().."Icon"]
 	end
-
+	icon:SetDrawLayer("OVERLAY")
 	if icon then
 		icon:SetTexCoord(.08,.88,.08,.88)
 
@@ -188,6 +188,10 @@ function AS:SkinIconButton(self, strip, style, shrinkIcon)
 		icon:SetParent(self.backdrop)
 	end
 	self.isSkinned = true
+end
+
+function AS:SkinTooltip(tooltip)
+	tooltip:HookScript("OnShow", function(self)	self:SetTemplate("Transparent") end)
 end
 
 function AS:Desaturate(f, point)
