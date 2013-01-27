@@ -16,6 +16,8 @@ V['general'] = {
 
 	['minimap'] = {
 		['enable'] = true,
+		['skinButtons'] = true,
+		['skinStyle'] = 'HORIZONTAL',
 	},
 }
 
