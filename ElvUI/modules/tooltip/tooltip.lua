@@ -550,7 +550,7 @@ function TT:GameTooltip_OnTooltipSetUnit(tt)
 		end
 	end
 	
-	if iLevel > 1 and IsShiftKeyDown() then
+	if iLevel > 1 then
 		GameTooltip:AddDoubleLine(("%s:"):format(STAT_AVERAGE_ITEM_LEVEL), ("|cffFFFFFF%d|r"):format(iLevel))
 	end	
 
