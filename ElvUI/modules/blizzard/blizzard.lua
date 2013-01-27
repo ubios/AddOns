@@ -14,6 +14,7 @@ function B:Initialize()
 	self:PositionVehicleFrame()
 	self:MoveWatchFrame()
 	self:PositionAltPowerBar()
+	self:PaperDollDurability()
 
 	E:CreateMover(LossOfControlFrame, 'LossControlMover', L['Loss Control Icon'])
 	
