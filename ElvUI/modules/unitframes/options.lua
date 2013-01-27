@@ -336,6 +336,16 @@ E.Options.args.unitframe = {
 									get = function(info) return E.db.unitframe.colors[ info[#info] ] end,
 									set = function(info, value) E.db.unitframe.colors[ info[#info] ] = value; UF:Update_AllFrames() end,									
 								},
+								multiplier = {
+									type = 'range',
+									order = 7,
+									name = L['Backdrop Alpha Percentage'],
+									desc = L['The backdrop alpha percentage, when 1 no alpha blending is applied.'],
+									isPercent = true,
+									min = 0, max = 1, step = 0.01,
+									get = function(info) return E.db.unitframe.colors[ info[#info] ] end,
+									set = function(info, value) E.db.unitframe.colors[ info[#info] ] = value; UF:Update_AllFrames() end,									
+								},
 								health = {
 									order = 10,
 									type = 'color',

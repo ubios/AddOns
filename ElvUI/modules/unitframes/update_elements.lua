@@ -85,7 +85,7 @@ function UF:PostUpdateHealth(unit, min, max)
 	end
 
 	if colors.classbackdrop then
-		mu = colors.usebackdropalpha and (self.bg.multiplier or 1) or 1 
+		mu = colors.usebackdropalpha and (colors.multiplier or 1) or 1 
 		if UnitIsPlayer(unit) then
 			local class = select(2, UnitClass(unit))
 			if class then
@@ -103,7 +103,7 @@ function UF:PostUpdateHealth(unit, min, max)
 	
 	--Backdrop
 	if colors.customhealthbackdrop then
-		mu = colors.usebackdropalpha and (self.bg.multiplier or 1) or 1 
+		mu = colors.usebackdropalpha and (colors.multiplier or 1) or 1 
 		self.bg:SetVertexColor(colors.health_backdrop.r * mu, colors.health_backdrop.g * mu, colors.health_backdrop.b * mu)		
 	end	
 end

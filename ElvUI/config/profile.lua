@@ -238,6 +238,7 @@ P['unitframe'] = {
 		['customhealthbackdrop'] = false,
 		['classbackdrop'] = false,
 		['usebackdropalpha'] = true,
+		['multiplier'] = .25,
 		['auraBarByType'] = true,
 		
 		['castColor'] = { r = .31,g = .31,b = .31 },
