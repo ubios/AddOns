@@ -81,6 +81,8 @@ function MB:SkinButton(frame)
 end
 
 function MB:UpdateLayout()
+	if not E.minimapbuttons then return end
+	
 	minimapButtonBar:Hide()
 	minimapButtonBar:SetPoint("CENTER", minimapButtonBarAnchor, "CENTER", 0, 0)
 	minimapButtonBar:Height(buttonSize + 4)
