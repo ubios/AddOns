@@ -264,7 +264,7 @@ end
 
 function UF:Update_AllFrames()
 	if InCombatLockdown() then self:RegisterEvent('PLAYER_REGEN_ENABLED'); return end
-	if E.private["unitframe"].enable ~= true then return; end
+	if E.private.unitframe.enable ~= true then return; end
 	self:UpdateColors()
 	self:Update_FontStrings()
 	self:Update_StatusBars()	
@@ -651,7 +651,7 @@ function UF:Initialize()
 	self.db = E.db.unitframe
 	
 	CompactUnitFrameProfiles:RegisterEvent('VARIABLES_LOADED')
-	if E.private["unitframe"].enable ~= true then return; end
+	if E.private.unitframe.enable ~= true then return; end
 	E.UnitFrames = UF;
 	
 	local ElvUF_Parent = CreateFrame('Frame', 'ElvUF_Parent', E.UIParent, 'SecureHandlerStateTemplate');
@@ -676,7 +676,7 @@ function UF:Initialize()
 	self:RegisterEvent('ARENA_PREP_OPPONENT_SPECIALIZATIONS', 'UpdatePrep')
 	self:RegisterEvent('ARENA_OPPONENT_UPDATE', 'UpdatePrep')
 
-	if E.private["unitframe"].disableBlizzard then
+	if E.private.unitframe.disableBlizzard then
 		self:DisableBlizzard()	
 		self:SecureHook('UnitFrameThreatIndicator_Initialize')
 		InterfaceOptionsFrameCategoriesButton9:SetScale(0.0001)
