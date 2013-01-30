@@ -82,17 +82,24 @@ local eclipsedirection = {
   	frame.Text:SetTextColor(1, 1, .3, 1) 
   end,
   ["none"] = function (frame, change)
-  	frame.Text:SetText() 
+		frame.Text:SetText() 
   end,
 }
 
-ElvUF_Player.EclipseBar.callbackid = LibBalancePowerTracker:RegisterCallback(function(energy, direction, virtual_energy, virtual_direction, virtual_eclipse)
-	eclipsedirection[virtual_direction](ElvUF_Player.EclipseBar, direction ~= virtual_direction)
-end)
+-- add eclipse prediction when playing druid
+if E.myclass == "DRUID" then
+	ElvUF_Player.EclipseBar.callbackid = LibBalancePowerTracker:RegisterCallback(function(energy, direction, virtual_energy, virtual_direction, virtual_eclipse)
+		if (ElvUF_Player.EclipseBar:IsShown()) then
+			eclipsedirection[virtual_direction](ElvUF_Player.EclipseBar, direction ~= virtual_direction)
+		end
+	end)
 
-ElvUF_Player.EclipseBar.PostPowerUpdate = function()
-	energy, direction, virtual_energy, virtual_direction, virtual_eclipse = LibBalancePowerTracker:GetEclipseEnergyInfo()
-	eclipsedirection[virtual_direction](self, direction ~= virtual_direction)	
+	ElvUF_Player.EclipseBar.PostPowerUpdate = function()
+		if (ElvUF_Player.EclipseBar:IsShown()) then
+			energy, direction, virtual_energy, virtual_direction, virtual_eclipse = LibBalancePowerTracker:GetEclipseEnergyInfo()
+			eclipsedirection[virtual_direction](self, direction ~= virtual_direction)	
+		end
+	end
 end
 
 -- Replaces original ElvUI function
