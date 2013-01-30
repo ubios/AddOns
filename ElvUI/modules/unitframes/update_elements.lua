@@ -889,9 +889,9 @@ function UF:UpdateComboDisplay(event, unit)
 		end	
 	end
 	
-	local BORDER = E.Border;
-	local SPACING = E.Spacing;
-	local db = E.db.unitframe['units'].target
+	local BORDER = E.Border
+	local SPACING = E.Spacing
+	local db = E.db.unitframe.units.target
 	local USE_COMBOBAR = db.combobar.enable
 	local USE_MINI_COMBOBAR = db.combobar.fill == "spaced" and USE_COMBOBAR
 	local COMBOBAR_HEIGHT = db.combobar.height
@@ -926,7 +926,6 @@ function UF:AuraFilter(unit, icon, name, rank, texture, count, dtype, duration, 
 		return false;
 	end
 
-	local isPlayer, isFriend
 	local db = self:GetParent().db
 	if not db or not db[self.type] then return true; end
 	
@@ -997,10 +996,9 @@ function UF:AuraFilter(unit, icon, name, rank, texture, count, dtype, duration, 
 		anotherFilterExists = true
 	end	
 
-	local useFilter = E.global.unitframe.aurafilters[db.useFilter]
-	if db.useFilter and useFilter then
-		local type = useFilter.type
-		local spellList = useFilter.spells
+	if db.useFilter and E.global.unitframe.aurafilters[db.useFilter] then
+		local type = E.global.unitframe.aurafilters[db.useFilter].type
+		local spellList = E.global.unitframe.aurafilters[db.useFilter].spells
 		if type == 'Whitelist' then
 			if spellList[name] and spellList[name].enable and passPlayerOnlyCheck then
 				returnValue = true
@@ -1322,10 +1320,9 @@ function UF:AuraBarFilter(unit, name, rank, icon, count, debuffType, duration, e
 		anotherFilterExists = true
 	end	
 
-	local useFilter = E.global.unitframe.aurafilters[db.useFilter]
-	if db.useFilter and useFilter then
-		local type = useFilter.type
-		local filter = useFilter.spells[name]
+	if db.useFilter and E.global.unitframe.aurafilters[db.useFilter] then
+		local type = E.global.unitframe.aurafilters[db.useFilter].type
+		local filter = E.global.unitframe.aurafilters[db.useFilter].spells[name]
 
 		if type == 'Whitelist' then
 			if spellList[name] and spellList[name].enable and passPlayerOnlyCheck then
