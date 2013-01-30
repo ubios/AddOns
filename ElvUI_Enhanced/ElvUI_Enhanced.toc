@@ -1,0 +1,16 @@
+## Interface: 50100
+## Title: |cff1784d1ElvUI |rEnhanced
+## Author: Omega1970
+## Version: 1.0
+## Notes: Plugin-Enhancements for |cff1784d1ElvUI|r.
+## URL: http://tukui.org/ 
+## RequiredDeps: ElvUI
+## DefaultState: Enabled
+
+libs\load_libs.xml
+locales\load_locales.xml
+media\load_media.xml
+config\load_config.xml
+modules\load_modules.xml
+ElvUI_Enhanced.lua
+
