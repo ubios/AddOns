@@ -101,35 +101,3 @@ if E.myclass == "DRUID" then
 		end
 	end
 end
-
--- Replaces original ElvUI function
---UF.UpdateRoleIcon = function()
---	print('Update Role Icon')
---	local lfdrole = self.LFDRole
---	local db = self.db.roleIcon;
-	
---	if (not db) or (db and not db.enable) then 
---		lfdrole:Hide()
---		return
---	end
-	
---	local role = UnitGroupRolesAssigned(self.unit)
---	if role == 'NONE' then
---		if self.isForced then
---			local rnd = random(1, 3)
---			role = rnd == 1 and "TANK" or (rnd == 2 and "HEALER" or (rnd == 3 and "DAMAGER"))
---		else
---			_, role = LSR:getRole(UnitGUID(self.unit))
---		end
---	end
-	
---	if role and role ~= 'NONE' and (self.isForced or UnitIsConnected(self.unit)) then
---		lfdrole:SetTexture(roleIconTextures[role])
---		lfdrole:Show()
---		self:UnregisterEvent('INSPECT_READY')
---	else
---		lfdrole:Hide()
---		self:RegisterEvent('INSPECT_READY', UF.UpdateRoleIcon)
---	end	
---end
-
