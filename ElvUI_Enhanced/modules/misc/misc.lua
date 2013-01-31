@@ -1,5 +1,5 @@
 local E, L, V, P, G, _ = unpack(ElvUI); --Inport: Engine, Locales, PrivateDB, ProfileDB, GlobalDB, Localize Underscore
-local M = E:NewModule('MiscEnh', 'AceEvent-3.0');
+local M = E:NewModule('MiscEnh', 'AceHook-3.0', 'AceEvent-3.0');
 
 E.MiscEnh = M;
 

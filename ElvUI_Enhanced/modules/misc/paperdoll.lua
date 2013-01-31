@@ -15,7 +15,10 @@ local slots = {
 }
 
 function M:UpdateDurability()
-	local frame, slot, current, maximum, r, g, b
+	local frame = _G["CharacterFrame"]
+	if not frame:IsShown() then return end
+	
+	local slot, current, maximum, r, g, b
 	for i = 1, #slots do
 		frame = _G[("Character%s"):format(slots[i])]
 		slot = GetInventorySlotInfo(slots[i])
@@ -33,6 +36,8 @@ function M:LoadPaperDollDurability()
 	_G["CharacterFrame"]:HookScript("OnShow", function(self)
 		M:UpdateDurability()
 	end)
+	
+	self:RegisterEvent("UPDATE_INVENTORY_DURABILITY", "UpdateDurability")
 
 	local frame
 	for i = 1, #slots do
