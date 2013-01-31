@@ -23,3 +23,14 @@ E.Options.args.general.args.minimap.args.skinStyle = {
 	},
 	disabled = function() return not E.private.general.minimap.skinButtons end,
 }
+
+E.Options.args.general.args.minimap.args.buttonSize = {
+	order = 22,
+	type = 'range',
+	name = L['Button Size'],
+	desc = L['The size of the minimap buttons.'],
+	min = 16, max = 40, step = 1,
+	get = function(info) return E.private.general.minimap.buttonSize end,
+	set = function(info, value) E.private.general.minimap.buttonSize = value; E:GetModule('MinimapButtons'):UpdateLayout() end,
+	disabled = function() return not E.private.general.minimap.skinButtons end,
+}

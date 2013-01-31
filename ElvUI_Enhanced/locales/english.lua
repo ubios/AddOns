@@ -39,6 +39,7 @@ L['Skin Buttons'] = true
 L['Skins the minimap buttons in Elv UI style.'] = true
 L['Skin Style'] = true
 L['Change settings for how the minimap buttons are skinned.'] = true
+L['The size of the minimap buttons.'] = true
 
 L['No Anchor Bar'] = true
 L['Horizontal Anchor Bar'] = true

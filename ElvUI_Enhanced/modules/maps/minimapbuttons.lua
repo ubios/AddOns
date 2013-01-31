@@ -19,7 +19,6 @@ local ignoreButtons = {
 }
 
 local moveButtons = {}
-local buttonSize = 28
 local minimapButtonBarAnchor, minimapButtonBar
 
 function MB:SkinButton(frame)
@@ -85,8 +84,8 @@ function MB:UpdateLayout()
 	
 	minimapButtonBar:Hide()
 	minimapButtonBar:SetPoint("CENTER", minimapButtonBarAnchor, "CENTER", 0, 0)
-	minimapButtonBar:Height(buttonSize + 4)
-	minimapButtonBar:Width(buttonSize + 4)
+	minimapButtonBar:Height(E.private.general.minimap.buttonSize + 4)
+	minimapButtonBar:Width(E.private.general.minimap.buttonSize + 4)
 
 	local lastFrame, anchor1, anchor2, offsetX, offsetY
 	for i = 1, #moveButtons do
@@ -114,7 +113,7 @@ function MB:UpdateLayout()
 			
 			frame:ClearAllPoints()
 			frame:SetFrameStrata("LOW")
-			frame:Size(buttonSize)
+			frame:Size(E.private.general.minimap.buttonSize)
 			if E.private.general.minimap.skinStyle == 'HORIZONTAL' then
 				anchor1 = 'RIGHT'
 				anchor2 = 'LEFT'
@@ -138,9 +137,9 @@ function MB:UpdateLayout()
 	
 	if E.private.general.minimap.skinStyle ~= 'NOANCHOR' then
 		if E.private.general.minimap.skinStyle == "HORIZONTAL" then
-			minimapButtonBar:Width((buttonSize * #moveButtons) + (2 * #moveButtons+1) + 1)
+			minimapButtonBar:Width((E.private.general.minimap.buttonSize * #moveButtons) + (2 * #moveButtons+1) + 1)
 		else
-			minimapButtonBar:Height((buttonSize * #moveButtons) + (2 * #moveButtons+1) + 1)
+			minimapButtonBar:Height((E.private.general.minimap.buttonSize * #moveButtons) + (2 * #moveButtons+1) + 1)
 		end
 		minimapButtonBarAnchor:SetSize(minimapButtonBar:GetSize())
 		minimapButtonBar:Show()
