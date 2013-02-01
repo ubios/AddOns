@@ -45,9 +45,8 @@ local function RotateTexture(texture, angle)
 end
 
 function UF:UpdateGPS(frame)
-	if not frame.gps.db.enable then return end
-
 	local gps = frame.gps
+	if not gps then return end
 	
 	-- GPS Disabled or not GPS parent frame visible or not in Party or Raid, Hide gps
 	if not (UnitInParty(frame.unit) or UnitInRaid(frame.unit)) then

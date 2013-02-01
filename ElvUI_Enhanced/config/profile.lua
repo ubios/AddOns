@@ -4,14 +4,12 @@
 --Core
 
 --Unitframes
-P.unitframe.units.target.gps = {
-		['enable'] = true,
-		['position'] = 'BOTTOMRIGHT'
+P['unitframe']['units']['target']['gps'] = {
+	['enable'] = true,
+	['position'] = 'BOTTOMRIGHT'
 }
 
-P.unitframe.units.focus.gps = {
+P['unitframe']['units']['focus']['gps']= {
 	['enable'] = true,
 	['position'] = 'LEFT'
 }
-
-

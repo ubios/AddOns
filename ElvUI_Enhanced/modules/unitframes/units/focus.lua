@@ -13,14 +13,22 @@ function UF:Update_FocusFrame(frame, db)
 		gps = frame.gps
 	end
 
-	if gps.db.enable then
-		local x, y = self:GetPositionOffset(gps.db.position)		
+	if not db.gps then return end
+
+	if db.gps.enable then
+		local x, y = self:GetPositionOffset(db.gps.position)		
 		gps:ClearAllPoints()
-		gps:Point(gps.db.position, frame.Health, gps.db.position, x, y)
+		gps:Point(db.gps.position, frame.Health, db.gps.position, x, y)
 		gps:SetFrameStrata("MEDIUM")
 		gps:Show()
+		
+		gps.timer = UF:ScheduleRepeatingTimer("UpdateGPS", 0.1, frame)
 		frame:EnableElement('GPS')
 	else
+		if (gps.timer) then
+			UF:CancelTimer(gps.timer)
+			gps.timer = nil
+		end
 		frame:DisableElement('GPS')
 		gps:Hide()
 	end
