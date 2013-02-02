@@ -41,6 +41,6 @@ E.Options.args.general.args.minimap.args.mouseover = {
 	desc = L['The frame is not shown unless you mouse over the frame.'],
 	type = "toggle",
 	get = function(info) return E.private.general.minimap.mouseover end,
-	set = function(info, value) E.private.general.minimap.mouseover = value; E:GetModule('MinimapButtons'):UpdateLayout() end,
+	set = function(info, value) E.private.general.minimap.mouseover = value; E:GetModule('MinimapButtons'):ChangeMouseOverSetting() end,
 	disabled = function() return not E.private.general.minimap.skinButtons or E.private.general.minimap.skinStyle == 'NOANCHOR' end,
 }

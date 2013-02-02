@@ -54,6 +54,7 @@ function MB:SkinButton(frame)
 	if not frame.isSkinned then
 		frame:HookScript('OnEnter', OnEnter)
 		frame:HookScript('OnLeave', OnLeave)
+		frame:HookScript('OnClick', MB.UpdateLayout)
 
 		for i = 1, frame:GetNumRegions() do
 			local region = select(i, frame:GetRegions())
@@ -96,16 +97,9 @@ end
 function MB:UpdateLayout()
 	if not E.minimapbuttons then return end
 	
-	minimapButtonBar:Hide()
 	minimapButtonBar:SetPoint("CENTER", minimapButtonBarAnchor, "CENTER", 0, 0)
 	minimapButtonBar:Height(E.private.general.minimap.buttonSize + 4)
 	minimapButtonBar:Width(E.private.general.minimap.buttonSize + 4)
-
-	if E.private.general.minimap.mouseover then
-		minimapButtonBar:SetAlpha(0)
-	else
-		minimapButtonBar:SetAlpha(1)
-	end
 
 	local lastFrame, anchor1, anchor2, offsetX, offsetY
 	for i = 1, #moveButtons do
@@ -162,8 +156,15 @@ function MB:UpdateLayout()
 			minimapButtonBar:Height((E.private.general.minimap.buttonSize * #moveButtons) + (2 * #moveButtons + 1) + 1)
 		end
 		minimapButtonBarAnchor:SetSize(minimapButtonBar:GetSize())
-		minimapButtonBar:Show()
 	end	
+end
+
+function MB:ChangeMouseOverSetting()
+	if E.private.general.minimap.mouseover then
+		minimapButtonBar:SetAlpha(0)
+	else
+		minimapButtonBar:SetAlpha(1)
+	end
 end
 
 function MB:SkinMinimapButtons()
@@ -195,6 +196,8 @@ function MB:CreateFrames()
 	minimapButtonBar:SetScript("OnEnter", OnEnter)
 	minimapButtonBar:SetScript("OnLeave", OnLeave)
 
+	self:ChangeMouseOverSetting()
+	
 	self:RegisterEvent("ADDON_LOADED", "StartSkinning")
 end
 
@@ -202,7 +205,7 @@ function MB:Initialize()
 	if not E.private.general.minimap.skinButtons then return end
 
 	E.minimapbuttons = MB
-
+	
 	self:RegisterEvent("PLAYER_ENTERING_WORLD", "CreateFrames")
 end
 
