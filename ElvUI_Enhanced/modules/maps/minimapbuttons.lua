@@ -21,6 +21,16 @@ local ignoreButtons = {
 local moveButtons = {}
 local minimapButtonBarAnchor, minimapButtonBar
 
+local function OnEnter()
+	if not E.private.general.minimap.mouseover then return end
+	E:UIFrameFadeIn(MinimapButtonBar, 0.2, MinimapButtonBar:GetAlpha(), 1)
+end
+
+local function OnLeave()
+	if not E.private.general.minimap.mouseover then return end
+	E:UIFrameFadeOut(MinimapButtonBar, 0.2, MinimapButtonBar:GetAlpha(), 0)
+end
+
 function MB:SkinButton(frame)
 	if frame == nil or frame:GetName() == nil or (frame:GetObjectType() ~= "Button") or not frame:IsVisible() then return end
 	
@@ -74,6 +84,9 @@ function MB:SkinButton(frame)
 			end
 		end
 		frame:SetTemplate("Default")
+		frame:HookScript('OnEnter', OnEnter)
+		frame:HookScript('OnLeave', OnLeave)
+
 		tinsert(moveButtons, name)
 		frame.isSkinned = true
 	end
@@ -86,6 +99,12 @@ function MB:UpdateLayout()
 	minimapButtonBar:SetPoint("CENTER", minimapButtonBarAnchor, "CENTER", 0, 0)
 	minimapButtonBar:Height(E.private.general.minimap.buttonSize + 4)
 	minimapButtonBar:Width(E.private.general.minimap.buttonSize + 4)
+
+	if E.private.general.minimap.mouseover then
+		minimapButtonBar:SetAlpha(0)
+	else
+		minimapButtonBar:SetAlpha(1)
+	end
 
 	local lastFrame, anchor1, anchor2, offsetX, offsetY
 	for i = 1, #moveButtons do
@@ -143,7 +162,7 @@ function MB:UpdateLayout()
 		end
 		minimapButtonBarAnchor:SetSize(minimapButtonBar:GetSize())
 		minimapButtonBar:Show()
-	end
+	end	
 end
 
 function MB:SkinMinimapButtons()
@@ -172,6 +191,8 @@ function MB:CreateFrames()
 	minimapButtonBar:SetTemplate("Transparent")
 	minimapButtonBar:CreateShadow()
 	minimapButtonBar:SetPoint("CENTER", minimapButtonBarAnchor, "CENTER", 0, 0)
+	minimapButtonBar:SetScript("OnEnter", OnEnter)
+	minimapButtonBar:SetScript("OnLeave", OnLeave)
 
 	self:RegisterEvent("ADDON_LOADED", "StartSkinning")
 end

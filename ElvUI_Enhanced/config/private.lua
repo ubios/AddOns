@@ -8,6 +8,7 @@ V.general.autorepchange = true
 V.general.minimap.skinButtons = true
 V.general.minimap.skinStyle = 'HORIZONTAL'
 V.general.minimap.buttonSize = 28
+V.general.minimap.mouseover = false
 
 V.equipment = {
 	['specialization'] = {

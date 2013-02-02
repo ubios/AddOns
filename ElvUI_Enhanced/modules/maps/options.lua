@@ -32,5 +32,15 @@ E.Options.args.general.args.minimap.args.buttonSize = {
 	min = 16, max = 40, step = 1,
 	get = function(info) return E.private.general.minimap.buttonSize end,
 	set = function(info, value) E.private.general.minimap.buttonSize = value; E:GetModule('MinimapButtons'):UpdateLayout() end,
-	disabled = function() return not E.private.general.minimap.skinButtons end,
+	disabled = function() return not E.private.general.minimap.skinButtons or E.private.general.minimap.skinStyle == 'NOANCHOR' end,
+}
+
+E.Options.args.general.args.minimap.args.mouseover = {
+	order = 23,
+	name = L['Mouse Over'],
+	desc = L['The frame is not shown unless you mouse over the frame.'],
+	type = "toggle",
+	get = function(info) return E.private.general.minimap.mouseover end,
+	set = function(info, value) E.private.general.minimap.mouseover = value; E:GetModule('MinimapButtons'):UpdateLayout() end,
+	disabled = function() return not E.private.general.minimap.skinButtons or E.private.general.minimap.skinStyle == 'NOANCHOR' end,
 }
