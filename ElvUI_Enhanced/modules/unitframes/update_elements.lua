@@ -1,6 +1,5 @@
 local E, L, V, P, G, _ = unpack(ElvUI); --Inport: Engine, Locales, PrivateDB, ProfileDB, GlobalDB, Localize Underscore
 local UF = E:GetModule('UnitFrames');
-local LSR = LibStub("LibSpecRoster-1.0")
 local MAP = LibStub("LibMapData-1.0")
 
 local sub = string.sub
