@@ -26,7 +26,7 @@ L["Battleground"] = true
 L['Enable/Disable the battleground switch.'] = true
 
 L["Equipment Set"] = true
-L["Choose the equipment set to use when you enter a battleground."] = true
+L["Choose the equipment set to use when you enter a battleground or arena."] = true
 
 L["You have equipped equipment set: "] = true
 

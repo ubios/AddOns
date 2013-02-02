@@ -20,9 +20,9 @@ function EQ:CheckForGearChange()
 
 	local active, activeSet = GetActiveSpecGroup(), GetCurrentEquipmentSet()
 	
-	local inInstance, instanceType = IsInInstance()
-	if (inInstance and (instanceType == "pvp")) then
-		if self.db.battleground.enable then
+	if self.db.battleground.enable then
+		local inInstance, instanceType = IsInInstance()
+		if (inInstance and (instanceType == "pvp" or instanceType == "arena")) then
 			local set = self.db.equipmentset
 			if set ~= "none" and set ~= activeSet then
 				changingEquipmentSet = set

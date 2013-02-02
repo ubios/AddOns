@@ -25,7 +25,7 @@ L["Battleground"] = "Schlachtfeld"
 L['Enable/Disable the battleground switch.'] = "Aktivieren / Deaktivieren des Sclachtfeldvorlagenschalter."
 
 L["Equipment Set"] = "Ausrüstungsvorlage"
-L["Choose the equipment set to use when you enter a battleground."] = "Wählen Sie die Ausrüstungsvorlage fur das Schlachtfeld."
+L["Choose the equipment set to use when you enter a battleground or arena."] = "Wählen Sie die Ausrüstungsvorlage fur das Schlachtfeld oder Arena."
 
 L["You have equipped equipment set: "] = "Sie haben die folgende Ausrüstungsvorlage ausgestattet: "
 
