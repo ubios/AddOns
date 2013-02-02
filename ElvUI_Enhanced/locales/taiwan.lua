@@ -1,3 +1,51 @@
 ﻿local AceLocale = LibStub:GetLibrary("AceLocale-3.0")
 local L = AceLocale:NewLocale("ElvUI", "zhTW")
 if not L then return end
+
+L["ENH_LOGIN_MSG"] = "您正在使用 |cff1784d1ElvUI Enhanced|r version %s%s|r."
+L["Your version of ElvUI is to old (required v5.1 or higher). Please, download the latest version from tukui.org."] = "您的ElvUI版本過低, 請前往tukui.org下載最新版本."
+
+-- Equipment
+L["Equipment"] = "自動換裝"
+L["EQUIPMENT_DESC"] = "當你進入戰場或切換專精時自動切換裝備, 你可以在選項中選擇相關的裝備模組."
+L["No Change"] = "不改變"
+
+L["Specialization"] = "專精"
+L["Enable/Disable the specialization switch."] = "開啓/關閉天賦切換"
+
+L["Primary Talent"] = "主專精"
+L["Choose the equipment set to use for your primary specialization."] = "選擇當你使用主專精時的裝備模組."
+
+L["Secondary Talent"] = "副專精"
+L["Choose the equipment set to use for your secondary specialization."] = "選擇當你使用副專精時的裝備模組."
+
+L["Battleground"] = "戰場"
+L['Enable/Disable the battleground switch.'] = "開啓/關閉戰場切換"
+
+L["Equipment Set"] = "裝備模組"
+L["Choose the equipment set to use when you enter a battleground or arena."] = "選擇當你進入戰場時的裝備模組."
+
+L["You have equipped equipment set: "] = "你已裝備此模組:"
+
+-- GPS module
+L['GPS'] = "GPS定位"
+L['Show the direction and distance to the selected party or raid member.'] = "顯示你與當前隊伍或團隊成員的方向与距離"
+
+-- Minimap Buttons
+L['Skin Buttons'] = "美化按鈕"
+L['Skins the minimap buttons in Elv UI style.'] = "將小地圖圖標美化成ElvUI風格."
+L['Skin Style'] = "美化風格"
+L['Change settings for how the minimap buttons are skinned.'] = "改變美化設定"
+L['The size of the minimap buttons.'] = "小地圖圖標大小"
+
+L['No Anchor Bar'] = "沒有錨點"
+L['Horizontal Anchor Bar'] = "水平狀"
+L['Vertical Anchor Bar'] = "垂直狀"
+
+-- PvP Autorelease
+L['PvP Autorelease'] = "PVP自動釋放靈魂"
+L['Automatically release body when killed inside a battleground.'] = "在戰場死亡後自動釋放靈魂."
+
+-- Track Reputation
+L['Track Reputation'] = "聲望追蹤"
+L['Automatically change your watched faction on the reputation bar to the faction you got reputation points for.'] = "當你獲得某個陣營的聲望時, 將自動追蹤此陣營的聲望至經驗值欄位." 
