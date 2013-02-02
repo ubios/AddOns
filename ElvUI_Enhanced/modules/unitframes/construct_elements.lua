@@ -11,7 +11,7 @@ function UF:Construct_GPS(frame, unit)
 	gps:SetHeight(E:Scale(14))
 	gps:SetAlpha(.9)
 	gps:Hide()
-	
+
 	gps.Texture = gps:CreateTexture("OVERLAY")
 	gps.Texture:SetTexture("Interface\\AddOns\\ElvUI_Enhanced\\media\\textures\\arrow.tga")
 	gps.Texture:SetBlendMode("BLEND")
@@ -21,11 +21,20 @@ function UF:Construct_GPS(frame, unit)
 	gps.Texture:SetPoint("LEFT", gps, "LEFT", 0, 0)
 
 	gps.Text = gps:CreateFontString(nil, "OVERLAY")
-	UF.fontstrings[gps.Text] = true
+	gps.Text:FontTemplate(E.media.font, 12, 'OUTLINE')
 	gps.Text:SetPoint("RIGHT", gps, "RIGHT", 0 , 0)
+	--UF.fontstrings[gps.Text] = true
 
-	frame.gps = gps
 	frame.unit = unit
+	frame.gps = gps
 
-	return gps
+	UF:CreateAndUpdateUF(unit)
 end
+
+local CF = CreateFrame('Frame')
+CF:RegisterEvent("PLAYER_ENTERING_WORLD")
+CF:SetScript("OnEvent", function(self, event)
+	UF:Construct_GPS(_G["ElvUF_Target"], 'target')
+	UF:Construct_GPS(_G["ElvUF_Focus"], 'focus')
+	self:UnregisterEvent("PLAYER_ENTERING_WORLD")
+end)
