@@ -23,12 +23,12 @@ local minimapButtonBarAnchor, minimapButtonBar
 
 local function OnEnter()
 	if not E.private.general.minimap.mouseover then return end
-	E:UIFrameFadeIn(MinimapButtonBar, 0.2, MinimapButtonBar:GetAlpha(), 1)
+	UIFrameFadeIn(MinimapButtonBar, 0.2, MinimapButtonBar:GetAlpha(), 1)
 end
 
 local function OnLeave()
 	if not E.private.general.minimap.mouseover then return end
-	E:UIFrameFadeOut(MinimapButtonBar, 0.2, MinimapButtonBar:GetAlpha(), 0)
+	UIFrameFadeOut(MinimapButtonBar, 0.2, MinimapButtonBar:GetAlpha(), 0)
 end
 
 function MB:SkinButton(frame)
@@ -52,6 +52,9 @@ function MB:SkinButton(frame)
 	if name == "SmartBuff_MiniMapButton" then frame:SetNormalTexture(select(3, GetSpellInfo(12051))) end
 
 	if not frame.isSkinned then
+		frame:HookScript('OnEnter', OnEnter)
+		frame:HookScript('OnLeave', OnLeave)
+
 		for i = 1, frame:GetNumRegions() do
 			local region = select(i, frame:GetRegions())
 			frame.original = {}
@@ -84,8 +87,6 @@ function MB:SkinButton(frame)
 			end
 		end
 		frame:SetTemplate("Default")
-		frame:HookScript('OnEnter', OnEnter)
-		frame:HookScript('OnLeave', OnLeave)
 
 		tinsert(moveButtons, name)
 		frame.isSkinned = true
