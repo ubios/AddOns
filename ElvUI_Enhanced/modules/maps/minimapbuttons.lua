@@ -143,7 +143,7 @@ function MB:UpdateLayout()
 				anchor1 = 'TOP'
 				anchor2 = 'BOTTOM'
 				offsetX = 0
-				offsetY = 2
+				offsetY = -2
 			end
 			
 			if not lastFrame then
@@ -157,9 +157,9 @@ function MB:UpdateLayout()
 	
 	if E.private.general.minimap.skinStyle ~= 'NOANCHOR' then
 		if E.private.general.minimap.skinStyle == "HORIZONTAL" then
-			minimapButtonBar:Width((E.private.general.minimap.buttonSize * #moveButtons) + (2 * #moveButtons+1) + 1)
+			minimapButtonBar:Width((E.private.general.minimap.buttonSize * #moveButtons) + (2 * #moveButtons + 1) + 1)
 		else
-			minimapButtonBar:Height((E.private.general.minimap.buttonSize * #moveButtons) + (2 * #moveButtons+1) + 1)
+			minimapButtonBar:Height((E.private.general.minimap.buttonSize * #moveButtons) + (2 * #moveButtons + 1) + 1)
 		end
 		minimapButtonBarAnchor:SetSize(minimapButtonBar:GetSize())
 		minimapButtonBar:Show()
