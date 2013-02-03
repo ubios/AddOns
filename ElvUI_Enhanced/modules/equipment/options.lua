@@ -1,5 +1,6 @@
 local E, L, V, P, G, _ = unpack(ElvUI); --Inport: Engine, Locales, PrivateDB, ProfileDB, GlobalDB, Localize Underscore
 local M = E:GetModule('Equipment')
+local ME = E:GetModule('MiscEnh');
 
 local tsort = table.sort
 
@@ -101,6 +102,34 @@ E.Options.args.equipment = {
 						tsort(sets, function(a, b) return a < b end)
 						return sets
 					end,
+				},
+			},
+		},
+		intro2 = {
+			type = "description",
+			name = L["DURABILITY_DESC"],
+			order = 4,
+		},		
+		durability = {
+			type = 'group',
+			name = DURABILITY,
+			guiInline = true,
+			order = 5,
+			get = function(info) return E.private.equipment.durability[ info[#info] ] end,
+			set = function(info, value) E.private.equipment.durability[ info[#info] ] = value ME:UpdateDurability() end,
+			args = {
+				enable = {
+					type = "toggle",
+					order = 1,
+					name = L["Enable"],
+					desc = L["Enable/Disable the display of durability information on the character screen."],
+				},
+				onlydamaged = {
+					type = "toggle",
+					order = 2,
+					name = L["Damaged Only"],
+					desc = L["Only show durabitlity information for items that are damaged."],
+					disabled = function() return not E.private.equipment.durability.enable end,
 				},
 			},
 		},

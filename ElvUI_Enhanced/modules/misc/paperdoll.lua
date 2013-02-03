@@ -21,15 +21,18 @@ function M:UpdateDurability()
 	local slot, current, maximum, r, g, b
 	for i = 1, #slots do
 		frame = _G[("Character%s"):format(slots[i])]
-		slot = GetInventorySlotInfo(slots[i])
-		current, maximum = GetInventoryItemDurability(slot)
 		frame.DurabilityInfo:SetText()
 
-		if current and maximum then
-			r, g, b = E:ColorGradient((current / maximum), 1, 0, 0, 1, 1, 0, 0, 1, 0)
-			frame.DurabilityInfo:SetFormattedText("%s%.0f%%|r", E:RGBToHex(r, g, b), (current / maximum) * 100)
+		if E.private.equipment.durability.enable then
+			slot = GetInventorySlotInfo(slots[i])
+			current, maximum = GetInventoryItemDurability(slot)
+
+			if current and maximum and (not E.private.equipment.durability.onlydamaged or current < maximum) then
+				r, g, b = E:ColorGradient((current / maximum), 1, 0, 0, 1, 1, 0, 0, 1, 0)
+				frame.DurabilityInfo:SetFormattedText("%s%.0f%%|r", E:RGBToHex(r, g, b), (current / maximum) * 100)
+			end
 		end
-	end	
+	end
 end
 
 function M:LoadPaperDollDurability()

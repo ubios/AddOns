@@ -1,7 +1,7 @@
 ﻿<Ui xmlns="http://www.blizzard.com/wow/ui/">
+	<Include file="misc\load_misc.xml"/>
 	<Include file="datatexts\load_datatexts.xml"/>
 	<Include file="equipment\load_equipment.xml"/>
 	<Include file="maps\load_maps.xml"/>
-	<Include file="misc\load_misc.xml"/>
 	<Include file="unitframes\load_unitframes.xml"/>
 </Ui>

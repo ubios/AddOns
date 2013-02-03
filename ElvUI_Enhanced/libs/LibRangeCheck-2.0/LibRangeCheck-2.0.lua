@@ -50,7 +50,7 @@ end
 
 -- << STATIC CONFIG
 
-local tinsert = tinsert
+local UpdateDelay = .5
 local ItemRequestTimeout = 10.0
 
 -- interact distance based checks. ranges are based on my own measurements (thanks for all the folks who helped me with this)
@@ -325,7 +325,9 @@ local tostring = tostring
 local print = print
 local next = next
 local type = type
-local twipe, tremove = table.wipe, table.remove
+local wipe = wipe
+local tinsert = tinsert
+local tremove = tremove
 local BOOKTYPE_SPELL = BOOKTYPE_SPELL
 local GetSpellInfo = GetSpellInfo
 local GetSpellBookItemName = GetSpellBookItemName
@@ -533,13 +535,13 @@ end
 
 local function updateCheckers(origList, newList)
     if #origList ~= #newList then
-        twipe(origList)
+        wipe(origList)
         copyTable(newList, origList)
         return true
     end
     for i = 1, #origList do
         if origList[i].range ~= newList[i].range or origList[i].checker ~= newList[i].checker then
-            twipe(origList)
+            wipe(origList)
             copyTable(newList, origList)
             return true
         end
@@ -898,7 +900,7 @@ function lib:GLYPH_UPDATED()
 end
 
 function lib:UNIT_INVENTORY_CHANGED(event, unit)
-    if self.initialized and self.handSlotItem ~= GetInventoryItemLink("player", HandSlotId) then
+    if self.initialized and unit == "player" and self.handSlotItem ~= GetInventoryItemLink("player", HandSlotId) then
         self:scheduleInit()
     end
 end
@@ -985,14 +987,16 @@ function lib:activate()
         local _, playerClass = UnitClass("player")
         if playerClass == "MAGE" or playerClass == "SHAMAN" then
             -- Mage and Shaman gladiator gloves modify spell ranges
-            frame:RegisterUnitEvent("UNIT_INVENTORY_CHANGED", "player")
+            frame:RegisterEvent("UNIT_INVENTORY_CHANGED")
         end
     end
     initItemRequests()
     self.frame:SetScript("OnEvent", function(frame, ...) self:OnEvent(...) end)
     self.frame:SetScript("OnUpdate", function(frame, elapsed)
         lastUpdate = lastUpdate + elapsed
-        if lastUpdate < .5 then return end
+        if lastUpdate < UpdateDelay then
+            return
+        end
         lastUpdate = 0
         self:initialOnUpdate()
     end)

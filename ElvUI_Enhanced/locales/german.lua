@@ -29,6 +29,13 @@ L["Choose the equipment set to use when you enter a battleground or arena."] = "
 
 L["You have equipped equipment set: "] = "Sie haben die folgende Ausrüstungsvorlage ausgestattet: "
 
+L["DURABILITY_DESC"] = "Passen Sie die Einstellungen für die Ausrüstungsdauerhaftigkeit im Charakterfenster an."
+
+L["Enable/Disable the display of durability information on the character screen."] = "Aktivieren / Deaktivieren der Anzeige der Ausrüstungsdauerhaftigkeit im Charakterfenster."
+
+L["Damaged Only"] = "Nur Beschädigte"
+L["Only show durabitlity information for items that are damaged."] = "Nur die Ausrüstungsdauerhaftigkeit fur Beschädigte Ausrüstungsstucke anzeigen."
+
 -- GPS module
 L['Show the direction and distance to the selected party or raid member.'] = "Anzeigen von der Richtung und Entfernung zum ausgewählten Gruppen oder Schlachtzugsmitglied."
 

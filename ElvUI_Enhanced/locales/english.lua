@@ -30,6 +30,12 @@ L["Choose the equipment set to use when you enter a battleground or arena."] = t
 
 L["You have equipped equipment set: "] = true
 
+L["DURABILITY_DESC"] = "Adjust the settings for the durability information on the character screen."
+L['Enable/Disable the display of durability information on the character screen.'] = true
+
+L["Damaged Only"] = true
+L["Only show durabitlity information for items that are damaged."] = true
+
 -- GPS module
 L['GPS'] = true
 L['Show the direction and distance to the selected party or raid member.'] = true

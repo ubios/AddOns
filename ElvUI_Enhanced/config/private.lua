@@ -20,4 +20,8 @@ V.equipment = {
 	['primary'] = 'none',
 	['secondary'] = 'none',
 	['equipmentset'] = 'none',
+	['durability'] = {
+		enable = true,
+		onlydamaged = false,
+	}
 }
