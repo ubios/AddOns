@@ -43,6 +43,7 @@ function MB:SkinButton(frame)
 		if _G[("GatherMatePin%d"):format(i)] == frame then return end
 		if _G[("Spy_MapNoteList_mini%d"):format(i)] == frame then return end
 		if _G[("HandyNotesPin%d"):format(i)] == frame then return end
+		if _G[("ZGVMarker%dMini"):format(i)] == frame then return end
 	end
 	
 	frame:SetPushedTexture(nil)
