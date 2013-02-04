@@ -2,6 +2,8 @@
 local L = AceLocale:NewLocale("ElvUI", "zhTW")
 if not L then return end
 
+-- Translation by: xjjxfpyyyf
+
 L["ENH_LOGIN_MSG"] = "您正在使用 |cff1784d1ElvUI Enhanced|r version %s%s|r."
 L["Your version of ElvUI is to old (required v5.1 or higher). Please, download the latest version from tukui.org."] = "您的ElvUI版本過低, 請前往tukui.org下載最新版本."
 

@@ -1,6 +1,6 @@
 ## Interface: 50100
 ## Title: |cff1784d1ElvUI |rEnhanced
-## Author: Omega1970
+## Author: Omega1970, Azilroka, Lockslap
 ## Version: 1.10
 ## Notes: Plugin-Enhancements for |cff1784d1ElvUI|r.
 ## URL: http://tukui.org/ 

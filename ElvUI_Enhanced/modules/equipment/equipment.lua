@@ -1,6 +1,9 @@
 local E, L, V, P, G, _ = unpack(ElvUI); --Inport: Engine, Locales, PrivateDB, ProfileDB, GlobalDB, Localize Underscore
 local EQ = E:NewModule('Equipment', 'AceHook-3.0', 'AceEvent-3.0');
 
+-- Based on ElvUI Improved Spec Switch Datatext
+-- Author: Lockslap
+
 local changingEquipmentSet = nil
 local join = string.join
 
