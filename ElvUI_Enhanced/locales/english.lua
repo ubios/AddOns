@@ -58,3 +58,8 @@ L['Automatically release body when killed inside a battleground.'] = true
 -- Track Reputation
 L['Track Reputation'] = true
 L['Automatically change your watched faction on the reputation bar to the faction you got reputation points for.'] = true
+
+-- Extra Datatexts
+L['Actionbar1DataPanel'] = 'Actionbar 1'
+L['Actionbar3DataPanel'] = 'Actionbar 3'
+L['Actionbar5DataPanel'] = 'Actionbar 5'

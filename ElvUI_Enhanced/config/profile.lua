@@ -13,3 +13,18 @@ P['unitframe']['units']['focus']['gps']= {
 	['enable'] = true,
 	['position'] = 'LEFT'
 }
+
+-- DataTexts
+P['datatexts']['Actionbar1DataPanel'] = false
+P['datatexts']['Actionbar3DataPanel'] = false
+P['datatexts']['Actionbar5DataPanel'] = false
+
+P['datatexts']['panels']['Actionbar1DataPanel'] = {
+	['left'] = 'Crit Chance',
+	['middle'] = 'Target Range',
+	['right'] = 'Armor',
+}
+
+P['datatexts']['panels']['Actionbar3DataPanel'] = 'Spec Switch'
+
+P['datatexts']['panels']['Actionbar5DataPanel'] = 'Call to Arms'

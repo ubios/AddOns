@@ -57,3 +57,8 @@ L['Automatically release body when killed inside a battleground.'] = "Automatisc
 -- Track Reputation
 L['Track Reputation'] = "Reputation Verfolgen"
 L['Automatically change your watched faction on the reputation bar to the faction you got reputation points for.'] = "Automatisch ändern der beobachteten Fraktion auf der Erfahrungsleiste zur Fraktion wo mann Reputationspunkte für bekommen hatt."
+
+-- Extra Datatexts
+L['Actionbar1DataPanel'] = 'Aktionsleiste 1'
+L['Actionbar3DataPanel'] = 'Aktionsleiste 3'
+L['Actionbar5DataPanel'] = 'Aktionsleiste 5'
