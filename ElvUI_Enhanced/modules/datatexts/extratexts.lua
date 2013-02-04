@@ -6,6 +6,7 @@ local AB = E:GetModule('ActionBars')
 
 local PANEL_HEIGHT = 22;
 local SPACING = (E.PixelMode and 1 or 5)
+local floor = math.floor
 
 local extrapanel = {
 	[1] = 3,
@@ -14,35 +15,35 @@ local extrapanel = {
 }
 
 function EDT:UpdateSettings()
-	local wasVisible = false
 	for k, v in pairs(extrapanel) do
-		if (_G[('Actionbar%dDataPanel'):format(k)]:IsShown()) then
-			wasVisible = true
-		end
-	end
+		local panel = _G[('Actionbar%dDataPanel'):format(k)]
+		local wasVisible = panel:IsShown()
 
-	local panel
-	local isVisible = false
-	for k, v in pairs(extrapanel) do
-		panel = _G[('Actionbar%dDataPanel'):format(k)]
-		if E.db.datatexts[("actionbar%d"):format(k)] then
+		if E.db.actionbar[('bar%d'):format(k)].enabled and E.db.datatexts[("actionbar%d"):format(k)] then
 			panel:Show()
-			isVisible = true
 		else
 			panel:Hide()
 		end
-	end
-	
-	if (wasVisible ~= isVisible) then
-		local mover = _G['ElvAB_1']
-		if (mover) then
-			local point, relativeTo, relativePoint, xOfs, yOfs = mover:GetPoint()
-			local newYOfs = wasVisible and (yOfs - 26) or (yOfs + 26)
-			if (newYOfs > 0) then
-				mover:SetPoint(point, relativeTo, relativePoint, xOfs, newYOfs)
-				E.db.movers[name] = format('%s\031%s\031%s\031%d\031%d', point, relativeTo:GetName(), relativePoint, E:Round(xOfs), E:Round(newYOfs))
-				
-				ACD['Close'](ACD, 'ElvUI')
+
+		if (wasVisible ~= panel:IsShown()) then
+			local mover = _G[('ElvAB_%d'):format(k)]
+
+			if (mover) then
+				local point, relativeTo, relativePoint, xOfs, yOfs = mover:GetPoint()
+				local newYOfs = floor((wasVisible and (yOfs - PANEL_HEIGHT) or (yOfs + PANEL_HEIGHT)) + .5)
+				if (newYOfs >= 0) then
+					if k ~=1 and not E.db["movers"][mover:GetName()] then
+						point = "BOTTOM"
+						relativePoint = "BOTTOM"
+						local calcOfs = floor(((_G['ElvUI_Bar1']:GetWidth() / 2) + (mover:GetWidth() / 2) + (SPACING * 2)) + .5)
+						xOfs = k == 3 and calcOfs or -calcOfs
+					end
+					mover:ClearAllPoints()
+					mover:Point(point, E.UIParent, relativePoint, xOfs, newYOfs)
+					E:SaveMoverPosition(mover.name)	
+					
+					AB:UpdateButtonSettings()
+				end
 			end
 		end
 	end
@@ -57,6 +58,8 @@ function EDT:PositionDataPanel(panel, index)
 	panel:ClearAllPoints()
 	panel:Point('TOPLEFT', actionbar, 'BOTTOMLEFT', spacer, -spacer)
 	panel:Point('BOTTOMRIGHT', actionbar, 'BOTTOMRIGHT', -spacer, -(spacer + PANEL_HEIGHT))
+	
+	EDT:UpdateSettings()
 end
 
 function EDT:OnInitialize()
