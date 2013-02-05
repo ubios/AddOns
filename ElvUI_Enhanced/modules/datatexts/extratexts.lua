@@ -52,8 +52,8 @@ end
 function EDT:PositionDataPanel(panel, index)
 	if not panel then return end
 	
-	local actionbar = _G["ElvUI_Bar"..index]
-	local spacer = E.db.actionbar["bar"..index].backdrop and 0 or SPACING
+	local actionbar = _G[("ElvUI_Bar%d"):format(index)]
+	local spacer = E.db.actionbar[("bar%d"):format(index)].backdrop and 0 or SPACING
 	
 	panel:ClearAllPoints()
 	panel:Point('TOPLEFT', actionbar, 'BOTTOMLEFT', spacer, -spacer)
@@ -66,7 +66,7 @@ function EDT:OnInitialize()
 	for k, v in pairs(extrapanel) do
 		local actionbar = _G[("ElvUI_Bar%d"):format(k)]
 		local panel = CreateFrame('Frame', ('Actionbar%dDataPanel'):format(k), Minimap)
-		local spacer = E.db.actionbar["bar"..k].backdrop and 0 or SPACING
+		local spacer = E.db.actionbar[("bar%d"):format(k)].backdrop and 0 or SPACING
 
 		panel:Point('TOPLEFT', actionbar, 'BOTTOMLEFT', spacer, -spacer)
 		panel:Point('BOTTOMRIGHT', actionbar, 'BOTTOMRIGHT', -spacer, -(spacer + PANEL_HEIGHT))	
