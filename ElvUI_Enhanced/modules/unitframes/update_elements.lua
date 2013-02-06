@@ -88,6 +88,8 @@ local eclipsedirection = {
 if E.myclass == "DRUID" then
 	ElvUF_Player.EclipseBar.callbackid = LibBalancePowerTracker:RegisterCallback(function(energy, direction, virtual_energy, virtual_direction, virtual_eclipse)
 		if (ElvUF_Player.EclipseBar:IsShown()) then
+			-- improve visibility of eclipse direction indicator
+			ElvUF_Player.EclipseBar.Text:SetFont([[Interface\AddOns\ElvUI\media\fonts\Continuum_Medium.ttf]], 18, 'OUTLINE')
 			eclipsedirection[virtual_direction](ElvUF_Player.EclipseBar, direction ~= virtual_direction)
 		end
 	end)
