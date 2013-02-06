@@ -61,7 +61,6 @@ function MB:SkinButton(frame)
 	end
 	
 	if not validIcon then
-		print('Check blacklist for '..name)
 		for i = 1, #ignoreButtons do
 			if name == ignoreButtons[i] then return end
 		end
