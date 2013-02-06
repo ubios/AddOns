@@ -4,7 +4,7 @@ local MB = E:NewModule('MinimapButtons', 'AceHook-3.0', 'AceEvent-3.0');
 -- Based on Square Minimap Buttons
 -- Original authors:  Azilroka, Sinaris
 
-local sub, len = string.sub, string.len
+local sub, len, find = string.sub, string.len, string.find
 
 -- list of specific minimap frames ignored
 local ignoreButtons = {
@@ -30,6 +30,13 @@ local genericIgnores = {
 	"MinimMap",
 	"Spy_MapNoteList_mini",
 	"ZGVMarker",
+}
+
+-- ignore all frames where then name contains this text
+local partialIgnores = {
+	"Node",
+	"Note",
+	"Pin",
 }
 
 -- whitelist all frames starting with
@@ -67,6 +74,10 @@ function MB:SkinButton(frame)
 		
 		for i = 1, #genericIgnores do
 			if sub(name, 1, len(genericIgnores[i])) == genericIgnores[i] then return end
+		end
+		
+		for i = 1, #partialIgnores do
+			if find(name, partialIgnores[i]) ~= nil then return end
 		end
 	end
 	
@@ -181,6 +192,9 @@ function MB:UpdateLayout()
 			minimapButtonBar:Height((E.private.general.minimap.buttonSize * #moveButtons) + (2 * #moveButtons + 1) + 1)
 		end
 		minimapButtonBarAnchor:SetSize(minimapButtonBar:GetSize())
+		minimapButtonBar:Show()
+	else
+		minimapButtonBar:Hide()
 	end	
 end
 
