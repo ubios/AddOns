@@ -12,6 +12,7 @@ local ignoreButtons = {
 	"AsphyxiaUIMinimapVersionButton",
 	"ElvConfigToggle",
 	"ElvUIConfigToggle",
+	"ElvUI_ConsolidatedBuffs",
 	"GameTimeframe",
 	"HelpOpenTicketButton",
 	"MMHolder",
@@ -23,6 +24,8 @@ local ignoreButtons = {
 local genericIgnores = {
 	"Archy",
 	"GatherMatePin",
+	"GatherNote",
+	"GuildInstance",
 	"HandyNotesPin",
 	"MinimMap",
 	"Spy_MapNoteList_mini",
