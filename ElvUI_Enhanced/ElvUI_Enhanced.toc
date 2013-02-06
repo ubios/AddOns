@@ -1,7 +1,7 @@
 ## Interface: 50100
 ## Title: |cff1784d1ElvUI |rEnhanced
 ## Author: Omega1970, Azilroka, Lockslap
-## Version: 1.11
+## Version: 1.12
 ## Notes: Plugin-Enhancements for |cff1784d1ElvUI|r.
 ## URL: http://tukui.org/ 
 ## RequiredDeps: ElvUI
