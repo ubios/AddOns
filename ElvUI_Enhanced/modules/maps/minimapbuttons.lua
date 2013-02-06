@@ -4,6 +4,9 @@ local MB = E:NewModule('MinimapButtons', 'AceHook-3.0', 'AceEvent-3.0');
 -- Based on Square Minimap Buttons
 -- Original authors:  Azilroka, Sinaris
 
+local sub, len = string.sub, string.len
+
+-- list of specific minimap frames ignored
 local ignoreButtons = {
 	"AsphyxiaUIMinimapHelpButton",
 	"AsphyxiaUIMinimapVersionButton",
@@ -11,11 +14,24 @@ local ignoreButtons = {
 	"ElvUIConfigToggle",
 	"GameTimeframe",
 	"HelpOpenTicketButton",
-	"MiniMapMailframe",
-	"MiniMapTrackingButton",
-	"MiniMapVoiceChatframe",
+	"MMHolder",
 	"QueueStatusMinimapButton",
 	"TimeManagerClockButton",
+}
+
+-- list of frames that are ignored when they start with this text
+local genericIgnores = {
+	"Archy",
+	"GatherMatePin",
+	"HandyNotesPin",
+	"MinimMap",
+	"Spy_MapNoteList_mini",
+	"ZGVMarker",
+}
+
+-- whitelist all frames starting with
+local whiteList = {
+	"LibDBIcon",
 }
 
 local moveButtons = {}
@@ -34,16 +50,22 @@ end
 function MB:SkinButton(frame)
 	if frame == nil or frame:GetName() == nil or (frame:GetObjectType() ~= "Button") or not frame:IsVisible() then return end
 	
-	local name = frame:GetName()	
-	for i = 1, #ignoreButtons do
-		if name == ignoreButtons[i] then return end
+	local name = frame:GetName()
+	local validIcon = false
+	
+	for i = 1, #whiteList do
+		if sub(name, 1, len(whiteList[i])) == whiteList[i] then validIcon = true break end
 	end
-
-	for i = 1,120 do
-		if _G[("GatherMatePin%d"):format(i)] == frame then return end
-		if _G[("Spy_MapNoteList_mini%d"):format(i)] == frame then return end
-		if _G[("HandyNotesPin%d"):format(i)] == frame then return end
-		if _G[("ZGVMarker%dMini"):format(i)] == frame then return end
+	
+	if not validIcon then
+		print('Check blacklist for '..name)
+		for i = 1, #ignoreButtons do
+			if name == ignoreButtons[i] then return end
+		end
+		
+		for i = 1, #genericIgnores do
+			if sub(name, 1, len(genericIgnores[i])) == genericIgnores[i] then return end
+		end
 	end
 	
 	frame:SetPushedTexture(nil)

@@ -65,7 +65,7 @@ end
 function EDT:OnInitialize()
 	for k, v in pairs(extrapanel) do
 		local actionbar = _G[("ElvUI_Bar%d"):format(k)]
-		local panel = CreateFrame('Frame', ('Actionbar%dDataPanel'):format(k), Minimap)
+		local panel = CreateFrame('Frame', ('Actionbar%dDataPanel'):format(k), E.UIParent)
 		local spacer = E.db.actionbar[("bar%d"):format(k)].backdrop and 0 or SPACING
 
 		panel:Point('TOPLEFT', actionbar, 'BOTTOMLEFT', spacer, -spacer)
