@@ -72,7 +72,7 @@ function EDT:OnInitialize()
 		panel:Point('BOTTOMRIGHT', actionbar, 'BOTTOMRIGHT', -spacer, -(spacer + PANEL_HEIGHT))	
 		panel:SetTemplate('Default', true)
 
-		DT:RegisterPanel(panel, v, 'ANCHOR_BOTTOM', 0, -4)
+		DT:RegisterPanel(panel, v, 'ANCHOR_TOP', 0, -4)
 	end
 	
 	--DT:LoadDataTexts()
