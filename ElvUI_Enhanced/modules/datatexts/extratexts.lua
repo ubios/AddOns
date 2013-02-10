@@ -4,6 +4,8 @@ local ACD = LibStub("AceConfigDialog-3.0")
 local DT = E:GetModule('DataTexts')
 local AB = E:GetModule('ActionBars')
 
+-- DT Quick Configuration based on ElvUI_HyperDT by sortokk
+
 local PANEL_HEIGHT = 22;
 local SPACING = (E.PixelMode and 1 or 5)
 local floor = math.floor
