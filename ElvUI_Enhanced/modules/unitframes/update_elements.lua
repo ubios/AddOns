@@ -73,11 +73,11 @@ end
 local eclipsedirection = {
   ["sun"] = function (frame, change)
   	frame.Text:SetText(change and "#>" or ">")
-  	frame.Text:SetTextColor(.2 ,.2, 1, 1) 
+  	frame.Text:SetTextColor(cahnge and 1 or .2 , change and 1 or .2, 1, 1) 
   end,
   ["moon"] = function (frame, change)
   	frame.Text:SetText(change and "<#" or "<") 
-  	frame.Text:SetTextColor(1, 1, .3, 1) 
+  	frame.Text:SetTextColor(1, 1, change and 1 or .3, 1) 
   end,
   ["none"] = function (frame, change)
 		frame.Text:SetText() 
