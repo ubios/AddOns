@@ -70,9 +70,17 @@ function EDT:PositionDataPanel(panel, index)
 	EDT:UpdateSettings()
 end
 
-function EDT:ChangeDatatext(name)
-	if not name then return end
+function EDT:GetPanelDatatextName()
+	if menuPanel.numPoints == 1 then
+		return E.db.datatexts.panels[menuPanel:GetName()]
+	else
+		local index = tonumber(match(menuPanel:GetName(), "%d+"))
+		local pointIndex = DT.PointLocation[index]
+		return E.db.datatexts.panels[menuPanel:GetName()][pointIndex]
+	end
+end
 
+function EDT:ChangeDatatext(name)
 	if menuPanel.numPoints == 1 then
 		E.db.datatexts.panels[menuPanel:GetName()] = name
 	else
@@ -85,15 +93,7 @@ function EDT:ChangeDatatext(name)
 end
 
 function EDT:UpdateCheckedMenuOption()
-	local current
-	if menuPanel.numPoints == 1 then
-		current = E.db.datatexts.panels[menuPanel:GetName()]
-	else
-		local index = tonumber(match(menuDatatext:GetName(), "%d+"))
-		local pointIndex = DT.PointLocation[index]
-		current = E.db.datatexts.panels[menuPanel:GetName()][pointIndex]	
-	end
-	
+	local current = EDT:GetPanelDatatextName()
 	for _, v in ipairs(menu) do
 		v.checked = false
 		if (v.text == current) or (v.text == 'None' and current == '') then
@@ -103,21 +103,25 @@ function EDT:UpdateCheckedMenuOption()
 end
 
 local enhancedClickMenu = function(self, button)
+	menuDatatext = self
+	menuPanel = DT.RegisteredPanels[self:GetParent():GetName()]
+
 	if button == "RightButton" and IsAltKeyDown() and IsControlKeyDown() then
-		menuDatatext = self
-		menuPanel = DT.RegisteredPanels[self:GetParent():GetName()]
 		menuFrame.point = "BOTTOM"
 		menuFrame.relativePoint = "TOP"
 		
 		EDT:UpdateCheckedMenuOption()
 		
 		EasyMenu(menu, menuFrame, menuDatatext, 0 , 0, "MENU", 2);			
-	elseif self['origOnClick'] then
-		self['origOnClick'](self, button)
+	else
+		local data = DT.RegisteredDataTexts[EDT:GetPanelDatatextName()]
+		if data and data['origOnClick'] then
+			data['origOnClick'](self, button)
+		end
 	end
 end
 
-function EDT:ExtendClickFunction(datatext, data)
+function EDT:ExtendClickFunction(data)
 	if data['onClick'] then
 		data['origOnClick'] = data['onClick']
 	end
@@ -171,12 +175,12 @@ function EDT:OnInitialize()
 	
 	-- extend datatext click function
 	for name, data in pairs(DT.RegisteredDataTexts) do
-	 	EDT:ExtendClickFunction(DT.RegisteredDataTexts[name], data)
+	 	EDT:ExtendClickFunction(DT.RegisteredDataTexts[name])
 	end
 	
 	-- hook function for datatexts that are added later
 	hooksecurefunc(DT, "RegisterDatatext", function(self, name)
-		EDT:ExtendClickFunction(self, DT.RegisteredDataTexts[name])	
+		EDT:ExtendClickFunction(DT.RegisteredDataTexts[name])	
 	end)
 	
 	hooksecurefunc(DT, "LoadDataTexts", function()
