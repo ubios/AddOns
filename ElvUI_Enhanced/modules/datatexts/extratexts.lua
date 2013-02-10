@@ -74,7 +74,7 @@ function EDT:GetPanelDatatextName()
 	if menuPanel.numPoints == 1 then
 		return E.db.datatexts.panels[menuPanel:GetName()]
 	else
-		local index = tonumber(match(menuPanel:GetName(), "%d+"))
+		local index = tonumber(match(menuDatatext:GetName(), "%d+"))
 		local pointIndex = DT.PointLocation[index]
 		return E.db.datatexts.panels[menuPanel:GetName()][pointIndex]
 	end
