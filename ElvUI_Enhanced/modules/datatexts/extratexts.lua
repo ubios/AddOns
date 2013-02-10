@@ -12,8 +12,7 @@ local twipe, tinsert, tsort = table.wipe, table.insert, table.sort
 
 local menu = {}
 local menuDatatext
-local menuFrame = CreateFrame("Frame", "EDTMenuFrame", E.UIParent, "UIDropDownMenuTemplate")
-
+local menuFrame
 
 local extrapanel = {
 	[1] = 3,
@@ -69,7 +68,9 @@ function EDT:PositionDataPanel(panel, index)
 	EDT:UpdateSettings()
 end
 
-function EDT.ChangeDatatext(name)
+function EDT:ChangeDatatext(name)
+	if not name then return end
+
 	if menuPanel.numPoints == 1 then
 		E.db.datatexts.panels[menuPanel:GetName()] = name
 	else
@@ -78,26 +79,65 @@ function EDT.ChangeDatatext(name)
 		E.db.datatexts.panels[menuPanel:GetName()][pointIndex] = name
 	end
 
-	DT:LoadDataTexts()
+	DT:LoadDataTexts()	
+end
+
+function EDT:UpdateCheckedMenuOption()
+	local current
+	if menuPanel.numPoints == 1 then
+		current = E.db.datatexts.panels[menuPanel:GetName()]
+	else
+		local index = tonumber(match(menuDatatext:GetName(), "%d+"))
+		local pointIndex = DT.PointLocation[index]
+		current = E.db.datatexts.panels[menuPanel:GetName()][pointIndex]	
+	end
+	
+	for _, v in ipairs(menu) do
+		v.checked = false
+		if (v.text == current) or (v.text == 'None' and current == '') then
+			v.checked = true
+		end
+	end
+end
+
+local enhancedClickMenu = function(self, button)
+	if button == "RightButton" and IsAltKeyDown() and IsControlKeyDown() then
+		menuDatatext = self
+		menuPanel = DT.RegisteredPanels[self:GetParent():GetName()]
+		menuFrame.point = "BOTTOM"
+		menuFrame.relativePoint = "TOP"
+		
+		EDT:UpdateCheckedMenuOption()
+		
+		EasyMenu(menu, menuFrame, menuDatatext, 0 , 0, "MENU", 2);			
+	elseif self['origOnClick'] then
+		self['origOnClick'](self, button)
+	end
 end
 
 function EDT:ExtendClickFunction(datatext, data)
-		if data['onClick'] then
-			data['origOnClick'] = data['onClick']
-		end
-		
-		data['onClick'] = function(datatext, button)
-			if button == "RightButton" and IsControlKeyDown() then
-				menuDatatext = datatext
-				menuPanel = DT.RegisteredPanels[datatext:GetParent():GetName()]
-				menuFrame.point = "BOTTOM"
-				menuFrame.relativePoint = "TOP"
-				EasyMenu(menu, menuFrame, menuDatatext, 0 , 0, "MENU", 2);
-				
-			elseif data['origOnClick'] then
-				data['origOnClick'](datatext, button)
+	if data['onClick'] then
+		data['origOnClick'] = data['onClick']
+	end
+	data['onClick'] = enhancedClickMenu
+end
+
+function EDT:HookClickMenuToEmptyDataText()
+	for panelName, panel in pairs(DT.RegisteredPanels) do
+		for i=1, panel.numPoints do
+			local pointIndex = DT.PointLocation[i]
+			local datatext = panel.dataPanels[pointIndex]
+			local isSet
+			if panel.numPoints == 1 then
+				isSet = E.db.datatexts.panels[panelName]
+			else
+				isSet = E.db.datatexts.panels[panelName][pointIndex]
 			end
-		end
+			if not isSet or isSet == '' then
+				datatext:SetScript('OnClick', enhancedClickMenu)
+			end
+		end		
+	end
 end
 
 function EDT:OnInitialize()
@@ -124,18 +164,28 @@ function EDT:OnInitialize()
 		end
 	end)
 	
-	-- extend DT click function
+	menuFrame = CreateFrame("Frame", "EDTMenuFrame", E.UIParent, "UIDropDownMenuTemplate")
+	menuFrame:SetTemplate("Default")
+	
+	-- extend datatext click function
 	for name, data in pairs(DT.RegisteredDataTexts) do
 	 	EDT:ExtendClickFunction(DT.RegisteredDataTexts[name], data)
 	end
 	
+	-- hook function for datatexts that are added later
+	hooksecurefunc(DT, "RegisterDatatext", function(self, name)
+		EDT:ExtendClickFunction(self, DT.RegisteredDataTexts[name])	
+	end)
+	
 	hooksecurefunc(DT, "LoadDataTexts", function()
 		twipe(menu)
 		for name, _ in pairs(DT.RegisteredDataTexts) do
-			tinsert(menu, { text = name, func = function() EDT.ChangeDatatext(name) end })
+			tinsert(menu, { text = name, func = function() EDT:ChangeDatatext(name) end, checked = false })
 		end
 		tsort(menu, function(a,b) return a.text < b.text end)
-		tinsert(menu, 1, { text = 'None', func = function() EDT.ChangeDatatext('None') end })		
+		tinsert(menu, 1, { text = 'None', func = function() EDT:ChangeDatatext('') end, checked = false })
+		
+		EDT:HookClickMenuToEmptyDataText()
 	end)
 end
 
