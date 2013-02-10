@@ -7,6 +7,13 @@ local AB = E:GetModule('ActionBars')
 local PANEL_HEIGHT = 22;
 local SPACING = (E.PixelMode and 1 or 5)
 local floor = math.floor
+local match = string.match
+local twipe, tinsert, tsort = table.wipe, table.insert, table.sort
+
+local menu = {}
+local menuDatatext
+local menuFrame = CreateFrame("Frame", "EDTMenuFrame", E.UIParent, "UIDropDownMenuTemplate")
+
 
 local extrapanel = {
 	[1] = 3,
@@ -62,6 +69,37 @@ function EDT:PositionDataPanel(panel, index)
 	EDT:UpdateSettings()
 end
 
+function EDT.ChangeDatatext(name)
+	if menuPanel.numPoints == 1 then
+		E.db.datatexts.panels[menuPanel:GetName()] = name
+	else
+		local index = tonumber(match(menuDatatext:GetName(), "%d+"))
+		local pointIndex = DT.PointLocation[index]
+		E.db.datatexts.panels[menuPanel:GetName()][pointIndex] = name
+	end
+
+	DT:LoadDataTexts()
+end
+
+function EDT:ExtendClickFunction(datatext, data)
+		if data['onClick'] then
+			data['origOnClick'] = data['onClick']
+		end
+		
+		data['onClick'] = function(datatext, button)
+			if button == "RightButton" and IsControlKeyDown() then
+				menuDatatext = datatext
+				menuPanel = DT.RegisteredPanels[datatext:GetParent():GetName()]
+				menuFrame.point = "BOTTOM"
+				menuFrame.relativePoint = "TOP"
+				EasyMenu(menu, menuFrame, menuDatatext, 0 , 0, "MENU", 2);
+				
+			elseif data['origOnClick'] then
+				data['origOnClick'](datatext, button)
+			end
+		end
+end
+
 function EDT:OnInitialize()
 	for k, v in pairs(extrapanel) do
 		local actionbar = _G[("ElvUI_Bar%d"):format(k)]
@@ -84,6 +122,20 @@ function EDT:OnInitialize()
 		if extrapanel[barnumber] then
 			EDT:PositionDataPanel(_G[('Actionbar%dDataPanel'):format(barnumber)], barnumber)
 		end
+	end)
+	
+	-- extend DT click function
+	for name, data in pairs(DT.RegisteredDataTexts) do
+	 	EDT:ExtendClickFunction(DT.RegisteredDataTexts[name], data)
+	end
+	
+	hooksecurefunc(DT, "LoadDataTexts", function()
+		twipe(menu)
+		for name, _ in pairs(DT.RegisteredDataTexts) do
+			tinsert(menu, { text = name, func = function() EDT.ChangeDatatext(name) end })
+		end
+		tsort(menu, function(a,b) return a.text < b.text end)
+		tinsert(menu, 1, { text = 'None', func = function() EDT.ChangeDatatext('None') end })		
 	end)
 end
 
