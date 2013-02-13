@@ -109,6 +109,7 @@ local roleIconTextures = {
 	TANK = [[Interface\AddOns\ElvUI\media\textures\tank.tga]],
 	HEALER = [[Interface\AddOns\ElvUI\media\textures\healer.tga]],
 	DAMAGER = [[Interface\AddOns\ElvUI\media\textures\dps.tga]],
+	DC = [[Interface\AddOns\ElvUI_Enhanced\media\textures\dc.tga]],
 }
 
 function UF:UpdateRoleIconEnhanced(event)
@@ -125,25 +126,19 @@ function UF:UpdateRoleIconEnhanced(event)
 		return
 	end
 	
-	if self.DC then
-		if UnitIsConnected(self.unit) then
-			self.DC:Hide()
-		else
-			self.DC:Show()
-		end	
-	end
-	
 	local role = UnitGroupRolesAssigned(self.unit)
 	if role == 'NONE' then
 		if self.isForced then
-			local rnd = random(1, 3)
-			role = rnd == 1 and "TANK" or (rnd == 2 and "HEALER" or (rnd == 3 and "DAMAGER"))
+			local rnd = random(1, 4)
+			role = rnd == 1 and "TANK" or (rnd == 2 and "HEALER" or (rnd == 3 and "DAMAGER" or(rnd == 4 and "DC")))
 		else
 			_, role = LSR:getRole(UnitGUID(self.unit))
 		end
 	end
 	
-	if role and role ~= 'NONE' and (self.isForced or UnitIsConnected(self.unit)) then
+	if not UnitIsConnected(self.unit) then role = "DC" end
+	
+	if role and role ~= 'NONE' then
 		lfdrole:SetTexture(roleIconTextures[role])
 		lfdrole:Show()
 		if lfdrole.timer then
