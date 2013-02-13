@@ -139,14 +139,12 @@ function UF:UpdateRoleIconEnhanced(event)
 		lfdrole:SetTexture(roleIconTextures[role])
 		lfdrole:Show()
 		if lfdrole.timer then
-			print("End Timer: "..self.unit)
 			UF:CancelTimer(lfdrole.timer)
 			lfdrole.timer = nil
 		end
 	else
 		lfdrole:Hide()
 		if not lfdrole.timer then
-			print("Start Timer: "..self.unit)
 			lfdrole.timer = UF:ScheduleRepeatingTimer("UpdateRoleIconEnhanced", 5, self)
 		end
 	end	
