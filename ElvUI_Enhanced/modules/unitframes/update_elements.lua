@@ -125,6 +125,14 @@ function UF:UpdateRoleIconEnhanced(event)
 		return
 	end
 	
+	if self.DC then
+		if UnitIsConnected(self.unit) then
+			self.DC:Hide()
+		else
+			self.DC:Show()
+		end	
+	end
+	
 	local role = UnitGroupRolesAssigned(self.unit)
 	if role == 'NONE' then
 		if self.isForced then

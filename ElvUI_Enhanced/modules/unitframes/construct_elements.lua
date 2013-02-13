@@ -47,6 +47,17 @@ function UF:UpdateRoleIconFrame(frame)
 	frame:RegisterEvent("UNIT_CONNECTION", UF.UpdateRoleIconEnhanced)
 	
 	frame.LFDRole.Override = UF.UpdateRoleIconEnhanced
+	
+	-- add disconnect texture
+	local f = CreateFrame('Frame', nil, frame)
+	local tex = f:CreateTexture(nil, "ARTWORK")
+	tex:Size(20)
+	tex:Point("CENTER", frame.Health, "CENTER", 0, 2)
+	tex.Override = UF.UpdateRoleIcon
+	tex:SetTexture([[Interface\AddOns\ElvUI_Enhanced\media\textures\dc.tga]])
+	tex:Hide()
+	
+	frame.DC = tex
 end
 
 local CF = CreateFrame('Frame')
