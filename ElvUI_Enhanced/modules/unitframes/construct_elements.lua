@@ -31,11 +31,30 @@ function UF:Construct_GPS(frame, unit)
 	UF:CreateAndUpdateUF(unit)
 end
 
+function UF:EnhanceUpdateRoleIcon()
+	for i=1, 5 do
+		UF:UpdateRoleIconFrame(_G[("ElvUF_PartyUnitButton%d"):format(i)])
+	end
+	for r=10,40,15 do
+		for i=1, r do
+			UF:UpdateRoleIconFrame(_G[("ElvUF_Raid%dUnitButton%i"):format(r, i)])
+		end
+	end
+end
+
+function UF:UpdateRoleIconFrame(frame)
+	frame:UnregisterEvent("UNIT_CONNECTION")
+	frame:RegisterEvent("UNIT_CONNECTION", UF.UpdateRoleIconEnhanced)
+	
+	frame.LFDRole.Override = UF.UpdateRoleIconEnhanced
+end
+
 local CF = CreateFrame('Frame')
 CF:RegisterEvent("PLAYER_ENTERING_WORLD")
 CF:SetScript("OnEvent", function(self, event)
 	UF:Construct_GPS(_G["ElvUF_Target"], 'target')
 	UF:Construct_GPS(_G["ElvUF_Focus"], 'focus')
 	UF:EnhanceDruidEclipse()
+	UF:EnhanceUpdateRoleIcon()
 	self:UnregisterEvent("PLAYER_ENTERING_WORLD")
 end)

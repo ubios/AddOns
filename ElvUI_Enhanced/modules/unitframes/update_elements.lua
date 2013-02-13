@@ -1,6 +1,7 @@
 local E, L, V, P, G, _ = unpack(ElvUI); --Inport: Engine, Locales, PrivateDB, ProfileDB, GlobalDB, Localize Underscore
 local UF = E:GetModule('UnitFrames');
 local MAP = LibStub("LibMapData-1.0")
+local LSR = LibStub("LibSpecRoster-1.0")
 
 local sub = string.sub
 local abs, atan2, cos, sin, sqrt2, random, floor, ceil = math.abs, math.atan2, math.cos, math.sin, math.sqrt(2), math.random, math.floor, math.ceil
@@ -102,4 +103,51 @@ function UF:EnhanceDruidEclipse()
 			end
 		end
 	end
+end
+
+local roleIconTextures = {
+	TANK = [[Interface\AddOns\ElvUI\media\textures\tank.tga]],
+	HEALER = [[Interface\AddOns\ElvUI\media\textures\healer.tga]],
+	DAMAGER = [[Interface\AddOns\ElvUI\media\textures\dps.tga]],
+}
+
+function UF:UpdateRoleIconEnhanced(event)
+	-- rehook self from timer event
+	if event and type(event) == "table" then
+		self = event
+	end
+
+	local lfdrole = self.LFDRole
+	local db = self.db.roleIcon
+	
+	if (not db) or (db and not db.enable) then 
+		lfdrole:Hide()
+		return
+	end
+	
+	local role = UnitGroupRolesAssigned(self.unit)
+	if role == 'NONE' then
+		if self.isForced then
+			local rnd = random(1, 3)
+			role = rnd == 1 and "TANK" or (rnd == 2 and "HEALER" or (rnd == 3 and "DAMAGER"))
+		else
+			_, role = LSR:getRole(UnitGUID(self.unit))
+		end
+	end
+	
+	if role and role ~= 'NONE' and (self.isForced or UnitIsConnected(self.unit)) then
+		lfdrole:SetTexture(roleIconTextures[role])
+		lfdrole:Show()
+		if lfdrole.timer then
+			print("End Timer: "..self.unit)
+			UF:CancelTimer(lfdrole.timer)
+			lfdrole.timer = nil
+		end
+	else
+		lfdrole:Hide()
+		if not lfdrole.timer then
+			print("Start Timer: "..self.unit)
+			lfdrole.timer = UF:ScheduleRepeatingTimer("UpdateRoleIconEnhanced", 5, self)
+		end
+	end	
 end
