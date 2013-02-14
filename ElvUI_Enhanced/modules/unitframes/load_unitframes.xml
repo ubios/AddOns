@@ -2,5 +2,6 @@
 	<Script file='options.lua'/>
 	<Script file='construct_elements.lua'/>
 	<Script file='update_elements.lua'/>
+	<Script file='tags.lua'/>	
 	<Include file='units\load_units.xml'/>
 </Ui>
