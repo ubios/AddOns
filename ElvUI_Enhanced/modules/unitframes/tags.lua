@@ -19,22 +19,26 @@ end
 
 ElvUF.Tags.Events['xthreat:percent'] = 'UNIT_THREAT_LIST_UPDATE GROUP_ROSTER_UPDATE'
 ElvUF.Tags.Methods['xthreat:percent'] = function(unit)
-	local status, percent = select(2, UnitDetailedThreatSituation('player', unit))
-	if (status) then
-		return format('%.0f%%', percent)
-	else 
+	if UnitCanAttack('player', unit) then
+		local status, percent = select(2, UnitDetailedThreatSituation('player', unit))
+		if (status) then
+			return format('%.0f%%', percent)
+		end
 		return L["None"]
 	end
+	return ''
 end
 
 ElvUF.Tags.Events['xthreat:current'] = 'UNIT_THREAT_LIST_UPDATE GROUP_ROSTER_UPDATE'
 ElvUF.Tags.Methods['xthreat:current'] = function(unit)
-	local status, _, _, threatvalue = select(2, UnitDetailedThreatSituation('player', unit))
-	if (status) then
-		return E:ShortValue(threatvalue)
-	else 
+	if UnitCanAttack('player', unit) then
+		local status, _, _, threatvalue = select(2, UnitDetailedThreatSituation('player', unit))
+		if (status) then
+			return E:ShortValue(threatvalue)
+		end
 		return L["None"]
 	end
+	return ''
 end
 
 ElvUF.Tags.Events['xthreatcolor'] = 'UNIT_THREAT_LIST_UPDATE GROUP_ROSTER_UPDATE'
