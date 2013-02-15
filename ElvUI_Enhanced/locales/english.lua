@@ -63,3 +63,10 @@ L['Automatically change your watched faction on the reputation bar to the factio
 L['Actionbar1DataPanel'] = 'Actionbar 1'
 L['Actionbar3DataPanel'] = 'Actionbar 3'
 L['Actionbar5DataPanel'] = 'Actionbar 5'
+
+-- Farmer Module
+L["FARMER_DESC"] = "Adjust the settings for the tools that help you farm more efficiently on Sunsong Ranch."
+L['Farmer Bars'] = true
+L['Enable/Disable the farmer bars.'] = true
+L['Only active buttons'] = true
+L['Only show the buttons for the seeds, portals, tools you have in your bags.'] = true

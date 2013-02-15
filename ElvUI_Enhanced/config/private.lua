@@ -25,3 +25,11 @@ V.equipment = {
 		onlydamaged = false,
 	}
 }
+
+V.farmer = {
+	['enabled'] = true,
+	['farmbars'] = {
+		['enable'] = true,
+		['onlyactive'] = true,
+	}
+}
