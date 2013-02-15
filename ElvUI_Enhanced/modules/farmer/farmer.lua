@@ -255,7 +255,13 @@ function F:CreateFrames()
 			if v[1] == i then
 				tinsert(seedButtons[i], F:CreateFarmButton(k, seedBar, "item", v[2], v[11], false))
 			end
-			tsort(seedButtons[i], function(a, b) return a.sortname < b.sortname end)
+			tsort(seedButtons[i], function(a, b) 
+				if a.sortname and b.sortname then 
+					return a.sortname < b.sortname 
+				else
+					return a.itemId < b.itemId
+				end
+			end)
 		end
 	end
 	
@@ -292,6 +298,19 @@ function F:Initialize()
 	if not E.private.farmer.enabled then return end
 	
 	E.farmer = self
+	
+	-- preload item links to prevent errors
+	for k, v in pairs(seeds) do
+		GetItemInfo(k)
+	end
+	
+	for k, v in pairs(tools) do
+		GetItemInfo(k)
+	end
+
+	for k, v in pairs(portals) do
+		GetItemInfo(k)
+	end
 
 	self:RegisterEvent("PLAYER_ENTERING_WORLD", "CreateFrames")
 end
