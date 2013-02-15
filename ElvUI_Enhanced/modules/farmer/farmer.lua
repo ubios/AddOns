@@ -151,6 +151,7 @@ function F:UpdateBar(bar, layoutfunc, zonecheck, anchor, buttons, category)
 end
 
 function F:UpdateLayout()
+	if InCombatLockdown() then return end
 	for i=1, 3 do
 		F:UpdateBar(_G[("FarmSeedBar%d"):format(i)], F.UpdateSeedBarLayout, F.InSeedZone, farmSeedBarAnchor, seedButtons[i], i)
 	end
