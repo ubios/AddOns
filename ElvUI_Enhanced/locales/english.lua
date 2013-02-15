@@ -65,6 +65,8 @@ L['Actionbar3DataPanel'] = 'Actionbar 3'
 L['Actionbar5DataPanel'] = 'Actionbar 5'
 
 -- Farmer Module
+L['Right-click to drop the item.'] = true
+
 L["FARMER_DESC"] = "Adjust the settings for the tools that help you farm more efficiently on Sunsong Ranch."
 L['Farmer Bars'] = true
 L['Enable/Disable the farmer bars.'] = true

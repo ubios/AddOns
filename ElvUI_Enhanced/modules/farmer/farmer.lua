@@ -177,6 +177,9 @@ function F:CreateFarmButton(index, owner, buttonType, name, texture, allowDrop)
 		GameTooltip:SetOwner(button, 'ANCHOR_TOPLEFT', 2, 4)
 		GameTooltip:ClearLines()
 		GameTooltip:AddDoubleLine(name)
+		if allowDrop then
+			GameTooltip:AddLine(L['Right-click to drop the item.'])
+		end
 		GameTooltip:Show()
 	end)
 	
@@ -207,8 +210,6 @@ end
 				
 
 function F:CreateFrames()
-	self:UnregisterEvent("PLAYER_ENTERING_WORLD")
-
 	farmSeedBarAnchor = CreateFrame("Frame", "FarmSeedBarAnchor", E.UIParent)
 	farmSeedBarAnchor:Point("LEFT", E.UIParent, "LEFT", 4, -200)
 	farmSeedBarAnchor:Size(96, 320)
@@ -255,13 +256,7 @@ function F:CreateFrames()
 			if v[1] == i then
 				tinsert(seedButtons[i], F:CreateFarmButton(k, seedBar, "item", v[2], v[11], false))
 			end
-			tsort(seedButtons[i], function(a, b) 
-				if a.sortname and b.sortname then 
-					return a.sortname < b.sortname 
-				else
-					return a.itemId < b.itemId
-				end
-			end)
+			tsort(seedButtons[i], function(a, b) return a.sortname < b.sortname end)
 		end
 	end
 	
@@ -286,12 +281,37 @@ function F:CreateFrames()
 		end
 	end
 	
-	self:FarmerInventoryUpdate()
-	self:UpdateLayout()
+	F:FarmerInventoryUpdate()
+	F:UpdateLayout()
 	
-	self:RegisterEvent("ZONE_CHANGED", "UpdateLayout")
-	self:RegisterEvent("PLAYER_REGEN_ENABLED", "UpdateLayout")
-	self:RegisterEvent("BAG_UPDATE", "FarmerInventoryUpdate")
+	F:RegisterEvent("ZONE_CHANGED", "UpdateLayout")
+	F:RegisterEvent("PLAYER_REGEN_ENABLED", "UpdateLayout")
+	F:RegisterEvent("BAG_UPDATE", "FarmerInventoryUpdate")
+end
+
+function F:StartFarmBarLoader()
+	F:UnregisterEvent("PLAYER_ENTERING_WORLD")
+
+	local itemError = false
+
+	-- preload item links to prevent errors
+	for k, v in pairs(seeds) do
+		if GetItemInfo(k) == nil then itemError = true end
+	end
+	
+	for k, v in pairs(tools) do
+		if GetItemInfo(k) == nil then itemError = true end
+	end
+
+	for k, v in pairs(portals) do
+		if GetItemInfo(k) == nil then itemError = true end
+	end
+
+	if itemError then
+		E:Delay(5, F.StartFarmBarLoader)
+	else
+		F.CreateFrames()
+	end
 end
 
 function F:Initialize()
@@ -299,20 +319,7 @@ function F:Initialize()
 	
 	E.farmer = self
 	
-	-- preload item links to prevent errors
-	for k, v in pairs(seeds) do
-		GetItemInfo(k)
-	end
-	
-	for k, v in pairs(tools) do
-		GetItemInfo(k)
-	end
-
-	for k, v in pairs(portals) do
-		GetItemInfo(k)
-	end
-
-	self:RegisterEvent("PLAYER_ENTERING_WORLD", "CreateFrames")
+	self:RegisterEvent("PLAYER_ENTERING_WORLD", "StartFarmBarLoader")
 end
 
 E:RegisterModule(F:GetName())
