@@ -17,18 +17,16 @@ local eclipsedirection = {
 
 function UF:Construct_GPS(frame, unit)
 	local gps = CreateFrame("Frame", nil, frame)
-	gps:SetTemplate("Default")
+	gps:SetTemplate("Transparent")
 	gps:SetParent(frame)
 	gps:EnableMouse(false)
 	gps:SetFrameLevel(frame:GetFrameLevel() + 10)
-	gps:Size(48, 14)
-	gps:SetAlpha(.9)
+	gps:Size(48, 13)
+	gps:SetAlpha(.7)
 	gps:Hide()
 
 	gps.Texture = gps:CreateTexture(nil, "OVERLAY")
 	gps.Texture:SetTexture([[Interface\AddOns\ElvUI_Enhanced\media\textures\arrow.tga]])
-	gps.Texture:SetBlendMode("BLEND")
-	gps.Texture:SetAlpha(.9)
 	gps.Texture:Size(12, 12)
 	gps.Texture:SetPoint("LEFT", gps, "LEFT", 0, 0)
 
