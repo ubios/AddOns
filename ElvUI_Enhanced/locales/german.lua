@@ -62,3 +62,7 @@ L['Automatically change your watched faction on the reputation bar to the factio
 L['Actionbar1DataPanel'] = 'Aktionsleiste 1'
 L['Actionbar3DataPanel'] = 'Aktionsleiste 3'
 L['Actionbar5DataPanel'] = 'Aktionsleiste 5'
+
+-- Farmer
+L["Sunsong Ranch"] = "Gehöft Sonnensang"
+L["The Halfhill Market"] = "Der Halbhügelmarkt"

@@ -63,3 +63,8 @@ L['Automatically change your watched faction on the reputation bar to the factio
 L['Actionbar1DataPanel'] = '快捷列 1 資訊框'
 L['Actionbar3DataPanel'] = '快捷列 3 資訊框'
 L['Actionbar5DataPanel'] = '快捷列 5 資訊框'
+
+-- Farmer
+L["Sunsong Ranch"] = "日歌農莊"
+L["The Halfhill Market"] = "半丘市集"
+

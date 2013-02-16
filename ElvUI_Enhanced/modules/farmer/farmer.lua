@@ -5,7 +5,7 @@ local F = E:NewModule('Farmer', 'AceHook-3.0', 'AceEvent-3.0');
 
 local farmSeedBarAnchor, farmToolBarAnchor, farmPortalBarAnchor
 local tsort = table.sort
-local activezones = { "Sunsong Ranch", "The Halfhill Market" }
+local activezones = { L["Sunsong Ranch"], L["The Halfhill Market"] }
 
 local seedButtons = {}
 local toolButtons = {}

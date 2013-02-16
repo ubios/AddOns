@@ -8,4 +8,5 @@
 	<Script file="korean.lua"/>
 	<Script file="china.lua"/>
 	<Script file="portuguese.lua"/>
+	<Script file="italian.lua"/>
 </Ui>
