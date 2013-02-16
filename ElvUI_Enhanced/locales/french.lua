@@ -3,6 +3,8 @@ local AceLocale = LibStub:GetLibrary("AceLocale-3.0");
 local L = AceLocale:NewLocale("ElvUI", "frFR");
 if not L then return; end
 
+-- Translation by: Alex586
+
 -- Init
 L["ENH_LOGIN_MSG"] = "Vous utilisez |cff1784d1ElvUI Enhanced|r version %s%s|r."
 L["Your version of ElvUI is to old (required v5.1 or higher). Please, download the latest version from tukui.org."] = "Votre version d'ElvUi est trop ancienne (requiert v5.1 ou plus). Merci de télécharger une version plus récente sur tukui.org."
