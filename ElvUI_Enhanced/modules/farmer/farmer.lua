@@ -299,15 +299,15 @@ function F:StartFarmBarLoader()
 
 	-- preload item links to prevent errors
 	for k, v in pairs(seeds) do
-		if GetItemInfo(k) == nil then itemError = true end
+		if select(2, GetItemInfo(k)) == nil then itemError = true end
 	end
 	
 	for k, v in pairs(tools) do
-		if GetItemInfo(k) == nil then itemError = true end
+		if select(2, GetItemInfo(k)) == nil then itemError = true end
 	end
 
 	for k, v in pairs(portals) do
-		if GetItemInfo(k) == nil then itemError = true end
+		if select(2, GetItemInfo(k)) == nil then itemError = true end
 	end
 
 	if itemError then
