@@ -1,5 +1,19 @@
 local E, L, V, P, G, _ = unpack(ElvUI); --Inport: Engine, Locales, PrivateDB, ProfileDB, GlobalDB, Localize Underscore
-local UF = E:GetModule('UnitFrames');
+local UF = E:GetModule('UnitFrames')
+
+local eclipsedirection = {
+  ["sun"] = function (frame, change)
+  	frame.Text:SetText(change and "#>" or ">")
+  	frame.Text:SetTextColor(cahnge and 1 or .2 , change and 1 or .2, 1, 1) 
+  end,
+  ["moon"] = function (frame, change)
+  	frame.Text:SetText(change and "<#" or "<") 
+  	frame.Text:SetTextColor(1, 1, change and 1 or .3, 1) 
+  end,
+  ["none"] = function (frame, change)
+		frame.Text:SetText() 
+  end,
+}
 
 function UF:Construct_GPS(frame, unit)
 	local gps = CreateFrame("Frame", nil, frame)
@@ -7,28 +21,47 @@ function UF:Construct_GPS(frame, unit)
 	gps:SetParent(frame)
 	gps:EnableMouse(false)
 	gps:SetFrameLevel(frame:GetFrameLevel() + 10)
-	gps:SetWidth(E:Scale(48))
-	gps:SetHeight(E:Scale(14))
+	gps:Size(48, 14)
 	gps:SetAlpha(.9)
 	gps:Hide()
 
-	gps.Texture = gps:CreateTexture("OVERLAY")
-	gps.Texture:SetTexture("Interface\\AddOns\\ElvUI_Enhanced\\media\\textures\\arrow.tga")
+	gps.Texture = gps:CreateTexture(nil, "OVERLAY")
+	gps.Texture:SetTexture([[Interface\AddOns\ElvUI_Enhanced\media\textures\arrow.tga]])
 	gps.Texture:SetBlendMode("BLEND")
 	gps.Texture:SetAlpha(.9)
-	gps.Texture:SetWidth(E:Scale(12))
-	gps.Texture:SetHeight(E:Scale(12))
+	gps.Texture:Size(12, 12)
 	gps.Texture:SetPoint("LEFT", gps, "LEFT", 0, 0)
 
 	gps.Text = gps:CreateFontString(nil, "OVERLAY")
 	gps.Text:FontTemplate(E.media.font, 12, 'OUTLINE')
 	gps.Text:SetPoint("RIGHT", gps, "RIGHT", 0 , 0)
-	--UF.fontstrings[gps.Text] = true
 
-	frame.unit = unit
+	UF:Configure_FontString(gps.Text)
+
+	gps.unit = unit
 	frame.gps = gps
 
 	UF:CreateAndUpdateUF(unit)
+end
+
+function UF:EnhanceDruidEclipse()
+	-- add eclipse prediction when playing druid
+	if E.myclass == "DRUID" then
+		ElvUF_Player.EclipseBar.callbackid = LibBalancePowerTracker:RegisterCallback(function(energy, direction, virtual_energy, virtual_direction, virtual_eclipse)
+			if (ElvUF_Player.EclipseBar:IsShown()) then
+				-- improve visibility of eclipse direction indicator
+				ElvUF_Player.EclipseBar.Text:SetFont([[Interface\AddOns\ElvUI\media\fonts\Continuum_Medium.ttf]], 18, 'OUTLINE')
+				eclipsedirection[virtual_direction](ElvUF_Player.EclipseBar, direction ~= virtual_direction)
+			end
+		end)
+		
+		ElvUF_Player.EclipseBar.PostUpdatePower = function()
+			if (ElvUF_Player.EclipseBar:IsShown()) then
+				energy, direction, virtual_energy, virtual_direction, virtual_eclipse = LibBalancePowerTracker:GetEclipseEnergyInfo()
+				eclipsedirection[virtual_direction](ElvUF_Player.EclipseBar, direction ~= virtual_direction)	
+			end
+		end
+	end
 end
 
 function UF:EnhanceUpdateRoleIcon()

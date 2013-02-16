@@ -13,7 +13,8 @@ local unitframeFont
 local roleIconTextures = {
 	TANK = [[Interface\AddOns\ElvUI\media\textures\tank.tga]],
 	HEALER = [[Interface\AddOns\ElvUI\media\textures\healer.tga]],
-	DAMAGER = [[Interface\AddOns\ElvUI\media\textures\dps.tga]]
+	DAMAGER = [[Interface\AddOns\ElvUI\media\textures\dps.tga]],
+	DC = [[Interface\AddOns\ElvUI_Enhanced\media\textures\dc.tga]],
 }
 
 -- Register callback for changing map and floor (GPS)
@@ -49,12 +50,12 @@ function UF:UpdateGPS(frame)
 	if not gps then return end
 	
 	-- GPS Disabled or not GPS parent frame visible or not in Party or Raid, Hide gps
-	if not (UnitInParty(frame.unit) or UnitInRaid(frame.unit)) then
+	if not (UnitInParty(gps.unit) or UnitInRaid(gps.unit)) then
 		gps:Hide()
 		return
 	end
 	
-	local angle, px, py, tx, ty = GetBearing(frame.unit)
+	local angle, px, py, tx, ty = GetBearing(gps.unit)
 	if angle == 999 then
 		-- no bearing show - to indicate we are lost :)
 		gps.Text:SetText("-")
@@ -70,47 +71,6 @@ function UF:UpdateGPS(frame)
 	gps.Text:SetFormattedText("%d", distance)
 	gps:Show()
 end
-
-local eclipsedirection = {
-  ["sun"] = function (frame, change)
-  	frame.Text:SetText(change and "#>" or ">")
-  	frame.Text:SetTextColor(cahnge and 1 or .2 , change and 1 or .2, 1, 1) 
-  end,
-  ["moon"] = function (frame, change)
-  	frame.Text:SetText(change and "<#" or "<") 
-  	frame.Text:SetTextColor(1, 1, change and 1 or .3, 1) 
-  end,
-  ["none"] = function (frame, change)
-		frame.Text:SetText() 
-  end,
-}
-
-function UF:EnhanceDruidEclipse()
-	-- add eclipse prediction when playing druid
-	if E.myclass == "DRUID" then
-		ElvUF_Player.EclipseBar.callbackid = LibBalancePowerTracker:RegisterCallback(function(energy, direction, virtual_energy, virtual_direction, virtual_eclipse)
-			if (ElvUF_Player.EclipseBar:IsShown()) then
-				-- improve visibility of eclipse direction indicator
-				ElvUF_Player.EclipseBar.Text:SetFont([[Interface\AddOns\ElvUI\media\fonts\Continuum_Medium.ttf]], 18, 'OUTLINE')
-				eclipsedirection[virtual_direction](ElvUF_Player.EclipseBar, direction ~= virtual_direction)
-			end
-		end)
-		
-		ElvUF_Player.EclipseBar.PostUpdatePower = function()
-			if (ElvUF_Player.EclipseBar:IsShown()) then
-				energy, direction, virtual_energy, virtual_direction, virtual_eclipse = LibBalancePowerTracker:GetEclipseEnergyInfo()
-				eclipsedirection[virtual_direction](ElvUF_Player.EclipseBar, direction ~= virtual_direction)	
-			end
-		end
-	end
-end
-
-local roleIconTextures = {
-	TANK = [[Interface\AddOns\ElvUI\media\textures\tank.tga]],
-	HEALER = [[Interface\AddOns\ElvUI\media\textures\healer.tga]],
-	DAMAGER = [[Interface\AddOns\ElvUI\media\textures\dps.tga]],
-	DC = [[Interface\AddOns\ElvUI_Enhanced\media\textures\dc.tga]],
-}
 
 function UF:UpdateRoleIconEnhanced(event)
 	-- rehook self from timer event
