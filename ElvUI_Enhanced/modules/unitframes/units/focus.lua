@@ -1,7 +1,7 @@
 local E, L, V, P, G, _ = unpack(ElvUI); --Inport: Engine, Locales, PrivateDB, ProfileDB, GlobalDB, Localize Underscore
 local UF = E:GetModule('UnitFrames');
 
-hooksecurefunc(UF,"Update_FocusFrame",function(self, frame, db)
+hooksecurefunc(UF, "Update_FocusFrame", function(self, frame, db)
 	--GPS
 	local gps = frame.gps
 	if not gps then return end

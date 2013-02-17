@@ -12,6 +12,7 @@ hooksecurefunc(UF, "Update_TargetFrame", function(self, frame, db)
 		gps:Point(db.gps.position, frame.Health, db.gps.position, x, y)
 		gps:SetFrameStrata("MEDIUM")
 		gps:Show()
+
 		gps.timer = UF:ScheduleRepeatingTimer("UpdateGPS", 0.1, frame)
 	else
 		if (gps.timer) then
