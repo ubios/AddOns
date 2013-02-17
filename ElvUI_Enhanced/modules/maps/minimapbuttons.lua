@@ -207,6 +207,8 @@ function MB:ChangeMouseOverSetting()
 end
 
 function MB:SkinMinimapButtons()
+	MB:RegisterEvent("ADDON_LOADED", "StartSkinning")
+
 	for i = 1, Minimap:GetNumChildren() do
 		self:SkinButton(select(i, Minimap:GetChildren()))
 	end
@@ -214,7 +216,9 @@ function MB:SkinMinimapButtons()
 end
 
 function MB:StartSkinning()
-	E:Delay(15, self:SkinMinimapButtons())	
+	MB:UnregisterEvent("ADDON_LOADED")
+
+	E:Delay(20, MB:SkinMinimapButtons())	
 end
 
 function MB:CreateFrames()
@@ -236,8 +240,7 @@ function MB:CreateFrames()
 	minimapButtonBar:SetScript("OnLeave", OnLeave)
 
 	self:ChangeMouseOverSetting()
-	
-	self:RegisterEvent("ADDON_LOADED", "StartSkinning")
+	self:StartSkinning()
 end
 
 function MB:Initialize()

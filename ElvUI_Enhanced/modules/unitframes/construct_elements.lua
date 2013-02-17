@@ -18,12 +18,10 @@ local eclipsedirection = {
 function UF:Construct_GPS(frame, unit)
 	local gps = CreateFrame("Frame", nil, frame)
 	gps:SetTemplate("Transparent")
-	gps:SetParent(frame)
 	gps:EnableMouse(false)
 	gps:SetFrameLevel(frame:GetFrameLevel() + 10)
 	gps:Size(48, 13)
 	gps:SetAlpha(.7)
-	gps:Hide()
 
 	gps.Texture = gps:CreateTexture(nil, "OVERLAY")
 	gps.Texture:SetTexture([[Interface\AddOns\ElvUI_Enhanced\media\textures\arrow.tga]])
@@ -37,6 +35,8 @@ function UF:Construct_GPS(frame, unit)
 	UF:Configure_FontString(gps.Text)
 
 	gps.unit = unit
+	gps:Hide()
+	
 	frame.gps = gps
 
 	UF:CreateAndUpdateUF(unit)
@@ -83,9 +83,9 @@ end
 local CF = CreateFrame('Frame')
 CF:RegisterEvent("PLAYER_ENTERING_WORLD")
 CF:SetScript("OnEvent", function(self, event)
-	UF:Construct_GPS(_G["ElvUF_Target"], 'target')
-	UF:Construct_GPS(_G["ElvUF_Focus"], 'focus')
-	UF:EnhanceDruidEclipse()
-	UF:EnhanceUpdateRoleIcon()
+	E:Delay(15, UF:EnhanceDruidEclipse())
+	E:Delay(18, UF:Construct_GPS(_G["ElvUF_Target"], 'target'))
+	E:Delay(20, UF:Construct_GPS(_G["ElvUF_Focus"], 'focus'))
+	E:Delay(30, UF:EnhanceUpdateRoleIcon())
 	self:UnregisterEvent("PLAYER_ENTERING_WORLD")
 end)

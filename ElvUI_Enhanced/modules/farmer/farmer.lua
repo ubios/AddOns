@@ -151,12 +151,16 @@ function F:UpdateBar(bar, layoutfunc, zonecheck, anchor, buttons, category)
 end
 
 function F:UpdateLayout()
-	if InCombatLockdown() then return end
+	if InCombatLockdown() then return	end	
 	for i=1, 3 do
 		F:UpdateBar(_G[("FarmSeedBar%d"):format(i)], F.UpdateSeedBarLayout, F.InSeedZone, farmSeedBarAnchor, seedButtons[i], i)
 	end
 	F:UpdateBar(_G["FarmToolBar"], F.UpdateBarLayout, F.InFarmZone, farmToolBarAnchor, toolButtons)
 	F:UpdateBar(_G["FarmPortalBar"], F.UpdateBarLayout, F.InFarmZone, farmPortalBarAnchor, portalButtons)
+end
+
+function F:DelayedUpdateLayout()
+	E:Delay(5, F.UpdateLayout)
 end
 
 function F:CreateFarmButton(index, owner, buttonType, name, texture, allowDrop)
@@ -288,7 +292,8 @@ function F:CreateFrames()
 	F:UpdateLayout()
 	
 	F:RegisterEvent("ZONE_CHANGED", "UpdateLayout")
-	F:RegisterEvent("PLAYER_REGEN_ENABLED", "UpdateLayout")
+	F:RegisterEvent("PLAYER_REGEN_ENABLED", "DelayedUpdateLayout")	
+	F:RegisterEvent("PLAYER_ENTERING_WORLD", "DelayedUpdateLayout")
 	F:RegisterEvent("BAG_UPDATE", "FarmerInventoryUpdate")
 end
 
