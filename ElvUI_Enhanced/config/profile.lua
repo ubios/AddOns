@@ -14,6 +14,9 @@ P['unitframe']['units']['focus']['gps']= {
 	['position'] = 'LEFT'
 }
 
+-- Nameplates
+P['nameplate'].showthreat = true
+
 -- DataTexts
 P['datatexts']['Actionbar1DataPanel'] = false
 P['datatexts']['Actionbar3DataPanel'] = false

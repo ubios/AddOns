@@ -75,3 +75,7 @@ L['Farmer Bars'] = true
 L['Enable/Disable the farmer bars.'] = true
 L['Only active buttons'] = true
 L['Only show the buttons for the seeds, portals, tools you have in your bags.'] = true
+
+-- Nameplates
+L["Threat Text"] = true
+L["Display threat level as text on targeted or mouseover nameplate."] = true

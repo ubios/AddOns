@@ -3,6 +3,7 @@
 	<Include file="datatexts\load_datatexts.xml"/>
 	<Include file="farmer\load_farmer.xml"/>
 	<Include file="equipment\load_equipment.xml"/>
+	<Include file="nameplates\load_nameplates.xml"/>
 	<Include file="maps\load_maps.xml"/>
 	<Include file="unitframes\load_unitframes.xml"/>
 </Ui>
