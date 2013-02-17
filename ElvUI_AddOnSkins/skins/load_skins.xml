@@ -1,4 +1,4 @@
-﻿<Ui xmlns="http://www.blizzard.com/wow/ui/">
+<Ui xmlns="http://www.blizzard.com/wow/ui/">
 	<Script file="ACP.lua"/>
 	<Script file="AdiBags.lua"/>
 	<Script file="AffDots.lua"/>

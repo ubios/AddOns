@@ -1,4 +1,4 @@
-﻿local E, L, V, P, G,_ = unpack(ElvUI)
+local E, L, V, P, G,_ = unpack(ElvUI)
 
 V["skins"]["addons"] = {
 	["enable"] = true,

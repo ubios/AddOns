@@ -1,4 +1,4 @@
-﻿--[[
+--[[
 	Author: Affli@RU-Howling Fjord, 
 	Modified: Elv, Azilroka
 	All rights reserved.

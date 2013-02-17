@@ -1,4 +1,4 @@
-﻿-- Camealion's Functions File
+-- Camealion's Functions File
 -- Added ccolor for class coloring. - Azilroka
 -- Restructured Functions file. - Azilroka
 -- Added Skinning features for ease of skinning and smaller size skins. - Azilroka
