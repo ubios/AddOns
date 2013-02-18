@@ -4,5 +4,5 @@ E.Options.args.nameplate.args.general.args.showthreat = {
 	type = "toggle",
 	order = 5,
 	name = L["Threat Text"],
-	desc = L["Display threat level as text on targeted or mouseover nameplate."],
+	desc = L["Display threat level as text on targeted, boss or mouseover nameplate."],
 }

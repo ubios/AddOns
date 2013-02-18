@@ -21,8 +21,18 @@ hooksecurefunc(NP, 'UpdateThreat', function(self, frame)
 		frame.hp.threat:SetText()
 
 		if self.db.showthreat then
-			if frame.unit and UnitCanAttack('player', frame.unit) then
-				local status, percent = select(2, UnitDetailedThreatSituation('player', frame.unit))
+			local unit = frame.unit
+			if not unit then
+				for i=1, 4 do
+					if frame.guid == UnitGUID(('boss%d'):format(i)) then
+						unit = ('boss%d'):format(i)
+						break
+					end
+				end
+			end
+
+			if unit and UnitCanAttack('player', unit) then
+				local status, percent = select(2, UnitDetailedThreatSituation('player', unit))
 				if (status) then
 					frame.hp.threat:SetFormattedText('%s%.0f%%|r', Hex(GetThreatStatusColor(status)), percent)
 				else

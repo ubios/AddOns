@@ -78,4 +78,4 @@ L['Only show the buttons for the seeds, portals, tools you have in your bags.'] 
 
 -- Nameplates
 L["Threat Text"] = true
-L["Display threat level as text on targeted or mouseover nameplate."] = true
+L["Display threat level as text on targeted, boss or mouseover nameplate."] = true
