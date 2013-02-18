@@ -24,6 +24,8 @@ E.Options.args.farmer = {
 			name = L["Farmer Bars"],
 			guiInline = true,
 			disabled = function() return not E.private.farmer.enabled end,
+			get = function(info) return E.private.farmer.farmbars[ info[#info] ] end,
+			set = function(info, value) E.private.farmer.farmbars[ info[#info] ] = value end,
 			args = {
 				enable = {
 					type = "toggle",
@@ -40,6 +42,13 @@ E.Options.args.farmer = {
 					desc = L['Only show the buttons for the seeds, portals, tools you have in your bags.'],
 					get = function(info) return E.private.farmer.farmbars.onlyactive end,
 					set = function(info, value) E.private.farmer.farmbars.onlyactive = value F:UpdateLayout() end,
+					disabled = function() return not E.private.farmer.farmbars.enable end,
+				},
+				droptools = {
+					order = 3,
+					type = 'toggle',
+					name = L['Drop Tools'],
+					desc = L['Automatically drop tools from your bags when leaving the farming area.'],
 					disabled = function() return not E.private.farmer.farmbars.enable end,
 				},
 			},

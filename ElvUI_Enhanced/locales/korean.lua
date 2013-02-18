@@ -5,4 +5,5 @@ if not L then return end
 -- Farmer
 L["Sunsong Ranch"] = "태양노래 농장"
 L["The Halfhill Market"] = "언덕골 시장"
+L["Tilled Soil"] = "갈아엎은 흙"
 

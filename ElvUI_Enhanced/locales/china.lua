@@ -67,4 +67,5 @@ L['Actionbar5DataPanel'] = '快捷列 5 资讯框'
 -- Farmer
 L["Sunsong Ranch"] = "日歌农场"
 L["The Halfhill Market"] = "半山市集"
+L["Tilled Soil"] = "开垦过的土壤"
 

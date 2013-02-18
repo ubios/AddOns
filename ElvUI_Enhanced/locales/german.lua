@@ -66,3 +66,4 @@ L['Actionbar5DataPanel'] = 'Aktionsleiste 5'
 -- Farmer
 L["Sunsong Ranch"] = "Gehöft Sonnensang"
 L["The Halfhill Market"] = "Der Halbhügelmarkt"
+L["Tilled Soil"] = "Gepflügtes Erdreich"

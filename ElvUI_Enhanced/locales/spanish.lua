@@ -5,4 +5,4 @@ if not L then return end
 -- Farmer
 L["Sunsong Ranch"] = "Rancho Cantosol"
 L["The Halfhill Market"] = "El Mercado del Alcor"
-
+L["Tilled Soil"] = "Tierra labrada"

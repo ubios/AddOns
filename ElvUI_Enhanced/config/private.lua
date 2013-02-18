@@ -31,5 +31,6 @@ V.farmer = {
 	['farmbars'] = {
 		['enable'] = true,
 		['onlyactive'] = true,
+		['droptools'] = true,
 	}
 }

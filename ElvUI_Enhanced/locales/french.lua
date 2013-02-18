@@ -68,6 +68,8 @@ L['Actionbar5DataPanel'] = "Barre d'actions 5"
 -- Farmer Module
 L["Sunsong Ranch"] = "Ferme Chant du Soleil"
 L["The Halfhill Market"] = "Marché de Micolline"
+L["Tilled Soil"] = "Terre labourée"
+
 L['Right-click to drop the item.'] = "Clique droit pour lacher l'objet."
 
 

@@ -7,4 +7,5 @@ if not L then return end
 -- Farmer
 L["Sunsong Ranch"] = "Tenuta Cantasole"
 L["The Halfhill Market"] = "Mercato di Mezzocolle"
+L["Tilled Soil"] = "Terreno Coltivato"
 

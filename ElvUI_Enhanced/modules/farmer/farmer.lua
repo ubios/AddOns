@@ -68,6 +68,23 @@ function F:InFarmZone()
 	return GetSubZoneText() == activezones[1]
 end
 
+function F:IsSeed(itemId)
+	for i, v in pairs(seeds) do
+		if i == itemId then return true end
+	end
+	return false
+end
+
+function F:FindItemInBags(itemId)
+	for container = 0, NUM_BAG_SLOTS do
+		for slot = 1, GetContainerNumSlots(container) do
+			if itemId == GetContainerItemID(container, slot) then
+				return container, slot
+			end
+		end
+	end
+end
+
 function F:FarmerInventoryUpdate()
 	if InCombatLockdown() then return end
 	
@@ -150,6 +167,20 @@ function F:UpdateBar(bar, layoutfunc, zonecheck, anchor, buttons, category)
 	end
 end
 
+function F:ZoneChanged()
+	if not F:InSeedZone() and E.private.farmer.farmbars.droptools then
+		for k, v in pairs(tools) do
+			local container, slot = F:FindItemInBags(k)
+			if container and slot then
+				PickupContainerItem(container, slot)
+				DeleteCursorItem()
+			end		
+		end
+	end
+
+	F:UpdateLayout()
+end
+
 function F:UpdateLayout()
 	if InCombatLockdown() then return	end	
 	for i=1, 3 do
@@ -198,17 +229,21 @@ function F:CreateFarmButton(index, owner, buttonType, name, texture, allowDrop)
 		if mousebutton == "LeftButton" then
 			button:SetAttribute("type", buttonType)
 			button:SetAttribute(buttonType, name)
+
+			if F:IsSeed(button.itemId) and UnitName("target") ~= L["Tilled Soil"] then
+				local container, slot = F:FindItemInBags(button.itemId)
+				if container and slot then
+					button:SetAttribute("type", "macro")
+					button:SetAttribute("macrotext", format("/targetexact %s \n/use %s %s", L["Tilled Soil"], container, slot))
+				end
+			end
 		elseif mousebutton == "RightButton" and allowDrop then
 			button:SetAttribute("type", "click")
-			for container = 0, 4 do
-				for slot = 1, GetContainerNumSlots(container) do
-					if button.itemId == GetContainerItemID(container, slot) then
-						PickupContainerItem(container, slot)
-						DeleteCursorItem()
-						return
-					end
-				end
-			end			
+			local container, slot = F:FindItemInBags(button.itemId)
+			if container and slot then
+				PickupContainerItem(container, slot)
+				DeleteCursorItem()
+			end
 		end
 	end)
 	
@@ -291,7 +326,7 @@ function F:CreateFrames()
 	F:FarmerInventoryUpdate()
 	F:UpdateLayout()
 	
-	F:RegisterEvent("ZONE_CHANGED", "UpdateLayout")
+	F:RegisterEvent("ZONE_CHANGED", "ZoneChanged")
 	F:RegisterEvent("PLAYER_REGEN_ENABLED", "DelayedUpdateLayout")	
 	F:RegisterEvent("PLAYER_ENTERING_WORLD", "DelayedUpdateLayout")
 	F:RegisterEvent("BAG_UPDATE", "FarmerInventoryUpdate")

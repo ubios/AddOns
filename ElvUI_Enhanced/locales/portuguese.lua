@@ -67,3 +67,4 @@ L['Actionbar5DataPanel'] = 'Actionbar 5'
 -- Farmer
 L["Sunsong Ranch"] = "Fazenda Sol Cantante"
 L["The Halfhill Market"] = "Mercado da Meia Colina"
+L["Tilled Soil"] = "Terra Arada"

@@ -75,7 +75,10 @@ L['Farmer Bars'] = true
 L['Enable/Disable the farmer bars.'] = true
 L['Only active buttons'] = true
 L['Only show the buttons for the seeds, portals, tools you have in your bags.'] = true
+L['Drop Tools'] = true
+L['Automatically drop tools from your bags when leaving the farming area.'] = true
 
 -- Nameplates
 L["Threat Text"] = true
 L["Display threat level as text on targeted, boss or mouseover nameplate."] = true
+L["Tilled Soil"] = true
