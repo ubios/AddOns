@@ -1,5 +1,6 @@
 local E, L, V, P, G, _ = unpack(ElvUI); --Inport: Engine, Locales, PrivateDB, ProfileDB, GlobalDB, Localize Underscore
 local NP = E:GetModule('NamePlates')
+local LSM = LibStub("LibSharedMedia-3.0")
 
 local UnitCanAttack, UnitDetailedThreatSituation, GetThreatStatusColor = UnitCanAttack, UnitDetailedThreatSituation, GetThreatStatusColor
 local format = string.format
@@ -11,9 +12,9 @@ end
 hooksecurefunc(NP, 'SkinPlate', function(self, frame, nameFrame)
 	if not frame.hp.threat then
 		frame.hp.threat = frame.hp:CreateFontString(nil, "OVERLAY")
-		frame.hp.threat:SetPoint("BOTTOMLEFT", frame.hp, "TOPRIGHT", 1, 1)
+		frame.hp.threat:SetPoint("RIGHT", frame.hp, "RIGHT", -1, 1)
 	end
-	frame.hp.threat:FontTemplate(font, self.db.fontSize, 'OUTLINE')
+	frame.hp.threat:FontTemplate(LSM:Fetch("font", self.db.font), self.db.fontSize, self.db.fontOutline)
 end)
 
 hooksecurefunc(NP, 'UpdateThreat', function(self, frame)
