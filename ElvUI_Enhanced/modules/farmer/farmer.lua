@@ -257,21 +257,21 @@ function F:CreateFrames()
 	farmSeedBarAnchor:Size(96, 320)
 	farmSeedBarAnchor:SetFrameStrata("BACKGROUND")
 
-	E:CreateMover(farmSeedBarAnchor, "FarmSeedAnchor", "Farmer Seed Bar")
+	E:CreateMover(farmSeedBarAnchor, "FarmSeedAnchor", L['Farmer Seed Bar'])
 	
 	farmToolBarAnchor = CreateFrame("Frame", "FarmToolBarAnchor", E.UIParent)
 	farmToolBarAnchor:Point("BOTTOMLEFT", farmSeedBarAnchor, "TOPLEFT", 0, 4)
 	farmToolBarAnchor:Size(128, 38)
 	farmToolBarAnchor:SetFrameStrata("BACKGROUND")
 	
-	E:CreateMover(farmToolBarAnchor, "FarmToolAnchor", "Farmer Tool Bar")
+	E:CreateMover(farmToolBarAnchor, "FarmToolAnchor", L['Farmer Tools Bar'])
 	
 	farmPortalBarAnchor = CreateFrame("Frame", "FarmPortalBarAnchor", E.UIParent)
 	farmPortalBarAnchor:Point("BOTTOMLEFT", farmToolBarAnchor, "TOPLEFT", 0, 4)
 	farmPortalBarAnchor:Size(128, 38)
 	farmPortalBarAnchor:SetFrameStrata("BACKGROUND")
 	
-	E:CreateMover(farmPortalBarAnchor, "FarmPortalAnchor", "Farmer Portal Bar")
+	E:CreateMover(farmPortalBarAnchor, "FarmPortalAnchor", L['Farmer Portal Bar'])
 
 	for k, v in pairs(seeds) do
 		seeds[k] = { v[1], GetItemInfo(k) }	

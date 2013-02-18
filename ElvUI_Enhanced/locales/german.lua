@@ -41,7 +41,7 @@ L['Show the direction and distance to the selected party or raid member.'] = "An
 
 -- Minimap Buttons
 L['Skin Buttons'] = "Skin Knöpfen"
-L['Skins the minimap buttons in Elv UI style.'] = "Skin die Minikarte Knöpfe in ElvUI Stil."
+L['Skins the minimap buttons in Elv UI style.'] = 'Skin die Minikarte Knöpfe in ElvUI Stil.'
 L['Skin Style'] = "Skin Stil"
 L['Change settings for how the minimap buttons are skinned.'] = "Ändern der Einstellungen für wie die Minimap Knöpfen geskind werden."
 L['The size of the minimap buttons.'] = "Die Größe der Minikarte Knöpfen."
@@ -58,12 +58,32 @@ L['Automatically release body when killed inside a battleground.'] = "Automatisc
 L['Track Reputation'] = "Reputation Verfolgen"
 L['Automatically change your watched faction on the reputation bar to the faction you got reputation points for.'] = "Automatisch ändern der beobachteten Fraktion auf der Erfahrungsleiste zur Fraktion wo mann Reputationspunkte für bekommen hatt."
 
+-- Range Datatext
+L['Distance'] = 'Entfernung'
+
 -- Extra Datatexts
 L['Actionbar1DataPanel'] = 'Aktionsleiste 1'
 L['Actionbar3DataPanel'] = 'Aktionsleiste 3'
 L['Actionbar5DataPanel'] = 'Aktionsleiste 5'
 
 -- Farmer
-L["Sunsong Ranch"] = "Gehöft Sonnensang"
-L["The Halfhill Market"] = "Der Halbhügelmarkt"
-L["Tilled Soil"] = "Gepflügtes Erdreich"
+L["Sunsong Ranch"] = 'Gehöft Sonnensang'
+L["The Halfhill Market"] = 'Der Halbhügelmarkt'
+L["Tilled Soil"] = 'Gepflügtes Erdreich'
+L['Right-click to drop the item.'] = 'Mit der rechten Maustaste klicken, um das Objekt abzulegen.'
+
+L['Farmer'] = 'Landwirt'
+L["FARMER_DESC"] = 'Ändern der Einstellungen für die Werkzeuge, die Sie effizienter auf Gehöft Sonnensang arbeiten lassen.'
+L['Farmer Bars'] = 'Landwirt Knöpfenleiste'
+L['Farmer Portal Bar'] = 'Landwirt Portalleiste'
+L['Farmer Seed Bar'] = 'Landwirt Saatleiste'
+L['Farmer Tools Bar'] = 'Landwirt Werkzeugleiste'
+L['Enable/Disable the farmer bars.'] = 'Aktivieren / Deaktivieren der Landwirtleisten'
+L['Only active buttons'] = 'Nur aktive Knöpfen'
+L['Only show the buttons for the seeds, portals, tools you have in your bags.'] = 'Nur die Knöpfe für Saat, Portale und Werkzeuge zeigen die Sie in Ihrem Gepäck haben.'
+L['Drop Tools'] = 'Werkzeuge ablegen'
+L['Automatically drop tools from your bags when leaving the farming area.'] = 'Automatische die Werkzeuge ablegen beim Verlassen des landwirtschaftlichen Bereichs.'
+
+-- Nameplates
+L["Bedrohungstext"] = true
+L["Anzeigen der Bedrohungslage als Text auf dem Ziel oder Boss Namensschild."] = true

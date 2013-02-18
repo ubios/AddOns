@@ -24,7 +24,7 @@ local function OnUpdate(self, t)
 	curMax = max
 	
 	if min and max then
-		self.text:SetFormattedText(displayString, RANGED, min, max)
+		self.text:SetFormattedText(displayString, L['Distance'], min, max)
 	else
 		self.text:SetText("")
 	end

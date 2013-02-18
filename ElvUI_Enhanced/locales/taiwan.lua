@@ -41,6 +41,7 @@ L['GPS'] = "GPS定位"
 L['Show the direction and distance to the selected party or raid member.'] = "顯示你與當前隊伍或團隊成員的方向与距離."
 
 -- Minimap Buttons
+L["Minimap Button Bar"] = "小地圖按鈕整合列"
 L['Skin Buttons'] = "美化按鈕"
 L['Skins the minimap buttons in Elv UI style.'] = "將小地圖圖標美化成ElvUI風格."
 L['Skin Style'] = "美化風格"
@@ -59,6 +60,9 @@ L['Automatically release body when killed inside a battleground.'] = "在戰場�
 L['Track Reputation'] = "聲望追蹤"
 L['Automatically change your watched faction on the reputation bar to the faction you got reputation points for.'] = "當你獲得某個陣營的聲望時, 將自動追蹤此陣營的聲望至經驗值欄位." 
 
+-- Range Datatext
+L['Distance'] = "距離"
+
 -- Extra Datatexts
 L['Actionbar1DataPanel'] = '快捷列 1 資訊框'
 L['Actionbar3DataPanel'] = '快捷列 3 資訊框'
@@ -68,4 +72,20 @@ L['Actionbar5DataPanel'] = '快捷列 5 資訊框'
 L["Sunsong Ranch"] = "日歌農莊"
 L["The Halfhill Market"] = "半丘市集"
 L["Tilled Soil"] = "開墾過的沃土"
-
+L['Right-click to drop the item.'] = "右鍵點擊需刪除的項目."
+ 
+L['Farmer'] = "農夫"
+L['Farmer Portal Bar'] = "農夫列:傳送"
+L['Farmer Seed Bar'] = "農夫列:種子"
+L['Farmer Tools Bar'] = "農夫列:工具"
+L["FARMER_DESC"] = "調整設置以便你在日歌農莊更有效的耕作."
+L['Farmer Bars'] = "農夫列"
+L['Enable/Disable the farmer bars.'] = "開啓/關閉 農夫快捷列."
+L['Only active buttons'] = "只顯示有效的按鈕"
+L['Only show the buttons for the seeds, portals, tools you have in your bags.'] = "只顯示你背包中有的種子, 傳送和工具."
+L['Drop Tools'] = "刪除工具"
+L['Automatically drop tools from your bags when leaving the farming area.'] = "當你離開農莊範圍時, 自動刪除背包中的工具."
+ 
+-- Nameplates
+L["Threat Text"] = "威脅值文字"
+L["Display threat level as text on targeted, boss or mouseover nameplate."] = "在首領或鼠標懸停的血條上顯示威脅等級文字."

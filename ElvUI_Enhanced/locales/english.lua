@@ -41,6 +41,7 @@ L['GPS'] = true
 L['Show the direction and distance to the selected party or raid member.'] = true
 
 -- Minimap Buttons
+L["Minimap Button Bar"] = true
 L['Skin Buttons'] = true
 L['Skins the minimap buttons in Elv UI style.'] = true
 L['Skin Style'] = true
@@ -59,6 +60,9 @@ L['Automatically release body when killed inside a battleground.'] = true
 L['Track Reputation'] = true
 L['Automatically change your watched faction on the reputation bar to the faction you got reputation points for.'] = true
 
+-- Range Datatext
+L['Distance'] = true
+
 -- Extra Datatexts
 L['Actionbar1DataPanel'] = 'Actionbar 1'
 L['Actionbar3DataPanel'] = 'Actionbar 3'
@@ -67,11 +71,15 @@ L['Actionbar5DataPanel'] = 'Actionbar 5'
 -- Farmer Module
 L["Sunsong Ranch"] = true
 L["The Halfhill Market"] = true
+L["Tilled Soil"] = true
 L['Right-click to drop the item.'] = true
 
-
+L['Farmer'] = true
 L["FARMER_DESC"] = "Adjust the settings for the tools that help you farm more efficiently on Sunsong Ranch."
 L['Farmer Bars'] = true
+L['Farmer Portal Bar'] = true
+L['Farmer Seed Bar'] = true
+L['Farmer Tools Bar'] = true
 L['Enable/Disable the farmer bars.'] = true
 L['Only active buttons'] = true
 L['Only show the buttons for the seeds, portals, tools you have in your bags.'] = true
@@ -81,4 +89,3 @@ L['Automatically drop tools from your bags when leaving the farming area.'] = tr
 -- Nameplates
 L["Threat Text"] = true
 L["Display threat level as text on targeted, boss or mouseover nameplate."] = true
-L["Tilled Soil"] = true
