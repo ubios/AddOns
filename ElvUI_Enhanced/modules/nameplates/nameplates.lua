@@ -32,7 +32,7 @@ hooksecurefunc(NP, 'UpdateThreat', function(self, frame)
 				end
 			end
 
-			if unit and UnitCanAttack('player', unit) then
+			if unit and not UnitIsPlayer(unit) and UnitCanAttack('player', unit) then
 				local status, percent = select(2, UnitDetailedThreatSituation('player', unit))
 				if (status) then
 					frame.hp.threat:SetFormattedText('%s%.0f%%|r', Hex(GetThreatStatusColor(status)), percent)
