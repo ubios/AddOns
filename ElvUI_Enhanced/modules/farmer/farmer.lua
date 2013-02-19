@@ -36,10 +36,10 @@ local seeds = {
 }
 
 local tools = {
-	[79104]	= { 1 }, -- RusyWateringCan
-	[80513] = { 1 }, -- VintageBugSprayer
-	[89880] = { 1 }, -- DentedShovel
-	[89815] = { 1 }, -- MasterPlow
+	[79104]	= { 30254 }, -- RusyWateringCan
+	[80513] = { 30254 }, -- VintageBugSprayer
+	[89880] = { 30535 }, -- DentedShovel
+	[89815] = { 31938 }, -- MasterPlow
 }
 
 local portals = {
@@ -68,11 +68,20 @@ function F:InFarmZone()
 	return GetSubZoneText() == activezones[1]
 end
 
-function F:IsSeed(itemId)
-	for i, v in pairs(seeds) do
+function F:IsInTable(group, itemId)
+	for i, v in pairs(group) do
 		if i == itemId then return true end
 	end
 	return false
+end
+
+function F:FindButton(group, itemId)
+	for _, button in ipairs(group) do
+		if button.itemId == itemId then
+			return button
+		end
+	end
+	return nil
 end
 
 function F:FindItemInBags(itemId)
@@ -157,8 +166,6 @@ function F:UpdateSeedBarLayout(seedBar, anchor, buttons, category)
 end
 
 function F:UpdateBar(bar, layoutfunc, zonecheck, anchor, buttons, category)
-	bar:Show()
-	
 	local count = layoutfunc(self, bar, anchor, buttons, category)
 	if (E.private.farmer.farmbars.enable and count > 0 and zonecheck(self) and not InCombatLockdown()) then
 		bar:Show()
@@ -230,7 +237,7 @@ function F:CreateFarmButton(index, owner, buttonType, name, texture, allowDrop)
 			button:SetAttribute("type", buttonType)
 			button:SetAttribute(buttonType, name)
 
-			if F:IsSeed(button.itemId) and UnitName("target") ~= L["Tilled Soil"] then
+			if F:IsInTable(seeds, button.itemId) and UnitName("target") ~= L["Tilled Soil"] then
 				local container, slot = F:FindItemInBags(button.itemId)
 				if container and slot then
 					button:SetAttribute("type", "macro")
@@ -249,7 +256,7 @@ function F:CreateFarmButton(index, owner, buttonType, name, texture, allowDrop)
 	
 	return button
 end				
-				
+
 
 function F:CreateFrames()
 	farmSeedBarAnchor = CreateFrame("Frame", "FarmSeedBarAnchor", E.UIParent)
@@ -278,7 +285,7 @@ function F:CreateFrames()
 	end
 	
 	for k, v in pairs(tools) do
-		tools[k] = { GetItemInfo(k) }
+		tools[k] = { v[1], GetItemInfo(k) }
 	end
 
 	for k, v in pairs(portals) do
@@ -308,7 +315,7 @@ function F:CreateFrames()
 	toolBar:CreateShadow()
 	toolBar:SetPoint("CENTER", farmToolBarAnchor, "CENTER", 0, 0)
 	for k, v in pairs(tools) do
-		tinsert(toolButtons, F:CreateFarmButton(k, toolBar, "item", v[1], v[10], true))
+		tinsert(toolButtons, F:CreateFarmButton(k, toolBar, "item", v[2], v[11], true))
 	end
 	
 	local portalBar = CreateFrame("Frame", "FarmPortalBar", UIParent)
