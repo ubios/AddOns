@@ -203,8 +203,11 @@ end
 
 function F:CreateFarmButton(index, owner, buttonType, name, texture, allowDrop)
 	local button = CreateFrame("Button", ("FarmerButton%d"):format(index), owner, "SecureActionButtonTemplate")
+	button:StyleButton();
+	button:SetTemplate('Default', true);
+	button:SetNormalTexture(nil);
+
 	button:Size(30, 30)
-	button:SetTemplate()
 
 	button.sortname = name
 	button.itemId = index
