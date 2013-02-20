@@ -155,6 +155,9 @@ function EDT:OnInitialize()
 		panel:Point('TOPLEFT', actionbar, 'BOTTOMLEFT', spacer, -spacer)
 		panel:Point('BOTTOMRIGHT', actionbar, 'BOTTOMRIGHT', -spacer, -(spacer + PANEL_HEIGHT))	
 		panel:SetTemplate('Default', true)
+		
+		-- Add DataPanel to FrameLock for hiding during Pet Battles
+		E.FrameLocks[('Actionbar%dDataPanel'):format(k)] = true;
 
 		DT:RegisterPanel(panel, v, 'ANCHOR_TOP', 0, -4)
 	end
