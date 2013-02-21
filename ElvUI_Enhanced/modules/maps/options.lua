@@ -44,3 +44,10 @@ E.Options.args.general.args.minimap.args.mouseover = {
 	set = function(info, value) E.private.general.minimap.mouseover = value; E:GetModule('MinimapButtons'):ChangeMouseOverSetting() end,
 	disabled = function() return not E.private.general.minimap.skinButtons or E.private.general.minimap.skinStyle == 'NOANCHOR' end,
 }
+
+E.Options.args.general.args.minimap.args.locationText.values = {
+	['MOUSEOVER'] = L['Minimap Mouseover'],
+	['SHOW'] = L['Always Display'],
+	['ABOVE'] = L['Above Minimap'],
+	['HIDE'] = L['Hide'],
+}

@@ -40,6 +40,9 @@ L["Only show durabitlity information for items that are damaged."] = true
 L['GPS'] = true
 L['Show the direction and distance to the selected party or raid member.'] = true
 
+-- Minimap Location
+L['Above Minimap'] = true
+
 -- Minimap Buttons
 L["Minimap Button Bar"] = true
 L['Skin Buttons'] = true

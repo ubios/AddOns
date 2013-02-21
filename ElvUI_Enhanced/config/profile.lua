@@ -1,7 +1,7 @@
 ﻿local E, L, V, P, G, _ = unpack(ElvUI); --Inport: Engine, Locales, PrivateDB, ProfileDB, GlobalDB
 
---For some reason datatext settings refuses to work if there is no general setting block here O_o
---Core
+--General
+P['general']['minimap']['locationText'] = 'ABOVE'
 
 --Unitframes
 P['unitframe']['units']['target']['gps'] = {
