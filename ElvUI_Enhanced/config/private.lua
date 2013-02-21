@@ -32,5 +32,6 @@ V.farmer = {
 		['enable'] = true,
 		['onlyactive'] = true,
 		['droptools'] = true,
+		['seedbardirection'] = 'VERTICAL',
 	}
 }

@@ -32,7 +32,6 @@ E.Options.args.farmer = {
 					order = 1,
 					name = L['Enable'],
 					desc = L['Enable/Disable the farmer bars.'],
-					get = function(info) return E.private.farmer.farmbars.enable end,
 					set = function(info, value) E.private.farmer.farmbars.enable = value F:UpdateLayout() end
 				},
 				onlyactive = {
@@ -40,7 +39,6 @@ E.Options.args.farmer = {
 					type = 'toggle',
 					name = L['Only active buttons'],
 					desc = L['Only show the buttons for the seeds, portals, tools you have in your bags.'],
-					get = function(info) return E.private.farmer.farmbars.onlyactive end,
 					set = function(info, value) E.private.farmer.farmbars.onlyactive = value F:UpdateLayout() end,
 					disabled = function() return not E.private.farmer.farmbars.enable end,
 				},
@@ -51,6 +49,18 @@ E.Options.args.farmer = {
 					desc = L['Automatically drop tools from your bags when leaving the farming area.'],
 					disabled = function() return not E.private.farmer.farmbars.enable end,
 				},
+				seedbardirection = {
+					order = 4,
+					type = 'select',
+					name = L['Seed Bar Direction'],
+					desc = L['The direction of the seed bar buttons (Horizontal or Vertical).'],
+					set = function(info, value) E.private.farmer.farmbars.seedbardirection = value F:UpdateLayout() end,
+					disabled = function() return not E.private.farmer.farmbars.enable end,
+					values = {
+						['VERTICAL'] = L['Vertical'],
+						['HORIZONTAL'] = L['Horizontal'],
+					},
+				},				
 			},
 		},
 	},

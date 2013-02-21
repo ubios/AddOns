@@ -145,14 +145,14 @@ function F:UpdateBarLayout(bar, anchor, buttons)
 end
 
 function F:UpdateSeedBarLayout(seedBar, anchor, buttons, category)
-	local count = 0
+	local count, horizontal = 0, E.private.farmer.farmbars.seedbardirection == 'HORIZONTAL'
 	seedBar:ClearAllPoints()
-	seedBar:Point("TOPLEFT", anchor, "TOPLEFT", (category - 1)* 38, 0)
+	seedBar:Point("TOPLEFT", anchor, "TOPLEFT", horizontal and 0 or (category - 1)* 38, horizontal and -((category - 1)* 38) or 0)
 	
 	for i, button in ipairs(buttons) do
 		button:ClearAllPoints()
 		if not E.private.farmer.farmbars.onlyactive or button.items > 0 then
-			button:Point("TOPLEFT", seedBar, "TOPLEFT", 2, -(count * 32)-2)
+			button:Point("TOPLEFT", seedBar, "TOPLEFT", horizontal and (count * 32)+2 or 2, horizontal and -2 or -(count * 32)-2)
 			button:Show()
 			count = count + 1
 		else
@@ -160,8 +160,8 @@ function F:UpdateSeedBarLayout(seedBar, anchor, buttons, category)
 		end
 	end
 	
-	seedBar:Width(32)
-	seedBar:Height((count * 32) + 2)
+	seedBar:Width(horizontal and (count * 32) + 2 or 32)
+	seedBar:Height(horizontal and 32 or (count * 32) + 2)
 	return count
 end
 
@@ -195,6 +195,12 @@ function F:UpdateLayout()
 	end
 	F:UpdateBar(_G["FarmToolBar"], F.UpdateBarLayout, F.InFarmZone, farmToolBarAnchor, toolButtons)
 	F:UpdateBar(_G["FarmPortalBar"], F.UpdateBarLayout, F.InFarmZone, farmPortalBarAnchor, portalButtons)
+	
+	if E.private.farmer.farmbars.seedbardirection == 'HORIZONTAL' then
+		farmSeedBarAnchor:Size(320, 114)
+	else
+		farmSeedBarAnchor:Size(114, 320)
+	end
 end
 
 function F:DelayedUpdateLayout()

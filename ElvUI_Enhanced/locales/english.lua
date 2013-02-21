@@ -85,6 +85,8 @@ L['Only active buttons'] = true
 L['Only show the buttons for the seeds, portals, tools you have in your bags.'] = true
 L['Drop Tools'] = true
 L['Automatically drop tools from your bags when leaving the farming area.'] = true
+L['Seed Bar Direction'] = true
+L['The direction of the seed bar buttons (Horizontal or Vertical).'] = true
 
 -- Nameplates
 L["Threat Text"] = true
