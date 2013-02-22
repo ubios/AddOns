@@ -72,6 +72,7 @@ hooksecurefunc(M, 'UpdateSettings', function()
 	local point, relativeTo, relativePoint, xOfs, yOfs = holder:GetPoint()
 	if E.db.general.minimap.locationText == 'ABOVE' then
 		holder:SetPoint(point, relativeTo, relativePoint, 0, -22)
+		holder:Height(holder:GetHeight() + 22)
 		panel:SetScript('OnUpdate', UpdateLocation)
 		panel:Show()
 	else
