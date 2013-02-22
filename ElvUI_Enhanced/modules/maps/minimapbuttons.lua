@@ -48,12 +48,12 @@ local moveButtons = {}
 local minimapButtonBarAnchor, minimapButtonBar
 
 local function OnEnter()
-	if not E.private.general.minimap.mouseover then return end
+	if not E.private.general.minimapbar.mouseover then return end
 	UIFrameFadeIn(MinimapButtonBar, 0.2, MinimapButtonBar:GetAlpha(), 1)
 end
 
 local function OnLeave()
-	if not E.private.general.minimap.mouseover then return end
+	if not E.private.general.minimapbar.mouseover then return end
 	UIFrameFadeOut(MinimapButtonBar, 0.2, MinimapButtonBar:GetAlpha(), 0)
 end
 
@@ -134,14 +134,14 @@ function MB:UpdateLayout()
 	if not E.minimapbuttons then return end
 	
 	minimapButtonBar:SetPoint("CENTER", minimapButtonBarAnchor, "CENTER", 0, 0)
-	minimapButtonBar:Height(E.private.general.minimap.buttonSize + 4)
-	minimapButtonBar:Width(E.private.general.minimap.buttonSize + 4)
+	minimapButtonBar:Height(E.private.general.minimapbar.buttonSize + 4)
+	minimapButtonBar:Width(E.private.general.minimapbar.buttonSize + 4)
 
 	local lastFrame, anchor1, anchor2, offsetX, offsetY
 	for i = 1, #moveButtons do
 		local frame =	_G[moveButtons[i]]
 		
-		if E.private.general.minimap.skinStyle == 'NOANCHOR' then
+		if E.private.general.minimapbar.skinStyle == 'NOANCHOR' then
 			frame:SetParent(frame.original.Parent)
 			if frame.original.DragStart then
 				frame:SetScript("OnDragStart", frame.original.DragStart)
@@ -163,8 +163,8 @@ function MB:UpdateLayout()
 			
 			frame:ClearAllPoints()
 			frame:SetFrameStrata("LOW")
-			frame:Size(E.private.general.minimap.buttonSize)
-			if E.private.general.minimap.skinStyle == 'HORIZONTAL' then
+			frame:Size(E.private.general.minimapbar.buttonSize)
+			if E.private.general.minimapbar.skinStyle == 'HORIZONTAL' then
 				anchor1 = 'RIGHT'
 				anchor2 = 'LEFT'
 				offsetX = -2
@@ -185,11 +185,11 @@ function MB:UpdateLayout()
 		lastFrame = frame	
 	end
 	
-	if E.private.general.minimap.skinStyle ~= 'NOANCHOR' then
-		if E.private.general.minimap.skinStyle == "HORIZONTAL" then
-			minimapButtonBar:Width((E.private.general.minimap.buttonSize * #moveButtons) + (2 * #moveButtons + 1) + 1)
+	if E.private.general.minimapbar.skinStyle ~= 'NOANCHOR' and #moveButtons > 0 then
+		if E.private.general.minimapbar.skinStyle == "HORIZONTAL" then
+			minimapButtonBar:Width((E.private.general.minimapbar.buttonSize * #moveButtons) + (2 * #moveButtons + 1) + 1)
 		else
-			minimapButtonBar:Height((E.private.general.minimap.buttonSize * #moveButtons) + (2 * #moveButtons + 1) + 1)
+			minimapButtonBar:Height((E.private.general.minimapbar.buttonSize * #moveButtons) + (2 * #moveButtons + 1) + 1)
 		end
 		minimapButtonBarAnchor:SetSize(minimapButtonBar:GetSize())
 		minimapButtonBar:Show()
@@ -199,7 +199,7 @@ function MB:UpdateLayout()
 end
 
 function MB:ChangeMouseOverSetting()
-	if E.private.general.minimap.mouseover then
+	if E.private.general.minimapbar.mouseover then
 		minimapButtonBar:SetAlpha(0)
 	else
 		minimapButtonBar:SetAlpha(1)
@@ -244,7 +244,7 @@ function MB:CreateFrames()
 end
 
 function MB:Initialize()
-	if not E.private.general.minimap.skinButtons then return end
+	if not E.private.general.minimapbar.skinButtons then return end
 
 	E.minimapbuttons = MB
 	
