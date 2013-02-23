@@ -69,7 +69,7 @@ local function HideMinimap()
 end
 
 local function ShowMinimap()
-	FadeFrame(cluster, "IN", 0, 1, .5, function() cluster:Show() end)
+	FadeFrame(cluster, "IN", 0, 1, .5, function() if not InCombatLockdown() then cluster:Show() end end)
 end
 
 hooksecurefunc(M, 'Update_ZoneText', function()
