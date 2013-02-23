@@ -1,6 +1,16 @@
 local E, L, V, P, G, _ = unpack(ElvUI); --Inport: Engine, Locales, PrivateDB, ProfileDB, GlobalDB, Localize Underscore
 local MB = E:GetModule('MinimapButtons')
 
+
+E.Options.args.general.args.minimap.args.hideincombat = {
+	order = 20,
+	type = 'toggle',
+	name = L["Combat Hide"],
+	desc = L["Hide minimap while in combat."],
+	get = function(info) return E.private.general.minimap.hideincombat end,
+	set = function(info, value) E.private.general.minimap.hideincombat = value; E:GetModule('Minimap'):UpdateSettings() end,					
+}
+
 E.Options.args.general.args.minimapbar = {
 	order = 2,
 	get = function(info) return E.private.general.minimapbar[ info[#info] ] end,	

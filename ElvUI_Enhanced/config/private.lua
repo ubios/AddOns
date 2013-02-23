@@ -5,6 +5,8 @@ local E, L, V, P, G, _ = unpack(ElvUI); --Inport: Engine, Locales, PrivateDB, Pr
 V.general.pvpautorelease = true
 V.general.autorepchange = true
 
+V.general.minimap.hideincombat = false
+
 V.general.minimapbar = {
 	['skinButtons'] = true,
 	['skinStyle'] = 'HORIZONTAL',

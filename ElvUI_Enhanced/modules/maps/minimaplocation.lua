@@ -3,7 +3,7 @@ local M = E:GetModule('Minimap')
 
 local GetPlayerMapPosition = GetPlayerMapPosition
 local init = false
-local panel, location, xMap, yMap
+local cluster, panel, location, xMap, yMap
 
 local function UpdateLocation(self, elapsed)
 	location.elapsed = (location.elapsed or 0) + elapsed
@@ -17,7 +17,9 @@ local function UpdateLocation(self, elapsed)
 end
 
 local function CreateEnhancedMaplocation()
-	panel = CreateFrame('Frame', 'EnhancedLocationPanel', E.UIParent)
+	cluster = _G['MinimapCluster']
+
+	panel = CreateFrame('Frame', 'EnhancedLocationPanel', _G['MinimapCluster'])
 	panel:SetFrameStrata("BACKGROUND")
 	panel:Point("CENTER", E.UIParent, "CENTER", 0, 0)
 	panel:Size(320, 22)
@@ -47,9 +49,27 @@ local function CreateEnhancedMaplocation()
 
 	yMap.text = yMap:CreateFontString(nil, "OVERLAY")
 	yMap.text:FontTemplate(E.media.font, 12, "OUTLINE")
-	yMap.text:SetAllPoints(yMap)
-	
-	init = true
+	yMap.text:SetAllPoints(yMap)	
+end
+
+local function FadeFrame(frame, direction, startAlpha, endAlpha, time, func)
+	UIFrameFade(frame, {
+		mode = direction,
+		finishedFunc = func,
+		startAlpha = startAlpha,
+		endAlpha = endAlpha,
+		timeToFade = time,
+	})
+end
+
+local function HideMinimap()
+	cluster:Hide()
+	-- Can't fade, will taint UI
+	-- FadeFrame(cluster, "OUT", cluster:GetAlpha(), 0, .5, function() cluster:Hide() end)
+end
+
+local function ShowMinimap()
+	FadeFrame(cluster, "IN", 0, 1, .5, function() cluster:Show() end)
 end
 
 hooksecurefunc(M, 'Update_ZoneText', function()
@@ -59,7 +79,16 @@ end)
 
 hooksecurefunc(M, 'UpdateSettings', function()
 	if not init then
+		init = true
 		CreateEnhancedMaplocation()
+	end
+	
+	if E.private.general.minimap.hideincombat then
+		M:RegisterEvent("PLAYER_REGEN_DISABLED", HideMinimap)	
+		M:RegisterEvent("PLAYER_REGEN_ENABLED", ShowMinimap)
+	else
+		M:UnregisterEvent("PLAYER_REGEN_DISABLED")	
+		M:UnregisterEvent("PLAYER_REGEN_ENABLED")
 	end
 
 	local holder = _G['MMHolder']

@@ -42,6 +42,7 @@ L['Show the direction and distance to the selected party or raid member.'] = tru
 
 -- Minimap Location
 L['Above Minimap'] = true
+L["Hide minimap while in combat."] = true
 
 -- Minimap Buttons
 L["Minimap Button Bar"] = true
