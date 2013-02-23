@@ -82,8 +82,10 @@ local FriendSpells = {}
 local HarmSpells = {}
 
 FriendSpells["DRUID"] = {
-    5185, -- ["Healing Touch"], -- 40
-    467, -- ["Thorns"], -- 30
+	774, -- ["Rejuvenation"] -- 40
+	29166, -- ["Innervate"] -- 30
+	110309, -- ["Symbiosis"] -- 30
+	5185, -- ["Healing Touch"], -- 40
 }
 HarmSpells["DRUID"] = {
     5176, -- ["Wrath"], -- 40
@@ -136,9 +138,11 @@ FriendSpells["PRIEST"] = {
     6346, -- ["Fear Ward"], -- 30
 }
 HarmSpells["PRIEST"] = {
-    589, -- ["Shadow Word: Pain"], -- 40
-    48045, -- ["Mind Sear"], -- 35
-    5019, -- ["Shoot"], -- 30
+	124465, -- ["Vampiric Touch"] -- 100
+	589, -- ["Shadow Word: Pain"], -- 40
+	48045, -- ["Mind Sear"], -- 35
+	5019, -- ["Shoot"], -- 30
+	585, -- ["Smite"] -- 30
 }
 
 FriendSpells["ROGUE"] = {}
@@ -146,19 +150,21 @@ HarmSpells["ROGUE"] = {
     2764, -- ["Throw"], -- 30 (Throwing Specialization: +5, +10)
     3018, -- ["Shoot"], -- 30
     2094, -- ["Blind"], -- 15
+    6770, -- ["Sap"], -- 10
 --    8676, -- ["Ambush"], -- 5 (Glyph of Ambush: +5)
 --    921, -- ["Pick Pocket"], -- 5 (Glyph of Pick Pocket: + 5)
     2098, -- ["Eviscerate"], -- 5
 }
 
 FriendSpells["SHAMAN"] = {
-    331, -- ["Healing Wave"], -- 40
+    8004, -- ["Healing Surge"], -- 40
     546, -- ["Water Walking"], -- 30
 }
 HarmSpells["SHAMAN"] = {
     403, -- ["Lightning Bolt"], -- 30 (Elemental Reach: +5)
     370, -- ["Purge"], -- 30
     8042, -- ["Earth Shock"], -- 25 (Elemental Reach: +7; Gladiator Gloves: +5)
+    57994, -- ["Wind Shear"], -- 25
     73899, -- ["Primal Strike"],. -- 5
 }
 
@@ -177,9 +183,9 @@ FriendSpells["WARLOCK"] = {
     5697, -- ["Unending Breath"], -- 30
 }
 HarmSpells["WARLOCK"] = {
-    348, -- ["Immolate"], -- 40
+    686, -- ["Shadow Bolt"], -- 40
     27243, -- ["Seed of Corruption"], -- 35
-    5019, -- ["Shoot"], -- 30
+    5782, -- ["Fear"], -- 30
     18223, -- ["Curse of Exhaustion"], -- 30 (Glyph of Exhaustion: +5)
 }
 
@@ -193,6 +199,15 @@ HarmSpells["DEATHKNIGHT"] = {
     45477, -- ["Icy Touch"], -- 20 (Icy Reach: +5, +10)
     50842, -- ["Pestilence"], -- 5
     45902, -- ["Blood Strike"], -- 5, but requires weapon, use Pestilence if possible, so keep it after Pestilence in this list
+}
+
+FriendSpells["MONK"] = {
+	115450, -- ["Detox"] -- 40
+}
+
+HarmSpells["MONK"]= {
+	115546, -- ["Provoke"], -- 40
+	100780, -- ["Jab"] -- 5
 }
 
 -- Items [Special thanks to Maldivia for the nice list]
@@ -975,32 +990,28 @@ end
 -- << load-time initialization 
 
 function lib:activate()
-    if not self.frame then
-        local frame = CreateFrame("Frame")
-        self.frame = frame
-        frame:RegisterEvent("LEARNED_SPELL_IN_TAB")
-        frame:RegisterEvent("CHARACTER_POINTS_CHANGED")
-        frame:RegisterEvent("PLAYER_TALENT_UPDATE")
-        frame:RegisterEvent("GLYPH_ADDED")
-        frame:RegisterEvent("GLYPH_REMOVED")
-        frame:RegisterEvent("GLYPH_UPDATED")
-        local _, playerClass = UnitClass("player")
-        if playerClass == "MAGE" or playerClass == "SHAMAN" then
-            -- Mage and Shaman gladiator gloves modify spell ranges
-            frame:RegisterEvent("UNIT_INVENTORY_CHANGED")
-        end
-    end
-    initItemRequests()
-    self.frame:SetScript("OnEvent", function(frame, ...) self:OnEvent(...) end)
-    self.frame:SetScript("OnUpdate", function(frame, elapsed)
-        lastUpdate = lastUpdate + elapsed
-        if lastUpdate < UpdateDelay then
-            return
-        end
-        lastUpdate = 0
-        self:initialOnUpdate()
-    end)
-    self:scheduleInit()
+	if not self.frame then
+		local frame = CreateFrame("Frame")
+		self.frame = frame
+		frame:RegisterEvent("LEARNED_SPELL_IN_TAB")
+		frame:RegisterEvent("CHARACTER_POINTS_CHANGED")
+		frame:RegisterEvent("PLAYER_TALENT_UPDATE")
+		frame:RegisterEvent("GLYPH_ADDED")
+		frame:RegisterEvent("GLYPH_REMOVED")
+		frame:RegisterEvent("GLYPH_UPDATED")
+		frame:RegisterEvent("UNIT_INVENTORY_CHANGED", "PLAYER")
+	end
+	initItemRequests()
+	self.frame:SetScript("OnEvent", function(frame, ...) self:OnEvent(...) end)
+	self.frame:SetScript("OnUpdate", function(frame, elapsed)
+		lastUpdate = lastUpdate + elapsed
+		if lastUpdate < UpdateDelay then
+		  return
+		end
+		lastUpdate = 0
+		self:initialOnUpdate()
+	end)
+	self:scheduleInit()
 end
 
 --- BEGIN CallbackHandler stuff
