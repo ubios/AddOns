@@ -11,6 +11,18 @@ E.Options.args.general.args.minimap.args.hideincombat = {
 	set = function(info, value) E.private.general.minimap.hideincombat = value; E:GetModule('Minimap'):UpdateSettings() end,					
 }
 
+E.Options.args.general.args.minimap.args.fadeindelay = {
+	order = 21,
+	type = 'range',
+	name = L["FadeIn Delay"],
+	desc = L["The time to wait before fading the minimap back in after combat hide. (0 = Disabled)"],
+	min = 0, max = 20, step = 1,
+	get = function(info) return E.private.general.minimap.fadeindelay end,	
+	set = function(info, value) E.private.general.minimap.fadeindelay = value end,	
+	disabled = function() return not E.private.general.minimap.hideincombat end,
+}
+
+
 E.Options.args.general.args.minimapbar = {
 	order = 2,
 	get = function(info) return E.private.general.minimapbar[ info[#info] ] end,	

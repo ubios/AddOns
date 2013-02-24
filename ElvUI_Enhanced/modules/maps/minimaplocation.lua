@@ -68,8 +68,18 @@ local function HideMinimap()
 	-- FadeFrame(cluster, "OUT", cluster:GetAlpha(), 0, .5, function() cluster:Hide() end)
 end
 
+local function FadeInMinimap()
+	if not InCombatLockdown() then
+		FadeFrame(cluster, "IN", 0, 1, .5, function() if not InCombatLockdown() then cluster:Show() end end)
+	end
+end
+
 local function ShowMinimap()
-	FadeFrame(cluster, "IN", 0, 1, .5, function() if not InCombatLockdown() then cluster:Show() end end)
+	if E.private.general.minimap.fadeindelay == 0 then
+		FadeInMinimap()		
+	else
+		E:Delay(E.private.general.minimap.fadeindelay, FadeInMinimap)
+	end
 end
 
 hooksecurefunc(M, 'Update_ZoneText', function()
