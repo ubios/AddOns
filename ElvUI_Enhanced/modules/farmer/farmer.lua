@@ -207,6 +207,24 @@ function F:DelayedUpdateLayout()
 	E:Delay(5, F.UpdateLayout)
 end
 
+function F:CooldownUpdate()
+	for _, button in pairs(toolButtons) do
+		if button.cooldown then
+			button.cooldown:SetCooldown(GetItemCooldown(button.itemId))
+		end
+	end
+	for _, button in pairs(seedButtons) do
+		if button.cooldown then
+			button.cooldown:SetCooldown(GetItemCooldown(button.itemId))
+		end
+	end
+	for _, button in pairs(portalButtons) do
+		if button.cooldown then
+			button.cooldown:SetCooldown(GetItemCooldown(button.itemId))
+		end
+	end
+end
+
 function F:CreateFarmButton(index, owner, buttonType, name, texture, allowDrop)
 	local button = CreateFrame("Button", ("FarmerButton%d"):format(index), owner, "SecureActionButtonTemplate")
 	button:StyleButton();
@@ -214,7 +232,7 @@ function F:CreateFarmButton(index, owner, buttonType, name, texture, allowDrop)
 	button:SetNormalTexture(nil);
 
 	button:Size(30, 30)
-
+	
 	button.sortname = name
 	button.itemId = index
 	
@@ -225,8 +243,11 @@ function F:CreateFarmButton(index, owner, buttonType, name, texture, allowDrop)
 
 	button.text = button:CreateFontString(nil, "OVERLAY")
 	button.text:SetFont(E.media.normFont, 12, "OUTLINE")
-	button.text:SetPoint("BOTTOMRIGHT", button, 1, 2)
-	
+	button.text:SetPoint("BOTTOMRIGHT", button, 1, 2)	
+
+	button.cooldown = CreateFrame("Cooldown", ("FarmerButton%dCooldown"):format(index), button)
+	button.cooldown:SetAllPoints(button)
+
 	button:SetScript("OnEnter", function()
 		GameTooltip:SetOwner(button, 'ANCHOR_TOPLEFT', 2, 4)
 		GameTooltip:ClearLines()
@@ -346,6 +367,7 @@ function F:CreateFrames()
 	F:RegisterEvent("PLAYER_REGEN_ENABLED", "DelayedUpdateLayout")	
 	F:RegisterEvent("PLAYER_ENTERING_WORLD", "DelayedUpdateLayout")
 	F:RegisterEvent("BAG_UPDATE", "FarmerInventoryUpdate")
+	F:RegisterEvent("BAG_UPDATE_COOLDOWN", "CooldownUpdate")
 end
 
 function F:StartFarmBarLoader()
