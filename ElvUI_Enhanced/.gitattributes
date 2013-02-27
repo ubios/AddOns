@@ -2,7 +2,7 @@
 * text=auto
 
 # Force CRLF line endings
-*.lua 	 eol=crlf
+text eol=crlf
 
 # Custom for Visual Studio
 *.cs     diff=csharp
