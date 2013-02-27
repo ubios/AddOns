@@ -245,7 +245,7 @@ function F:ZoneChanged()
 		end
 	end
 
-	if F:InFarmZone() then
+	if F:InSeedZone() then
 		F:RegisterEvent("BAG_UPDATE", "FarmerInventoryUpdate")
 		F:RegisterEvent("BAG_UPDATE_COOLDOWN", "UpdateCooldown")
 		
