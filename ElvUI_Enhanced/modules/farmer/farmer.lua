@@ -4,7 +4,7 @@ local F = E:NewModule('Farmer', 'AceHook-3.0', 'AceEvent-3.0');
 -- Idea for farming bars based on: BigButtons, by Azilroka / Sortokk
 
 local farmSeedBarAnchor, farmToolBarAnchor, farmPortalBarAnchor
-local tsort = table.sort
+local tsort, twipe = table.sort, table.wipe
 local activezones = { L["Sunsong Ranch"], L["The Halfhill Market"] }
 
 local seedButtons = {}
@@ -53,6 +53,46 @@ local portals = {
 	[91865] = { "Alliance" }, -- Darnassus Portal Shard
 	[91866] = { "Alliance" }, -- Exodar Portal Shard
 }
+
+local onMouseDown = function(self, mousebutton)
+	if mousebutton == "LeftButton" then
+		self:SetAttribute("type", self.buttonType)
+		self:SetAttribute(self.buttonType, self.sortname)
+
+		if F:IsInTable(seeds, self.itemId) and UnitName("target") ~= L["Tilled Soil"] then
+			local container, slot = F:FindItemInBags(self.itemId)
+			if container and slot then
+				self:SetAttribute("type", "macro")
+				self:SetAttribute("macrotext", format("/targetexact %s \n/use %s %s", L["Tilled Soil"], container, slot))
+			end
+		end
+		
+		if self.cooldown then 
+			self.cooldown:SetCooldown(GetItemCooldown(self.itemId))
+		end	
+	elseif mousebutton == "RightButton" and self.allowDrop then
+		self:SetAttribute("type", "click")
+		local container, slot = F:FindItemInBags(self.itemId)
+		if container and slot then
+			PickupContainerItem(container, slot)
+			DeleteCursorItem()
+		end
+	end
+end
+
+local onEnter = function(self)
+	GameTooltip:SetOwner(self, 'ANCHOR_TOPLEFT', 2, 4)
+	GameTooltip:ClearLines()
+	GameTooltip:AddDoubleLine(self.sortname)
+	if self.allowDrop then
+		GameTooltip:AddLine(L['Right-click to drop the item.'])
+	end
+	GameTooltip:Show()
+end
+
+local onLeave = function()
+	GameTooltip:Hide() 
+end
 
 function F:InSeedZone()
 	local subzone = GetSubZoneText()
@@ -144,6 +184,26 @@ function F:UpdateBarLayout(bar, anchor, buttons)
 	return count
 end
 
+function F:UpdateButtonCooldown(button)
+	if button.cooldown then
+		button.cooldown:SetCooldown(GetItemCooldown(button.itemId))
+	end
+end
+
+function F:UpdateCooldown()
+	for i = 1, 3 do
+		for _, button in ipairs(seedButtons[i]) do
+			F:UpdateButtonCooldown(button)
+		end
+	end
+	for _, button in ipairs(toolButtons) do
+		F:UpdateButtonCooldown(button)
+	end
+	for _, button in ipairs(portalButtons) do
+		F:UpdateButtonCooldown(button)
+	end
+end
+
 function F:UpdateSeedBarLayout(seedBar, anchor, buttons, category)
 	local count, horizontal = 0, E.private.farmer.farmbars.seedbardirection == 'HORIZONTAL'
 	seedBar:ClearAllPoints()
@@ -185,11 +245,25 @@ function F:ZoneChanged()
 		end
 	end
 
-	F:UpdateLayout()
+	if F:InFarmZone() then
+		F:RegisterEvent("BAG_UPDATE", "FarmerInventoryUpdate")
+		F:RegisterEvent("BAG_UPDATE_COOLDOWN", "UpdateCooldown")
+		
+		F:FarmerInventoryUpdate()
+	else
+		F:UnregisterEvent("BAG_UPDATE")
+		F:UnregisterEvent("BAG_UPDATE_COOLDOWN")
+	end	
+	
+		F:UpdateLayout()
 end
 
 function F:UpdateLayout()
-	if InCombatLockdown() then return	end	
+	if InCombatLockdown() then
+		F:RegisterEvent("PLAYER_REGEN_ENABLED", "UpdateLayout")	
+		return	
+ 	end
+ 	
 	for i=1, 3 do
 		F:UpdateBar(_G[("FarmSeedBar%d"):format(i)], F.UpdateSeedBarLayout, F.InSeedZone, farmSeedBarAnchor, seedButtons[i], i)
 	end
@@ -201,28 +275,12 @@ function F:UpdateLayout()
 	else
 		farmSeedBarAnchor:Size(114, 320)
 	end
+	
+	F:UnregisterEvent("PLAYER_REGEN_ENABLED")
 end
 
 function F:DelayedUpdateLayout()
 	E:Delay(5, F.UpdateLayout)
-end
-
-function F:CooldownUpdate()
-	for _, button in pairs(toolButtons) do
-		if button.cooldown then
-			button.cooldown:SetCooldown(GetItemCooldown(button.itemId))
-		end
-	end
-	for _, button in pairs(seedButtons) do
-		if button.cooldown then
-			button.cooldown:SetCooldown(GetItemCooldown(button.itemId))
-		end
-	end
-	for _, button in pairs(portalButtons) do
-		if button.cooldown then
-			button.cooldown:SetCooldown(GetItemCooldown(button.itemId))
-		end
-	end
 end
 
 function F:CreateFarmButton(index, owner, buttonType, name, texture, allowDrop)
@@ -235,6 +293,8 @@ function F:CreateFarmButton(index, owner, buttonType, name, texture, allowDrop)
 	
 	button.sortname = name
 	button.itemId = index
+	button.allowDrop = allowDrop
+	button.buttonType = buttonType
 	
 	button.icon = button:CreateTexture(nil, "OVERLAY")
 	button.icon:SetTexture(texture)
@@ -245,44 +305,14 @@ function F:CreateFarmButton(index, owner, buttonType, name, texture, allowDrop)
 	button.text:SetFont(E.media.normFont, 12, "OUTLINE")
 	button.text:SetPoint("BOTTOMRIGHT", button, 1, 2)	
 
-	button.cooldown = CreateFrame("Cooldown", ("FarmerButton%dCooldown"):format(index), button)
-	button.cooldown:SetAllPoints(button)
+	if select(3, GetItemCooldown(button.itemId)) == 1 then
+		button.cooldown = CreateFrame("Cooldown", ("FarmerButton%dCooldown"):format(index), button)
+		button.cooldown:SetAllPoints(button)
+	end
 
-	button:SetScript("OnEnter", function()
-		GameTooltip:SetOwner(button, 'ANCHOR_TOPLEFT', 2, 4)
-		GameTooltip:ClearLines()
-		GameTooltip:AddDoubleLine(name)
-		if allowDrop then
-			GameTooltip:AddLine(L['Right-click to drop the item.'])
-		end
-		GameTooltip:Show()
-	end)
-	
-	button:SetScript("OnLeave", function()
-		GameTooltip:Hide() 
-	end)
-
-	button:SetScript("OnMouseDown", function(self, mousebutton)
-		if mousebutton == "LeftButton" then
-			button:SetAttribute("type", buttonType)
-			button:SetAttribute(buttonType, name)
-
-			if F:IsInTable(seeds, button.itemId) and UnitName("target") ~= L["Tilled Soil"] then
-				local container, slot = F:FindItemInBags(button.itemId)
-				if container and slot then
-					button:SetAttribute("type", "macro")
-					button:SetAttribute("macrotext", format("/targetexact %s \n/use %s %s", L["Tilled Soil"], container, slot))
-				end
-			end
-		elseif mousebutton == "RightButton" and allowDrop then
-			button:SetAttribute("type", "click")
-			local container, slot = F:FindItemInBags(button.itemId)
-			if container and slot then
-				PickupContainerItem(container, slot)
-				DeleteCursorItem()
-			end
-		end
-	end)
+	button:SetScript("OnEnter", onEnter)
+	button:SetScript("OnLeave", onLeave)
+	button:SetScript("OnMouseDown", onMouseDown)
 	
 	return button
 end				
@@ -361,13 +391,12 @@ function F:CreateFrames()
 	end
 	
 	F:FarmerInventoryUpdate()
-	F:UpdateLayout()
-	
-	F:RegisterEvent("ZONE_CHANGED", "ZoneChanged")
-	F:RegisterEvent("PLAYER_REGEN_ENABLED", "DelayedUpdateLayout")	
+
 	F:RegisterEvent("PLAYER_ENTERING_WORLD", "DelayedUpdateLayout")
-	F:RegisterEvent("BAG_UPDATE", "FarmerInventoryUpdate")
-	F:RegisterEvent("BAG_UPDATE_COOLDOWN", "CooldownUpdate")
+	F:RegisterEvent("ZONE_CHANGED", "ZoneChanged")
+
+	F:DelayedUpdateLayout()
+	F:ZoneChanged()
 end
 
 function F:StartFarmBarLoader()
