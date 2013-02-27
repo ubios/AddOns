@@ -83,6 +83,8 @@ end
 local CF = CreateFrame('Frame')
 CF:RegisterEvent("PLAYER_ENTERING_WORLD")
 CF:SetScript("OnEvent", function(self, event)
+	if not E.private["unitframe"].enable then return end
+
 	E:Delay(15, UF:EnhanceDruidEclipse())
 	E:Delay(18, UF:Construct_GPS(_G["ElvUF_Target"], 'target'))
 	E:Delay(20, UF:Construct_GPS(_G["ElvUF_Focus"], 'focus'))
