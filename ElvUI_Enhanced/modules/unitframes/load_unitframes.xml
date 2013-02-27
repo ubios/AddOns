@@ -1,5 +1,4 @@
 <Ui xmlns="http://www.blizzard.com/wow/ui/">	
-	<Script file='options.lua'/>
 	<Script file='construct_elements.lua'/>
 	<Script file='update_elements.lua'/>
 	<Script file='tags.lua'/>	
