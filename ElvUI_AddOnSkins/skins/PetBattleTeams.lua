@@ -1,4 +1,4 @@
-local E, L, V, P, G,_ = unpack(ElvUI)
+﻿local E, L, V, P, G,_ = unpack(ElvUI)
 local AS = E:GetModule('AddOnSkins')
 local S = E:GetModule('Skins')
 
@@ -20,7 +20,7 @@ local function SkinPetBattleTeams(self)
 			self.BorderBottom:SetTexture(nil)
 			self.BorderBottomRight:SetTexture(nil)
 			self.BorderBottomLeft:SetTexture(nil)
-			AS:SkinFrame(self, true)
+			self:SetTemplate('Transparent')
 		end)
 	end)
 end

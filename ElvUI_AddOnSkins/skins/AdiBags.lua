@@ -1,4 +1,4 @@
-local E, L, V, P, G,_ = unpack(ElvUI)
+﻿local E, L, V, P, G,_ = unpack(ElvUI)
 local AS = E:GetModule('AddOnSkins')
 local S = E:GetModule('Skins')
 
@@ -29,7 +29,7 @@ local function AdiSkin(self,event)
 	if event == 'BANKFRAME_OPENED' then
 		E:Delay(0, function()
 			SkinFrame(AdiBagsContainer2)
-			AS:UnregisterEvent("BANKFRAME_OPENED")
+			AS:UnregisterEvent(name,"BANKFRAME_OPENED")
 		end)
 	end
 end

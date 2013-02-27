@@ -1,4 +1,4 @@
-local E, L, V, P, G,_ = unpack(ElvUI)
+﻿local E, L, V, P, G,_ = unpack(ElvUI)
 local AS = E:GetModule('AddOnSkins')
 local S = E:GetModule('Skins')
 
@@ -35,8 +35,8 @@ function SkinMisc(self, event)
 	if IsAddOnLoaded("Blizzard_TrainerUI") then
 		ClassTrainerFrame:HookScript("OnShow", function()
 			if ClassTrainerTrainAllButton then
-				AS:SkinFrameD(ClassTrainerTrainAllButton)
-				AS:SkinFrameD(ClassTrainerTrainButton)
+				AS:SkinFrame(ClassTrainerTrainAllButton, 'Default')
+				AS:SkinFrame(ClassTrainerTrainButton, 'Default')
 			end
 		end)
 	end

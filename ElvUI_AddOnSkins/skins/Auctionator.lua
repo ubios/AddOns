@@ -1,13 +1,12 @@
-
+﻿
 local E, L, V, P, G,_ = unpack(ElvUI)
 local AS = E:GetModule('AddOnSkins')
 local S = E:GetModule('Skins')
 
 local name = "AuctionatorSkin"
-function AtrSkin(self,event)
+local function AtrSkin(self,event)
 	if event == "PLAYER_ENTERING_WORLD" then return end
 	if E.private.skins.blizzard.enable ~= true or E.private.skins.blizzard.auctionhouse ~= true then return end
-	if not auctionatorskinned then
 	AuctionsCancelAuctionButton:Point("RIGHT", AuctionFrameMoneyFrame, "RIGHT", 554, 0)
 	AuctionsCloseButton:ClearAllPoints()
 	AuctionsCloseButton:Point("RIGHT", AuctionsCancelAuctionButton, "RIGHT", 86, 0)
@@ -167,15 +166,15 @@ function AtrSkin(self,event)
 	AS:SkinFrame(Atr_FullScanResults)
 	AS:SkinFrame(Atr_Adv_Search_Dialog)
 	AS:SkinFrame(Atr_FullScanFrame)
-	AS:SkinFrameD(Atr_HeadingsBar)
+	AS:SkinFrame(Atr_HeadingsBar, 'Default')
 	Atr_HeadingsBar:Height(19)
 	AS:SkinFrame(Atr_Error_Frame)
-	AS:SkinFrameD(Atr_Hlist)
+	AS:SkinFrame(Atr_Hlist, 'Default')
 	Atr_Hlist:Width(196)
 	Atr_Hlist:ClearAllPoints()
 	Atr_Hlist:Point("TOPLEFT", -195, -75)
-	AS:SkinFrameD(Atr_Buy_Confirm_Frame)
-	AS:SkinFrameD(Atr_CheckActives_Frame)
+	AS:SkinFrame(Atr_Buy_Confirm_Frame, 'Default')
+	AS:SkinFrame(Atr_CheckActives_Frame, 'Default')
 	Atr_SrchSListButton:Width(196)
 	Atr_MngSListsButton:Width(196)
 	Atr_NewSListButton:Width(196)
@@ -197,10 +196,7 @@ function AtrSkin(self,event)
 	end
 	AuctionFrameTab1:Point("TOPLEFT", AuctionFrame, "BOTTOMLEFT", 5, 2)
 
-		auctionatorskinned = true
-	end
-
-	--AS:UnregisterEvent(name,self,"AUCTION_HOUSE_SHOW")
+	AS:UnregisterEvent(name,"AUCTION_HOUSE_SHOW")
 end
 
 AS:RegisterSkin(name,AtrSkin,'AUCTION_HOUSE_SHOW')

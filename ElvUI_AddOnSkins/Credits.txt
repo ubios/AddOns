@@ -1,4 +1,4 @@
-Tukz and Elv for the amazing UI's of awesomeness.
+﻿Tukz and Elv for the amazing UI's of awesomeness.
 
 Main Functions = Camealion / Azilroka / Sortokk
 ElvUI Backend = Sortokk
