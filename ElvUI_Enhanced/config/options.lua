@@ -1,5 +1,7 @@
 local E, L, V, P, G, _ = unpack(ElvUI); --Inport: Engine, Locales, PrivateDB, ProfileDB, GlobalDB, Localize Underscore
 local EO = E:NewModule('EnhancedOptions', 'AceEvent-3.0')
+local EP = LibStub("LibElvUIPlugin-1.0")
+local ElvUIEnhanced, ns = ...
 
 local tsort = table.sort
 
@@ -411,7 +413,7 @@ function EO:UnitFramesOptions()
 	}
 end
 
-function EO:AddOptions()
+function EO:GetOptions()
 	EO:DataTextOptions()
 	EO:EquipmentOptions()
 	EO:FarmerOptions()
@@ -421,17 +423,8 @@ function EO:AddOptions()
 	EO:UnitFramesOptions()
 end
 
-function EO:LoadOptions(event, addon)
-	-- Preparations for next version of ElvUI
-	if addon == 'ElvUI_Config' then
-		EO:AddOptions()
-		EO:UnregisterEvent('ADDON_LOADED')
-	end
-end
-
 function EO:Initialize()
-	--EO:RegisterEvent('ADDON_LOADED', 'LoadOptions')
-	EO:AddOptions()
+  EP:RegisterPlugin(ElvUIEnhanced, EO.GetOptions)
 end
 
 E:RegisterModule(EO:GetName())
