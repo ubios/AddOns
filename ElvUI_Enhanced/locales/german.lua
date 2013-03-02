@@ -39,6 +39,14 @@ L["Only show durabitlity information for items that are damaged."] = "Nur die Au
 -- GPS module
 L['Show the direction and distance to the selected party or raid member.'] = "Anzeigen von der Richtung und Entfernung zum ausgewählten Gruppen oder Schlachtzugsmitglied."
 
+-- Minimap Location
+L['Above Minimap'] = "Oberhalb der Minimap"
+L['Location Digits'] = "Stellen der Umgebungskoordinaten"
+L['Number of digits for map location.'] = "Anzahl der stellen fur die Umgebungskoordinaten."
+L["Hide minimap while in combat."] = "Ausblenden Minimap während des Kampfes."
+L["FadeIn Delay"] = "FadeIn Verzögerung"
+L["The time to wait before fading the minimap back in after combat hide. (0 = Disabled)"] = "Die Zeit vor dem wieder Einblenden der Minimap nach dem Kampf. (0 = deaktiviert)"
+
 -- Minimap Buttons
 L['Skin Buttons'] = "Skin Knöpfen"
 L['Skins the minimap buttons in Elv UI style.'] = 'Skin die Minikarte Knöpfe in ElvUI Stil.'
