@@ -191,6 +191,8 @@ function F:UpdateButtonCooldown(button)
 end
 
 function F:UpdateCooldown()
+	if not F:InSeedZone() then return end
+
 	for i = 1, 3 do
 		for _, button in ipairs(seedButtons[i]) do
 			F:UpdateButtonCooldown(button)
@@ -305,10 +307,8 @@ function F:CreateFarmButton(index, owner, buttonType, name, texture, allowDrop)
 	button.text:SetFont(E.media.normFont, 12, "OUTLINE")
 	button.text:SetPoint("BOTTOMRIGHT", button, 1, 2)	
 
-	if select(3, GetItemCooldown(button.itemId)) == 1 then
-		button.cooldown = CreateFrame("Cooldown", ("FarmerButton%dCooldown"):format(index), button)
-		button.cooldown:SetAllPoints(button)
-	end
+	button.cooldown = CreateFrame("Cooldown", ("FarmerButton%dCooldown"):format(index), button)
+	button.cooldown:SetAllPoints(button)
 
 	button:SetScript("OnEnter", onEnter)
 	button:SetScript("OnLeave", onLeave)
