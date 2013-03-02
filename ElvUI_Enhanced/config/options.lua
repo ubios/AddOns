@@ -259,8 +259,19 @@ end
 function EO:MapOptions()
 	local MB = E:GetModule('MinimapButtons')
 
-	E.Options.args.general.args.minimap.args.hideincombat = {
+	E.Options.args.general.args.minimap.args.locationdigits = {
 		order = 20,
+		type = 'range',
+		name = L['Location Digits'],
+		desc = L['Number of digits for map location.'],
+		min = 0, max = 2, step = 1,
+		get = function(info) return E.private.general.minimap.locationdigits end,
+		set = function(info, value) E.private.general.minimap.locationdigits = value; E:GetModule('Minimap'):UpdateSettings() end,					
+		disabled = function() return E.db.general.minimap.locationText ~= 'ABOVE' end,
+	}
+
+	E.Options.args.general.args.minimap.args.hideincombat = {
+		order = 21,
 		type = 'toggle',
 		name = L["Combat Hide"],
 		desc = L["Hide minimap while in combat."],
@@ -269,7 +280,7 @@ function EO:MapOptions()
 	}
 	
 	E.Options.args.general.args.minimap.args.fadeindelay = {
-		order = 21,
+		order = 22,
 		type = 'range',
 		name = L["FadeIn Delay"],
 		desc = L["The time to wait before fading the minimap back in after combat hide. (0 = Disabled)"],

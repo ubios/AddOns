@@ -5,13 +5,19 @@ local GetPlayerMapPosition = GetPlayerMapPosition
 local init = false
 local cluster, panel, location, xMap, yMap
 
+local digits ={
+	[0] = { .5, '%.0f' },
+	[1] = { .2, '%.1f' },
+	[2] = { .1, '%.2f' },
+}
+
 local function UpdateLocation(self, elapsed)
 	location.elapsed = (location.elapsed or 0) + elapsed
-	if location.elapsed < .1 then return end
+	if location.elapsed < digits[E.private.general.minimap.locationdigits][1] then return end
 
 	xMap.pos, yMap.pos = GetPlayerMapPosition('player')
-	xMap.text:SetFormattedText('%.2f', xMap.pos * 100)
-	yMap.text:SetFormattedText('%.2f', yMap.pos * 100)
+	xMap.text:SetFormattedText(digits[E.private.general.minimap.locationdigits][2], xMap.pos * 100)
+	yMap.text:SetFormattedText(digits[E.private.general.minimap.locationdigits][2], yMap.pos * 100)
 
 	location.elapsed = 0
 end

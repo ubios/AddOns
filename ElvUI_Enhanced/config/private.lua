@@ -7,6 +7,7 @@ V.general.autorepchange = true
 
 V.general.minimap.hideincombat = false
 V.general.minimap.fadeindelay = 5
+V.general.minimap.locationdigits = 1
 
 V.general.minimapbar = {
 	['skinButtons'] = true,
