@@ -46,6 +46,8 @@ function EQ:CheckForGearChange()
 end
 
 function EQ:UpdateTalentConfiguration()
+	if not E.Options.args.equipment then return end
+
 	local specialization = GetSpecialization(false, false, 1)
 	if (specialization) then
 		E.Options.args.equipment.args.specialization.args.primary.name = select(2, GetSpecializationInfo(specialization)) or L["Primary Talent"]
