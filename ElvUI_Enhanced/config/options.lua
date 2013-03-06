@@ -53,6 +53,7 @@ end
 
 function EO:EquipmentOptions()
 	local ME = E:GetModule('MiscEnh')
+	local EQ = E:GetModule('Equipment')
 
 	E.Options.args.equipment = {
 		type = 'group',
@@ -185,6 +186,8 @@ function EO:EquipmentOptions()
 			},
 		},
 	}
+	
+	EQ:UpdateTalentConfiguration()
 end
 
 function EO:FarmerOptions()
@@ -424,17 +427,6 @@ function EO:UnitFramesOptions()
 	}
 end
 
-function EO:UpdateTalentConfiguration()
-	local specialization = GetSpecialization(false, false, 1)
-	if (specialization) then
-		E.Options.args.equipment.args.specialization.args.primary.name = select(2, GetSpecializationInfo(specialization)) or L["Primary Talent"]
-	end
-	specialization = GetSpecialization(false, false, 2)
-	if (specialization) then
-		E.Options.args.equipment.args.specialization.args.secondary.name = select(2, GetSpecializationInfo(specialization)) or L["Secondary Talent"]
-	end
-end
-
 function EO:GetOptions()
 	EO:DataTextOptions()
 	EO:EquipmentOptions()
@@ -443,7 +435,6 @@ function EO:GetOptions()
 	EO:MiscOptions()
 	EO:NameplateOptions()
 	EO:UnitFramesOptions()
-	EO:UpdateTalentConfiguration()
 end
 
 function EO:Initialize()
