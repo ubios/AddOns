@@ -11,6 +11,8 @@ local seedButtons = {}
 local toolButtons = {}
 local portalButtons = {}
 
+local NUM_SEED_BARS = 5
+
 local seeds = {
 	[79102] = { 1 }, -- GreenCabbageSeeds
 	[89328] = { 1 }, -- JadeSquashSeeds
@@ -22,17 +24,33 @@ local seeds = {
 	[89329] = { 1 }, -- StripedMelonSeeds
 	[80595] = { 1 }, -- WhiteTurnipSeeds
 	[89326] = { 1 }, -- WitchberrySeeds
+	[80809] = { 3 }, -- Bag of Green Cabbage Seeds
+	[89848] = { 3 }, -- Bag of Jade Squash Seeds
+	[84782] = { 3 }, -- Bag of Juicycrunch Carrot Seeds
+	[85153] = { 3 }, -- Bag of Mogu Pumpkin Seeds
+	[85162] = { 3 }, -- Bag of Pink Turnip Seeds
+	[85158] = { 3 }, -- Bag of Red Blossom Leek Seeds
+	[84783] = { 3 }, -- Bag of Scallion Seeds
+	[89849] = { 3 }, -- Bag of Striped Melon Seeds
+	[85163] = { 3 }, -- Bag of White Turnip Seeds
+	[89847] = { 3 }, -- Bag of Witchberry Seeds
 	[85216] = { 2 }, -- EnigmaSeed
 	[85217] = { 2 }, -- MagebulbSeed
-	[85219] = { 2 }, -- OminousSeed
 	[89202] = { 2 }, -- RaptorleafSeed
 	[85215] = { 2 }, -- SnakerootSeed
 	[89233] = { 2 }, -- SongbellSeed
-	[91806] = { 2 }, -- UnstablePortalShard
 	[89197] = { 2 }, -- WindshearCactusSeed
-	[85267] = { 3 }, -- AutumnBlossomSapling
-	[85268] = { 3 }, -- SpringBlossomSapling
-	[85269] = { 3 }, -- WinterBlossomSapling
+	[85219] = { 2 }, -- OminousSeed
+	[91806] = { 2 }, -- UnstablePortalShard
+	[95449] = { 4 }, -- Bag of Enigma Seeds
+	[95451] = { 4 }, -- Bag of Magebulb Seeds
+	[95457] = { 4 }, -- Bag of Raptorleaf Seeds
+	[95447] = { 4 }, -- Bag of Snakeroot Seeds
+	[95445] = { 4 }, -- Bag of Songbell Seeds
+	[95454] = { 4 }, -- Bag of Windshear Cactus Seeds	
+	[85267] = { 5 }, -- AutumnBlossomSapling
+	[85268] = { 5 }, -- SpringBlossomSapling
+	[85269] = { 5 }, -- WinterBlossomSapling
 }
 
 local tools = {
@@ -137,7 +155,7 @@ end
 function F:FarmerInventoryUpdate()
 	if InCombatLockdown() then return end
 	
-	for i = 1, 3 do
+	for i = 1, NUM_SEED_BARS do
 		for _, button in ipairs(seedButtons[i]) do
 			button.items = GetItemCount(button.itemId)
 			button.text:SetText(button.items)
@@ -193,7 +211,7 @@ end
 function F:UpdateCooldown()
 	if not F:InSeedZone() then return end
 
-	for i = 1, 3 do
+	for i = 1, NUM_SEED_BARS do
 		for _, button in ipairs(seedButtons[i]) do
 			F:UpdateButtonCooldown(button)
 		end
@@ -209,7 +227,7 @@ end
 function F:UpdateSeedBarLayout(seedBar, anchor, buttons, category)
 	local count, horizontal = 0, E.private.farmer.farmbars.seedbardirection == 'HORIZONTAL'
 	seedBar:ClearAllPoints()
-	seedBar:Point("TOPLEFT", anchor, "TOPLEFT", horizontal and 0 or (category - 1)* 38, horizontal and -((category - 1)* 38) or 0)
+	seedBar:Point("TOPLEFT", anchor, "TOPLEFT", horizontal and 0 or (category - 1)* 34, horizontal and -((category - 1)* 34) or 0)
 	
 	for i, button in ipairs(buttons) do
 		button:ClearAllPoints()
@@ -227,13 +245,14 @@ function F:UpdateSeedBarLayout(seedBar, anchor, buttons, category)
 	return count
 end
 
-function F:UpdateBar(bar, layoutfunc, zonecheck, anchor, buttons, category)
-	local count = layoutfunc(self, bar, anchor, buttons, category)
+function F:UpdateBar(bar, layoutfunc, zonecheck, anchor, buttons, position)
+	local count = layoutfunc(self, bar, anchor, buttons, position)
 	if (E.private.farmer.farmbars.enable and count > 0 and zonecheck(self) and not InCombatLockdown()) then
 		bar:Show()
 	else
 		bar:Hide()
 	end
+	return count > 0
 end
 
 function F:ZoneChanged()
@@ -266,16 +285,19 @@ function F:UpdateLayout()
 		return	
  	end
  	
-	for i=1, 3 do
-		F:UpdateBar(_G[("FarmSeedBar%d"):format(i)], F.UpdateSeedBarLayout, F.InSeedZone, farmSeedBarAnchor, seedButtons[i], i)
+ 	local position = 1
+	for i=1, NUM_SEED_BARS do
+		if F:UpdateBar(_G[("FarmSeedBar%d"):format(i)], F.UpdateSeedBarLayout, F.InSeedZone, farmSeedBarAnchor, seedButtons[i], position) then
+			position = position + 1
+		end
 	end
 	F:UpdateBar(_G["FarmToolBar"], F.UpdateBarLayout, F.InFarmZone, farmToolBarAnchor, toolButtons)
 	F:UpdateBar(_G["FarmPortalBar"], F.UpdateBarLayout, F.InFarmZone, farmPortalBarAnchor, portalButtons)
 	
 	if E.private.farmer.farmbars.seedbardirection == 'HORIZONTAL' then
-		farmSeedBarAnchor:Size(320, 114)
+		farmSeedBarAnchor:Size(320, ((position - 1) * 34))
 	else
-		farmSeedBarAnchor:Size(114, 320)
+		farmSeedBarAnchor:Size(((position - 1) * 34), 320)
 	end
 	
 	F:UnregisterEvent("PLAYER_REGEN_ENABLED")
@@ -352,11 +374,9 @@ function F:CreateFrames()
 		portals[k] = { v[1], GetItemInfo(k) }
 	end
 
-	for i = 1, 3 do
+	for i = 1, NUM_SEED_BARS do
 		local seedBar = CreateFrame("Frame", ("FarmSeedBar%d"):format(i), UIParent)
 		seedBar:SetFrameStrata("BACKGROUND")
-		seedBar:SetTemplate("Transparent")
-		seedBar:CreateShadow()
 		seedBar:SetPoint("CENTER", farmSeedBarAnchor, "CENTER", 0, 0)
 
 		seedButtons[i] = seedButtons[i] or {}
@@ -371,8 +391,6 @@ function F:CreateFrames()
 	
 	local toolBar = CreateFrame("Frame", "FarmToolBar", UIParent)	
 	toolBar:SetFrameStrata("BACKGROUND")
-	toolBar:SetTemplate("Transparent")
-	toolBar:CreateShadow()
 	toolBar:SetPoint("CENTER", farmToolBarAnchor, "CENTER", 0, 0)
 	for k, v in pairs(tools) do
 		tinsert(toolButtons, F:CreateFarmButton(k, toolBar, "item", v[2], v[11], true))
@@ -380,8 +398,6 @@ function F:CreateFrames()
 	
 	local portalBar = CreateFrame("Frame", "FarmPortalBar", UIParent)
 	portalBar:SetFrameStrata("BACKGROUND")
-	portalBar:SetTemplate("Transparent")
-	portalBar:CreateShadow()
 	portalBar:SetPoint("CENTER", farmPortalBarAnchor, "CENTER", 0, 0)
 	local playerFaction = UnitFactionGroup('player')
 	for k, v in pairs(portals) do
