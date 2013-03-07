@@ -198,14 +198,12 @@ function EDT:OnInitialize()
 	end)
 	
 	hooksecurefunc(LO, "SetDataPanelStyle", function()
-		if E.db.datatexts.panelTransparency then
-			Actionbar1DataPanel:SetTemplate('Transparent')
-			Actionbar3DataPanel:SetTemplate('Transparent')
-			Actionbar5DataPanel:SetTemplate('Transparent')
-		else
-			Actionbar1DataPanel:SetTemplate('Default', true)
-			Actionbar3DataPanel:SetTemplate('Default', true)
-			Actionbar5DataPanel:SetTemplate('Default', true)
+		for k, v in pairs(extrapanel) do
+			if E.db.datatexts.panelTransparency then
+				_G[('Actionbar%dDataPanel'):format(k)]:SetTemplate('Transparent')
+			else
+				_G[('Actionbar%dDataPanel'):format(k)]:SetTemplate('Default', true)
+			end
 		end
 	end)
 end
