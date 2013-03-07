@@ -1,8 +1,8 @@
 local E, L, V, P, G, _ = unpack(ElvUI); --Import: Engine, Locales, PrivateDB, ProfileDB, GlobalDB
 local EDT = E:NewModule('ExtraDataTexts')
-local ACD = LibStub("AceConfigDialog-3.0")
 local DT = E:GetModule('DataTexts')
 local AB = E:GetModule('ActionBars')
+local LO = E:GetModule('Layout')
 
 -- DT Quick Configuration based on ElvUI_HyperDT by sortokk
 
@@ -154,7 +154,7 @@ function EDT:OnInitialize()
 
 		panel:Point('TOPLEFT', actionbar, 'BOTTOMLEFT', spacer, -spacer)
 		panel:Point('BOTTOMRIGHT', actionbar, 'BOTTOMRIGHT', -spacer, -(spacer + PANEL_HEIGHT))	
-		panel:SetTemplate('Default', true)
+		panel:SetTemplate(E.db.datatexts.panelTransparency and 'Transparent' or 'Default', true)
 		
 		-- Add DataPanel to FrameLock for hiding during Pet Battles
 		E.FrameLocks[('Actionbar%dDataPanel'):format(k)] = true;
@@ -195,6 +195,18 @@ function EDT:OnInitialize()
 		tinsert(menu, 1, { text = 'None', func = function() EDT:ChangeDatatext('') end, checked = false })
 		
 		EDT:HookClickMenuToEmptyDataText()
+	end)
+	
+	hooksecurefunc(LO, "SetDataPanelStyle", function()
+		if E.db.datatexts.panelTransparency then
+			Actionbar1DataPanel:SetTemplate('Transparent')
+			Actionbar3DataPanel:SetTemplate('Transparent')
+			Actionbar5DataPanel:SetTemplate('Transparent')
+		else
+			Actionbar1DataPanel:SetTemplate('Default', true)
+			Actionbar3DataPanel:SetTemplate('Default', true)
+			Actionbar5DataPanel:SetTemplate('Default', true)
+		end
 	end)
 end
 
