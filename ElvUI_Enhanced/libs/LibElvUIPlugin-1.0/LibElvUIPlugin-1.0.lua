@@ -1,7 +1,8 @@
 if not ElvUI then return end
 
-local MAJOR, MINOR = "LibElvUIPlugin-1.0", 6
+local MAJOR, MINOR = "LibElvUIPlugin-1.0", 8
 local lib, oldminor = LibStub:NewLibrary(MAJOR, MINOR)
+
 
 if not lib then return end
 lib.plugins = {}
@@ -11,6 +12,7 @@ lib.index = 0
 --
 
 local E = ElvUI[1]
+local L = ElvUI[2]
 local _
 
 --
@@ -80,11 +82,14 @@ function lib:SetupVersionCheck(plugin)
 	RegisterAddonMessagePrefix(prefix)
 	local function SendRecieve(self, event, mprefix, message, channel, sender)
 		if event == "CHAT_MSG_ADDON" then
-			if sender == E.myname or not sender or mprefix ~= prefix then return end
+			if sender == E.myname or not sender or mprefix ~= prefix  or plugin.name == MAJOR then return end
 			
 			if not E[plugin.name.."recievedOutOfDateMessage"] then
 				if plugin.version ~= 'BETA' and tonumber(message) ~= nil and tonumber(message) > tonumber(plugin.version) then
-					E:Print("Your version of " .. plugin.name .. " is out of date. You can download the latest version from http://www.tukui.org")
+					plugin.old = true
+					plugin.newversion = tonumber(message)
+					local Pname = GetAddOnMetadata(plugin.name, "Title")
+					E:Print(L["Your version of "] .. Pname .. L[" is out of date. You can download the latest version from http://www.tukui.org"])
 					E[plugin.name.."recievedOutOfDateMessage"] = true
 				end
 			end
@@ -103,13 +108,13 @@ function lib:GetPluginOptions()
 	E.Options.args.plugins = {
         order = 10000,
         type = "group",
-        name = "Plugins",
+        name = L["Plugins"],
         guiInline = false,
         args = {
             pluginheader = {
                 order = 1,
                 type = "header",
-                name = "Plugins Loaded",
+                name = "LibElvUIPlugin-1.0."..MINOR..L[" - Plugins Loaded  (Green means you have current version, Red means out of date)"],
             },
             plugins = {
                 order = 2,
@@ -124,11 +129,19 @@ end
 function lib:GeneratePluginList()
 	list = ""
 	for _, plugin in pairs(lib.plugins) do
-		local author = GetAddOnMetadata(plugin.name, "Author")
-		if(author) then
-			list = list .. plugin.name .. " Version " .. plugin.version .. " by " .. author .. "\n"
-		else
-			list = list .. plugin.name .. " Version " .. plugin.version .. "\n"
+		if plugin.name ~= MAJOR then
+			local author = GetAddOnMetadata(plugin.name, "Author")
+			local Pname = GetAddOnMetadata(plugin.name, "Title")
+			local color = plugin.old and E:RGBToHex(1,0,0) or E:RGBToHex(0,1,0)
+			list = list .. Pname 
+			if author then
+			  list = list .. " "..L["by"].." " .. author
+			end
+			list = list .. color .. " - " ..L["Version"].." " .. plugin.version
+			if plugin.old then
+			  list = list .. L[" (Newest: "] .. plugin.newversion .. ")"
+			end
+			list = list .. "|r\n"
 		end
 	end
 	return list
