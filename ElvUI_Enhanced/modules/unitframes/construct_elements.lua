@@ -16,6 +16,8 @@ local eclipsedirection = {
 }
 
 function UF:Construct_GPS(frame, unit)
+	if not frame then return end
+	
 	local gps = CreateFrame("Frame", nil, frame)
 	gps:SetTemplate("Transparent")
 	gps:EnableMouse(false)
@@ -74,6 +76,8 @@ function UF:EnhanceUpdateRoleIcon()
 end
 
 function UF:UpdateRoleIconFrame(frame)
+	if not frame then return end
+
 	frame:UnregisterEvent("UNIT_CONNECTION")
 	frame:RegisterEvent("UNIT_CONNECTION", UF.UpdateRoleIconEnhanced)
 	
@@ -86,8 +90,8 @@ CF:SetScript("OnEvent", function(self, event)
 	if not E.private["unitframe"].enable then return end
 
 	E:Delay(15, UF:EnhanceDruidEclipse())
-	E:Delay(18, UF:Construct_GPS(_G["ElvUF_Target"], 'target'))
-	E:Delay(20, UF:Construct_GPS(_G["ElvUF_Focus"], 'focus'))
-	E:Delay(30, UF:EnhanceUpdateRoleIcon())
+	E:Delay(20, UF:Construct_GPS(_G["ElvUF_Target"], 'target'))
+	E:Delay(25, UF:Construct_GPS(_G["ElvUF_Focus"], 'focus'))
+	E:Delay(40, UF:EnhanceUpdateRoleIcon())
 	self:UnregisterEvent("PLAYER_ENTERING_WORLD")
 end)
