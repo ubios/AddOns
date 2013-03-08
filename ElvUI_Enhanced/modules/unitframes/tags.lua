@@ -11,12 +11,6 @@ ElvUF.Tags.Methods['afk'] = function(unit)
 	end
 end
 
-ElvUF.Tags.Events['name:abbrev'] = 'UNIT_NAME_UPDATE'
-ElvUF.Tags.Methods['name:abbrev'] = function(unit)
-	local name = UnitName(unit)
-	return name ~= nil and E:ShortenString(name, 5) or ''
-end
-
 ElvUF.Tags.Events['xthreat:percent'] = 'UNIT_THREAT_LIST_UPDATE GROUP_ROSTER_UPDATE'
 ElvUF.Tags.Methods['xthreat:percent'] = function(unit)
 	if UnitCanAttack('player', unit) then
