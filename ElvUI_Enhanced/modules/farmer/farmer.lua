@@ -73,6 +73,8 @@ local portals = {
 }
 
 local onMouseDown = function(self, mousebutton)
+	if InCombatLockdown() then return end
+
 	if mousebutton == "LeftButton" then
 		self:SetAttribute("type", self.buttonType)
 		self:SetAttribute(self.buttonType, self.sortname)
