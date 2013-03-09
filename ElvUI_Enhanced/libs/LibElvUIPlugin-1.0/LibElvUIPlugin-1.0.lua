@@ -1,8 +1,7 @@
-if not ElvUI then return end
+﻿if not ElvUI then return end
 
 local MAJOR, MINOR = "LibElvUIPlugin-1.0", 8
 local lib, oldminor = LibStub:NewLibrary(MAJOR, MINOR)
-
 
 if not lib then return end
 lib.plugins = {}
@@ -14,6 +13,7 @@ lib.index = 0
 local E = ElvUI[1]
 local L = ElvUI[2]
 local _
+local concat, format, join = string.concat, string.format, string.join
 
 --
 -- Plugin table format:
@@ -27,6 +27,24 @@ local _
 -- RegisterPlugin(name,callback)
 --   Registers a module with the given name and option callback, pulls version info from metadata
 --
+
+-- MULTI Language Support (Default Language: English)
+local MSG_OUTDATED = "Your version of %s is out of date. You can download the latest version from http://www.tukui.org"
+local HDR_CONFIG = "Plugins"
+local HDR_INFORMATION = "LibElvUIPlugin-1.0.%d - Plugins Loaded  (Green means you have current version, Red means out of date)"
+local INFO_BY = "by"
+local INFO_VERSION = "Version:"
+local INFO_NEW = "Newest:"
+
+if GetLocale() == "ruRU" then -- Russian Translations
+	MSG_OUTDATED = "Ваша версия %s устарела. Вы можете скачать последнюю версию на http://www.tukui.org"
+	HDR_CONFIG = "Плагины"
+	HDR_INFORMATION = "LibElvUIPlugin-1.0.%d - загруженные плагины (зеленый означает, что у вас последняя версия, красный - устаревшая)"
+	INFO_BY = "от"
+	INFO_VERSION = "Версия:"
+	INFO_NEW = "Последняя:"
+end
+
 
 function lib:RegisterPlugin(name,callback)
 	local plugin = {}
@@ -89,7 +107,7 @@ function lib:SetupVersionCheck(plugin)
 					plugin.old = true
 					plugin.newversion = tonumber(message)
 					local Pname = GetAddOnMetadata(plugin.name, "Title")
-					E:Print(L["Your version of "] .. Pname .. L[" is out of date. You can download the latest version from http://www.tukui.org"])
+					E:Print(format(MSG_OUTDATED, Pname))
 					E[plugin.name.."recievedOutOfDateMessage"] = true
 				end
 			end
@@ -106,25 +124,24 @@ end
 
 function lib:GetPluginOptions()
 	E.Options.args.plugins = {
-        order = 10000,
-        type = "group",
-        name = L["Plugins"],
-        guiInline = false,
-        args = {
-            pluginheader = {
-                order = 1,
-                type = "header",
-                name = "LibElvUIPlugin-1.0."..MINOR..L[" - Plugins Loaded  (Green means you have current version, Red means out of date)"],
-            },
-            plugins = {
-                order = 2,
-                type = "description",
-                name = lib:GeneratePluginList(),
-            },
-        }
-    }
+		order = 10000,
+		type = "group",
+		name = HDR_CONFIG,
+		guiInline = false,
+		args = {
+			pluginheader = {
+				order = 1,
+				type = "header",
+				name = format(HDR_INFORMATION, MINOR),
+			},
+			plugins = {
+				order = 2,
+				type = "description",
+				name = lib:GeneratePluginList(),
+			},
+		}
+	}
 end
-
 
 function lib:GeneratePluginList()
 	list = ""
@@ -133,15 +150,15 @@ function lib:GeneratePluginList()
 			local author = GetAddOnMetadata(plugin.name, "Author")
 			local Pname = GetAddOnMetadata(plugin.name, "Title")
 			local color = plugin.old and E:RGBToHex(1,0,0) or E:RGBToHex(0,1,0)
-			list = list .. Pname 
+			list = concat(list, Pname)
 			if author then
-			  list = list .. " "..L["by"].." " .. author
+			  list = join(' ', list, INFO_BY, author)
 			end
-			list = list .. color .. " - " ..L["Version"].." " .. plugin.version
+			list = join('', list, color, " - ", INFO_VERSION, " ", plugin.version)
 			if plugin.old then
-			  list = list .. L[" (Newest: "] .. plugin.newversion .. ")"
+			  list = join('', list, " (", INFO_NEW, " ", plugin.newversion, ")")
 			end
-			list = list .. "|r\n"
+			list = concat(list, "|r\n")
 		end
 	end
 	return list
