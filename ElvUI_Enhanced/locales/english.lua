@@ -40,6 +40,10 @@ L["Only show durabitlity information for items that are damaged."] = true
 L['GPS'] = true
 L['Show the direction and distance to the selected party or raid member.'] = true
 
+-- Attack Icon
+L['Attack Icon'] = true
+L['Show attack icon for units that are not tapped by you or your group, but still give kill credit when attacked.'] = true
+
 -- Minimap Location
 L['Above Minimap'] = true
 L['Location Digits'] = true

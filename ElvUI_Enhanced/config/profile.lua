@@ -9,6 +9,12 @@ P['unitframe']['units']['target']['gps'] = {
 	['position'] = 'BOTTOMRIGHT'
 }
 
+P['unitframe']['units']['target']['attackicon'] = {
+	['enable'] = true,
+	['xOffset'] = 24,
+	['yOffset'] = 6,
+}
+
 P['unitframe']['units']['focus']['gps']= {
 	['enable'] = true,
 	['position'] = 'LEFT'

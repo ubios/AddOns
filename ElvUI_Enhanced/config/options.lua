@@ -403,6 +403,34 @@ function EO:UnitFramesOptions()
 		},
 	}
 	
+	E.Options.args.unitframe.args.target.args.attackicon = {
+		order = 1001,
+		type = 'group',
+		name = L['Attack Icon'],
+		get = function(info) return E.db.unitframe.units['target']['attackicon'][ info[#info] ] end,
+		set = function(info, value) E.db.unitframe.units['target']['attackicon'][ info[#info] ] = value end,
+		args = {
+			enable = {
+				type = 'toggle',
+				order = 1,
+				name = L['Enable'],
+				desc = L['Show attack icon for units that are not tapped by you or your group, but still give kill credit when attacked.'],
+			},
+			xOffset = {
+				order = 4,
+				type = 'range',
+				name = L['xOffset'],
+				min = -60, max = 60, step = 1,
+			},
+			yOffset = {
+				order = 5,
+				type = 'range',
+				name = L['yOffset'],
+				min = -60, max = 60, step = 1,
+			},
+		},
+	}	
+	
 	--Focus
 	E.Options.args.unitframe.args.focus.args.gps = {
 		order = 1000,

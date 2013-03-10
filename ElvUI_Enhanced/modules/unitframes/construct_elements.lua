@@ -64,6 +64,45 @@ function UF:EnhanceDruidEclipse()
 	end
 end
 
+function UF:AddShouldIAttackIcon(frame)
+	if not frame then return end
+
+	local tag = CreateFrame("Frame", nil, frame)
+	tag:SetFrameLevel(frame:GetFrameLevel() + 8)
+	tag:EnableMouse(false)
+	
+	local size = frame.Health and frame.Health:GetHeight() - 16 or 24 
+	tag:Size(size, size)
+	tag:SetAlpha(.5)
+
+	tag.tx = tag:CreateTexture(nil, "OVERLAY")
+	tag.tx:SetTexture([[Interface\AddOns\ElvUI_Enhanced\media\textures\shield.tga]])
+	tag.tx:SetAllPoints()
+	
+	tag.db = E.db.unitframe.units.target.attackicon
+	
+	tag:RegisterEvent("PLAYER_TARGET_CHANGED")
+	tag:RegisterEvent("UNIT_COMBAT")
+	
+	tag:SetScript("OnEvent", function()
+		--if UnitIsTapped("target") and not (UnitIsTappedByPlayer("target") or UnitIsTappedByAllThreatList("target")) then
+			--tag:Hide
+		--end
+		--if UnitCanAttack("player", "target") and (not UnitIsTapped("target") or UnitIsTappedByAllThreatList("target")) then
+		--	tag:Show()	
+		--else
+		--	tag:Hide()
+		--end
+		if tag.db.enable and not UnitIsDeadOrGhost("target") and UnitCanAttack("player", "target") and UnitIsTapped("target") and not UnitIsTappedByPlayer("target") and UnitIsTappedByAllThreatList("target") then
+			tag:ClearAllPoints()
+			tag:SetPoint("CENTER", frame, "CENTER", tag.db.xOffset, tag.db.yOffset)
+			tag:Show()
+		else
+			tag:Hide()
+		end	
+	end)
+end
+
 function UF:EnhanceUpdateRoleIcon()
 	for i=1, 5 do
 		UF:UpdateRoleIconFrame(_G[("ElvUF_PartyUnitButton%d"):format(i)])
@@ -90,6 +129,7 @@ CF:SetScript("OnEvent", function(self, event)
 	if not E.private["unitframe"].enable then return end
 
 	E:Delay(15, UF:EnhanceDruidEclipse())
+	E:Delay(18, UF:AddShouldIAttackIcon(_G["ElvUF_Target"]))
 	E:Delay(20, UF:Construct_GPS(_G["ElvUF_Target"], 'target'))
 	E:Delay(25, UF:Construct_GPS(_G["ElvUF_Focus"], 'focus'))
 	E:Delay(40, UF:EnhanceUpdateRoleIcon())
