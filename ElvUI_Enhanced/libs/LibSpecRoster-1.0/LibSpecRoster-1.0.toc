@@ -1,9 +1,9 @@
-## Interface: 50001
+## Interface: 50100
 ## Title: LibSpecRoster-1.0
 ## Notes: Tracks specialization and talent data for group members
 ## Author: msaint
-## Version: 5.0.5.7
-## X-Curse-Packaged-Version: 5.0.5.7
+## Version: r22
+## X-Curse-Packaged-Version: r22
 ## X-Curse-Project-Name: LibSpecRoster
 ## X-Curse-Project-ID: libspecroster
 ## X-Curse-Repository-ID: wow/libspecroster/mainline

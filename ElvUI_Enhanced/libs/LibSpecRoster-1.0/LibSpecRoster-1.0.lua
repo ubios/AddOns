@@ -1,10 +1,10 @@
 -- LibSpecRoster
--- Project: LibSpecRoster 5.0.5.7
+-- Project: LibSpecRoster r22
 -- File: LibSpecRoster-1.0.lua
--- Last Modified: 2012-10-23T21:51:12Z
+-- Last Modified: 2013-02-15T08:16:52Z
 -- Author: msaint
 -- Project desc: Efficiently maintains up to date raid spec information, inspecting
---               only when needed. 
+--               only when needed.
 
 
 --  Library methods:
@@ -12,11 +12,13 @@
 --    lib.UnregisterMessage(yourObject, "messageName")
 --    lib.UnregisterAllMessages(yourObject)
 --    lib.getInspectData(guid) - returns specName, specID, class, role, blizzRole, talents, glyphs
---    lib:getSpecialization(guid) - returns specName, specID, class -- Class is the non-localized version, i.e. the second return value from UnitClass()
---    lib:getRole(guid) - returns role, blizzRole  --role is one of "tank" | "healer" | "melee" | "ranged", blizzRole is one of "TANK" | "HEALER" | "DAMAGER"
+--    lib:getSpecialization(guid) - returns specName, specID, class -- class is the non-localized version, i.e. the second return value from UnitClass()
+--    lib:getRole(guid) - returns role, blizzRole  -- role is one of "tank" | "healer" | "melee" | "ranged", blizzRole is one of "TANK" | "HEALER" | "DAMAGER"
+--    lib:rescan(guid | nil) - reinspects the parameter guid  -- pass nil to reinspect all
 --
 --
 --  Messages:
+--    "LSR_Added" - params: eventName, guid, unit
 --    "LSR_SpecializationChanged" - params: eventName, guid, unit, specID, talents, glyphs
 --    "LSR_RoleChanged" - params: eventName, guid, unit, role
 --    "LSR_TalentUpdate" - params: eventName, guid, unit, specID, talents, glyphs
@@ -29,44 +31,45 @@
 --    BUT, talent changes and glyph changes done without changing between specs will not be
 --    detected until the unit change specializations, UNLESS THEY ARE INSPECTED for some other
 --    reason.  If you subscribe to talent or glyph updates, you can trigger a check by calling
---    NotifyInspec(unit).  The inspect will be captured, and any changes to talents or glyphs 
---    will trigger a callback.
+--    :rescan(guid) or NotifyInspect(unit).  The inspect will be captured, and any changes
+--    to talents or glyphs will trigger a callback.
 
 -- Globals to ignore:
--- GLOBALS: DEFAULT_CHAT_FRAME, NUM_GLYPH_SLOTS, NotifyInspect
+-- GLOBALS: DEFAULT_CHAT_FRAME, MAX_NUM_TALENT_TIERS, NUM_GLYPH_SLOTS, NotifyInspect
 
 --[===[@debug@
 local DEBUG = true
-local debug = DEBUG and function(s) DEFAULT_CHAT_FRAME:AddMessage("LSR: "..s, 1, 0, 0) end or function() return end  
+local debug = DEBUG and function(s) DEFAULT_CHAT_FRAME:AddMessage("LSR: "..s, 1, 0, 0) end or function() return end
 MSO__inspectTally = (DEBUG and {}) or nil
 --@end-debug@]===]
 
 -- ***** Obtain the library object **********
-local LIB_VERSION = tonumber("17") or 5000
+local LIB_VERSION = tonumber("22") or 5000
 local MAJOR, MINOR = "LibSpecRoster-1.0", LIB_VERSION
 local lib = LibStub:NewLibrary(MAJOR, MINOR)
 if not lib then return end
-
-lib.messages = LibStub("CallbackHandler-1.0"):New(lib, "RegisterMessage", "UnregisterMessage", "UnregisterAllMessages")
+local msg = LibStub("CallbackHandler-1.0"):New(lib, "RegisterMessage", "UnregisterMessage", "UnregisterAllMessages")
 
 -- ***** LUA library functions made local **********
 local math, max
       = math, math.max
-local table, tinsert, tremove = table, tinsert, tremove
-local pairs, ipairs, next, select, type, tostring = pairs, ipairs, next, select, type, tostring
+local table, tinsert, tremove
+      = table, tinsert, tremove
+local pairs, ipairs, next, select, type, tostring
+      = pairs, ipairs, next, select, type, tostring
 local S = tostring
 
 -- ***** API functions made local **********
-local GetNumGroupMembers, GetPlayerInfoByGUID, IsInRaid, UnitGUID, UnitClass 
-      = GetNumGroupMembers, GetPlayerInfoByGUID, IsInRaid, UnitGUID, UnitClass
-local UnitIsVisible, UnitIsConnected, CanInspect, UnitIsUnit
-      = UnitIsVisible, UnitIsConnected, CanInspect, UnitIsUnit
-local GetSpecializationInfo, GetSpecialization, GetSpecializationInfoByID, GetInspectSpecialization, GetInspectTalent
-      = GetSpecializationInfo, GetSpecialization, GetSpecializationInfoByID, GetInspectSpecialization, GetInspectTalent
-local GetSpellInfo, GetActiveSpecGroup, GetTalentInfo, GetGlyphSocketInfo, GetClassInfo, GetNumClasses
-      = GetSpellInfo, GetActiveSpecGroup, GetTalentInfo, GetGlyphSocketInfo, GetClassInfo, GetNumClasses
-local RegisterEvent, UnregisterEvent, UnregisterAllEvents
-      = RegisterEvent, UnregisterEvent, UnregisterAllEvents      
+local GetNumGroupMembers, IsInRaid, UnitGUID, UnitClass
+      = GetNumGroupMembers, IsInRaid, UnitGUID, UnitClass
+local UnitIsConnected, CanInspect
+      = UnitIsConnected, CanInspect
+local GetSpecializationInfoByID, GetInspectSpecialization, GetInspectTalent
+      = GetSpecializationInfoByID, GetInspectSpecialization, GetInspectTalent
+local GetGlyphSocketInfo, GetClassInfo, GetNumClasses
+      = GetGlyphSocketInfo, GetClassInfo, GetNumClasses
+local RegisterEvent, UnregisterAllEvents
+      = RegisterEvent, UnregisterAllEvents
 
 -- ***** Constants-ish **********
 local updateDelay = 0.275 -- miliseconds between updates / talent requests
@@ -74,13 +77,7 @@ local notifyTimeout = 2.5 -- If requests don't come back in this time, requeue
 local inspectsPerFive = 8 -- Throttle so that no more than this many requests go out in any five second period
 local GOOD, INVALID, QUEUED, REQUEUE, REQUESTED, REQUESTED_GOOD = "GOOD", "INVALID", "QUEUED", "REQUEUE", "REQUESTED", "REQUESTED_GOOD"
 local valid_status = {GOOD = true, INVALID = true, QUEUED = true, REQUEUE = true, REQUESTED = true} -- REQUESTED_GOOD is not here because you cannot ask for it with setStatus
-local classID = {} -- Class IDs, filled by Init
-local blizzRoles = {
-	melee = "DAMAGER",
-	ranged = "DAMAGER",
-	tank = "TANK",
-	healer = "HEALER"
-}
+local classID = {} -- Class IDs, filled by init
 local specIDRoles = {
       -- Death Knight
       [250] = "tank", -- Blood
@@ -129,11 +126,25 @@ local specIDRoles = {
       [73] = "tank", -- Protection
    }
 
+local fixedRoles = {
+      HUNTER = "ranged",
+      MAGE = "ranged",
+      ROGUE = "melee",
+      WARLOCK = "ranged",
+   }
+
+local fixedBlizzRoles = {
+      HUNTER = "DAMAGER",
+      MAGE = "DAMAGER",
+      ROGUE = "DAMAGER",
+      WARLOCK = "DAMAGER",
+   }
+
 -- ***** Local tables **********
 local events = {} -- Used by event handlers and timers
 local group = {} -- All raid members: group[guid] = {unitID, status, statusElapsed, class, specID, specName, oldSpecID, talents, oldTalents, glyphs, oldGlyphs}
-                 -- group[].talents is an array of 6 numbers/nils representing the column of the selected talent at each tier. 
-                 -- group[].glyphs = {major = {}, minor = {}} where major and minor are arrays of glyphs of that type.
+                 -- group[].talents is an array of the form {[talentLine] = spellID | false} representing the selected talent at each tier
+                 -- group[].glyphs is an array of the form {[glyphSlot] = {spellID = spellID, rank = 1 | 2} | false} where rank==1 is a major glyph, rank==2 is a minor glyph
 
 -- ***** Local variables **********
 local playerGUID -- Set in init() and used in setStatus()
@@ -144,7 +155,7 @@ eFrame:SetScript("OnEvent", function(self, event, ...)
       if events[event] then
          events[event](events, ...)
       end
-   end) 
+   end)
 eFrame:RegisterEvent("PLAYER_ENTERING_WORLD") -- This is where we will initialize the library
 
 -- ***** Local utility functions **********
@@ -158,27 +169,27 @@ local function shallowCopy(t)
    end
 end
 
-local function uniter() 
+local function uniter()
 -- use is: for i, unitID in uniter() do block end
 -- i starts at 1 and corresponds to raid or party unit number.
--- For party (and solo), player is 'player' and is given last 
-   local raid, N = IsInRaid(), GetNumGroupMembers() 
-   N = N + ((N==0 or raid) and 1 or 0) -- The relation between index and reported size works differently for solo, party, and raid. Silly and confusing, but there it is. 
+-- For party (and solo), player is 'player' and is given last
+   local raid, N = IsInRaid(), GetNumGroupMembers()
+   N = N + ((N==0 or raid) and 1 or 0) -- The relation between index and reported size works differently for solo, party, and raid. Silly and confusing, but there it is.
    local iter = function(prefix, i)
       i = i + 1
       if (i < N) then
          return i, prefix..tostring(i)
       elseif (i == N and not raid) then
          return i, "player"
-      else 
+      else
          return nil
       end
-   end           
+   end
    return iter, (raid and "raid" or "party"), 0
 end
 
 local function buildRoster()
-   local roster, guidRoster, guid = {}, {}
+   local roster, guid = {}
    for i, unit in uniter() do
       guid = UnitGUID(unit)
       if guid then
@@ -196,9 +207,9 @@ local function getTalentTable(guid)
    if rec then
       local unit = rec.unitID
       local talents = {}
-      for i = 1, 6 do
-         talents[i] = talents[i] or false -- GetInspectTalents returns nil for empty lines, but we don't want holes in our array!
-         local line, spellID = GetInspectTalent(unit, i) -- Curiously, sometimes the index given is unrelated to the line in the talent tab, but 1 to 6 gets all lines 
+      for i = 1, MAX_NUM_TALENT_TIERS do
+         talents[i] = talents[i] or false -- GetInspectTalent returns nil for empty lines, but we don't want holes in our array!
+         local line, spellID = GetInspectTalent(unit, i) -- Curiously, sometimes the index given is unrelated to the line in the talent tab, but 1 to 6 gets all lines
          if line then
             talents[line + 1] = spellID or false -- the line returned is zero indexed.  That's what happens when C programmers write lua api functions, eh?
          end
@@ -207,7 +218,7 @@ local function getTalentTable(guid)
    end
 end
 
-local function getGlyphTable(guid) 
+local function getGlyphTable(guid)
    local unit = ((guid ~= playerGUID) and group[guid].unitID) or nil -- "player" needs no params except index
    local glyphs = {}
    for i=1, NUM_GLYPH_SLOTS do
@@ -223,7 +234,7 @@ local function talentsChanged(guid, isGlyphs)
       local t1, t2 = rec[((isGlyphs and "glyphs") or "talents")], rec[((isGlyphs and "oldGlyphs") or "oldTalents")]
       if t1 and next(t1) then
          if t2 and next(t2) then
-            for i, d in ipairs(t1) do        
+            for i, d in ipairs(t1) do
                local v1, v2 = ((isGlyphs and d and d.spellID) or d), ((isGlyphs and t2[i] and t2[i].spellID) or t2[i])
                if (v1 ~= v2) then return true end
             end
@@ -237,23 +248,23 @@ local function glyphsChanged(guid) return talentsChanged(guid, true) end
 
 local function fireMessages(guid)
    local rec = guid and group[guid]
-   if (rec.specID ~= rec.oldSpecID) then 
-      lib.messages:Fire("LSR_SpecializationChanged", guid, rec.unitID, rec.specID, rec.talents, rec.glyphs)
+   if (rec.specID ~= rec.oldSpecID) then
+      msg:Fire("LSR_SpecializationChanged", guid, rec.unitID, rec.specID, rec.talents, rec.glyphs)
       if specIDRoles[rec.oldSpecID] ~= specIDRoles[rec.specID] then
-         lib.messages:Fire("LSR_RoleChanged", guid, rec.unitID, specIDRoles[rec.specID], blizzRoles[specIDRoles[rec.specID]])
+         msg:Fire("LSR_RoleChanged", guid, rec.unitID, specIDRoles[rec.specID])
       end
    end
    if talentsChanged(guid) then
-      lib.messages:Fire("LSR_TalentUpdate", guid, rec.unitID, rec.specID, rec.talents, rec.glyphs)
+      msg:Fire("LSR_TalentUpdate", guid, rec.unitID, rec.specID, rec.talents, rec.glyphs)
    end
    if glyphsChanged(guid) then
-      lib.messages:Fire("LSR_GlyphUpdate", guid, rec.unitID, rec.specID, rec.talents, rec.glyphs)
-   end       
+      msg:Fire("LSR_GlyphUpdate", guid, rec.unitID, rec.specID, rec.talents, rec.glyphs)
+   end
 end
 
 local setStatus
 do
-   local lock 
+   local lock
    setStatus = function (guid, status)
       if not (guid and status and valid_status[status]) then return end
       while lock do end -- This is not perfect, but also not as bad as it looks
@@ -275,11 +286,9 @@ end
 
 local function setGUIDData(guid)
    local rec = group[guid]
-   local specGroups = {}
-   local specID, specName, _, _, _, blizRole = GetSpecializationInfoByID(GetInspectSpecialization(rec.unitID))
+   local specID, specName, _, _, _, blizzRole = GetSpecializationInfoByID(GetInspectSpecialization(rec.unitID))
    if specID and specID > 0 then
-      rec.oldSpecID, rec.specID, rec.specName, rec.blizRole = rec.specID, specID, specName, blizRole 
-      rec.class = rec.class or (select(2, UnitClass(rec.unitID)))
+      rec.oldSpecID, rec.specID, rec.specName, rec.blizzRole = rec.specID, specID, specName, blizzRole
       rec.oldTalents, rec.talents, rec.oldGlyphs, rec.glyphs = rec.talents, getTalentTable(guid), rec.glyphs, getGlyphTable(guid)
       setStatus(guid, GOOD)
    end
@@ -289,8 +298,7 @@ end
 local OnUpdate
 local incrementThrottleCounter
 do
-   local sinceLast, queue = 0, {}, {}
-   local checkOnce = true
+   local sinceLast, queue = 0, {}
 
    local inspectThrottleCounter, throttleSinceLast, averageInspectInterval = 0, 0, (5 / inspectsPerFive) -- Let's not do this division every time
    incrementThrottleCounter = function()
@@ -310,9 +318,9 @@ do
             end --@end-debug@]===]
          end
       end
-   end 
+   end
    local function throttleInspect()
-      return (inspectThrottleCounter >= inspectsPerFive)  
+      return (inspectThrottleCounter >= inspectsPerFive)
    end
 
    OnUpdate = function (self, elapsed)
@@ -328,7 +336,7 @@ do
                if rec.statusElapsed > notifyTimeout then
                   setStatus(guid, ((status == REQUESTED_GOOD) and GOOD) or REQUEUE)
                end
-            end       
+            end
             if (rec.status == INVALID) or (rec.status == REQUEUE) then
                tinsert(queue, 1, guid)
                setStatus(guid, QUEUED)
@@ -336,7 +344,7 @@ do
          end
          if not throttleInspect() then
             for i = #queue, 1, -1 do
-               local guid = queue[i] 
+               local guid = queue[i]
                local rec = group[guid]
                tremove(queue, i)
                if rec then
@@ -347,7 +355,7 @@ do
                         debug("Sending NotifyInspect for "..unit) --@end-debug@]===]
                         if DEBUG then
                            local name = UnitName(unit)
-                           MSO__inspectTally[name] = (MSO__inspectTally[name] or 0) + 1   
+                           MSO__inspectTally[name] = (MSO__inspectTally[name] or 0) + 1
                         end --@end-debug@
                         NotifyInspect(unit) -- REQUESTED status is set by our secure hook on NotifyInspect
                         break -- Only one request per requestThrottleDelay!
@@ -358,7 +366,7 @@ do
                end
             end
          end
-      end            
+      end
    end
 end
 
@@ -366,12 +374,12 @@ end
 local function init()
    -- Fill classID table with className = ID
    for i=1, GetNumClasses() do
-      local _, name, id = GetClassInfo(i) 
+      local _, name, id = GetClassInfo(i)
       classID[name] = id
-   end   
+   end
    playerGUID = UnitGUID("player") -- Why look it up more times?
    -- Create initial roster before handling events
-   events:GROUP_ROSTER_UPDATE()               
+   events:GROUP_ROSTER_UPDATE()
    eFrame:UnregisterAllEvents()
    for e, _ in pairs(events) do
       eFrame:RegisterEvent(e)
@@ -394,7 +402,7 @@ function events:PLAYER_ENTERING_WORLD()
          eFrame:Hide()
          eFrame:SetScript("OnUpdate", OnUpdate)
          init()
-      end 
+      end
    end
    eFrame:SetScript("OnUpdate", doWaitForGUIDs)
    eFrame:Show()
@@ -411,30 +419,39 @@ function events:GROUP_ROSTER_UPDATE()
          rec.unitID = newRoster[guid]
          newRoster[guid] = nil
       end
-   end 
-   for guid, unit in pairs(newRoster) do -- Any units still in newRoster must be added to group 
-      group[guid] = {unitID = unit, status = INVALID}
-      group[guid].class = (select(2, UnitClass(unit)))
    end
-end      
+   for guid, unit in pairs(newRoster) do -- Any units still in newRoster must be added to group
+      local unitClass = (select(2, UnitClass(unit)))
+      if unitClass then
+          group[guid] = {unitID = unit, class = unitClass, status = INVALID}
+          msg:Fire("LSR_Added", guid, unit)
+      end
+   end
+end
 
 function events:PLAYER_SPECIALIZATION_CHANGED(unit)
-   unit = unit or "player" -- This event sometimes leaves out unit for the player 
+   unit = unit or "player" -- This event sometimes leaves out unit for the player
    --[===[@debug@
    debug("PLAYER_SPECIALIZATION_CHANGED event for "..S(unit)) --@end-debug@]===]
    local guid = UnitGUID(unit)
    if guid and group[guid] then
       setStatus(guid, INVALID)
-   end            
+   end
 end
 
 function events:INSPECT_READY(guid)
    --[===[@debug@
    debug("INSPECT_READY received for "..S(guid)) --@end-debug@]===]
    local rec = guid and group[guid]
-   if guid and group[guid] then
+    if guid and group[guid] then
       setGUIDData(guid)
    end
+end
+
+function events:UNIT_NAME_UPDATE(unit)
+   --[===[@debug@
+   debug("UNIT_NAME_UPDATE event for "..S(unit)) --@end-debug@]===]
+   self:GROUP_ROSTER_UPDATE()
 end
 
 -- ***** Hook to catch inspects from other addons and avoid duplicating them **********
@@ -451,7 +468,7 @@ hooksecurefunc("NotifyInspect", notifyInspect)
 function lib:getInspectData(guid)
    local rec = guid and group[guid]
    if rec then
-      return rec.specName, rec.specID, rec.class, (rec.specID and specIDRoles[rec.specID]), (rec.specID and blizzRoles[specIDRoles[rec.specID]]), (rec.talents and shallowCopy(rec.talents)), (rec.glyphs and shallowCopy(rec.glyphs))
+      return rec.specName, rec.specID, rec.class, ((rec.specID and specIDRoles[rec.specID]) or (rec.class and fixedRoles[rec.class])), (rec.blizzRole or (rec.class and fixedBlizzRoles[rec.class])), (rec.talents and shallowCopy(rec.talents)), (rec.glyphs and shallowCopy(rec.glyphs))
    end
 end
 
@@ -465,6 +482,18 @@ end
 function lib:getRole(guid)
    local rec = guid and group[guid]
    if rec then
-      return (rec.specID and specIDRoles[rec.specID]), (rec.specID and blizzRoles[specIDRoles[rec.specID]])
+      return ((rec.specID and specIDRoles[rec.specID]) or (rec.class and fixedRoles[rec.class])), (rec.blizzRole or (rec.class and fixedBlizzRoles[rec.class]))
+   end
+end
+
+function lib:rescan(guid)
+   if guid then
+      if group[guid] then
+         setStatus(guid, INVALID)
+      end
+   else
+      for guid in pairs(group) do
+         setStatus(guid, INVALID)
+      end
    end
 end
