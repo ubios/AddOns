@@ -1,6 +1,6 @@
 --[[
 Name: LibRangeCheck-2.0
-Revision: $Revision: 127 $
+Revision: $Revision: 134 $
 Author(s): mitch0
 Website: http://www.wowace.com/projects/librangecheck-2-0/
 Description: A range checking library based on interact distances and spell ranges
@@ -41,7 +41,7 @@ License: Public Domain
 -- @class file
 -- @name LibRangeCheck-2.0
 local MAJOR_VERSION = "LibRangeCheck-2.0"
-local MINOR_VERSION = tonumber(("$Revision: 127 $"):match("%d+")) + 100000
+local MINOR_VERSION = tonumber(("$Revision: 134 $"):match("%d+")) + 100000
 
 local lib, oldminor = LibStub:NewLibrary(MAJOR_VERSION, MINOR_VERSION)
 if not lib then
@@ -82,10 +82,8 @@ local FriendSpells = {}
 local HarmSpells = {}
 
 FriendSpells["DRUID"] = {
-	774, -- ["Rejuvenation"] -- 40
-	29166, -- ["Innervate"] -- 30
-	110309, -- ["Symbiosis"] -- 30
-	5185, -- ["Healing Touch"], -- 40
+    5185, -- ["Healing Touch"], -- 40
+    467, -- ["Thorns"], -- 30
 }
 HarmSpells["DRUID"] = {
     5176, -- ["Wrath"], -- 40
@@ -138,11 +136,9 @@ FriendSpells["PRIEST"] = {
     6346, -- ["Fear Ward"], -- 30
 }
 HarmSpells["PRIEST"] = {
-	124465, -- ["Vampiric Touch"] -- 100
-	589, -- ["Shadow Word: Pain"], -- 40
-	48045, -- ["Mind Sear"], -- 35
-	5019, -- ["Shoot"], -- 30
-	585, -- ["Smite"] -- 30
+    589, -- ["Shadow Word: Pain"], -- 40
+    48045, -- ["Mind Sear"], -- 35
+    5019, -- ["Shoot"], -- 30
 }
 
 FriendSpells["ROGUE"] = {}
@@ -157,7 +153,7 @@ HarmSpells["ROGUE"] = {
 }
 
 FriendSpells["SHAMAN"] = {
-    8004, -- ["Healing Surge"], -- 40
+    331, -- ["Healing Wave"], -- 40
     546, -- ["Water Walking"], -- 30
 }
 HarmSpells["SHAMAN"] = {
@@ -183,9 +179,9 @@ FriendSpells["WARLOCK"] = {
     5697, -- ["Unending Breath"], -- 30
 }
 HarmSpells["WARLOCK"] = {
-    686, -- ["Shadow Bolt"], -- 40
+    348, -- ["Immolate"], -- 40
     27243, -- ["Seed of Corruption"], -- 35
-    5782, -- ["Fear"], -- 30
+    5019, -- ["Shoot"], -- 30
     18223, -- ["Curse of Exhaustion"], -- 30 (Glyph of Exhaustion: +5)
 }
 
@@ -914,6 +910,10 @@ function lib:GLYPH_UPDATED()
     self:scheduleInit()
 end
 
+function lib:SPELLS_CHANGED()
+    self:scheduleInit()
+end
+
 function lib:UNIT_INVENTORY_CHANGED(event, unit)
     if self.initialized and unit == "player" and self.handSlotItem ~= GetInventoryItemLink("player", HandSlotId) then
         self:scheduleInit()
@@ -990,28 +990,33 @@ end
 -- << load-time initialization 
 
 function lib:activate()
-	if not self.frame then
-		local frame = CreateFrame("Frame")
-		self.frame = frame
-		frame:RegisterEvent("LEARNED_SPELL_IN_TAB")
-		frame:RegisterEvent("CHARACTER_POINTS_CHANGED")
-		frame:RegisterEvent("PLAYER_TALENT_UPDATE")
-		frame:RegisterEvent("GLYPH_ADDED")
-		frame:RegisterEvent("GLYPH_REMOVED")
-		frame:RegisterEvent("GLYPH_UPDATED")
-		frame:RegisterEvent("UNIT_INVENTORY_CHANGED", "PLAYER")
-	end
-	initItemRequests()
-	self.frame:SetScript("OnEvent", function(frame, ...) self:OnEvent(...) end)
-	self.frame:SetScript("OnUpdate", function(frame, elapsed)
-		lastUpdate = lastUpdate + elapsed
-		if lastUpdate < UpdateDelay then
-		  return
-		end
-		lastUpdate = 0
-		self:initialOnUpdate()
-	end)
-	self:scheduleInit()
+    if not self.frame then
+        local frame = CreateFrame("Frame")
+        self.frame = frame
+        frame:RegisterEvent("LEARNED_SPELL_IN_TAB")
+        frame:RegisterEvent("CHARACTER_POINTS_CHANGED")
+        frame:RegisterEvent("PLAYER_TALENT_UPDATE")
+        frame:RegisterEvent("GLYPH_ADDED")
+        frame:RegisterEvent("GLYPH_REMOVED")
+        frame:RegisterEvent("GLYPH_UPDATED")
+        frame:RegisterEvent("SPELLS_CHANGED")
+        local _, playerClass = UnitClass("player")
+        if playerClass == "MAGE" or playerClass == "SHAMAN" then
+            -- Mage and Shaman gladiator gloves modify spell ranges
+            frame:RegisterEvent("UNIT_INVENTORY_CHANGED")
+        end
+    end
+    initItemRequests()
+    self.frame:SetScript("OnEvent", function(frame, ...) self:OnEvent(...) end)
+    self.frame:SetScript("OnUpdate", function(frame, elapsed)
+        lastUpdate = lastUpdate + elapsed
+        if lastUpdate < UpdateDelay then
+            return
+        end
+        lastUpdate = 0
+        self:initialOnUpdate()
+    end)
+    self:scheduleInit()
 end
 
 --- BEGIN CallbackHandler stuff
