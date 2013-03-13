@@ -72,6 +72,18 @@ function UF:UpdateGPS(frame)
 	gps:Show()
 end
 
+function UF:ForceZoneChanged()
+	MAP:ZoneChanged(true)
+end
+
+function UF:GetTargetDistance(unit)
+  local tx, ty = GetPlayerMapPosition(unit)
+  if tx == 0 and ty == 0 then return 0 end
+
+  local px, py = GetPlayerMapPosition("player")
+	return MAP:Distance(mapfile, mapfloor, px, py, tx, ty)
+end
+
 function UF:UpdateRoleIconEnhanced(event)
 	-- rehook self from timer event
 	if event and type(event) == "table" then

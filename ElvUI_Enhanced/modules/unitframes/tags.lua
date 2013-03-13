@@ -1,4 +1,5 @@
 local E, L, V, P, G, _ = unpack(ElvUI); --Inport: Engine, Locales, PrivateDB, ProfileDB, GlobalDB, Localize Underscore
+local UF = E:GetModule('UnitFrames')
 
 ElvUF.Tags.Methods['afk'] = function(unit)
 	local isAFK, isDND = UnitIsAFK(unit), UnitIsDND(unit)
@@ -9,6 +10,14 @@ ElvUF.Tags.Methods['afk'] = function(unit)
 	else
 		return ''
 	end
+end
+
+ElvUF.Tags.Methods['xdistance'] = function(unit)
+	local distance = UF:GetTargetDistance(unit)
+	if distance ~= 0 then
+		return format('%d', distance)
+	end
+	return ''
 end
 
 ElvUF.Tags.Events['xthreat:percent'] = 'UNIT_THREAT_LIST_UPDATE GROUP_ROSTER_UPDATE'
