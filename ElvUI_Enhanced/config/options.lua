@@ -455,6 +455,76 @@ function EO:UnitFramesOptions()
 	}
 end
 
+function EO:WatchFrame()
+	local WF = E:GetModule('WatchFrame')
+	
+	local choices = {
+		['NONE'] = L['None'],
+		['COLLAPSED'] = L['Collapsed'],
+		['HIDDEN'] = L['Hidden'],
+	}
+	
+	E.Options.args.watchframe = {
+		type = 'group',
+		name = L['WatchFrame'],
+		get = function(info) return E.private.watchframe[ info[#info] ] end,
+		set = function(info, value) E.private.watchframe[ info[#info] ] = value; WF:UpdateSettings() end,
+		args = {
+			intro = {
+				order = 1,
+				type = 'description',
+				name = L["WATCHFRAME_DESC"],
+			},
+			enable = {
+				order = 2,
+				type = 'toggle',
+				name = L['Enable'],
+			},
+			settings = {
+				order = 3,
+				type = "group",
+				name = L['Settings'],
+				guiInline = true,
+				disabled = function() return not E.private.watchframe.enable end,
+				get = function(info) return E.db.watchframe[ info[#info] ] end,
+				set = function(info, value) E.db.watchframe[ info[#info] ] = value end,
+				args = {
+					city = {
+						order = 4,
+						type = 'select',
+						name = L['City (Resting)'],
+						values = choices,
+					},
+					pvp = {
+						order = 5,
+						type = 'select',
+						name = L['PvP'],
+						values = choices,
+					},
+					arena = {
+						order = 6,
+						type = 'select',
+						name = L['Arena'],
+						values = choices,
+					},
+					party = {
+						order = 7,
+						type = 'select',
+						name = L['Party'],
+						values = choices,
+					},
+					raid = {
+						order = 8,
+						type = 'select',
+						name = L['Raid'],
+						values = choices,
+					},
+				}
+			}
+		}
+	}	
+end
+
 function EO:GetOptions()
 	EO:DataTextOptions()
 	EO:EquipmentOptions()
@@ -463,6 +533,7 @@ function EO:GetOptions()
 	EO:MiscOptions()
 	EO:NameplateOptions()
 	EO:UnitFramesOptions()
+	EO:WatchFrame()
 end
 
 function EO:Initialize()

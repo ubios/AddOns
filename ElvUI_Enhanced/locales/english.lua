@@ -103,3 +103,15 @@ L['The direction of the seed bar buttons (Horizontal or Vertical).'] = true
 -- Nameplates
 L["Threat Text"] = true
 L["Display threat level as text on targeted, boss or mouseover nameplate."] = true
+
+-- WatchFrame
+L['WatchFrame'] = true
+L['WATCHFRAME_DESC'] = "Adjust the settings for the visibility of the watchframe (questlog) to your personal preference."
+L['Hidden'] = true
+L['Collapsed'] = true
+L['Settings'] = true
+L['City (Resting)'] = true
+L['PvP'] = true
+L['Arena'] = true
+L['Party'] = true
+L['Raid'] = true

@@ -41,3 +41,7 @@ V.farmer = {
 		['seedbardirection'] = 'VERTICAL',
 	}
 }
+
+V['watchframe'] = {
+	['enable'] = true,
+}

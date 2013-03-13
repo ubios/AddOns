@@ -6,4 +6,5 @@
 	<Include file="nameplates\load_nameplates.xml"/>
 	<Include file="maps\load_maps.xml"/>
 	<Include file="unitframes\load_unitframes.xml"/>
+	<Include file="watchframe\load_watchframe.xml"/>
 </Ui>

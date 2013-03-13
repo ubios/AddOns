@@ -37,3 +37,11 @@ P['datatexts']['panels']['Actionbar1DataPanel'] = {
 P['datatexts']['panels']['Actionbar3DataPanel'] = 'Spec Switch'
 
 P['datatexts']['panels']['Actionbar5DataPanel'] = 'Call to Arms'
+
+P['watchframe'] = {
+	['city'] = 'COLLAPSED',
+	['pvp'] = 'HIDDEN',
+	['arena'] = 'HIDDEN',
+	['party'] = 'COLLAPSED',
+	['raid'] = 'COLLAPSED',
+}
