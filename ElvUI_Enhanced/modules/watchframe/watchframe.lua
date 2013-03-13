@@ -1,6 +1,8 @@
 local E, L, V, P, G, _ = unpack(ElvUI); --Inport: Engine, Locales, PrivateDB, ProfileDB, GlobalDB, Localize Underscore
 local WF = E:NewModule('WatchFrame', 'AceEvent-3.0')
 
+-- Based on WatchFrameHider by Sortokk
+
 local watchFrame
 
 local statedriver = {
