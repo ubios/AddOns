@@ -404,9 +404,7 @@ function F:CreateFrames()
 		end
 	end
 
-	SetMapToCurrentZone()
-	
-	F:RegisterEvent("PLAYER_ENTERING_WORLD", "UpdateLayout")
+	F:RegisterEvent("PLAYER_ENTERING_WORLD", "ZoneChanged")
 	F:RegisterEvent("ZONE_CHANGED", "ZoneChanged")
 
 	F:FarmerInventoryUpdate()
