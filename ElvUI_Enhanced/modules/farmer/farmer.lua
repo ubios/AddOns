@@ -257,6 +257,10 @@ function F:UpdateBar(bar, layoutfunc, zonecheck, anchor, buttons, position)
 	return count > 0
 end
 
+function F:DelayZoneChanged()
+	E:Delay(10, F.ZoneChanged)
+end
+
 function F:ZoneChanged()
 	if not F:InSeedZone() and E.private.farmer.farmbars.droptools then
 		for k, v in pairs(tools) do
@@ -270,8 +274,8 @@ function F:ZoneChanged()
 
 	if F:InSeedZone() then
 		F:RegisterEvent("BAG_UPDATE", "FarmerInventoryUpdate")
-		F:RegisterEvent("BAG_UPDATE_COOLDOWN", "UpdateCooldown")	
-		
+		F:RegisterEvent("BAG_UPDATE_COOLDOWN", "UpdateCooldown")		
+
 		F:FarmerInventoryUpdate()
 	else
 		F:UnregisterEvent("BAG_UPDATE")
@@ -404,12 +408,12 @@ function F:CreateFrames()
 		end
 	end
 
-	F:RegisterEvent("PLAYER_ENTERING_WORLD", "ZoneChanged")
+	F:RegisterEvent("PLAYER_ENTERING_WORLD", "DelayZoneChanged")
 	F:RegisterEvent("ZONE_CHANGED", "ZoneChanged")
 
 	F:FarmerInventoryUpdate()
 
-	E:Delay(10, F.ZoneChanged)
+	F:DelayZoneChanged()
 end
 
 function F:StartFarmBarLoader()
