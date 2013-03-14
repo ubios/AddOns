@@ -179,7 +179,7 @@ function F:FarmerInventoryUpdate()
 		button.icon:SetAlpha(button.items == 0 and .25 or 1)
 	end	
 	
-	self:UpdateLayout()
+	F:UpdateLayout()
 end
 
 function F:UpdateBarLayout(bar, anchor, buttons)
@@ -270,15 +270,13 @@ function F:ZoneChanged()
 
 	if F:InSeedZone() then
 		F:RegisterEvent("BAG_UPDATE", "FarmerInventoryUpdate")
-		F:RegisterEvent("BAG_UPDATE_COOLDOWN", "UpdateCooldown")
+		F:RegisterEvent("BAG_UPDATE_COOLDOWN", "UpdateCooldown")	
 		
 		F:FarmerInventoryUpdate()
 	else
 		F:UnregisterEvent("BAG_UPDATE")
 		F:UnregisterEvent("BAG_UPDATE_COOLDOWN")
-	end	
-	
-		F:UpdateLayout()
+	end		
 end
 
 function F:UpdateLayout()
@@ -303,10 +301,6 @@ function F:UpdateLayout()
 	end
 	
 	F:UnregisterEvent("PLAYER_REGEN_ENABLED")
-end
-
-function F:DelayedUpdateLayout()
-	E:Delay(5, F.UpdateLayout)
 end
 
 function F:CreateFarmButton(index, owner, buttonType, name, texture, allowDrop)
@@ -407,14 +401,13 @@ function F:CreateFrames()
 			tinsert(portalButtons, F:CreateFarmButton(k, portalBar, "item", v[2], v[11], false))
 		end
 	end
-	
-	F:FarmerInventoryUpdate()
 
-	F:RegisterEvent("PLAYER_ENTERING_WORLD", "DelayedUpdateLayout")
+	SetMapToCurrentZone()
+	
+	F:RegisterEvent("PLAYER_ENTERING_WORLD", "UpdateLayout")
 	F:RegisterEvent("ZONE_CHANGED", "ZoneChanged")
 
-	F:DelayedUpdateLayout()
-	F:ZoneChanged()
+	E:Delay(10, F.ZoneChanged)
 end
 
 function F:StartFarmBarLoader()
