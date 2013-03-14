@@ -19,7 +19,6 @@ local roleIconTextures = {
 
 -- Register callback for changing map and floor (GPS)
 MAP:RegisterCallback("MapChanged", function (event, map, level, w, h)
-	print("Map changed: "..map)
 	mapfile = map
 	maplevel = level
 end)
