@@ -7,7 +7,7 @@ local sub = string.sub
 local abs, atan2, cos, sin, sqrt2, random, floor, ceil = math.abs, math.atan2, math.cos, math.sin, math.sqrt(2), math.random, math.floor, math.ceil
 local pairs, type, select, unpack = pairs, type, select, unpack
 local GetPlayerMapPosition, GetPlayerFacing = GetPlayerMapPosition, GetPlayerFacing
-local mapfile, mapfloor
+local mapfile, maplevel
 local unitframeFont
 
 local roleIconTextures = {
@@ -18,9 +18,10 @@ local roleIconTextures = {
 }
 
 -- Register callback for changing map and floor (GPS)
-MAP:RegisterCallback("MapChanged", function (event, map, floor, w, h)
+MAP:RegisterCallback("MapChanged", function (event, map, level, w, h)
+	print("Map changed: "..map)
 	mapfile = map
-	mapfloor = floor
+	maplevel = level
 end)
 
 local function GetBearing(unit)
@@ -67,7 +68,7 @@ function UF:UpdateGPS(frame)
 	RotateTexture(gps.Texture, angle)
 	gps.Texture:Show()
 
-	local distance = MAP:Distance(mapfile, mapfloor, px, py, tx, ty)
+	local distance = MAP:Distance(mapfile, maplevel, px, py, tx, ty)
 	gps.Text:SetFormattedText("%d", distance)
 	gps:Show()
 end
@@ -81,7 +82,7 @@ function UF:GetTargetDistance(unit)
   if tx == 0 and ty == 0 then return 0 end
 
   local px, py = GetPlayerMapPosition("player")
-	return MAP:Distance(mapfile, mapfloor, px, py, tx, ty)
+	return MAP:Distance(mapfile, maplevel, px, py, tx, ty)
 end
 
 function UF:UpdateRoleIconEnhanced(event)
