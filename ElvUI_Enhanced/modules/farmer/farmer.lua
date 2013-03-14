@@ -276,6 +276,8 @@ function F:ZoneChanged()
 	else
 		F:UnregisterEvent("BAG_UPDATE")
 		F:UnregisterEvent("BAG_UPDATE_COOLDOWN")
+		
+		F:UpdateLayout()
 	end		
 end
 
@@ -406,6 +408,8 @@ function F:CreateFrames()
 	
 	F:RegisterEvent("PLAYER_ENTERING_WORLD", "UpdateLayout")
 	F:RegisterEvent("ZONE_CHANGED", "ZoneChanged")
+
+	F:FarmerInventoryUpdate()
 
 	E:Delay(10, F.ZoneChanged)
 end
