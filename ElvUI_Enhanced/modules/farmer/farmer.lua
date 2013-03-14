@@ -155,8 +155,13 @@ function F:FindItemInBags(itemId)
 end
 
 function F:FarmerInventoryUpdate()
-	if InCombatLockdown() then return end
-	
+	if InCombatLockdown() then
+		F:RegisterEvent("PLAYER_REGEN_ENABLED", "FarmerInventoryUpdate")	
+		return
+	else
+		F:UnregisterEvent("PLAYER_REGEN_ENABLED")
+ 	end
+ 	
 	for i = 1, NUM_SEED_BARS do
 		for _, button in ipairs(seedButtons[i]) do
 			button.items = GetItemCount(button.itemId)
@@ -257,10 +262,6 @@ function F:UpdateBar(bar, layoutfunc, zonecheck, anchor, buttons, position)
 	return count > 0
 end
 
-function F:DelayZoneChanged()
-	E:Delay(10, F.ZoneChanged)
-end
-
 function F:ZoneChanged()
 	if not F:InSeedZone() and E.private.farmer.farmbars.droptools then
 		for k, v in pairs(tools) do
@@ -271,26 +272,19 @@ function F:ZoneChanged()
 			end		
 		end
 	end
-
+	
 	if F:InSeedZone() then
 		F:RegisterEvent("BAG_UPDATE", "FarmerInventoryUpdate")
 		F:RegisterEvent("BAG_UPDATE_COOLDOWN", "UpdateCooldown")		
-
-		F:FarmerInventoryUpdate()
 	else
 		F:UnregisterEvent("BAG_UPDATE")
 		F:UnregisterEvent("BAG_UPDATE_COOLDOWN")
-		
-		F:UpdateLayout()
 	end		
+
+	F:FarmerInventoryUpdate()
 end
 
-function F:UpdateLayout()
-	if InCombatLockdown() then
-		F:RegisterEvent("PLAYER_REGEN_ENABLED", "UpdateLayout")	
-		return	
- 	end
- 	
+function F:UpdateLayout()	
  	local position = 1
 	for i=1, NUM_SEED_BARS do
 		if F:UpdateBar(_G[("FarmSeedBar%d"):format(i)], F.UpdateSeedBarLayout, F.InSeedZone, farmSeedBarAnchor, seedButtons[i], position) then
@@ -304,9 +298,7 @@ function F:UpdateLayout()
 		farmSeedBarAnchor:Size(320, ((position - 1) * 34))
 	else
 		farmSeedBarAnchor:Size(((position - 1) * 34), 320)
-	end
-	
-	F:UnregisterEvent("PLAYER_REGEN_ENABLED")
+	end	
 end
 
 function F:CreateFarmButton(index, owner, buttonType, name, texture, allowDrop)
@@ -408,12 +400,11 @@ function F:CreateFrames()
 		end
 	end
 
-	F:RegisterEvent("PLAYER_ENTERING_WORLD", "DelayZoneChanged")
 	F:RegisterEvent("ZONE_CHANGED", "ZoneChanged")
+	F:RegisterEvent("ZONE_CHANGED_NEW_AREA", "ZoneChanged")
+	F:RegisterEvent("ZONE_CHANGED_INDOORS", "ZoneChanged")
 
-	F:FarmerInventoryUpdate()
-
-	F:DelayZoneChanged()
+	E:Delay(10, F:ZoneChanged())
 end
 
 function F:StartFarmBarLoader()
