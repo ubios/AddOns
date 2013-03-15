@@ -9,6 +9,8 @@ local playerId
 HG.GroupUnits = {}
 
 function HG:SetupVariables()
+	HG:UnregisterEvent("PLAYER_ENTERING_WORLD")
+
 	playerId = UnitGUID('player')
 	
 	for _, spellID in ipairs({
@@ -44,6 +46,7 @@ function HG:SetupVariables()
 		end
 	end
 	
+	HG:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED", "ParseCombatLog")
 end
 
 function HG:GroupRosterUpdate()
@@ -59,7 +62,7 @@ function HG:GroupRosterUpdate()
 end
 
 function HG:ParseCombatLog(_, timestamp, event, hideCaster, sourceGUID, sourceName, sourceFlags, sourceFlags2, destGUID, destName, destFlags, destFlags2, spellID, spellName)
-	if not playerId or sourceGUID ~= playerId or event ~= "SPELL_HEAL" or not spells[spellName] then
+	if sourceGUID ~= playerId or event ~= "SPELL_HEAL" or not spells[spellName] then
 		return
 	end
 	
@@ -69,11 +72,8 @@ function HG:ParseCombatLog(_, timestamp, event, hideCaster, sourceGUID, sourceNa
 end
 
 function HG:Initialize()
-	--if not E.private.farmer.enabled then return end
-
 	HG:RegisterEvent("PLAYER_ENTERING_WORLD", "SetupVariables")
 	HG:RegisterEvent("GROUP_ROSTER_UPDATE", "GroupRosterUpdate")
-	HG:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED", "ParseCombatLog")
 end
 
 E:RegisterModule(HG:GetName())

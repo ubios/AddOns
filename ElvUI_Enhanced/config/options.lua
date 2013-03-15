@@ -398,7 +398,7 @@ function EO:UnitFramesOptions()
 				order = 3,
 				name = L["Glow Duration"],
 				desc = L["The amount of time the unit frames of party / raid members will glow when affected by an AoE heal."],
-				min = .4, max = 2, step = .1,
+				min = .2, max = 3, step = .1,
 			},	
 			glowcolor = {
 				type = 'color',
