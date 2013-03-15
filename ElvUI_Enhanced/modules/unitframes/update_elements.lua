@@ -1,5 +1,6 @@
 local E, L, V, P, G, _ = unpack(ElvUI); --Inport: Engine, Locales, PrivateDB, ProfileDB, GlobalDB, Localize Underscore
 local UF = E:GetModule('UnitFrames');
+local HG = E:GetModule('HealGlow')
 local MAP = LibStub("LibMapData-1.0")
 local LSR = LibStub("LibSpecRoster-1.0")
 
@@ -70,6 +71,19 @@ function UF:UpdateGPS(frame)
 	local distance = MAP:Distance(mapfile, maplevel, px, py, tx, ty)
 	gps.Text:SetFormattedText("%d", distance)
 	gps:Show()
+end
+
+function UF:UpdateHealGlow(frame, unit)
+	if unit then
+		if not UnitIsUnit(unit, 'player') then
+			local unitId = UnitGUID(unit)
+			if HG.GroupUnits[unitId] and GetTime() < HG.GroupUnits[unitId][2] + E.db.unitframe.glowtime then
+				frame.HealGlow:Show()
+			else
+				frame.HealGlow:Hide()
+			end
+		end	
+	end
 end
 
 function UF:ForceZoneChanged()

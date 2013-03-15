@@ -104,6 +104,13 @@ L['The direction of the seed bar buttons (Horizontal or Vertical).'] = true
 L["Threat Text"] = true
 L["Display threat level as text on targeted, boss or mouseover nameplate."] = true
 
+-- HealGlow
+L['Heal Glow'] = true
+L['AoE heals will let the unit frames of the affected party / raid members glow for the defined time period.'] = true
+L["Glow Duration"] = true
+L["The amount of time the unit frames of party / raid members will glow when affected by an AoE heal."] = true
+L["Glow Color"] = true
+
 -- WatchFrame
 L['WatchFrame'] = true
 L['WATCHFRAME_DESC'] = "Adjust the settings for the visibility of the watchframe (questlog) to your personal preference."

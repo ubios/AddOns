@@ -21,3 +21,14 @@ SlashCmdList["ANALYZE"] = function(arg)
 		ChatFrame1:AddMessage("|cffCC0000----------------------------")	
 	end
 end
+
+SLASH_PROFILE1 = "/profile"
+SlashCmdList["PROFILE"] = function(arg)
+	local cpuProfiling = GetCVar("scriptProfile") == "1"
+	if cpuProfiling then
+		SetCVar("scriptProfile", "0")
+	else
+		SetCVar("scriptProfile", "1")
+	end
+	ReloadUI()
+end

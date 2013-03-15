@@ -44,6 +44,15 @@ function UF:Construct_GPS(frame, unit)
 	UF:CreateAndUpdateUF(unit)
 end
 
+function UF:Construct_HealGlow(frame)
+	frame:CreateShadow('Default')
+	local x = frame.shadow
+	frame.shadow = nil
+	x:Hide()
+	
+	return x
+end
+
 function UF:EnhanceDruidEclipse()
 	-- add eclipse prediction when playing druid
 	if E.myclass == "DRUID" then
@@ -103,15 +112,22 @@ function UF:AddShouldIAttackIcon(frame)
 	end)
 end
 
-function UF:EnhanceUpdateRoleIcon()
+function UF:EnhanceUnitFrames()
+	local frame
 	for i=1, 5 do
-		UF:UpdateRoleIconFrame(_G[("ElvUF_PartyUnitButton%d"):format(i)])
+		frame = _G[("ElvUF_PartyUnitButton%d"):format(i)]
+		UF:UpdateRoleIconFrame(frame)
+		frame.HealGlow = UF:Construct_HealGlow(frame, ('party%d'):format(i))
 	end
 	for r=10,40,15 do
 		for i=1, r do
-			UF:UpdateRoleIconFrame(_G[("ElvUF_Raid%dUnitButton%i"):format(r, i)])
+			frame = _G[("ElvUF_Raid%dUnitButton%i"):format(r, i)]
+			UF:UpdateRoleIconFrame(frame)
+			frame.HealGlow = UF:Construct_HealGlow(frame, ('raid%d'):format(i))	
 		end
 	end
+	
+	UF:UpdateAllHeaders()
 end
 
 function UF:UpdateRoleIconFrame(frame)
@@ -132,7 +148,7 @@ CF:SetScript("OnEvent", function(self, event)
 	E:Delay(18, UF:AddShouldIAttackIcon(_G["ElvUF_Target"]))
 	E:Delay(20, UF:Construct_GPS(_G["ElvUF_Target"], 'target'))
 	E:Delay(25, UF:Construct_GPS(_G["ElvUF_Focus"], 'focus'))
-	E:Delay(40, UF:EnhanceUpdateRoleIcon())
+	E:Delay(40, UF:EnhanceUnitFrames())
 
 	UF:ForceZoneChanged()
 	

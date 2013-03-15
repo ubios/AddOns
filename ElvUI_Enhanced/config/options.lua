@@ -380,6 +380,42 @@ end
 function EO:UnitFramesOptions()
 	local UF = E:GetModule('UnitFrames')
 	
+	E.Options.args.unitframe.args.general.args.healglowGroup = {
+		order = 2,
+		type = 'group',
+		guiInline = true,
+		name = L['Heal Glow'],
+		args = {
+			healglow = {
+				type = 'toggle',
+				order = 2,
+				name = L['Enable'],
+				desc = L['AoE heals will let the unit frames of the affected party / raid members glow for the defined time period.'],	
+				set = function(info, value) E.db.unitframe[ info[#info] ] = value; UF:Update_AllFrames(); end,
+			},
+			glowtime = {
+				type = 'range',
+				order = 3,
+				name = L["Glow Duration"],
+				desc = L["The amount of time the unit frames of party / raid members will glow when affected by an AoE heal."],
+				min = .4, max = 2, step = .1,
+			},	
+			glowcolor = {
+				type = 'color',
+				name = L["Glow Color"],
+				order = 4,
+				get = function(info)
+					local t = E.db.unitframe[ info[#info] ]
+					return t.r, t.g, t.b, t.a
+				end,
+				set = function(info, r, g, b)
+					local t = E.db.unitframe[ info[#info] ]
+					t.r, t.g, t.b = r, g, b
+				end,
+			}
+		},
+	}
+	
 	--Target
 	E.Options.args.unitframe.args.target.args.gps = {
 		order = 1000,

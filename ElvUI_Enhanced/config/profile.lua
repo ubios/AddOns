@@ -4,6 +4,10 @@
 P['general']['minimap']['locationText'] = 'ABOVE'
 
 --Unitframes
+P['unitframe']['healglow'] = true
+P['unitframe']['glowtime'] = .8
+P['unitframe']['glowcolor'] = { r = 1, g = 1, b = 0}
+
 P['unitframe']['units']['target']['gps'] = {
 	['enable'] = true,
 	['position'] = 'BOTTOMRIGHT'
