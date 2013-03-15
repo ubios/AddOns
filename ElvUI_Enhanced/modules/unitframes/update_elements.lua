@@ -69,7 +69,7 @@ function UF:UpdateGPS(frame)
 	gps.Texture:Show()
 
 	local distance = MAP:Distance(mapfile, maplevel, px, py, tx, ty)
-	gps.Text:SetFormattedText("%d", (distance / 10))
+	gps.Text:SetFormattedText("%d", distance)
 	gps:Show()
 end
 
@@ -95,7 +95,7 @@ function UF:GetTargetDistance(unit)
   if tx == 0 and ty == 0 then return 0 end
 
   local px, py = GetPlayerMapPosition("player")
-	return (MAP:Distance(mapfile, maplevel, px, py, tx, ty) / 10)
+	return MAP:Distance(mapfile, maplevel, px, py, tx, ty)
 end
 
 function UF:UpdateRoleIconEnhanced(event)
