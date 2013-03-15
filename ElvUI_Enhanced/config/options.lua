@@ -1,7 +1,7 @@
 local E, L, V, P, G, _ = unpack(ElvUI); --Inport: Engine, Locales, PrivateDB, ProfileDB, GlobalDB, Localize Underscore
 local EO = E:NewModule('EnhancedOptions', 'AceEvent-3.0')
-local EP = LibStub("LibElvUIPlugin-1.0")
-local ElvUIEnhanced, ns = ...
+local EP = LibStub('LibElvUIPlugin-1.0')
+local ElvUIEnhanced = select(1, ...)
 
 local tsort = table.sort
 
