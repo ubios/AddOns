@@ -1,13 +1,12 @@
 local E, L, V, P, G, _ = unpack(ElvUI); --Inport: Engine, Locales, PrivateDB, ProfileDB, GlobalDB, Localize Underscore
 local UF = E:GetModule('UnitFrames');
-local MAP = LibStub("LibMapData-1.0")
 local LSR = LibStub("LibSpecRoster-1.0")
+local Astrolabe = DongleStub("ElvUIAstrolabe-1.0")
 
 local sub = string.sub
 local abs, atan2, cos, sin, sqrt2, random, floor, ceil = math.abs, math.atan2, math.cos, math.sin, math.sqrt(2), math.random, math.floor, math.ceil
 local pairs, type, select, unpack = pairs, type, select, unpack
 local GetPlayerMapPosition, GetPlayerFacing = GetPlayerMapPosition, GetPlayerFacing
-local mapfile, maplevel
 local unitframeFont
 
 local roleIconTextures = {
@@ -16,21 +15,6 @@ local roleIconTextures = {
 	DAMAGER = [[Interface\AddOns\ElvUI\media\textures\dps.tga]],
 	DC = [[Interface\AddOns\ElvUI_Enhanced\media\textures\dc.tga]],
 }
-
--- Register callback for changing map and floor (GPS)
-MAP:RegisterCallback("MapChanged", function (event, map, level, w, h)
-	mapfile = map
-	maplevel = level
-end)
-
-local function GetBearing(unit)
-  local tx, ty = GetPlayerMapPosition(unit)
-  if tx == 0 and ty == 0 then
-    return 999
-  end
-  local px, py = GetPlayerMapPosition("player")
-  return -GetPlayerFacing() - atan2(tx - px, py - ty), px, py, tx, ty
-end
 
 local function CalculateCorner(r)
 	return 0.5 + cos(r) / sqrt2, 0.5 + sin(r) / sqrt2;
@@ -55,7 +39,7 @@ function UF:UpdateGPS(frame)
 		return
 	end
 	
-	local angle, px, py, tx, ty = GetBearing(gps.unit)
+	local distance, angle = UF:GetTargetDistance(gps.unit)
 	if angle == 999 then
 		-- no bearing show - to indicate we are lost :)
 		gps.Text:SetText("-")
@@ -67,21 +51,25 @@ function UF:UpdateGPS(frame)
 	RotateTexture(gps.Texture, angle)
 	gps.Texture:Show()
 
-	local distance = MAP:Distance(mapfile, maplevel, px, py, tx, ty)
 	gps.Text:SetFormattedText("%d", distance)
 	gps:Show()
 end
 
-function UF:ForceZoneChanged()
-	MAP:ZoneChanged(true)
-end
+local pc = { }
+local tc = { }
+local distance = { }
 
 function UF:GetTargetDistance(unit)
-  local tx, ty = GetPlayerMapPosition(unit)
-  if tx == 0 and ty == 0 then return 0 end
+	pc = { Astrolabe:GetCurrentPlayerPosition() }
+	
+	if not (pc[1] and pc[4]) then return 0, 999 end
+	
+	tc = { Astrolabe:GetUnitPosition( unit, false ) }
+	if not (tc[1] and tc[4]) then return 0, 999 end
+	
+	distance = { Astrolabe:ComputeDistance( pc[1], pc[2], pc[3], pc[4], tc[1], tc[2], tc[3], tc[4] ) }
 
-  local px, py = GetPlayerMapPosition("player")
-	return MAP:Distance(mapfile, maplevel, px, py, tx, ty)
+	return distance[1], -GetPlayerFacing() - atan2(tc[3] - pc[3], pc[4] - tc[4])
 end
 
 function UF:UpdateRoleIconEnhanced(event)

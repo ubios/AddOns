@@ -145,8 +145,6 @@ CF:SetScript("OnEvent", function(self, event)
 	E:Delay(20, UF:Construct_GPS(_G["ElvUF_Target"], 'target'))
 	E:Delay(25, UF:Construct_GPS(_G["ElvUF_Focus"], 'focus'))
 	E:Delay(40, UF:EnhanceUpdateRoleIcon())
-
-	UF:ForceZoneChanged()
 	
 	self:UnregisterEvent("PLAYER_ENTERING_WORLD")
 end)
