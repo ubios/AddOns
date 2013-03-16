@@ -56,21 +56,17 @@ function UF:UpdateGPS(frame)
 	gps:Show()
 end
 
-local pc = { }
-local tc = { }
-local distance = { }
-
 function UF:GetTargetDistance(unit)
-	pc = { Astrolabe:GetCurrentPlayerPosition() }
+	local pm, pf, px, py = Astrolabe:GetCurrentPlayerPosition()
 	
-	if not (pc[1] and pc[4]) then return 0, 999 end
+	if not (pm and px) then return 0, 999 end
 	
-	tc = { Astrolabe:GetUnitPosition( unit, false ) }
-	if not (tc[1] and tc[4]) then return 0, 999 end
+	local tm, tf, tx, ty = Astrolabe:GetUnitPosition( unit, false )
+	if not (tm and tx) then return 0, 999 end
 	
-	distance = { Astrolabe:ComputeDistance( pc[1], pc[2], pc[3], pc[4], tc[1], tc[2], tc[3], tc[4] ) }
+	local distance, xdelta, ydelta = Astrolabe:ComputeDistance( pm, pf, px, py, tm, tf, tx, ty )
 
-	return distance[1], -ninetyDegreeAngleInRadians -GetPlayerFacing() - atan2(distance[3], distance[2])
+	return distance, -ninetyDegreeAngleInRadians -GetPlayerFacing() - atan2(ydelta, xdelta)
 end
 
 function UF:UpdateRoleIconEnhanced(event)
