@@ -1,8 +1,9 @@
 local E, L, V, P, G, _ = unpack(ElvUI); --Inport: Engine, Locales, PrivateDB, ProfileDB, GlobalDB, Localize Underscore
 local UF = E:GetModule('UnitFrames');
 local LSR = LibStub("LibSpecRoster-1.0")
-local Astrolabe = DongleStub("ElvUIAstrolabe-1.0")
+local Astrolabe = DongleStub("Astrolabe-1.0")
 
+local ninetyDegreeAngleInRadians = (3.141592653589793 / 2)
 local sub = string.sub
 local abs, atan2, cos, sin, sqrt2, random, floor, ceil = math.abs, math.atan2, math.cos, math.sin, math.sqrt(2), math.random, math.floor, math.ceil
 local pairs, type, select, unpack = pairs, type, select, unpack
@@ -34,7 +35,7 @@ function UF:UpdateGPS(frame)
 	if not gps then return end
 	
 	-- GPS Disabled or not GPS parent frame visible or not in Party or Raid, Hide gps
-	if not (UnitInParty(gps.unit) or UnitInRaid(gps.unit)) then
+	if UnitIsUnit(gps.unit, 'player') or not (UnitInParty(gps.unit) or UnitInRaid(gps.unit)) then
 		gps:Hide()
 		return
 	end
@@ -69,7 +70,7 @@ function UF:GetTargetDistance(unit)
 	
 	distance = { Astrolabe:ComputeDistance( pc[1], pc[2], pc[3], pc[4], tc[1], tc[2], tc[3], tc[4] ) }
 
-	return distance[1], -GetPlayerFacing() - atan2(tc[3] - pc[3], pc[4] - tc[4])
+	return distance[1], -ninetyDegreeAngleInRadians -GetPlayerFacing() - atan2(distance[3], distance[2])
 end
 
 function UF:UpdateRoleIconEnhanced(event)
