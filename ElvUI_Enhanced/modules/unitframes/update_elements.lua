@@ -58,15 +58,18 @@ end
 
 function UF:GetTargetDistance(unit)
 	local pm, pf, px, py = Astrolabe:GetCurrentPlayerPosition()
-	
-	if not (pm and px) then return 0, 999 end
+	if not (pm and px and py) then return 0, 999 end
 	
 	local tm, tf, tx, ty = Astrolabe:GetUnitPosition( unit, false )
-	if not (tm and tx) then return 0, 999 end
+	if not (tm and tx and ty) then return 0, 999 end
 	
 	local distance, xdelta, ydelta = Astrolabe:ComputeDistance( pm, pf, px, py, tm, tf, tx, ty )
 
-	return distance, -ninetyDegreeAngleInRadians -GetPlayerFacing() - atan2(ydelta, xdelta)
+	if not (xdelta and ydelta) then
+		return distance or 0, 999
+	else
+		return distance, -ninetyDegreeAngleInRadians -GetPlayerFacing() - atan2(ydelta, xdelta)
+	end
 end
 
 function UF:UpdateRoleIconEnhanced(event)
