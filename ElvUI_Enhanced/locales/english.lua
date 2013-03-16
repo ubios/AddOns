@@ -106,9 +106,9 @@ L["Display threat level as text on targeted, boss or mouseover nameplate."] = tr
 
 -- HealGlow
 L['Heal Glow'] = true
-L['AoE heals will let the unit frames of the affected party / raid members glow for the defined time period.'] = true
+L['Direct AoE heals will let the unit frames of the affected party / raid members glow for the defined time period.'] = true
 L["Glow Duration"] = true
-L["The amount of time the unit frames of party / raid members will glow when affected by an AoE heal."] = true
+L["The amount of time the unit frames of party / raid members will glow when affected by a direct AoE heal."] = true
 L["Glow Color"] = true
 
 -- WatchFrame
