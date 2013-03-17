@@ -27,11 +27,7 @@ function EDT:UpdateSettings()
 		local panel = _G[('Actionbar%dDataPanel'):format(k)]
 		local wasVisible = panel:IsShown()
 
-		if E.db.actionbar[('bar%d'):format(k)].enabled and E.db.datatexts[("actionbar%d"):format(k)] then
-			panel:Show()
-		else
-			panel:Hide()
-		end
+		panel:SetShown(E.db.actionbar[('bar%d'):format(k)].enabled and E.db.datatexts[("actionbar%d"):format(k)])
 
 		if (wasVisible ~= panel:IsShown()) then
 			local mover = _G[('ElvAB_%d'):format(k)]

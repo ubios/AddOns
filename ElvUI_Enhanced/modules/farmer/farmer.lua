@@ -254,11 +254,7 @@ end
 
 function F:UpdateBar(bar, layoutfunc, zonecheck, anchor, buttons, position)
 	local count = layoutfunc(self, bar, anchor, buttons, position)
-	if (E.private.farmer.farmbars.enable and count > 0 and zonecheck(self) and not InCombatLockdown()) then
-		bar:Show()
-	else
-		bar:Hide()
-	end
+	bar:SetShown(E.private.farmer.farmbars.enable and count > 0 and zonecheck(self) and not InCombatLockdown())
 	return count > 0
 end
 
