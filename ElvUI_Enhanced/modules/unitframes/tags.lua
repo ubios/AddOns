@@ -13,8 +13,8 @@ ElvUF.Tags.Methods['afk'] = function(unit)
 end
 
 ElvUF.Tags.Methods['xdistance'] = function(unit)
-	local distance = UF:GetTargetDistance(unit)
-	if distance ~= 0 then
+	local distance = E:GetDistance('player', unit)
+	if distance and distance > 0 then
 		return format('%d', distance)
 	end
 	return ''

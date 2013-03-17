@@ -1,9 +1,7 @@
 local E, L, V, P, G, _ = unpack(ElvUI); --Inport: Engine, Locales, PrivateDB, ProfileDB, GlobalDB, Localize Underscore
 local UF = E:GetModule('UnitFrames');
 local LSR = LibStub("LibSpecRoster-1.0")
-local Astrolabe = DongleStub("Astrolabe-1.0")
 
-local ninetyDegreeAngleInRadians = (3.141592653589793 / 2)
 local sub = string.sub
 local abs, atan2, cos, sin, sqrt2, random, floor, ceil = math.abs, math.atan2, math.cos, math.sin, math.sqrt(2), math.random, math.floor, math.ceil
 local pairs, type, select, unpack = pairs, type, select, unpack
@@ -40,8 +38,8 @@ function UF:UpdateGPS(frame)
 		return
 	end
 	
-	local distance, angle = UF:GetTargetDistance(gps.unit)
-	if angle == 999 then
+	local distance, angle = E:GetDistance('player', gps.unit)
+	if not angle then
 		-- no bearing show - to indicate we are lost :)
 		gps.Text:SetText("-")
 		gps.Texture:Hide()
@@ -54,22 +52,6 @@ function UF:UpdateGPS(frame)
 
 	gps.Text:SetFormattedText("%d", distance)
 	gps:Show()
-end
-
-function UF:GetTargetDistance(unit)
-	local pm, pf, px, py = Astrolabe:GetCurrentPlayerPosition()
-	if not (pm and px and py) then return 0, 999 end
-	
-	local tm, tf, tx, ty = Astrolabe:GetUnitPosition( unit, false )
-	if not (tm and tx and ty) then return 0, 999 end
-	
-	local distance, xdelta, ydelta = Astrolabe:ComputeDistance( pm, pf, px, py, tm, tf, tx, ty )
-
-	if not (xdelta and ydelta) then
-		return distance or 0, 999
-	else
-		return distance, -ninetyDegreeAngleInRadians -GetPlayerFacing() - atan2(ydelta, xdelta)
-	end
 end
 
 function UF:UpdateRoleIconEnhanced(event)
