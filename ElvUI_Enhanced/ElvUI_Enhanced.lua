@@ -1,4 +1,4 @@
-local E, L, V, P, G, _ = unpack(ElvUI); --Inport: Engine, Locales, PrivateDB, ProfileDB, GlobalDB, Localize Underscore
+local E, L, V, P, G = unpack(ElvUI); --Inport: Engine, Locales, PrivateDB, ProfileDB, GlobalDB, Localize Underscore
 local ENH = E:NewModule('ENH', 'AceHook-3.0', 'AceEvent-3.0', 'AceTimer-3.0')
 
 ENH.version = GetAddOnMetadata("ElvUI_Enhanced", "Version")

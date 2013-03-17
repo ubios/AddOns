@@ -1,4 +1,4 @@
-local E, L, V, P, G, _ = unpack(ElvUI); --Inport: Engine, Locales, PrivateDB, ProfileDB, GlobalDB, Localize Underscore
+local E, L, V, P, G = unpack(ElvUI); --Inport: Engine, Locales, PrivateDB, ProfileDB, GlobalDB, Localize Underscore
 local F = E:NewModule('Farmer', 'AceHook-3.0', 'AceEvent-3.0');
 
 -- Idea for farming bars based on: BigButtons, by Azilroka / Sortokk

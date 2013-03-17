@@ -1,4 +1,4 @@
-local E, L, V, P, G, _ = unpack(ElvUI); --Import: Engine, Locales, PrivateDB, ProfileDB, GlobalDB
+local E, L, V, P, G = unpack(ElvUI); --Import: Engine, Locales, PrivateDB, ProfileDB, GlobalDB
 local EDT = E:NewModule('ExtraDataTexts')
 local DT = E:GetModule('DataTexts')
 local AB = E:GetModule('ActionBars')
