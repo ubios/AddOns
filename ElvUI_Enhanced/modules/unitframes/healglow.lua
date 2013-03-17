@@ -1,33 +1,31 @@
 ﻿local E, L, V, P, G, _ = unpack(ElvUI); --Inport: Engine, Locales, PrivateDB, ProfileDB, GlobalDB, Localize Underscore
-local HG = E:NewModule('HealGlow', 'AceHook-3.0', 'AceEvent-3.0')
+local HG = E:NewModule('HealGlow', 'AceEvent-3.0')
 local UF = E:GetModule('UnitFrames')
 
-local twipe = table.wipe
+local tinsert, twipe = table.insert, table.wipe
+
+local playerId
 
 local spells = {}
-local playerId
+local groupUnits = {}
+local frameBuffers = {}
+local frameGroups = {5, 10, 25, 40}
+
 local healGlowFrame
 local healGlowTime
 
-HG.GroupUnits = {}
-HG.FrameBuffers = {}
-
-local currentTime
 local function ShowHealGlows(self, elapsed)
 	self.elapsed = (self.elapsed or 0) + elapsed
 	if self.elapsed < .1 then return end
 	self.elapsed = 0
 
-	currentTime = GetTime()
-	for k, u in pairs(HG.GroupUnits) do
-		for _, index in ipairs({0, 10, 25, 40}) do
-				for _, frame in pairs(HG.FrameBuffers[index]) do			
-					if frame.unit == u[1] then
-						if currentTime < (u[2] + healGlowTime) then					
-							frame.HealGlow:Show()
-						else
-							frame.HealGlow:Hide()
-						end 
+	local currentTime = GetTime(), expireTime
+	for k, unit in pairs(groupUnits) do
+		expireTime = unit[2] + healGlowTime
+		for _, index in ipairs(frameGroups) do
+				for _, frame in pairs(frameBuffers[index]) do			
+					if frame.unit == unit[1] then
+						frame.HealGlow:SetShown(currentTime < expireTime)
 					end
 				end	
 		end
@@ -72,20 +70,16 @@ function HG:SetupVariables()
 		end
 	end
 
-	HG.FrameBuffers[0] = {}
 
-	local frame
-	for i=1, 5 do
-		frame = _G[("ElvUF_PartyUnitButton%d"):format(i)]
-		frame.HealGlow = UF:Construct_HealGlow(frame, ('party%d'):format(i))
-		HG.FrameBuffers[0][i] = frame
-	end
-	for r = 10, 40, 15 do
-		HG.FrameBuffers[r] = {}
-		for i=1, r do
-			frame = _G[("ElvUF_Raid%dUnitButton%i"):format(r, i)]
-			frame.HealGlow = UF:Construct_HealGlow(frame, ('raid%d'):format(i))	
-			HG.FrameBuffers[r][i] = frame
+	twipe(frameBuffers)
+	for _, index in ipairs(frameGroups) do
+		frameBuffers[index] = {}
+		for i = 1, index do
+			frame = (index == 5 and _G[("ElvUF_PartyUnitButton%d"):format(i)] or _G[("ElvUF_Raid%dUnitButton%i"):format(index, i)])
+			if frame then
+				frame.HealGlow = UF:Construct_HealGlow(frame, ((index == 5 and 'party%d' or 'raid%d')):format(i))
+				tinsert(frameBuffers[index], frame)		
+			end
 		end
 	end
 	
@@ -94,14 +88,14 @@ function HG:SetupVariables()
 	healGlowFrame = CreateFrame("Frame")
 	healGlowFrame:SetScript("OnEvent", function(self, event, ...)
 		if (event=="COMBAT_LOG_EVENT_UNFILTERED") then
-	  	local timestamp, event, hideCaster, sourceGUID, sourceName, sourceFlags, sourceFlags2, destGUID, destName, destFlags, destFlags2, spellID, spellName = select(1, ...)
+	  	local _, event, _, sourceGUID, _, _, _, destGUID, _, _, _, spellID, spellName = select(1, ...)
 	  	
-			if sourceGUID ~= playerId or event ~= "SPELL_HEAL" or not spells[spellName] then
+			if not (sourceGUID == playerId and event == "SPELL_HEAL" and spells[spellName]) then
 				return
 			end
 			
-			if HG.GroupUnits[destGUID] then
-				HG.GroupUnits[destGUID][2] = GetTime()
+			if groupUnits[destGUID] then
+				groupUnits[destGUID][2] = GetTime()
 			end
 	  end
 	end)
@@ -112,12 +106,9 @@ end
 function HG:UpdateSettings()
 	local color = E.db.unitframe.glowcolor
 
-	for i=1, 5 do
-		HG.FrameBuffers[0][i].HealGlow:SetBackdropBorderColor(color.r , color.g, color.b)
-	end
-	for r=10,40,15 do
-		for i=1, r do
-			HG.FrameBuffers[r][i].HealGlow:SetBackdropBorderColor(color.r , color.g, color.b)
+	for _, index in ipairs(frameGroups) do
+		for _, frame in ipairs(frameBuffers[index]) do
+			frame.HealGlow:SetBackdropBorderColor(color.r , color.g, color.b)
 		end
 	end
 	
@@ -133,13 +124,13 @@ function HG:UpdateSettings()
 end
 
 function HG:GroupRosterUpdate()
-	twipe(HG.GroupUnits)
+	twipe(groupUnits)
 	
 	local unit
 	for index = 1, GetNumGroupMembers() - (IsInGroup() and 1 or 0) do
 		unit = format("%s%d", (IsInRaid() and "raid" or (IsInGroup() and "party" or "solo")), index)
 		if not UnitIsUnit(unit, "player") then
-			HG.GroupUnits[UnitGUID(unit)] = { unit, 0 }
+			groupUnits[UnitGUID(unit)] = { unit, 0 }
 		end
 	end
 end
