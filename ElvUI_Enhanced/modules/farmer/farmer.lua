@@ -154,6 +154,15 @@ function F:FindItemInBags(itemId)
 	end
 end
 
+function F:UpdateButtonInformation(button)
+	button.items = GetItemCount(button.itemId)
+	if button.text then
+		button.text:SetText(button.items)
+	end
+	button.icon:SetDesaturated(button.items == 0)
+	button.icon:SetAlpha(button.items == 0 and .25 or 1)	
+end
+
 function F:FarmerInventoryUpdate()
 	if InCombatLockdown() then
 		F:RegisterEvent("PLAYER_REGEN_ENABLED", "FarmerInventoryUpdate")	
@@ -164,24 +173,16 @@ function F:FarmerInventoryUpdate()
  	
 	for i = 1, NUM_SEED_BARS do
 		for _, button in ipairs(seedButtons[i]) do
-			button.items = GetItemCount(button.itemId)
-			button.text:SetText(button.items)
-			button.icon:SetDesaturated(button.items == 0)
-			button.icon:SetAlpha(button.items == 0 and .25 or 1)
+			F:UpdateButtonInformation(button)
 		end
 	end
 	
 	for _, button in ipairs(toolButtons) do
-		button.items = GetItemCount(button.itemId)
-		button.icon:SetDesaturated(button.items == 0)
-		button.icon:SetAlpha(button.items == 0 and .25 or 1)
+		F:UpdateButtonInformation(button)
 	end
 	
 	for _, button in ipairs(portalButtons) do
-		button.items = GetItemCount(button.itemId)
-		button.text:SetText(button.items)
-		button.icon:SetDesaturated(button.items == 0)
-		button.icon:SetAlpha(button.items == 0 and .25 or 1)
+		F:UpdateButtonInformation(button)
 	end	
 	
 	F:UpdateLayout()
@@ -297,7 +298,7 @@ function F:UpdateLayout()
 	end	
 end
 
-function F:CreateFarmButton(index, owner, buttonType, name, texture, allowDrop)
+function F:CreateFarmButton(index, owner, buttonType, name, texture, allowDrop, showCount)
 	local button = CreateFrame("Button", ("FarmerButton%d"):format(index), owner, "SecureActionButtonTemplate")
 	button:StyleButton();
 	button:SetTemplate('Default', true);
@@ -315,9 +316,11 @@ function F:CreateFarmButton(index, owner, buttonType, name, texture, allowDrop)
 	button.icon:SetTexCoord(0.1, 0.9, 0.1, 0.9)
 	button.icon:SetInside()
 
-	button.text = button:CreateFontString(nil, "OVERLAY")
-	button.text:SetFont(E.media.normFont, 12, "OUTLINE")
-	button.text:SetPoint("BOTTOMRIGHT", button, 1, 2)	
+	if showCount then
+		button.text = button:CreateFontString(nil, "OVERLAY")
+		button.text:SetFont(E.media.normFont, 12, "OUTLINE")
+		button.text:SetPoint("BOTTOMRIGHT", button, 1, 2)	
+	end
 
 	button.cooldown = CreateFrame("Cooldown", ("FarmerButton%dCooldown"):format(index), button)
 	button.cooldown:SetAllPoints(button)
@@ -373,7 +376,7 @@ function F:CreateFrames()
 				
 		for k, v in pairs(seeds) do
 			if v[1] == i then
-				tinsert(seedButtons[i], F:CreateFarmButton(k, seedBar, "item", v[2], v[11], false))
+				tinsert(seedButtons[i], F:CreateFarmButton(k, seedBar, "item", v[2], v[11], false, true))
 			end
 			tsort(seedButtons[i], function(a, b) return a.sortname < b.sortname end)
 		end
@@ -383,7 +386,7 @@ function F:CreateFrames()
 	toolBar:SetFrameStrata("BACKGROUND")
 	toolBar:SetPoint("CENTER", farmToolBarAnchor, "CENTER", 0, 0)
 	for k, v in pairs(tools) do
-		tinsert(toolButtons, F:CreateFarmButton(k, toolBar, "item", v[2], v[11], true))
+		tinsert(toolButtons, F:CreateFarmButton(k, toolBar, "item", v[2], v[11], true, false))
 	end
 	
 	local portalBar = CreateFrame("Frame", "FarmPortalBar", UIParent)
@@ -392,7 +395,7 @@ function F:CreateFrames()
 	local playerFaction = UnitFactionGroup('player')
 	for k, v in pairs(portals) do
 		if v[1] == playerFaction then
-			tinsert(portalButtons, F:CreateFarmButton(k, portalBar, "item", v[2], v[11], false))
+			tinsert(portalButtons, F:CreateFarmButton(k, portalBar, "item", v[2], v[11], false, true))
 		end
 	end
 
