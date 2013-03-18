@@ -60,8 +60,8 @@ function EDT:PositionDataPanel(panel, index)
 	local spacer = E.db.actionbar[("bar%d"):format(index)].backdrop and 0 or SPACING
 	
 	panel:ClearAllPoints()
-	panel:Point('TOPLEFT', actionbar, 'BOTTOMLEFT', spacer, -spacer)
-	panel:Point('BOTTOMRIGHT', actionbar, 'BOTTOMRIGHT', -spacer, -(spacer + PANEL_HEIGHT))
+	panel:Point('TOPLEFT', actionbar, 'BOTTOMLEFT', spacer, 0)
+	panel:Point('BOTTOMRIGHT', actionbar, 'BOTTOMRIGHT', -spacer, -PANEL_HEIGHT)
 	
 	EDT:UpdateSettings()
 end
@@ -145,15 +145,14 @@ end
 function EDT:OnInitialize()
 	for k, v in pairs(extrapanel) do
 		local actionbar = _G[("ElvUI_Bar%d"):format(k)]
-		local panel = CreateFrame('Frame', ('Actionbar%dDataPanel'):format(k), E.UIParent)
+		local panelname = ('Actionbar%dDataPanel'):format(k)
+		local panel = CreateFrame('Frame', panelname, E.UIParent)
 		local spacer = E.db.actionbar[("bar%d"):format(k)].backdrop and 0 or SPACING
 
-		panel:Point('TOPLEFT', actionbar, 'BOTTOMLEFT', spacer, -spacer)
-		panel:Point('BOTTOMRIGHT', actionbar, 'BOTTOMRIGHT', -spacer, -(spacer + PANEL_HEIGHT))	
 		panel:SetTemplate(E.db.datatexts.panelTransparency and 'Transparent' or 'Default', true)
 		
 		-- Add DataPanel to FrameLock for hiding during Pet Battles
-		E.FrameLocks[('Actionbar%dDataPanel'):format(k)] = true;
+		E.FrameLocks[panelname] = true;
 
 		DT:RegisterPanel(panel, v, 'ANCHOR_TOP', 0, -4)
 	end
