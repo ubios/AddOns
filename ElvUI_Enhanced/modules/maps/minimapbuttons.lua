@@ -231,7 +231,7 @@ function MB:CreateFrames()
 	
 	E:CreateMover(minimapButtonBarAnchor, "MinimapButtonAnchor", L["Minimap Button Bar"])
 
-	minimapButtonBar = CreateFrame("Frame", "MinimapButtonBar", UIParent)
+	minimapButtonBar = CreateFrame("Frame", "MinimapButtonBar", E.UIParent)
 	minimapButtonBar:SetFrameStrata("BACKGROUND")
 	minimapButtonBar:SetTemplate("Transparent")
 	minimapButtonBar:CreateShadow()
