@@ -36,13 +36,23 @@ L["Enable/Disable the display of durability information on the character screen.
 L["Damaged Only"] = "Nur Beschädigte"
 L["Only show durabitlity information for items that are damaged."] = "Nur die Ausrüstungsdauerhaftigkeit fur Beschädigte Ausrüstungsstucke anzeigen."
 
+-- Movers
+L["Mover Transparency"] = true
+L["Changes the transparency of all the movers."] = true
+
 -- GPS module
 L['Show the direction and distance to the selected party or raid member.'] = "Anzeigen von der Richtung und Entfernung zum ausgewählten Gruppen oder Schlachtzugsmitglied."
+
+-- Attack Icon
+L['Attack Icon'] = true
+L['Show attack icon for units that are not tapped by you or your group, but still give kill credit when attacked.'] = true
 
 -- Minimap Location
 L['Above Minimap'] = "Oberhalb der Minimap"
 L['Location Digits'] = "Stellen der Umgebungskoordinaten"
 L['Number of digits for map location.'] = "Anzahl der stellen fur die Umgebungskoordinaten."
+
+-- Minimap Combat Hide
 L["Hide minimap while in combat."] = "Ausblenden Minimap während des Kampfes."
 L["FadeIn Delay"] = "FadeIn Verzögerung"
 L["The time to wait before fading the minimap back in after combat hide. (0 = Disabled)"] = "Die Zeit vor dem wieder Einblenden der Minimap nach dem Kampf. (0 = deaktiviert)"
@@ -91,7 +101,29 @@ L['Only active buttons'] = 'Nur aktive Knöpfen'
 L['Only show the buttons for the seeds, portals, tools you have in your bags.'] = 'Nur die Knöpfe für Saat, Portale und Werkzeuge zeigen die Sie in Ihrem Gepäck haben.'
 L['Drop Tools'] = 'Werkzeuge ablegen'
 L['Automatically drop tools from your bags when leaving the farming area.'] = 'Automatische die Werkzeuge ablegen beim Verlassen des landwirtschaftlichen Bereichs.'
+L['Seed Bar Direction'] = true
+L['The direction of the seed bar buttons (Horizontal or Vertical).'] = true
 
 -- Nameplates
 L["Bedrohungstext"] = true
 L["Anzeigen der Bedrohungslage als Text auf dem Ziel oder Boss Namensschild."] = true
+
+-- HealGlow
+L['Heal Glow'] = true
+L['Direct AoE heals will let the unit frames of the affected party / raid members glow for the defined time period.'] = true
+L["Glow Duration"] = true
+L["The amount of time the unit frames of party / raid members will glow when affected by a direct AoE heal."] = true
+L["Glow Color"] = true
+
+-- WatchFrame
+L['WatchFrame'] = true
+L['WATCHFRAME_DESC'] = "Adjust the settings for the visibility of the watchframe (questlog) to your personal preference."
+L['Hidden'] = true
+L['Collapsed'] = true
+L['Settings'] = true
+L['City (Resting)'] = true
+L['PvP'] = true
+L['Arena'] = true
+L['Party'] = true
+L['Raid'] = true
+

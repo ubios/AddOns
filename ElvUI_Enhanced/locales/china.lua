@@ -36,9 +36,17 @@ L['Enable/Disable the display of durability information on the character screen.
 L["Damaged Only"] = "受损显示"
 L["Only show durabitlity information for items that are damaged."] = "只在装备受损时显示耐久度."
 
+-- Movers
+L["Mover Transparency"] = true
+L["Changes the transparency of all the movers."] = true
+
 -- GPS module
 L['GPS'] = "GPS定位"
 L['Show the direction and distance to the selected party or raid member.'] = "显示你与当前队伍或团队成员的方向与距离."
+
+-- Attack Icon
+L['Attack Icon'] = true
+L['Show attack icon for units that are not tapped by you or your group, but still give kill credit when attacked.'] = true
 
 -- Minimap Buttons
 L["Minimap Button Bar"] = "小地图按钮整合列"
@@ -51,6 +59,16 @@ L['The size of the minimap buttons.'] = "小地图图标尺寸."
 L['No Anchor Bar'] = "没有锚点"
 L['Horizontal Anchor Bar'] = "水平状"
 L['Vertical Anchor Bar'] = "垂直状"
+
+-- Minimap Location
+L['Above Minimap'] = true
+L['Location Digits'] = true
+L['Number of digits for map location.'] = true
+
+-- Minimap Combat Hide
+L["Hide minimap while in combat."] = true
+L["FadeIn Delay"] = true
+L["The time to wait before fading the minimap back in after combat hide. (0 = Disabled)"] = true
 
 -- PvP Autorelease
 L['PvP Autorelease'] = "PVP自动释放灵魂"
@@ -85,8 +103,28 @@ L['Only active buttons'] = "只显示有效的按钮"
 L['Only show the buttons for the seeds, portals, tools you have in your bags.'] = "只显示你背包中有的种子, 传送门和工具."
 L['Drop Tools'] = "删除工具"
 L['Automatically drop tools from your bags when leaving the farming area.'] = "当你离开农场范围时, 自动删除背包中的工具."
- 
+L['Seed Bar Direction'] = true
+L['The direction of the seed bar buttons (Horizontal or Vertical).'] = true
+
 -- Nameplates
 L["Threat Text"] = "威胁值文字"
 L["Display threat level as text on targeted, boss or mouseover nameplate."] = "在首领或鼠标悬停的血条上显示威胁值文字."
 
+-- HealGlow
+L['Heal Glow'] = true
+L['Direct AoE heals will let the unit frames of the affected party / raid members glow for the defined time period.'] = true
+L["Glow Duration"] = true
+L["The amount of time the unit frames of party / raid members will glow when affected by a direct AoE heal."] = true
+L["Glow Color"] = true
+
+-- WatchFrame
+L['WatchFrame'] = true
+L['WATCHFRAME_DESC'] = "Adjust the settings for the visibility of the watchframe (questlog) to your personal preference."
+L['Hidden'] = true
+L['Collapsed'] = true
+L['Settings'] = true
+L['City (Resting)'] = true
+L['PvP'] = true
+L['Arena'] = true
+L['Party'] = true
+L['Raid'] = true

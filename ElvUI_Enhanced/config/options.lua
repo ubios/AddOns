@@ -349,6 +349,8 @@ function EO:MapOptions()
 end
 
 function EO:MiscOptions()
+	local M = E:GetModule('MiscEnh')
+
 	E.Options.args.general.args.general.args.pvpautorelease = {
 		order = 40,
 		type = "toggle",
@@ -365,6 +367,17 @@ function EO:MiscOptions()
 		desc = L['Automatically change your watched faction on the reputation bar to the faction you got reputation points for.'],
 		get = function(info) return E.private.general.autorepchange end,
 		set = function(info, value) E.private.general.autorepchange = value; end,
+	}
+	
+	E.Options.args.general.args.general.args.movertransparancy = {
+		order = 4,
+		type = 'range',
+    isPercent = true,
+    name = L["Mover Transparency"],
+    desc = L["Changes the transparency of all the movers."],
+    min = 0, max = 1, step = 0.01,
+    set = function(info, value) E.db.general.movertransparancy = value M:UpdateMoverTransparancy() end,
+    get = function(info) return E.db.general.movertransparancy end,
 	}
 end
 

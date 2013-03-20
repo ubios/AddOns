@@ -33,6 +33,7 @@ function M:Initialize()
 	self:LoadQuestReward()
 	self:LoadWatchedFaction()
 	self:LoadPaperDollDurability()
+	self:LoadMoverTransparancy()
 end
 
 E:RegisterModule(M:GetName())

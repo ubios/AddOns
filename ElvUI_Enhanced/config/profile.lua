@@ -2,6 +2,7 @@
 
 --General
 P['general']['minimap']['locationText'] = 'ABOVE'
+P['general']['movertransparancy'] = .8
 
 --Unitframes
 P['unitframe']['healglow'] = true

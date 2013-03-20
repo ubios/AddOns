@@ -36,6 +36,10 @@ L['Enable/Disable the display of durability information on the character screen.
 L["Damaged Only"] = true
 L["Only show durabitlity information for items that are damaged."] = true
 
+-- Movers
+L["Mover Transparency"] = true
+L["Changes the transparency of all the movers."] = true
+
 -- GPS module
 L['GPS'] = true
 L['Show the direction and distance to the selected party or raid member.'] = true
@@ -48,6 +52,8 @@ L['Show attack icon for units that are not tapped by you or your group, but stil
 L['Above Minimap'] = true
 L['Location Digits'] = true
 L['Number of digits for map location.'] = true
+
+-- Minimap Combat Hide
 L["Hide minimap while in combat."] = true
 L["FadeIn Delay"] = true
 L["The time to wait before fading the minimap back in after combat hide. (0 = Disabled)"] = true
