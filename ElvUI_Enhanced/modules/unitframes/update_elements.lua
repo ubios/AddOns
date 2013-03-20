@@ -62,6 +62,7 @@ function UF:UpdateRoleIconEnhanced(event)
 
 	local lfdrole = self.LFDRole
 	local db = self.db.roleIcon
+	local autochange = false
 	
 	if (not db) or (db and not db.enable) then 
 		lfdrole:Hide()
@@ -75,6 +76,7 @@ function UF:UpdateRoleIconEnhanced(event)
 			role = rnd == 1 and "TANK" or (rnd == 2 and "HEALER" or (rnd == 3 and "DAMAGER" or(rnd == 4 and "DC")))
 		else
 			_, role = LSR:getRole(UnitGUID(self.unit))
+			autochange = true
 		end
 	end
 	
@@ -87,6 +89,9 @@ function UF:UpdateRoleIconEnhanced(event)
 			UF:CancelTimer(lfdrole.timer)
 			lfdrole.timer = nil
 		end
+		if autochange and not InCombatLockdown() and (UnitIsGroupLeader('player') or UnitIsGroupAssistant('player')) and role ~= "DC" then
+			UnitSetRole(self.unit, role)
+		end	
 	else
 		lfdrole:Hide()
 		if not lfdrole.timer then
