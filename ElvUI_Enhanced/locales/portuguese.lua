@@ -39,6 +39,10 @@ L["Only show durabitlity information for items that are damaged."] = "Só mostra
 L["Mover Transparency"] = true
 L["Changes the transparency of all the movers."] = true
 
+-- Automatic Role Assignment
+L['Automatic Role Assignment'] = true
+L['Enables the automatic role assignment based on specialization for party / raid members (only work when you are group leader or group assist).'] = true
+
 -- GPS module
 L['GPS'] = "GPS"
 L['Show the direction and distance to the selected party or raid member.'] = "Mostrar a direcção e distância para o membro do grupo ou raide seleccionado."

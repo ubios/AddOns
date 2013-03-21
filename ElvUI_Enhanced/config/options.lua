@@ -505,6 +505,13 @@ function EO:UnitFramesOptions()
 			},
 		},
 	}
+
+	E.Options.args.unitframe.args.general.args.generalGroup.args.autoRoleSet = {
+		order = 6,
+		name = L['Automatic Role Assignment'],
+		desc = L['Enables the automatic role assignment based on specialization for party / raid members (only work when you are group leader or group assist).'],
+		type = 'toggle',
+	}
 end
 
 function EO:WatchFrame()

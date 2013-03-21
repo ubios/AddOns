@@ -8,6 +8,7 @@ P['general']['movertransparancy'] = .8
 P['unitframe']['healglow'] = true
 P['unitframe']['glowtime'] = .8
 P['unitframe']['glowcolor'] = { r = 1, g = 1, b = 0}
+P['unitframe']['autoRoleSet'] = false
 
 P['unitframe']['units']['target']['gps'] = {
 	['enable'] = true,

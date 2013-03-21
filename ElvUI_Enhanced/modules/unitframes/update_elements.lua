@@ -89,7 +89,7 @@ function UF:UpdateRoleIconEnhanced(event)
 			UF:CancelTimer(lfdrole.timer)
 			lfdrole.timer = nil
 		end
-		if autochange and not InCombatLockdown() and (UnitIsGroupLeader('player') or UnitIsGroupAssistant('player')) and role ~= "DC" then
+		if E.db.unitframe.autoRoleSet and autochange and not InCombatLockdown() and (UnitIsGroupLeader('player') or UnitIsGroupAssistant('player')) and role ~= "DC" then
 			UnitSetRole(self.unit, role)
 		end	
 	else
