@@ -48,12 +48,12 @@ local moveButtons = {}
 local minimapButtonBarAnchor, minimapButtonBar
 
 local function OnEnter()
-	if not E.private.general.minimapbar.mouseover then return end
+	if not E.private.general.minimapbar.mouseover or E.private.general.minimapbar.skinStyle == 'NOANCHOR' then return end
 	UIFrameFadeIn(MinimapButtonBar, 0.2, MinimapButtonBar:GetAlpha(), 1)
 end
 
 local function OnLeave()
-	if not E.private.general.minimapbar.mouseover then return end
+	if not E.private.general.minimapbar.mouseover or E.private.general.minimapbar.skinStyle == 'NOANCHOR' then return end
 	UIFrameFadeOut(MinimapButtonBar, 0.2, MinimapButtonBar:GetAlpha(), 0)
 end
 
@@ -99,6 +99,7 @@ function MB:SkinButton(frame)
 			frame.original.Point, frame.original.relativeTo, frame.original.relativePoint, frame.original.xOfs, frame.original.yOfs = frame:GetPoint()
 			frame.original.Parent = frame:GetParent()
 			frame.original.FrameStrata = frame:GetFrameStrata()
+			frame.original.FrameLevel = frame:GetFrameLevel()
 			if frame:HasScript("OnDragStart") then
 				frame.original.DragStart = frame:GetScript("OnDragStart")
 			end
@@ -154,6 +155,7 @@ function MB:UpdateLayout()
 			frame:SetSize(frame.original.Width, frame.original.Height)
 			frame:SetPoint(frame.original.Point, frame.original.relativeTo, frame.original.relativePoint, frame.original.xOfs, frame.original.yOfs)
 			frame:SetFrameStrata(frame.original.FrameStrata)
+			frame:SetFrameLevel(frame.original.FrameLevel)
 			frame:SetMovable(true)
 		else
 			frame:SetParent(minimapButtonBar)
@@ -163,6 +165,7 @@ function MB:UpdateLayout()
 			
 			frame:ClearAllPoints()
 			frame:SetFrameStrata("LOW")
+			frame:SetFrameLevel(20)
 			frame:Size(E.private.general.minimapbar.buttonSize)
 			if E.private.general.minimapbar.skinStyle == 'HORIZONTAL' then
 				anchor1 = 'RIGHT'
