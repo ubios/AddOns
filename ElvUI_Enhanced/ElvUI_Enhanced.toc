@@ -11,6 +11,7 @@
 ## DefaultState: Enabled
 ## SavedVariables: ElvDB, ElvPrivateDB
 ## SavedVariablesPerCharacter: ElvCharacterDB
+## X-Tukui-ProjectID: 161
 
 ## OptionalDeps: LibBalancePowerTracker-1.1, LibRangeCheck-2.0, LibSpecRoster-1.0
 ## X-Embeds: LibBalancePowerTracker-1.1, LibRangeCheck-2.0, LibSpecRoster-1.0
