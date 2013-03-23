@@ -110,24 +110,28 @@ local function NearbyPlayers(unit, range)
 	return unitsInRange
 end
 
+-- Extra Throttled version of distance, handy for large raidgroups
 ElvUF.Tags.Methods['xdistance'] = function(unit)
 	if not UnitIsConnected(unit) or UnitIsUnit(unit, 'player') then return end
 
-	return CheckElapsedTimeFunction('distance', unit, .1, Distance)
+	return CheckElapsedTimeFunction('distance', unit, .2, Distance)
 end
 
+-- Extra Throttled version of nearbyplayers, handy for large raidgroups
 ElvUF.Tags.Methods['xnearbyplayers:8'] = function(unit)
 	if not UnitIsConnected(unit) then return end
 
 	return CheckElapsedTimeFunction('nearbyplayers:8', unit, .25, NearbyPlayers, 8)
 end
 
+-- Extra Throttled version of nearbyplayers, handy for large raidgroups
 ElvUF.Tags.Methods['xnearbyplayers:10'] = function(unit)
 	if not UnitIsConnected(unit) then return end
 
 	return CheckElapsedTimeFunction('nearbyplayers:10', unit, .25, NearbyPlayers, 10)
 end
 
+-- Extra Throttled version of nearbyplayers, handy for large raidgroups
 ElvUF.Tags.Methods['xnearbyplayers:30'] = function(unit)
 	if not UnitIsConnected(unit) then return end
 
