@@ -14,6 +14,7 @@ ElvUF.Tags.Methods['xafk'] = function(unit)
 	end
 end
 
+ElvUF.Tags.OnUpdateThrottle['xdistance'] = .2
 ElvUF.Tags.Methods['xdistance'] = function(unit)
   local distance = E:GetDistance('player', unit)
   if distance and distance > 0 then
