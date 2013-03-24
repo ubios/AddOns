@@ -14,7 +14,7 @@ ElvUF.Tags.Methods['xafk'] = function(unit)
 	end
 end
 
-ElvUF.Tags.OnUpdateThrottle['xdistance'] = .5
+ElvUF.Tags.OnUpdateThrottle['xdistance'] = .2
 ElvUF.Tags.Methods['xdistance'] = function(unit)
 	if not UnitIsConnected(unit) or UnitIsUnit(unit, 'player') then return end
 
