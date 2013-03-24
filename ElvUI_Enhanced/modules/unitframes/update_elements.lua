@@ -33,7 +33,7 @@ function UF:UpdateGPS(frame)
 	if not gps then return end
 	
 	-- GPS Disabled or not GPS parent frame visible or not in Party or Raid, Hide gps
-	if UnitIsUnit(gps.unit, 'player') or not (UnitInParty(gps.unit) or UnitInRaid(gps.unit)) then
+	if not frame:IsVisible() or UnitIsUnit(gps.unit, 'player') or not (UnitInParty(gps.unit) or UnitInRaid(gps.unit)) then
 		gps:Hide()
 		return
 	end

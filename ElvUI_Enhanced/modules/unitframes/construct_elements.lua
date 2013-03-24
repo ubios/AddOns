@@ -57,7 +57,7 @@ function UF:EnhanceDruidEclipse()
 	-- add eclipse prediction when playing druid
 	if E.myclass == "DRUID" then
 		ElvUF_Player.EclipseBar.callbackid = LibBalancePowerTracker:RegisterCallback(function(energy, direction, virtual_energy, virtual_direction, virtual_eclipse)
-			if (ElvUF_Player.EclipseBar:IsShown()) then
+			if (ElvUF_Player.EclipseBar:IsVisible()) then
 				-- improve visibility of eclipse direction indicator
 				ElvUF_Player.EclipseBar.Text:SetFont([[Interface\AddOns\ElvUI\media\fonts\Continuum_Medium.ttf]], 18, 'OUTLINE')
 				eclipsedirection[virtual_direction](ElvUF_Player.EclipseBar, direction ~= virtual_direction)
@@ -65,7 +65,7 @@ function UF:EnhanceDruidEclipse()
 		end)
 		
 		ElvUF_Player.EclipseBar.PostUpdatePower = function()
-			if (ElvUF_Player.EclipseBar:IsShown()) then
+			if (ElvUF_Player.EclipseBar:IsVisible()) then
 				energy, direction, virtual_energy, virtual_direction, virtual_eclipse = LibBalancePowerTracker:GetEclipseEnergyInfo()
 				eclipsedirection[virtual_direction](ElvUF_Player.EclipseBar, direction ~= virtual_direction)	
 			end

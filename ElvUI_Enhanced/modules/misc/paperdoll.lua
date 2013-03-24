@@ -16,7 +16,7 @@ local slots = {
 
 function M:UpdateDurability()
 	local frame = _G["CharacterFrame"]
-	if not frame:IsShown() then return end
+	if not frame:IsVisible() then return end
 	
 	local slot, current, maximum, r, g, b
 	for i = 1, #slots do
