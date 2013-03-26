@@ -50,4 +50,5 @@ function M:LoadPaperDollDurability()
 	end	
 	
 	self:RegisterEvent("UPDATE_INVENTORY_DURABILITY", "UpdateDurability")	
+	self:UpdateDurability();
 end
