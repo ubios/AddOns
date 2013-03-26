@@ -15,9 +15,14 @@ local slots = {
 }
 
 function M:UpdateDurability()
+	if InCombatLockdown() then
+		M:RegisterEvent("PLAYER_REGEN_ENABLED", "UpdateDurability")	
+		return
+	else
+		M:UnregisterEvent("PLAYER_REGEN_ENABLED")
+ 	end
+
 	local frame = _G["CharacterFrame"]
-	if not frame:IsVisible() then return end
-	
 	local slot, current, maximum, r, g, b
 	for i = 1, #slots do
 		frame = _G[("Character%s"):format(slots[i])]
@@ -36,12 +41,6 @@ function M:UpdateDurability()
 end
 
 function M:LoadPaperDollDurability()
-	_G["CharacterFrame"]:HookScript("OnShow", function(self)
-		M:UpdateDurability()
-	end)
-	
-	self:RegisterEvent("UPDATE_INVENTORY_DURABILITY", "UpdateDurability")
-
 	local frame
 	for i = 1, #slots do
 		frame = _G[("Character%s"):format(slots[i])]
@@ -49,4 +48,6 @@ function M:LoadPaperDollDurability()
 		frame.DurabilityInfo:SetPoint("CENTER", frame, "CENTER", 0, 0)
 		frame.DurabilityInfo:FontTemplate(E.media.font, 12, "OUTLINE")
 	end	
+	
+	self:RegisterEvent("UPDATE_INVENTORY_DURABILITY", "UpdateDurability")	
 end
