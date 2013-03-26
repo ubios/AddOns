@@ -369,6 +369,15 @@ function EO:MiscOptions()
 		set = function(info, value) E.private.general.autorepchange = value; end,
 	}
 	
+	E.Options.args.general.args.general.args.selectquestreward = {
+		order = 42,
+		type = "toggle",
+		name = L['Select Quest Reward'],
+		desc = L['Automatically select the quest reward with the highest vendor sell value.'],
+		get = function(info) return E.private.general.selectquestreward end,
+		set = function(info, value) E.private.general.selectquestreward = value; end,
+	}
+	
 	E.Options.args.general.args.general.args.movertransparancy = {
 		order = 4,
 		type = 'range',

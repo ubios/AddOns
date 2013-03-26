@@ -80,6 +80,10 @@ L['Automatically release body when killed inside a battleground.'] = "Automatisc
 L['Track Reputation'] = "Reputation Verfolgen"
 L['Automatically change your watched faction on the reputation bar to the faction you got reputation points for.'] = "Automatisch ändern der beobachteten Fraktion auf der Erfahrungsleiste zur Fraktion wo mann Reputationspunkte für bekommen hatt."
 
+-- Select Quest Reward
+L['Select Quest Reward'] = true
+L['Automatically select the quest reward with the highest vendor sell value.'] = true
+
 -- Range Datatext
 L['Distance'] = 'Entfernung'
 

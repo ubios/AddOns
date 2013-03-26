@@ -82,6 +82,10 @@ L['Automatically release body when killed inside a battleground.'] = "Libère au
 L['Track Reputation'] = "Suivre la Réputation"
 L['Automatically change your watched faction on the reputation bar to the faction you got reputation points for.'] = "Change automatiquement la réputation suivie sur la barre de réputation avec la faction que vous êtes en train de faire."
 
+-- Select Quest Reward
+L['Select Quest Reward'] = true
+L['Automatically select the quest reward with the highest vendor sell value.'] = true
+
 -- Extra Datatexts
 L['Actionbar1DataPanel'] = "Barre d'actions 1"
 L['Actionbar3DataPanel'] = "Barre d'actions 3"

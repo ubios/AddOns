@@ -82,6 +82,10 @@ L['Automatically release body when killed inside a battleground.'] = "在戰場�
 L['Track Reputation'] = "聲望追蹤"
 L['Automatically change your watched faction on the reputation bar to the faction you got reputation points for.'] = "當你獲得某個陣營的聲望時, 將自動追蹤此陣營的聲望至經驗值欄位." 
 
+-- Select Quest Reward
+L['Select Quest Reward'] = true
+L['Automatically select the quest reward with the highest vendor sell value.'] = true
+
 -- Range Datatext
 L['Distance'] = "距離"
 

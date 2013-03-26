@@ -14,6 +14,8 @@ local function SelectQuestReward(index)
 end
 
 function M:QUEST_COMPLETE()
+	if not E.private.general.selectquestreward then return end
+
 	-- default first button when no item has a sell value.
 	local choice, price = 1, 0
 	local num = GetNumQuestChoices()
