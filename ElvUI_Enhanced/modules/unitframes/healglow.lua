@@ -136,6 +136,8 @@ function HG:GroupRosterUpdate()
 end
 
 function HG:Initialize()
+	if not E.private["unitframe"].enable then return end
+
 	HG:RegisterEvent("PLAYER_ENTERING_WORLD", "SetupVariables")
 	HG:RegisterEvent("GROUP_ROSTER_UPDATE", "GroupRosterUpdate")
 end
