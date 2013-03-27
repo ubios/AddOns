@@ -1,4 +1,4 @@
-﻿-- French localization file for frFR.
+-- French localization file for frFR.
 local AceLocale = LibStub:GetLibrary("AceLocale-3.0");
 local L = AceLocale:NewLocale("ElvUI", "frFR");
 if not L then return; end
@@ -38,30 +38,30 @@ L["Damaged Only"] = "Dégâts seulement"
 L["Only show durabitlity information for items that are damaged."] = "Afficher la durailité seulement quand l'équipement est endommagé."
 
 -- Movers
-L["Mover Transparency"] = true
-L["Changes the transparency of all the movers."] = true
+L["Mover Transparency"] = "Transparence des Movers"
+L["Changes the transparency of all the movers."] = "Chance la transparence des Movers"
 
 -- Automatic Role Assignment
-L['Automatic Role Assignment'] = true
-L['Enables the automatic role assignment based on specialization for party / raid members (only work when you are group leader or group assist).'] = true
+L['Automatic Role Assignment'] = "Assigner automatiquement le rôle"
+L['Enables the automatic role assignment based on specialization for party / raid members (only work when you are group leader or group assist).'] = "Active l'assignation automatique des rôles des membres selon la spécialisation dans le group/ Raid (Fonctionne seulement quans vous êtes le leader ou que vous possédez une assist.)"
 
 -- GPS module
 L['GPS'] = "GPS"
 L['Show the direction and distance to the selected party or raid member.'] = "Affiche la direction et la distance entre vous et la cible du groupe ou du raid."
 
 -- Attack Icon
-L['Attack Icon'] = true
-L['Show attack icon for units that are not tapped by you or your group, but still give kill credit when attacked.'] = true
+L['Attack Icon'] = "Icône d'Attaque"
+L['Show attack icon for units that are not tapped by you or your group, but still give kill credit when attacked.'] = "Affiche un icône d'attaque sur les unités que vous ou votre groupe n'avez pas encore tapé mais dont vous pouvez revendiquer la paternité."
 
 -- Minimap Location
-L['Above Minimap'] = true
-L['Location Digits'] = true
-L['Number of digits for map location.'] = true
+L['Above Minimap'] = "Sous la minicarte"
+L['Location Digits'] = "Chiffres d'emplacement"
+L['Number of digits for map location.'] = "Nombre de chiffres pour l'emplacement."
 
 -- Minimap Combat Hide
-L["Hide minimap while in combat."] = true
-L["FadeIn Delay"] = true
-L["The time to wait before fading the minimap back in after combat hide. (0 = Disabled)"] = true
+L["Hide minimap while in combat."] = "Cacher la minicarte quand vous êtes en combat"
+L["FadeIn Delay"] = "Délais d'estompage"
+L["The time to wait before fading the minimap back in after combat hide. (0 = Disabled)"] = "Le temps à attendre avant que la minicarte s'estompe avec que le combat ait commencé. (0 = désactié)"
 
 -- Minimap Buttons
 L['Skin Buttons'] = "Boutons Skin"
@@ -83,8 +83,8 @@ L['Track Reputation'] = "Suivre la Réputation"
 L['Automatically change your watched faction on the reputation bar to the faction you got reputation points for.'] = "Change automatiquement la réputation suivie sur la barre de réputation avec la faction que vous êtes en train de faire."
 
 -- Select Quest Reward
-L['Select Quest Reward'] = true
-L['Automatically select the quest reward with the highest vendor sell value.'] = true
+L['Select Quest Reward'] = "Sélection de la récompense de quête"
+L['Automatically select the quest reward with the highest vendor sell value.'] = "Sélectionne automatiquement la récompense de quête qui vaut la plus chère chez le vendeur."
 
 -- Extra Datatexts
 L['Actionbar1DataPanel'] = "Barre d'actions 1"
@@ -97,39 +97,39 @@ L["The Halfhill Market"] = "Marché de Micolline"
 L["Tilled Soil"] = "Terre labourée"
 L['Right-click to drop the item.'] = "Clique droit pour lacher l'objet."
 
-L['Farmer'] = true
+L['Farmer'] = "Ferme"
 L["FARMER_DESC"] = "Adjust the settings for the tools that help you farm more efficiently on Sunsong Ranch."
 L['Farmer Bars'] = "Barre d'agriculteur" --huhu nice joke
-L['Farmer Portal Bar'] = true
-L['Farmer Seed Bar'] = true
-L['Farmer Tools Bar'] = true
+L['Farmer Portal Bar'] = "Barre des portails"
+L['Farmer Seed Bar'] = "Barre des graines"
+L['Farmer Tools Bar'] = "Barre des outils"
 L['Enable/Disable the farmer bars.'] = "Activer / Désactiver la barre d'agriculteur" --second try :p
 L['Only active buttons'] = "Seulement les boutons actifs"
 L['Only show the buttons for the seeds, portals, tools you have in your bags.'] = "Affiche seulement les boutons pour les graines, portails et outils que vous avez dans vos sacs."
-L['Drop Tools'] = true
-L['Automatically drop tools from your bags when leaving the farming area.'] = true
-L['Seed Bar Direction'] = true
-L['The direction of the seed bar buttons (Horizontal or Vertical).'] = true
+L['Drop Tools'] = "Jeter les outils"
+L['Automatically drop tools from your bags when leaving the farming area.'] = "Jète automatiquement les outils de votre sac après avoir quité la ferme."
+L['Seed Bar Direction'] = "Direction de la barre de graine."
+L['The direction of the seed bar buttons (Horizontal or Vertical).'] = "La direction de la barre de graine (Horizontal ou Vertical)."
 
 -- Nameplates
-L["Threat Text"] = true
-L["Display threat level as text on targeted, boss or mouseover nameplate."] = true
+L["Threat Text"] = "Texte de menace"
+L["Display threat level as text on targeted, boss or mouseover nameplate."] = "Affiche le niveau de menace sur le cadre d'unité de la cible, du boss, ou en passant votre souris."
 
 -- HealGlow
-L['Heal Glow'] = true
-L['Direct AoE heals will let the unit frames of the affected party / raid members glow for the defined time period.'] = true
-L["Glow Duration"] = true
-L["The amount of time the unit frames of party / raid members will glow when affected by a direct AoE heal."] = true
-L["Glow Color"] = true
+L['Heal Glow'] = "Prédiction des soins"
+L['Direct AoE heals will let the unit frames of the affected party / raid members glow for the defined time period.'] = "Les soins directs d'AoE laisserons sur les cadres d'unités du groupe / raid un montant fixe défini pour la période du soin."
+L["Glow Duration"] = "Durée de la prédiction"
+L["The amount of time the unit frames of party / raid members will glow when affected by a direct AoE heal."] = "Le temps que les cadres d'unités du groupe / Raid seront affectés par la prédiction de soin."
+L["Glow Color"] = "Couleur de la prédiction"
 
 -- WatchFrame
-L['WatchFrame'] = true
+L['WatchFrame'] = "Fenêtre d'objectifs"
 L['WATCHFRAME_DESC'] = "Adjust the settings for the visibility of the watchframe (questlog) to your personal preference."
-L['Hidden'] = true
-L['Collapsed'] = true
-L['Settings'] = true
-L['City (Resting)'] = true
-L['PvP'] = true
-L['Arena'] = true
-L['Party'] = true
-L['Raid'] = true
+L['Hidden'] = "Caché"
+L['Collapsed'] = "Replié"
+L['Settings'] = "Paramètres"
+L['City (Resting)'] = "Ville (repos)"
+L['PvP'] = "PvP"
+L['Arena'] = "Arêne"
+L['Party'] = "Groupe"
+L['Raid'] = "Raid"
