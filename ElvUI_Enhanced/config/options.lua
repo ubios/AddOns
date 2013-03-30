@@ -626,8 +626,19 @@ function EO:GetOptions()
 	EO:WatchFrame()
 end
 
+function EO:CheckIncompatible()
+	if E.global.ignoreIncompatible then return end
+
+	if IsAddOnLoaded('SquareMinimapButtons') and E.private.general.minimapbar.skinButtons then
+		E:IncompatibleAddOn('SquareMinimapButtons', 'Minimap')		
+	end
+	
+end
+
+
 function EO:Initialize()
   EP:RegisterPlugin(ElvUIEnhanced, EO.GetOptions)
+  self:CheckIncompatible()
 end
 
 E:RegisterModule(EO:GetName())
