@@ -672,6 +672,9 @@ function EO:CheckIncompatible()
 	if IsAddOnLoaded('ElvUI_HyperDT') then
 		EO:IncompatibleAddOn2('ElvUI_HyperDT', 'Enhanced Datatext')
 	end
+	if IsAddOnLoaded('ElvUI_TransparentMovers') then
+		EO:IncompatibleAddOn2('ElvUI_TransparentMovers', 'Tranparent Movers')
+	end
 end
 
 
