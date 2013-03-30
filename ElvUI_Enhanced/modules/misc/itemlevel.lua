@@ -60,12 +60,12 @@ function EI:UpdateItemLevel()
 				if itemLevel and upgrade and levelAdjust[upgrade] then
 					itemLevel = itemLevel + levelAdjust[upgrade]
 				end
-				
-				frame.ItemLevel:SetFormattedText("%s%d|r", levelColors[(itemLevel < avgEquipItemLevel-10 and 0 or (itemLevel > avgEquipItemLevel + 10 and 1 or (2)))], itemLevel)
+				if itemLevel and avgEquipItemLevel then
+					frame.ItemLevel:SetFormattedText("%s%d|r", levelColors[(itemLevel < avgEquipItemLevel-10 and 0 or (itemLevel > avgEquipItemLevel + 10 and 1 or (2)))], itemLevel)
+				end
 			end
 		end
-	end 	
- 	
+	end	
 end
 
 function EI:Initialize()
