@@ -82,9 +82,7 @@ function HG:SetupVariables()
 			end
 		end
 	end
-	
-	UF:UpdateAllHeaders()
-	
+
 	healGlowFrame = CreateFrame("Frame")
 	healGlowFrame:SetScript("OnEvent", function(self, event, ...)
 		if (event=="COMBAT_LOG_EVENT_UNFILTERED") then
