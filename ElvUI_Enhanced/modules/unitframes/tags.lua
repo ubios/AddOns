@@ -18,7 +18,7 @@ ElvUF.Tags.OnUpdateThrottle['xdistance'] = .2
 ElvUF.Tags.Methods['xdistance'] = function(unit)
 	if not UnitIsConnected(unit) or UnitIsUnit(unit, 'player') then return end
 
-  local distance = E:GetDistance('player', unit)
+  local distance = E:GetDistance('player', unit, true)
   if distance and distance > 0 then
     return format('%d', distance)
   end
