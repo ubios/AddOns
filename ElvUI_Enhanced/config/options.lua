@@ -626,13 +626,32 @@ function EO:GetOptions()
 	EO:WatchFrame()
 end
 
+E.PopupDialogs['ENHANCED_INCOMPATIBLE_ADDON'] = {
+	text = L['INCOMPATIBLE_ADDON'],
+	OnAccept = function(self) DisableAddOn(E.PopupDialogs['ENHANCED_INCOMPATIBLE_ADDON'].addon); ReloadUI(); end,
+	OnCancel = function(self) E.PopupDialogs['ENHANCED_INCOMPATIBLE_ADDON'].optiontable[E.PopupDialogs['ENHANCED_INCOMPATIBLE_ADDON'].value] = false; ReloadUI(); end,
+	timeout = 0,
+	whileDead = 1,	
+	hideOnEscape = false,	
+}
+
+function EO:IncompatibleAddOn(addon, module, optiontable, value)
+	E.PopupDialogs['ENHANCED_INCOMPATIBLE_ADDON'].button1 = addon
+	E.PopupDialogs['ENHANCED_INCOMPATIBLE_ADDON'].button2 = 'Enhanced: '..module
+	E.PopupDialogs['ENHANCED_INCOMPATIBLE_ADDON'].addon = addon
+	E.PopupDialogs['ENHANCED_INCOMPATIBLE_ADDON'].module = module
+	E.PopupDialogs['ENHANCED_INCOMPATIBLE_ADDON'].optiontable = optiontable
+	E.PopupDialogs['ENHANCED_INCOMPATIBLE_ADDON'].value = value
+	E.PopupDialogs['ENHANCED_INCOMPATIBLE_ADDON'].showAlert = true
+	E:StaticPopup_Show('ENHANCED_INCOMPATIBLE_ADDON', addon, module)
+end
+
 function EO:CheckIncompatible()
 	if E.global.ignoreIncompatible then return end
 
 	if IsAddOnLoaded('SquareMinimapButtons') and E.private.general.minimapbar.skinButtons then
-		E:IncompatibleAddOn('SquareMinimapButtons', 'Minimap')		
+		EO:IncompatibleAddOn('SquareMinimapButtons', 'MinimapButtons', E.private.general.minimapbar, "skinButtons")
 	end
-	
 end
 
 
