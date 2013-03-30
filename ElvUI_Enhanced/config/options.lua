@@ -635,6 +635,14 @@ E.PopupDialogs['ENHANCED_INCOMPATIBLE_ADDON'] = {
 	hideOnEscape = false,	
 }
 
+E.PopupDialogs['ENHANCED_INCOMPATIBLE_ADDON2'] = {
+	text = L['INCOMPATIBLE_ADDON'],
+	OnAccept = function(self) DisableAddOn(E.PopupDialogs['ENHANCED_INCOMPATIBLE_ADDON2'].addon); ReloadUI(); end,
+	timeout = 0,
+	whileDead = 1,	
+	hideOnEscape = false,	
+}
+
 function EO:IncompatibleAddOn(addon, module, optiontable, value)
 	E.PopupDialogs['ENHANCED_INCOMPATIBLE_ADDON'].button1 = addon
 	E.PopupDialogs['ENHANCED_INCOMPATIBLE_ADDON'].button2 = 'Enhanced: '..module
@@ -646,11 +654,23 @@ function EO:IncompatibleAddOn(addon, module, optiontable, value)
 	E:StaticPopup_Show('ENHANCED_INCOMPATIBLE_ADDON', addon, module)
 end
 
+function EO:IncompatibleAddOn2(addon, module)
+	E.PopupDialogs['ENHANCED_INCOMPATIBLE_ADDON2'].button1 = addon
+	E.PopupDialogs['ENHANCED_INCOMPATIBLE_ADDON2'].addon = addon
+	E.PopupDialogs['ENHANCED_INCOMPATIBLE_ADDON2'].module = module
+	E.PopupDialogs['ENHANCED_INCOMPATIBLE_ADDON2'].showAlert = true
+	E:StaticPopup_Show('ENHANCED_INCOMPATIBLE_ADDON2', addon, module)
+end
+
 function EO:CheckIncompatible()
 	if E.global.ignoreIncompatible then return end
 
 	if IsAddOnLoaded('SquareMinimapButtons') and E.private.general.minimapbar.skinButtons then
 		EO:IncompatibleAddOn('SquareMinimapButtons', 'MinimapButtons', E.private.general.minimapbar, "skinButtons")
+	end
+	
+	if IsAddOnLoaded('ElvUI_HyperDT') then
+		EO:IncompatibleAddOn2('ElvUI_HyperDT', 'Enhanced Datatext')
 	end
 end
 
