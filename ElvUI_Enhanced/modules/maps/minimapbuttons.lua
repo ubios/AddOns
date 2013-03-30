@@ -1,5 +1,5 @@
 local E, L, V, P, G = unpack(ElvUI); --Inport: Engine, Locales, PrivateDB, ProfileDB, GlobalDB, Localize Underscore
-local MB = E:NewModule('MinimapButtons', 'AceHook-3.0', 'AceEvent-3.0');
+local MB = E:NewModule('MinimapButtons', 'AceHook-3.0', 'AceEvent-3.0', 'AceTimer-3.0');
 
 -- Based on Square Minimap Buttons
 -- Original authors:  Azilroka, Sinaris
@@ -221,12 +221,10 @@ end
 function MB:StartSkinning()
 	MB:UnregisterEvent("ADDON_LOADED")
 
-	E:Delay(20, MB:SkinMinimapButtons())	
+	MB:ScheduleTimer("SkinMinimapButtons", 5)
 end
 
 function MB:CreateFrames()
-	self:UnregisterEvent("PLAYER_ENTERING_WORLD")
-
 	minimapButtonBarAnchor = CreateFrame("Frame", "MinimapButtonBarAnchor", E.UIParent)
 	minimapButtonBarAnchor:Point("TOPRIGHT", ElvConfigToggle, "BOTTOMRIGHT", -2, -2)
 	minimapButtonBarAnchor:Size(200, 32)
@@ -243,7 +241,7 @@ function MB:CreateFrames()
 	minimapButtonBar:SetScript("OnLeave", OnLeave)
 
 	self:ChangeMouseOverSetting()
-	self:StartSkinning()
+	self:SkinMinimapButtons()
 end
 
 function MB:Initialize()
@@ -251,7 +249,7 @@ function MB:Initialize()
 
 	E.minimapbuttons = MB
 	
-	self:RegisterEvent("PLAYER_ENTERING_WORLD", "CreateFrames")
+	self:CreateFrames()
 end
 
 E:RegisterModule(MB:GetName())

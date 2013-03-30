@@ -1,5 +1,5 @@
 local E, L, V, P, G = unpack(ElvUI); --Inport: Engine, Locales, PrivateDB, ProfileDB, GlobalDB, Localize Underscore
-local F = E:NewModule('Farmer', 'AceHook-3.0', 'AceEvent-3.0');
+local F = E:NewModule('Farmer', 'AceHook-3.0', 'AceEvent-3.0', 'AceTimer-3.0');
 
 -- Idea for farming bars based on: BigButtons, by Azilroka / Sortokk
 
@@ -419,7 +419,7 @@ function F:CreateFrames()
 	F:RegisterEvent("ZONE_CHANGED_NEW_AREA", "ZoneChanged")
 	F:RegisterEvent("ZONE_CHANGED_INDOORS", "ZoneChanged")
 
-	E:Delay(10, F:ZoneChanged())
+	F:ScheduleTimer("ZoneChanged", 5)
 end
 
 function F:StartFarmBarLoader()
@@ -441,7 +441,7 @@ function F:StartFarmBarLoader()
 	end
 
 	if itemError then
-		E:Delay(5, F.StartFarmBarLoader)
+		F:ScheduleTimer("StartFarmBarLoader", 5)
 	else
 		F.CreateFrames()
 	end

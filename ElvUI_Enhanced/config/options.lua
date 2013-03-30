@@ -52,9 +52,8 @@ function EO:DataTextOptions()
 end
 
 function EO:EquipmentOptions()
-	local ED = E:GetModule('EnhDurability')
-	local EI = E:GetModule('EnhItemLevel')
 	local EQ = E:GetModule('Equipment')
+	local PD = E:GetModule('PaperDoll')
 
 	E.Options.args.equipment = {
 		type = 'group',
@@ -168,7 +167,7 @@ function EO:EquipmentOptions()
 				guiInline = true,
 				order = 5,
 				get = function(info) return E.private.equipment.durability[ info[#info] ] end,
-				set = function(info, value) E.private.equipment.durability[ info[#info] ] = value ED:UpdateDurability() end,
+				set = function(info, value) E.private.equipment.durability[ info[#info] ] = value PD:UpdatePaperDoll() end,
 				args = {
 					enable = {
 						type = "toggle",
@@ -196,7 +195,7 @@ function EO:EquipmentOptions()
 				guiInline = true,
 				order = 7,
 				get = function(info) return E.private.equipment.itemlevel[ info[#info] ] end,
-				set = function(info, value) E.private.equipment.itemlevel[ info[#info] ] = value EI:UpdateItemLevel() end,
+				set = function(info, value) E.private.equipment.itemlevel[ info[#info] ] = value PD:UpdatePaperDoll() end,
 				args = {
 					enable = {
 						type = "toggle",
