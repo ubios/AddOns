@@ -1,5 +1,5 @@
 local E, L, V, P, G = unpack(ElvUI); --Inport: Engine, Locales, PrivateDB, ProfileDB, GlobalDB, Localize Underscore
-local M = E:GetModule('MiscEnh');
+local ED = E:NewModule('EnhDurability', 'AceEvent-3.0');
 
 local slots = {
 	"SecondaryHandSlot",
@@ -14,12 +14,12 @@ local slots = {
 	"HeadSlot"
 }
 
-function M:UpdateDurability()
+function ED:UpdateDurability()
 	if InCombatLockdown() then
-		M:RegisterEvent("PLAYER_REGEN_ENABLED", "UpdateDurability")	
+		ED:RegisterEvent("PLAYER_REGEN_ENABLED", "UpdateDurability")	
 		return
 	else
-		M:UnregisterEvent("PLAYER_REGEN_ENABLED")
+		ED:UnregisterEvent("PLAYER_REGEN_ENABLED")
  	end
 
 	local frame = _G["CharacterFrame"]
@@ -40,15 +40,17 @@ function M:UpdateDurability()
 	end
 end
 
-function M:LoadPaperDollDurability()
+function ED:Initialize()
 	local frame
 	for i = 1, #slots do
 		frame = _G[("Character%s"):format(slots[i])]
 		frame.DurabilityInfo = frame:CreateFontString(nil, "OVERLAY")
-		frame.DurabilityInfo:SetPoint("CENTER", frame, "CENTER", 0, 0)
+		frame.DurabilityInfo:SetPoint("TOPRIGHT", frame, "TOPRIGHT", -1, -1)
 		frame.DurabilityInfo:FontTemplate(E.media.font, 12, "OUTLINE")
 	end	
 	
 	self:RegisterEvent("UPDATE_INVENTORY_DURABILITY", "UpdateDurability")	
 	self:UpdateDurability();
 end
+
+E:RegisterModule(ED:GetName())

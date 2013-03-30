@@ -30,6 +30,9 @@ V.equipment = {
 	['durability'] = {
 		enable = true,
 		onlydamaged = false,
+	},
+	['itemlevel'] = {
+		enable = true,
 	}
 }
 

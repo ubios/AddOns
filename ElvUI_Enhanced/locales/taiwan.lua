@@ -33,6 +33,9 @@ L["You have equipped equipment set: "] = "你已裝備此模組: "
 L["DURABILITY_DESC"] = "調整設置人物窗口裝備耐久度顯示."
 L['Enable/Disable the display of durability information on the character screen.'] = "開啓/關閉 人物窗口裝備耐久度顯示."
 
+L["ITEMLEVEL_DESC"] = "Adjust the settings for the item level information on the character screen."
+L["Enable/Disable the display of item levels on the character screen."] = true
+
 L["Damaged Only"] = "受損顯示"
 L["Only show durabitlity information for items that are damaged."] = "只在裝備受損時顯示耐久度."
 

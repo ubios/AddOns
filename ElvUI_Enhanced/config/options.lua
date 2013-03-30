@@ -52,7 +52,8 @@ function EO:DataTextOptions()
 end
 
 function EO:EquipmentOptions()
-	local ME = E:GetModule('MiscEnh')
+	local ED = E:GetModule('EnhDurability')
+	local EI = E:GetModule('EnhItemLevel')
 	local EQ = E:GetModule('Equipment')
 
 	E.Options.args.equipment = {
@@ -167,7 +168,7 @@ function EO:EquipmentOptions()
 				guiInline = true,
 				order = 5,
 				get = function(info) return E.private.equipment.durability[ info[#info] ] end,
-				set = function(info, value) E.private.equipment.durability[ info[#info] ] = value ME:UpdateDurability() end,
+				set = function(info, value) E.private.equipment.durability[ info[#info] ] = value ED:UpdateDurability() end,
 				args = {
 					enable = {
 						type = "toggle",
@@ -181,6 +182,27 @@ function EO:EquipmentOptions()
 						name = L["Damaged Only"],
 						desc = L["Only show durabitlity information for items that are damaged."],
 						disabled = function() return not E.private.equipment.durability.enable end,
+					},
+				},
+			},
+			intro3 = {
+				type = "description",
+				name = L["ITEMLEVEL_DESC"],
+				order = 6,
+			},		
+			itemlevel = {
+				type = 'group',
+				name = STAT_AVERAGE_ITEM_LEVEL,
+				guiInline = true,
+				order = 7,
+				get = function(info) return E.private.equipment.itemlevel[ info[#info] ] end,
+				set = function(info, value) E.private.equipment.itemlevel[ info[#info] ] = value EI:UpdateItemLevel() end,
+				args = {
+					enable = {
+						type = "toggle",
+						order = 1,
+						name = L["Enable"],
+						desc = L["Enable/Disable the display of item levels on the character screen."],
 					},
 				},
 			},

@@ -32,7 +32,6 @@ function M:Initialize()
 	self:LoadAutoRelease()
 	self:LoadQuestReward()
 	self:LoadWatchedFaction()
-	self:LoadPaperDollDurability()
 	self:LoadMoverTransparancy()
 end
 

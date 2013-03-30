@@ -32,6 +32,8 @@ L["You have equipped equipment set: "] = true
 
 L["DURABILITY_DESC"] = "Adjust the settings for the durability information on the character screen."
 L['Enable/Disable the display of durability information on the character screen.'] = true
+L["ITEMLEVEL_DESC"] = "Adjust the settings for the item level information on the character screen."
+L["Enable/Disable the display of item levels on the character screen."] = true
 
 L["Damaged Only"] = true
 L["Only show durabitlity information for items that are damaged."] = true
