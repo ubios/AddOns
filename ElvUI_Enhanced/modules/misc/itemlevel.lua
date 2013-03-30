@@ -74,7 +74,7 @@ function EI:Initialize()
 		frame = _G[("Character%s"):format(slots[i])]
 		frame.ItemLevel = frame:CreateFontString(nil, "OVERLAY")
 		frame.ItemLevel:SetPoint("BOTTOMLEFT", frame, "BOTTOMLEFT", 1, 1)
-		frame.ItemLevel:FontTemplate(E.media.font, 12, "OUTLINE")
+		frame.ItemLevel:FontTemplate(E.media.font, 12, "THINOUTLINE")
 	end	
 	
 	self:RegisterEvent("PLAYER_EQUIPMENT_CHANGED", "UpdateItemLevel")

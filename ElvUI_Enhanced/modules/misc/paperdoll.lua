@@ -45,8 +45,8 @@ function ED:Initialize()
 	for i = 1, #slots do
 		frame = _G[("Character%s"):format(slots[i])]
 		frame.DurabilityInfo = frame:CreateFontString(nil, "OVERLAY")
-		frame.DurabilityInfo:SetPoint("TOPRIGHT", frame, "TOPRIGHT", -1, -1)
-		frame.DurabilityInfo:FontTemplate(E.media.font, 12, "OUTLINE")
+		frame.DurabilityInfo:SetPoint("TOP", frame, "TOP", 0, -4)
+		frame.DurabilityInfo:FontTemplate(E.media.font, 12, "THINOUTLINE")
 	end	
 	
 	self:RegisterEvent("UPDATE_INVENTORY_DURABILITY", "UpdateDurability")	
