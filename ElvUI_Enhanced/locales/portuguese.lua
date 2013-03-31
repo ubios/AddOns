@@ -31,12 +31,15 @@ L["You have equipped equipment set: "] = "Você tem equipado o conjunto: "
 
 L["DURABILITY_DESC"] = "Ajuste as opções para a informação de durabilidade no ecrã de informação do personagem."
 L['Enable/Disable the display of durability information on the character screen.'] = "Activar/desactivar a informação de durabilidade no ecrã de informação do personagem."
+L["Damaged Only"] = "Só Danificados"
+L["Only show durabitlity information for items that are damaged."] = "Só mostrar informação de durabilidade para itens danificados."
 
 L["ITEMLEVEL_DESC"] = "Adjust the settings for the item level information on the character screen."
 L["Enable/Disable the display of item levels on the character screen."] = true
 
-L["Damaged Only"] = "Só Danificados"
-L["Only show durabitlity information for items that are damaged."] = "Só mostrar informação de durabilidade para itens danificados."
+L["Miscellaneous"] = true
+L['Equipment Set Overlay'] = true
+L['Show the associated equipment sets for the items in your bags (or bank).'] = true
 
 -- Movers
 L["Mover Transparency"] = true

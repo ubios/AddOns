@@ -54,6 +54,7 @@ end
 function EO:EquipmentOptions()
 	local EQ = E:GetModule('Equipment')
 	local PD = E:GetModule('PaperDoll')
+	local BI = E:GetModule('BagInfo')
 
 	E.Options.args.equipment = {
 		type = 'group',
@@ -205,6 +206,23 @@ function EO:EquipmentOptions()
 					},
 				},
 			},
+			misc = {
+				type = 'group',
+				name = L["Miscellaneous"],
+				guiInline = true,
+				order = 8,
+				get = function(info) return E.private.equipment.misc[ info[#info] ] end,
+				set = function(info, value) E.private.equipment.misc[ info[#info] ] = value end,
+				args = {
+					setoverlay = {
+						type = "toggle",
+						order = 1,
+						name = L['Equipment Set Overlay'],
+						desc = L['Show the associated equipment sets for the items in your bags (or bank).'],
+						set = function(info, value) E.private.equipment.misc[ info[#info] ] = value BI:ToggleSettings() end,
+					}
+				}
+			}
 		},
 	}
 	

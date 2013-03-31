@@ -32,13 +32,15 @@ L["You have equipped equipment set: "] = "你已装备此模组: "
 
 L["DURABILITY_DESC"] = "调整设置人物窗口装备耐久度显示."
 L['Enable/Disable the display of durability information on the character screen.'] = "开启/关闭 人物窗口装备耐久度显示."
+L["Damaged Only"] = "受损显示"
+L["Only show durabitlity information for items that are damaged."] = "只在装备受损时显示耐久度."
 
 L["ITEMLEVEL_DESC"] = "Adjust the settings for the item level information on the character screen."
 L["Enable/Disable the display of item levels on the character screen."] = true
 
-
-L["Damaged Only"] = "受损显示"
-L["Only show durabitlity information for items that are damaged."] = "只在装备受损时显示耐久度."
+L["Miscellaneous"] = true
+L['Equipment Set Overlay'] = true
+L['Show the associated equipment sets for the items in your bags (or bank).'] = true
 
 -- Movers
 L["Mover Transparency"] = true

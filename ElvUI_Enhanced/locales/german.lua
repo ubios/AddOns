@@ -31,12 +31,15 @@ L["You have equipped equipment set: "] = "Sie haben die folgende Ausrüstungsvor
 
 L["DURABILITY_DESC"] = "Passen Sie die Einstellungen für die Ausrüstungsdauerhaftigkeit im Charakterfenster an."
 L["Enable/Disable the display of durability information on the character screen."] = "Aktivieren / Deaktivieren der Anzeige der Ausrüstungsdauerhaftigkeit im Charakterfenster."
+L["Damaged Only"] = "Nur Beschädigte"
+L["Only show durabitlity information for items that are damaged."] = "Nur die Ausrüstungsdauerhaftigkeit fur Beschädigte Ausrüstungsstucke anzeigen."
 
 L["ITEMLEVEL_DESC"] = "Adjust the settings for the item level information on the character screen."
 L["Enable/Disable the display of item levels on the character screen."] = true
 
-L["Damaged Only"] = "Nur Beschädigte"
-L["Only show durabitlity information for items that are damaged."] = "Nur die Ausrüstungsdauerhaftigkeit fur Beschädigte Ausrüstungsstucke anzeigen."
+L["Miscellaneous"] = true
+L['Equipment Set Overlay'] = true
+L['Show the associated equipment sets for the items in your bags (or bank).'] = true
 
 -- Movers
 L["Mover Transparency"] = true
