@@ -82,7 +82,7 @@ end
 
 function PD:InitialUpdatePaperDoll()
 	PD:UnregisterEvent("PLAYER_ENTERING_WORLD")
-	PD:ScheduleTimer("UpdatePaperDoll", 5)
+	PD:ScheduleTimer("UpdatePaperDoll", 10)
 end
 
 function PD:Initialize()
