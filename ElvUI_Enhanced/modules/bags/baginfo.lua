@@ -5,10 +5,10 @@ local B = E:GetModule('Bags')
 local byte, format = string.byte, string.format
 local tinsert, twipe = table.insert, table.wipe
 
+local updateTimer
 local containers = {}
 local infoArray = {}
 local equipmentMap = {}
-local updateTimer
 
 local function Utf8Sub(str, start, numChars)
   local currentIndex = start
@@ -31,6 +31,13 @@ end
 local function MapKey(bag, slot)
 	return format("%d_%d", bag, slot)
 end
+
+local quickFormat = {
+	[0] = function(font, map) font:SetText() end,
+	[1] = function(font, map) font:SetFormattedText("|cffffffaa%s|r", Utf8Sub(map[1], 1, 4)) end,
+	[2] = function(font, map) font:SetFormattedText("|cffffffaa%s %s|r", Utf8Sub(map[1], 1, 4), Utf8Sub(map[2], 1, 4)) end,
+	[3] = function(font, map) font:SetFormattedText("|cffffffaa%s %s %s|r", Utf8Sub(map[1], 1, 4), Utf8Sub(map[2], 1, 4), Utf8Sub(map[3], 1, 4)) end,
+}
 
 function BI:BuildEquipmentMap(clear)
 	-- clear mapped names
@@ -60,19 +67,20 @@ function BI:UpdateContainerFrame(frame, bag, slot)
 	if (not frame.equipmentinfo) then
 		frame.equipmentinfo = frame:CreateFontString(nil, "OVERLAY")
 		frame.equipmentinfo:FontTemplate(E.media.font, 12, "THINOUTLINE")
+		frame.equipmentinfo:SetWordWrap(true)
+		frame.equipmentinfo:SetJustifyH('CENTER')
+		frame.equipmentinfo:SetJustifyV('MIDDLE')
 	end
 
 	if (frame.equipmentinfo) then
 		frame.equipmentinfo:SetAllPoints(frame)
 
-		local key, info = MapKey(bag, slot), ""
-		if equipmentMap[key] then
-			for i = 1, #equipmentMap[key] do
-				info = format("%s%s\n", info, Utf8Sub(equipmentMap[key][i], 1, 4))
-			end
+		local key = MapKey(bag, slot)
+		if equipmentMap[key] then	
+			quickFormat[#equipmentMap[key] < 4 and #equipmentMap[key] or 3](frame.equipmentinfo, equipmentMap[key])
+		else
+			quickFormat[0](frame.equipmentinfo, nil)
 		end
-
-		frame.equipmentinfo:SetFormattedText("|cffffffaa%s|r", info)
 	end
 end
 
