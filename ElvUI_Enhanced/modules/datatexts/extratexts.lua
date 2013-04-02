@@ -57,7 +57,7 @@ function EDT:PositionDataPanel(panel, index)
 	if not panel then return end
 	
 	local actionbar = _G[("ElvUI_Bar%d"):format(index)]
-	local spacer = E.db.actionbar[("bar%d"):format(index)].backdrop and 0 or SPACING
+	local spacer = E.db.actionbar[("bar%d"):format(index)].backdrop and 0 or E.db.actionbar[("bar%d"):format(index)].buttonspacing
 	
 	panel:ClearAllPoints()
 	panel:Point('TOPLEFT', actionbar, 'BOTTOMLEFT', spacer, 0)
