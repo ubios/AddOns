@@ -100,11 +100,15 @@ end
 function BI:DelayUpdateBagInformation(event)
 	-- delay to make sure multiple bag events are consolidated to one update.
 	if not updateTimer then
-		updateTimer = BI:ScheduleTimer("UpdateBagInformation", .2)
+		updateTimer = BI:ScheduleTimer("UpdateBagInformation", .25)
 	end
 end
 
 function BI:ToggleSettings()
+	if updateTimer then
+		self:CancelTimer(updateTimer)
+	end
+
 	if E.private.equipment.misc.setoverlay then
 		self:RegisterEvent("EQUIPMENT_SETS_CHANGED", "DelayUpdateBagInformation")
 		self:RegisterEvent("BAG_UPDATE", "DelayUpdateBagInformation")
@@ -120,11 +124,10 @@ function BI:Initialize()
 	if not E.private.bags.enable then return end
 
 	tinsert(containers, _G["ElvUI_ContainerFrame"])	
-
 	self:SecureHook(B, "OpenBank", function()
 		self:Unhook(B, "OpenBank")	
 		tinsert(containers, _G["ElvUI_BankContainerFrame"])
-		BI:UpdateBagInformation()
+		BI:ToggleSettings()
 	end)
 	
 	BI:ToggleSettings()
