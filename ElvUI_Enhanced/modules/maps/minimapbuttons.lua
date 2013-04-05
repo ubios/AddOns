@@ -16,6 +16,7 @@ local ignoreButtons = {
 	"GameTimeframe",
 	"HelpOpenTicketButton",
 	"MMHolder",
+	"DroodFocusMinimapButton",
 	"QueueStatusMinimapButton",
 	"TimeManagerClockButton",
 }
@@ -84,6 +85,7 @@ function MB:SkinButton(frame)
 	frame:SetPushedTexture(nil)
 	frame:SetHighlightTexture(nil)
 	frame:SetDisabledTexture(nil)
+	
 	if name == "DBMMinimapButton" then frame:SetNormalTexture("Interface\\Icons\\INV_Helmet_87") end
 	if name == "SmartBuff_MiniMapButton" then frame:SetNormalTexture(select(3, GetSpellInfo(12051))) end
 
