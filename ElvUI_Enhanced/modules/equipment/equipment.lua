@@ -7,7 +7,7 @@ local EQ = E:NewModule('Equipment', 'AceHook-3.0', 'AceEvent-3.0');
 local changingEquipmentSet = nil
 local join = string.join
 
-local function GetCurrentEquipmentSet()
+function EQ:GetCurrentEquipmentSet()
 	if GetNumEquipmentSets() == 0 then return false end
 	for i = 1, GetNumEquipmentSets() do
 		local name, _, _, isEquipped = GetEquipmentSetInfo(i)
@@ -21,7 +21,7 @@ end
 function EQ:CheckForGearChange()
 	if InCombatLockdown() or GetNumEquipmentSets() == 0 or not self.db then return end
 
-	local active, activeSet = GetActiveSpecGroup(), GetCurrentEquipmentSet()
+	local active, activeSet = GetActiveSpecGroup(), EQ:GetCurrentEquipmentSet()
 	
 	if self.db.battleground.enable then
 		local inInstance, instanceType = IsInInstance()
