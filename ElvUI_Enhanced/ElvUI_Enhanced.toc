@@ -2,7 +2,7 @@
 ## Title: |cff1784d1ElvUI|r Enhanced
 ## Author: Tristimdorio (Omega1970)
 ## X-Credits: Azilroka, Lockslap, Sortokk
-## Version: 1.71
+## Version: 1.72
 ## Notes: Plugin-Enhancements for |cff1784d1ElvUI|r.
 ## X-Category: Plugins
 ## URL: http://www.tukui.org/addons/index.php?act=view&id=161
@@ -13,8 +13,8 @@
 ## SavedVariablesPerCharacter: ElvCharacterDB
 ## X-Tukui-ProjectID: 161
 
-## OptionalDeps: LibBalancePowerTracker-1.1, LibRangeCheck-2.0, LibSpecRoster-1.0
-## X-Embeds: LibBalancePowerTracker-1.1, LibRangeCheck-2.0, LibSpecRoster-1.0
+## OptionalDeps: LibBalancePowerTracker-1.1, LibRangeCheck-2.0
+## X-Embeds: LibBalancePowerTracker-1.1, LibRangeCheck-2.0
 
 ## X-Localizations: enUS, enGB, deDE, frFR, esES, esMX, zhCN, zhTW, koKR, ruRU
 ## X-CompatibleLocales: enUS, enGB, deDE, frFR, esES, esMX, zhCN, zhTW, koKR, ruRU
