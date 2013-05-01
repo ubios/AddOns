@@ -1,6 +1,5 @@
 local E, L, V, P, G = unpack(ElvUI); --Inport: Engine, Locales, PrivateDB, ProfileDB, GlobalDB, Localize Underscore
 local UF = E:GetModule('UnitFrames');
-local LSR = LibStub("LibSpecRoster-1.0")
 
 local sub = string.sub
 local abs, atan2, cos, sin, sqrt2, random, floor, ceil = math.abs, math.atan2, math.cos, math.sin, math.sqrt(2), math.random, math.floor, math.ceil
@@ -75,8 +74,11 @@ function UF:UpdateRoleIconEnhanced(event)
 			local rnd = random(1, 4)
 			role = rnd == 1 and "TANK" or (rnd == 2 and "HEALER" or (rnd == 3 and "DAMAGER" or(rnd == 4 and "DC")))
 		else
-			_, role = LSR:getRole(UnitGUID(self.unit))
-			autochange = true
+			local specId = GetInspectSpecialization(self.unit)
+			if specId > 0 then
+				role = GetSpecializationRoleByID(specId)
+				autochange = true
+			end
 		end
 	end
 	
