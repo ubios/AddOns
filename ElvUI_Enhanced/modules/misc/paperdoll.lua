@@ -42,7 +42,7 @@ function PD:UpdatePaperDoll()
  	end
 
 	local frame, slot, current, maximum, r, g, b
-	local itemLink, rarity, itemLevel, upgrade
+	local itemLink, rarity, itemLevel, linkLevel, upgrade
 	local	avgItemLevel, avgEquipItemLevel = GetAverageItemLevel()
 	
 	for k, info in pairs(slots) do
@@ -54,16 +54,19 @@ function PD:UpdatePaperDoll()
 			if E.private.equipment.itemlevel.enable and info[1] then
 				itemLink = GetInventoryItemLink("player", slot)
 				
-				if itemLink then
-					rarity, itemLevel = select(3, GetItemInfo(itemLink))	
-					upgrade = itemLink:match(":(%d+)\124h%[")
-					if itemLevel and upgrade and levelAdjust[upgrade] then
-						itemLevel = itemLevel + levelAdjust[upgrade]
-					end
-					if itemLevel and avgEquipItemLevel then
-						frame.ItemLevel:SetFormattedText("%s%d|r", levelColors[(itemLevel < avgEquipItemLevel-10 and 0 or (itemLevel > avgEquipItemLevel + 10 and 1 or (2)))], itemLevel)
-					end
-				end
+        if itemLink then
+            rarity, itemLevel = select(3, GetItemInfo(itemLink))    
+            linkLevel, upgrade = itemLink:match(":(%d+):%d+:(%d+)\124h%[")
+            if linkLevel and rarity == 7 then -- heirloom adjust
+                itemLevel = (tonumber(linkLevel) == UnitLevel("player")) and avgEquipItemLevel or linkLevel
+            end
+            if itemLevel and upgrade and levelAdjust[upgrade] then
+                itemLevel = itemLevel + levelAdjust[upgrade]
+            end
+            if itemLevel and avgEquipItemLevel then
+                frame.ItemLevel:SetFormattedText("%s%d|r", levelColors[(itemLevel < avgEquipItemLevel-10 and 0 or (itemLevel > avgEquipItemLevel + 10 and 1 or (2)))], itemLevel)
+            end
+        end
 			end
 		end
 
