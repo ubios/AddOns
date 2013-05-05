@@ -135,16 +135,20 @@ function UF:UpdateRoleIconFrame(frame)
 	frame.LFDRole.Override = UF.UpdateRoleIconEnhanced	
 end
 
+function UF:ApplyUnitFrameEnhancements()
+	UF:ScheduleTimer("EnhanceDruidEclipse", 5)
+	UF:ScheduleTimer("AddShouldIAttackIcon", 8, _G["ElvUF_Target"])
+	UF:ScheduleTimer("Construct_GPS", 10, _G["ElvUF_Target"], 'target')
+	UF:ScheduleTimer("Construct_GPS", 12, _G["ElvUF_Focus"], 'focus')
+	UF:ScheduleTimer("EnhanceUpdateRoleIcon", 15)
+end
+
 local CF = CreateFrame('Frame')
 CF:RegisterEvent("PLAYER_ENTERING_WORLD")
 CF:SetScript("OnEvent", function(self, event)
 	if not E.private["unitframe"].enable then return end
 
-	E:Delay(15, UF:EnhanceDruidEclipse())
-	E:Delay(18, UF:AddShouldIAttackIcon(_G["ElvUF_Target"]))
-	E:Delay(20, UF:Construct_GPS(_G["ElvUF_Target"], 'target'))
-	E:Delay(25, UF:Construct_GPS(_G["ElvUF_Focus"], 'focus'))
-	E:Delay(40, UF:EnhanceUpdateRoleIcon())
+	UF:ScheduleTimer("ApplyUnitFrameEnhancements", 5)
 	
 	self:UnregisterEvent("PLAYER_ENTERING_WORLD")
 end)
