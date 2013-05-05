@@ -2,7 +2,7 @@ local E, L, V, P, G = unpack(ElvUI); --Inport: Engine, Locales, PrivateDB, Profi
 local UF = E:GetModule('UnitFrames');
 
 local sub = string.sub
-local abs, atan2, cos, sin, sqrt2, random, floor, ceil = math.abs, math.atan2, math.cos, math.sin, math.sqrt(2), math.random, math.floor, math.ceil
+local abs, atan2, cos, sin, sqrt2, random, floor, ceil, random = math.abs, math.atan2, math.cos, math.sin, math.sqrt(2), math.random, math.floor, math.ceil, math.random
 local pairs, type, select, unpack = pairs, type, select, unpack
 local GetPlayerMapPosition, GetPlayerFacing = GetPlayerMapPosition, GetPlayerFacing
 local unitframeFont
@@ -72,13 +72,22 @@ function UF:UpdateRoleIconEnhanced(event)
 	if role == 'NONE' then
 		if self.isForced then
 			local rnd = random(1, 4)
-			role = rnd == 1 and "TANK" or (rnd == 2 and "HEALER" or (rnd == 3 and "DAMAGER" or(rnd == 4 and "DC")))
+			role = rnd == 1 and "TANK" or (rnd == 2 and "HEALER" or (rnd == 3 and "DAMAGER" or (rnd == 4 and "DC")))
 		else
-			local specId = GetInspectSpecialization(self.unit)
-			if specId > 0 then
-				role = GetSpecializationRoleByID(specId)
-				autochange = true
+			local specId
+			if UnitIsPlayer(self.unit) then
+				specId = GetSpecialization()
+				if specId then
+					role = select(6, GetSpecializationInfo(specId))
+				end
+			else	
+				specId = GetInspectSpecialization(self.unit)
+				if specId > 0 then
+					role = GetSpecializationRoleByID(specId) 
+				end
 			end
+			role = (role == nil) and 'NONE' or role
+			autochange = role ~= 'NONE' 
 		end
 	end
 	
@@ -87,17 +96,11 @@ function UF:UpdateRoleIconEnhanced(event)
 	if role and role ~= 'NONE' then
 		lfdrole:SetTexture(roleIconTextures[role])
 		lfdrole:Show()
-		if lfdrole.timer then
-			UF:CancelTimer(lfdrole.timer)
-			lfdrole.timer = nil
-		end
 		if E.db.unitframe.autoRoleSet and autochange and not InCombatLockdown() and (UnitIsGroupLeader('player') or UnitIsGroupAssistant('player')) and role ~= "DC" then
 			UnitSetRole(self.unit, role)
 		end	
 	else
 		lfdrole:Hide()
-		if not lfdrole.timer then
-			lfdrole.timer = UF:ScheduleRepeatingTimer("UpdateRoleIconEnhanced", 5, self)
-		end
+		UF:ScheduleTimer("UpdateRoleIconEnhanced", random(2, 7), self)
 	end	
 end
