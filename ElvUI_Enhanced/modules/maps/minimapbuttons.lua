@@ -228,7 +228,11 @@ end
 
 function MB:CreateFrames()
 	minimapButtonBarAnchor = CreateFrame("Frame", "MinimapButtonBarAnchor", E.UIParent)
-	minimapButtonBarAnchor:Point("TOPRIGHT", ElvConfigToggle, "BOTTOMRIGHT", -2, -2)
+	if E.db.auras.consolidatedBuffs.enable then
+		minimapButtonBarAnchor:Point("TOPRIGHT", ElvConfigToggle, "BOTTOMRIGHT", -2, -2)
+	else
+		minimapButtonBarAnchor:Point("TOPRIGHT", RightMiniPanel, "BOTTOMRIGHT", -2, -2)		
+	end
 	minimapButtonBarAnchor:Size(200, 32)
 	minimapButtonBarAnchor:SetFrameStrata("BACKGROUND")
 	
