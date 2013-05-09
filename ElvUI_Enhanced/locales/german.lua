@@ -1,4 +1,4 @@
-﻿-- German localisation file for deDE
+-- German localisation file for deDE
 local AceLocale = LibStub:GetLibrary("AceLocale-3.0")
 local L = AceLocale:NewLocale("ElvUI", "deDE")
 if not L then return end
@@ -9,85 +9,85 @@ L["Your version of ElvUI is to old (required v5.81 or higher). Please, download 
 
 -- Equipment
 L["Equipment"] = "Ausrüstung"
-L["EQUIPMENT_DESC"] = "Passen Sie die Einstellungen für das ändern Ihrer Ausrüstung an, wenn Sie Ihre Talentspezialisierung ändern oder ein Schlachtfeld betreten."
+L["EQUIPMENT_DESC"] = "Passen Sie die Einstellungen für das Ändern Ihrer Ausrüstung an, wenn Sie Ihre Talentspezialisierung ändern oder ein Schlachtfeld betreten."
 L["No Change"] = "Keine Änderung"
 
 L["Specialization"] = "Talentspezialisierung"
-L["Enable/Disable the specialization switch."] = "Aktivieren / Deaktivieren des Talentspezialisierungsschalter."
+L["Enable/Disable the specialization switch."] = "Automatische Änderung der Ausrüstung beim Talentwechsel."
 
 L["Primary Talent"] = "Primäre Talentspezialisierung"
-L["Choose the equipment set to use for your primary specialization."] = "Wählen Sie die Ausrüstungsvorlage fur Ihre Primäre Talentspezialisierung."
+L["Choose the equipment set to use for your primary specialization."] = "Wählen Sie das Ausrüstungsset für Ihre primäre Talentspezialisierung."
 
 L["Secondary Talent"] = "Sekundäre Talentspezialisierung"
-L["Choose the equipment set to use for your secondary specialization."] = "Wählen Sie die Ausrüstungsvorlage fur Ihre Sekundäre Talentspezialisierung."
+L["Choose the equipment set to use for your secondary specialization."] = "Wählen Sie das Ausrüstungsset für Ihre sekundäre Talentspezialisierung."
 
 L["Battleground"] = "Schlachtfeld"
-L['Enable/Disable the battleground switch.'] = "Aktivieren / Deaktivieren des Sclachtfeldvorlagenschalter."
+L['Enable/Disable the battleground switch.'] = "Automatische Änderung der Ausrüstung beim Betreten eines Schlachtfelds."
 
-L["Equipment Set"] = "Ausrüstungsvorlage"
-L["Choose the equipment set to use when you enter a battleground or arena."] = "Wählen Sie die Ausrüstungsvorlage fur das Schlachtfeld oder Arena."
+L["Equipment Set"] = "Ausrüstungsset"
+L["Choose the equipment set to use when you enter a battleground or arena."] = "Wählen Sie Ihr Ausrüstungsset für Schlachtfelder oder die Arena."
 
-L["You have equipped equipment set: "] = "Sie haben die folgende Ausrüstungsvorlage ausgestattet: "
+L["You have equipped equipment set: "] = "Sie haben das folgende Ausrüstungsset angelegt: "
 
-L["DURABILITY_DESC"] = "Passen Sie die Einstellungen für die Ausrüstungsdauerhaftigkeit im Charakterfenster an."
-L["Enable/Disable the display of durability information on the character screen."] = "Aktivieren / Deaktivieren der Anzeige der Ausrüstungsdauerhaftigkeit im Charakterfenster."
+L["DURABILITY_DESC"] = "Passen Sie die Einstellungen für die Haltbarkeit im Charakterfenster an."
+L["Enable/Disable the display of durability information on the character screen."] = "Anzeige der Haltbarkeit im Charakterfenster."
 L["Damaged Only"] = "Nur Beschädigte"
-L["Only show durabitlity information for items that are damaged."] = "Nur die Ausrüstungsdauerhaftigkeit fur Beschädigte Ausrüstungsstucke anzeigen."
+L["Only show durabitlity information for items that are damaged."] = "Nur die Haltbarkeit für beschädigte Ausrüstungsteile anzeigen."
 
-L["ITEMLEVEL_DESC"] = "Adjust the settings for the item level information on the character screen."
-L["Enable/Disable the display of item levels on the character screen."] = true
+L["ITEMLEVEL_DESC"] = "Passen Sie die Einstellungen für die Anzeige von Gegenstandsstufen im Charakterfenster an."
+L["Enable/Disable the display of item levels on the character screen."] = "Anzeige von Gegenstandsstufen im Charakterfenster."
 
-L["Miscellaneous"] = true
-L['Equipment Set Overlay'] = true
-L['Show the associated equipment sets for the items in your bags (or bank).'] = true
+L["Miscellaneous"] = "Verschiedenes"
+L['Equipment Set Overlay'] = 'Ausrüstungssettext'
+L['Show the associated equipment sets for the items in your bags (or bank).'] = 'Zeige auf Gegenständen im Rucksack oder Bank die zugehörigen Ausrüstungssets als Text an.'
 
 -- Movers
 L["Mover Transparency"] = true
 L["Changes the transparency of all the movers."] = true
 
 -- Automatic Role Assignment
-L['Automatic Role Assignment'] = true
-L['Enables the automatic role assignment based on specialization for party / raid members (only work when you are group leader or group assist).'] = true
+L['Automatic Role Assignment'] = 'Automatische Rollenzuweisung'
+L['Enables the automatic role assignment based on specialization for party / raid members (only work when you are group leader or group assist).'] = 'Aktiviert die automatische Rollenzuweisung basierend auf der Talentspezialisierung der Gruppen- oder Schlachtzugsmitglieder. Funktioniert nur, wenn Sie Gruppenleiter oder -assistent sind.'
 
 -- GPS module
-L['Show the direction and distance to the selected party or raid member.'] = "Anzeigen von der Richtung und Entfernung zum ausgewählten Gruppen oder Schlachtzugsmitglied."
+L['Show the direction and distance to the selected party or raid member.'] = "Zeige die Richtung und Entfernung zum ausgewählten Gruppen- oder Schlachtzugsmitglied an."
 
 -- Attack Icon
-L['Attack Icon'] = true
-L['Show attack icon for units that are not tapped by you or your group, but still give kill credit when attacked.'] = true
+L['Attack Icon'] = 'Angriffssymbol'
+L['Show attack icon for units that are not tapped by you or your group, but still give kill credit when attacked.'] = 'Zeige Angriffssymbol für Gegner, die noch nicht von Ihnen markiert, aber trotzdem Belohnungen gewähren, wenn sie von Ihnen angegriffen werden'
 
 -- Minimap Location
 L['Above Minimap'] = "Oberhalb der Minimap"
-L['Location Digits'] = "Stellen der Umgebungskoordinaten"
-L['Number of digits for map location.'] = "Anzahl der stellen fur die Umgebungskoordinaten."
+L['Location Digits'] = "Anzahl Nachkommastellen der Koordinaten"
+L['Number of digits for map location.'] = "Anzahl der Nachkommastellen der Koordinaten."
 
 -- Minimap Combat Hide
-L["Hide minimap while in combat."] = "Ausblenden Minimap während des Kampfes."
-L["FadeIn Delay"] = "FadeIn Verzögerung"
+L["Hide minimap while in combat."] = "Ausblenden der Minimap während des Kampfes."
+L["FadeIn Delay"] = "Einblendungsverzögerung"
 L["The time to wait before fading the minimap back in after combat hide. (0 = Disabled)"] = "Die Zeit vor dem wieder Einblenden der Minimap nach dem Kampf. (0 = deaktiviert)"
 
 -- Minimap Buttons
-L['Skin Buttons'] = "Skin Knöpfen"
-L['Skins the minimap buttons in Elv UI style.'] = 'Skin die Minikarte Knöpfe in ElvUI Stil.'
+L['Skin Buttons'] = "Skin Buttons"
+L['Skins the minimap buttons in Elv UI style.'] = 'Skinne die Minimap-Buttons im ElvUI-Stil.'
 L['Skin Style'] = "Skin Stil"
-L['Change settings for how the minimap buttons are skinned.'] = "Ändern der Einstellungen für wie die Minimap Knöpfen geskind werden."
-L['The size of the minimap buttons.'] = "Die Größe der Minikarte Knöpfen."
+L['Change settings for how the minimap buttons are skinned.'] = "Ändern der Einstellungen, wie die Minimap-Buttons geskinnt werden."
+L['The size of the minimap buttons.'] = "Die Größe der Minimap-Buttons."
 
 L['No Anchor Bar'] = "Keine Ankerleiste"
 L['Horizontal Anchor Bar'] = "Horizontale Ankerleiste"
 L['Vertical Anchor Bar'] = "Vertikale Ankerleiste"
 
 -- PvP Autorelease
-L['PvP Autorelease'] = "PVP Automatische Freigabe"
-L['Automatically release body when killed inside a battleground.'] = "Automatisch freigeben des Körpers, wenn mann in einem Schlachtfeld getötet wird."
+L['PvP Autorelease'] = "Automatische Freigabe im PvP"
+L['Automatically release body when killed inside a battleground.'] = "Gibt automatisch den Geist frei, wenn Sie auf dem Schlachtfeld getötet wurden."
 
 -- Track Reputation
-L['Track Reputation'] = "Reputation Verfolgen"
-L['Automatically change your watched faction on the reputation bar to the faction you got reputation points for.'] = "Automatisch ändern der beobachteten Fraktion auf der Erfahrungsleiste zur Fraktion wo mann Reputationspunkte für bekommen hatt."
+L['Track Reputation'] = "Ruf beobachten"
+L['Automatically change your watched faction on the reputation bar to the faction you got reputation points for.'] = "Ändere automatisch die beobachtete Fraktion auf der Erfahrungsleiste zu der Fraktion für die Sie grade Rufpunkte erhalten haben."
 
 -- Select Quest Reward
-L['Select Quest Reward'] = true
-L['Automatically select the quest reward with the highest vendor sell value.'] = true
+L['Select Quest Reward'] = 'Wähle Questbelohnung'
+L['Automatically select the quest reward with the highest vendor sell value.'] = 'Wählt automatisch die Questbelohnung mit dem höchsten Wiederverkaufswert beim Händler'
 
 -- Range Datatext
 L['Distance'] = 'Entfernung'
@@ -104,39 +104,39 @@ L["Tilled Soil"] = 'Gepflügtes Erdreich'
 L['Right-click to drop the item.'] = 'Mit der rechten Maustaste klicken, um das Objekt abzulegen.'
 
 L['Farmer'] = 'Landwirt'
-L["FARMER_DESC"] = 'Ändern der Einstellungen für die Werkzeuge, die Sie effizienter auf Gehöft Sonnensang arbeiten lassen.'
-L['Farmer Bars'] = 'Landwirt Knöpfenleiste'
+L["FARMER_DESC"] = 'Einstellungen für alle Werkzeuge, die Sie effizienter auf Gehöft Sonnensang arbeiten lassen.'
+L['Farmer Bars'] = 'Landwirt Aktionsleisten'
 L['Farmer Portal Bar'] = 'Landwirt Portalleiste'
 L['Farmer Seed Bar'] = 'Landwirt Saatleiste'
 L['Farmer Tools Bar'] = 'Landwirt Werkzeugleiste'
 L['Enable/Disable the farmer bars.'] = 'Aktivieren / Deaktivieren der Landwirtleisten'
-L['Only active buttons'] = 'Nur aktive Knöpfen'
-L['Only show the buttons for the seeds, portals, tools you have in your bags.'] = 'Nur die Knöpfe für Saat, Portale und Werkzeuge zeigen die Sie in Ihrem Gepäck haben.'
+L['Only active buttons'] = 'Nur aktive Buttons'
+L['Only show the buttons for the seeds, portals, tools you have in your bags.'] = 'Nur Buttons für Saat, Portale und Werkzeuge anzeigen, wenn diese in Ihrem Rucksack vorhanden sind.'
 L['Drop Tools'] = 'Werkzeuge ablegen'
-L['Automatically drop tools from your bags when leaving the farming area.'] = 'Automatische die Werkzeuge ablegen beim Verlassen des landwirtschaftlichen Bereichs.'
-L['Seed Bar Direction'] = true
-L['The direction of the seed bar buttons (Horizontal or Vertical).'] = true
+L['Automatically drop tools from your bags when leaving the farming area.'] = 'Beim Verlassen der Farm automatisch die Werkzeuge ablegen.'
+L['Seed Bar Direction'] = 'Richtung Saatleiste'
+L['The direction of the seed bar buttons (Horizontal or Vertical).'] = 'Die Ausbreitungsrichtung der Saatleiste (horizontal oder vertikal)'
 
 -- Nameplates
-L["Bedrohungstext"] = true
-L["Anzeigen der Bedrohungslage als Text auf dem Ziel oder Boss Namensschild."] = true
+L["Threat Text"] = "Bedrohungstext"
+L["Display threat level as text on targeted, boss or mouseover nameplate."] = "Anzeigen der Bedrohung als Text auf der Namensplakette des Ziels."
 
 -- HealGlow
-L['Heal Glow'] = true
-L['Direct AoE heals will let the unit frames of the affected party / raid members glow for the defined time period.'] = true
-L["Glow Duration"] = true
-L["The amount of time the unit frames of party / raid members will glow when affected by a direct AoE heal."] = true
-L["Glow Color"] = true
+L['Heal Glow'] = 'Heilungsleuchten'
+L['Direct AoE heals will let the unit frames of the affected party / raid members glow for the defined time period.'] = 'Direkte AoE-Heilungen lassen die Einheitenfenster von Gruppen- oder Schlachtzugsmitgliedern für eine festgelegte Zeit leuchten'
+L["Glow Duration"] = 'Richtung des Leuchtens'
+L["The amount of time the unit frames of party / raid members will glow when affected by a direct AoE heal."] = "Die Zeitdauer die Einheitenfenster von Gruppen- oder Schlachtzugsmitgliedern leuchten, wenn diese durch direkte AoE-Heilungen betroffen sind."
+L["Glow Color"] = 'Farbe des Leuchtens'
 
 -- WatchFrame
-L['WatchFrame'] = true
-L['WATCHFRAME_DESC'] = "Adjust the settings for the visibility of the watchframe (questlog) to your personal preference."
-L['Hidden'] = true
-L['Collapsed'] = true
-L['Settings'] = true
-L['City (Resting)'] = true
-L['PvP'] = true
-L['Arena'] = true
-L['Party'] = true
-L['Raid'] = true
+L['WatchFrame'] = "Questlog"
+L['WATCHFRAME_DESC'] = 'Passen Sie die Einstellungen für die Sichtbarkeit des Questlogs ganz an ihre persönlichen Bedürfnisse an.'
+L['Hidden'] = 'Versteckt'
+L['Collapsed'] = 'Eingeklappt'
+L['Settings'] = 'Einstellungen'
+L['City (Resting)'] = 'Stadt (erholend)'
+L['PvP'] = 'PvP'
+L['Arena'] = 'Arena'
+L['Party'] = 'Gruppe'
+L['Raid'] = 'Schlachtzug'
 
