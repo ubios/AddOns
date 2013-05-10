@@ -3,6 +3,8 @@ local AceLocale = LibStub:GetLibrary("AceLocale-3.0")
 local L = AceLocale:NewLocale("ElvUI", "deDE")
 if not L then return end
 
+-- Translation by: Kaltzifar
+
 -- Init
 L["ENH_LOGIN_MSG"] = "Sie verwenden |cff1784d1ElvUI Enhanced|r Version %s%s|r."
 L["Your version of ElvUI is to old (required v5.81 or higher). Please, download the latest version from tukui.org."] = "Ihre Version von ElvUI ist zu alt (erforderlich v5.81 oder höher). Bitte laden Sie die neueste Version von tukui.org."
@@ -42,8 +44,8 @@ L['Equipment Set Overlay'] = 'Ausrüstungssettext'
 L['Show the associated equipment sets for the items in your bags (or bank).'] = 'Zeige auf Gegenständen im Rucksack oder Bank die zugehörigen Ausrüstungssets als Text an.'
 
 -- Movers
-L["Mover Transparency"] = true
-L["Changes the transparency of all the movers."] = true
+L["Mover Transparency"] = "Transparenz Ankerpunkte"
+L["Changes the transparency of all the movers."] = "Konfiguriere die Einstellungen der Transparenz der Ankerpukte"
 
 -- Automatic Role Assignment
 L['Automatic Role Assignment'] = 'Automatische Rollenzuweisung'
