@@ -106,7 +106,6 @@ function UF:UpdateRoleIconEnhanced(event)
 								for i = 1, 4 do
 									if classes[classToken][i] and talentSpec == classes[classToken][i].specName then
 										role = classes[classToken][i].role
-										print(self.unit, unitName, classToken, talentSpec, role)
 										break
 									end
 								end
