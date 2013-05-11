@@ -1,7 +1,7 @@
 local E, L, V, P, G = unpack(ElvUI); --Inport: Engine, Locales, PrivateDB, ProfileDB, GlobalDB, Localize Underscore
 local UF = E:GetModule('UnitFrames');
 
-local sub = string.sub
+local sub, find = string.sub, string.find
 local abs, atan2, cos, sin, sqrt2, random, floor, ceil, random = math.abs, math.atan2, math.cos, math.sin, math.sqrt(2), math.random, math.floor, math.ceil, math.random
 local pairs, type, select, unpack = pairs, type, select, unpack
 local GetPlayerMapPosition, GetPlayerFacing = GetPlayerMapPosition, GetPlayerFacing
@@ -13,6 +13,19 @@ local roleIconTextures = {
 	DAMAGER = [[Interface\AddOns\ElvUI\media\textures\dps.tga]],
 	DC = [[Interface\AddOns\ElvUI_Enhanced\media\textures\dc.tga]],
 }
+
+local classes = {	DEATHKNIGHT, DRUID, HUNTER,	MAGE, MONK, PALADIN, PRIEST, ROGUE, SHAMAN, WARLOCK, WARRIOR }
+
+for classID = 1, MAX_CLASSES do
+	local _, classTag = GetClassInfoByID(classID)
+	local numTabs = GetNumSpecializationsForClassID(classID)
+	classes[classTag] = {}
+	for i = 1, numTabs do
+		local id, name = GetSpecializationInfoForClassID(classID, i)
+		local role = GetSpecializationRoleByID(id)
+		classes[classTag][i] = { role = role, specName = name }
+	end
+end
 
 local function CalculateCorner(r)
 	return 0.5 + cos(r) / sqrt2, 0.5 + sin(r) / sqrt2;
@@ -75,18 +88,40 @@ function UF:UpdateRoleIconEnhanced(event)
 			role = rnd == 1 and "TANK" or (rnd == 2 and "HEALER" or (rnd == 3 and "DAMAGER" or (rnd == 4 and "DC")))
 		else
 			local specId
-			if UnitIsPlayer(self.unit) then
+			if UnitIsUnit(self.unit, "player") then
 				specId = GetSpecialization()
 				if specId then
 					role = select(6, GetSpecializationInfo(specId))
 				end
-			else	
-				specId = GetInspectSpecialization(self.unit)
-				if specId > 0 then
-					role = GetSpecializationRoleByID(specId) 
+			else
+				role = nil
+				local inInstance, instanceType = IsInInstance()
+				if (inInstance and (instanceType == "pvp")) then
+					local unitName = UnitName(self.unit)
+					local playerFaction = GetBattlefieldArenaFaction()
+					if unitName then
+						for index = 1, GetNumBattlefieldScores() do
+							local name, _, _, _, _, faction, _, _, classToken, _, _, _, _, _, _, talentSpec = GetBattlefieldScore(index)
+							if name and find(name, unitName) and playerFaction == faction and classes[classToken] and talentSpec then
+								for i = 1, 4 do
+									if classes[classToken][i] and talentSpec == classes[classToken][i].specName then
+										role = classes[classToken][i].role
+										print(self.unit, unitName, classToken, talentSpec, role)
+										break
+									end
+								end
+							end
+							if role then break end
+						end
+					end
+				else	
+					specId = GetInspectSpecialization(self.unit)
+					if specId > 0 then
+						role = GetSpecializationRoleByID(specId)
+					end
 				end
 			end
-			role = (role == nil) and 'NONE' or role
+			role = (role == nil) and 'NONE' or role			
 			autochange = role ~= 'NONE' 
 		end
 	end
@@ -101,6 +136,8 @@ function UF:UpdateRoleIconEnhanced(event)
 		end	
 	else
 		lfdrole:Hide()
-		UF:ScheduleTimer("UpdateRoleIconEnhanced", random(2, 7), self)
+		if not lfdrole.timer or UF:TimeLeft(lfdrole.timer) == 0 then
+			lfdrole.timer = UF:ScheduleTimer("UpdateRoleIconEnhanced", random(10, 20), self)
+		end
 	end	
 end
