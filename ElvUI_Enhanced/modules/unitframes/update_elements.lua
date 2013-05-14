@@ -87,39 +87,42 @@ function UF:UpdateRoleIconEnhanced(event)
 			local rnd = random(1, 4)
 			role = rnd == 1 and "TANK" or (rnd == 2 and "HEALER" or (rnd == 3 and "DAMAGER" or (rnd == 4 and "DC")))
 		else
+			role = nil
 			local specId
+			local inInstance, instanceType = IsInInstance()
+			
 			if UnitIsUnit(self.unit, "player") then
 				specId = GetSpecialization()
 				if specId then
 					role = select(6, GetSpecializationInfo(specId))
 				end
-			else
-				role = nil
-				local inInstance, instanceType = IsInInstance()
-				if (inInstance and (instanceType == "pvp")) then
-					local unitName = UnitName(self.unit)
-					local playerFaction = GetBattlefieldArenaFaction()
-					if unitName then
-						for index = 1, GetNumBattlefieldScores() do
-							local name, _, _, _, _, faction, _, _, classToken, _, _, _, _, _, _, talentSpec = GetBattlefieldScore(index)
-							if name and find(name, unitName) and playerFaction == faction and classes[classToken] and talentSpec then
-								for i = 1, 4 do
-									if classes[classToken][i] and talentSpec == classes[classToken][i].specName then
-										role = classes[classToken][i].role
-										break
-									end
+			elseif (inInstance and (instanceType == "pvp")) then
+				local unitName = UnitName(self.unit)
+				if unitName then
+					local playerFaction, numScores = GetBattlefieldArenaFaction(), GetNumBattlefieldScores()
+					local name, faction, classToken, talentSpec
+					for index = 1, numScores do
+						name, _, _, _, _, faction, _, _, classToken, _, _, _, _, _, _, talentSpec = GetBattlefieldScore(index)
+						if name and find(name, unitName) and playerFaction == faction and classes[classToken] and talentSpec then
+							for i = 1, 4 do
+								if classes[classToken][i] and talentSpec == classes[classToken][i].specName then
+									role = classes[classToken][i].role
+									break
 								end
 							end
-							if role then break end
 						end
+						if role then break end
 					end
-				else	
-					specId = GetInspectSpecialization(self.unit)
-					if specId > 0 then
-						role = GetSpecializationRoleByID(specId)
+				end
+			else	
+				specId = GetInspectSpecialization(self.unit)
+				if specId then
+					if GetSpecializationRoleByID(specId) then								-- verify that specId is valid
+						role = select(6, GetSpecializationInfoByID(specID))		-- get role information from specId
 					end
 				end
 			end
+
 			role = (role == nil) and 'NONE' or role			
 			autochange = role ~= 'NONE' 
 		end
