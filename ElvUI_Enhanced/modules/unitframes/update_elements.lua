@@ -122,7 +122,7 @@ function UF:UpdateRoleIconEnhanced(event)
 				end
 			else	
 				specId = GetInspectSpecialization(self.unit)
-				if specId then
+				if specId and specId > 0 then
 					if GetSpecializationRoleByID(specId) then								-- verify that specId is valid
 						role = select(6, GetSpecializationInfoByID(specID))		-- get role information from specId
 					end
