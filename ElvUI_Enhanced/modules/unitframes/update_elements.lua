@@ -49,8 +49,14 @@ function UF:UpdateGPS(frame)
 		gps:Hide()
 		return
 	end
-	
-	local distance, angle = E:GetDistance('player', gps.unit)
+
+	-- Arbitrary method to determine if we should try to calculate the map position
+	local x, y = GetPlayerMapPosition(gps.unit)
+	local distance, angle
+	if not (x == 0 and y == 0) then
+		-- Unit is in acceptable range, calculate position fast
+		distance, angle = E:GetDistance('player', gps.unit, true)
+	end
 	if not angle then
 		-- no bearing show - to indicate we are lost :)
 		gps.Text:SetText("-")
