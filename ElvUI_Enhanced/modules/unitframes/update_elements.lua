@@ -15,6 +15,7 @@ local roleIconTextures = {
 }
 
 local classes = {	DEATHKNIGHT, DRUID, HUNTER,	MAGE, MONK, PALADIN, PRIEST, ROGUE, SHAMAN, WARLOCK, WARRIOR }
+local specializations = { }
 
 for classID = 1, MAX_CLASSES do
 	local _, classTag = GetClassInfoByID(classID)
@@ -24,6 +25,7 @@ for classID = 1, MAX_CLASSES do
 		local id, name = GetSpecializationInfoForClassID(classID, i)
 		local role = GetSpecializationRoleByID(id)
 		classes[classTag][i] = { role = role, specName = name }
+		specializations[id] = role
 	end
 end
 
@@ -94,7 +96,7 @@ function UF:UpdateRoleIconEnhanced(event)
 			role = rnd == 1 and "TANK" or (rnd == 2 and "HEALER" or (rnd == 3 and "DAMAGER" or (rnd == 4 and "DC")))
 		else
 			role = nil
-			local specId
+			local specId = nil
 			local inInstance, instanceType = IsInInstance()
 			
 			if UnitIsUnit(self.unit, "player") then
@@ -122,10 +124,8 @@ function UF:UpdateRoleIconEnhanced(event)
 				end
 			else	
 				specId = GetInspectSpecialization(self.unit)
-				if specId and specId > 0 then
-					if GetSpecializationRoleByID(specId) then								-- verify that specId is valid
-						role = select(6, GetSpecializationInfoByID(specID))		-- get role information from specId
-					end
+				if specId and specializations[specId] then
+					role = specializations[specId]
 				end
 			end
 
