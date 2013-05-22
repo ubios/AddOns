@@ -49,10 +49,10 @@ function BI:BuildEquipmentMap(clear)
 	local name, player, bank, bags, slot, bag, key
 	for i = 1, GetNumEquipmentSets() do
 		name = GetEquipmentSetInfo(i)
-		GetEquipmentSetLocations(name, infoArray)			
+		GetEquipmentSetLocations(name, infoArray)
 		for _, location in pairs(infoArray) do
 			if location < -1 or location > 1 then
-				player, bank, bags, slot, bag = EquipmentManager_UnpackLocation(location)
+				player, bank, bags, _, slot, bag = EquipmentManager_UnpackLocation(location)
 				if ((bank or bags) and slot and bag) then
 					key = MapKey(bag, slot)
 					equipmentMap[key] = equipmentMap[key] or {}
