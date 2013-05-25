@@ -24,7 +24,8 @@ local levelAdjust = {
 	["0"]=0,["1"]=8,["373"]=4,["374"]=8,["375"]=4,["376"]=4,
 	["377"]=4,["379"]=4,["380"]=4,["445"]=0,["446"]=4,["447"]=8,
 	["451"]=0,["452"]=8,["453"]=0,["454"]=4,["455"]=8,["456"]=0,
-	["457"]=8,["458"]=0,["459"]=4,["460"]=8,["461"]=12,["462"]=16
+	["457"]=8,["458"]=0,["459"]=4,["460"]=8,["461"]=12,["462"]=16,
+	["465"]=0,["466"]=4,["467"]=8 
 }
 
 local levelColors = {
@@ -109,6 +110,9 @@ function PD:Initialize()
 	PD:RegisterEvent("UPDATE_INVENTORY_DURABILITY", "UpdatePaperDoll")	
 	PD:RegisterEvent("PLAYER_EQUIPMENT_CHANGED", "UpdatePaperDoll")
 	PD:RegisterEvent("SOCKET_INFO_UPDATE", "UpdatePaperDoll")
+	PD:RegisterEvent("COMBAT_RATING_UPDATE", "UpdatePaperDoll")
+	PD:RegisterEvent("MASTERY_UPDATE", "UpdatePaperDoll")
+	
 	PD:RegisterEvent("PLAYER_ENTERING_WORLD", "InitialUpdatePaperDoll")
 end
 
