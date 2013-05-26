@@ -102,6 +102,7 @@ function MB:SkinButton(frame)
 			frame.original.Parent = frame:GetParent()
 			frame.original.FrameStrata = frame:GetFrameStrata()
 			frame.original.FrameLevel = frame:GetFrameLevel()
+			frame.original.Scale = frame:GetScale()
 			if frame:HasScript("OnDragStart") then
 				frame.original.DragStart = frame:GetScript("OnDragStart")
 			end
@@ -158,6 +159,7 @@ function MB:UpdateLayout()
 			frame:SetPoint(frame.original.Point, frame.original.relativeTo, frame.original.relativePoint, frame.original.xOfs, frame.original.yOfs)
 			frame:SetFrameStrata(frame.original.FrameStrata)
 			frame:SetFrameLevel(frame.original.FrameLevel)
+			frame:SetScale(frame.original.Scale)
 			frame:SetMovable(true)
 		else
 			frame:SetParent(minimapButtonBar)
