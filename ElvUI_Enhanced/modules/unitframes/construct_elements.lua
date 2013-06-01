@@ -115,11 +115,13 @@ end
 function UF:EnhanceUpdateRoleIcon()
 	local frame
 	for i=1, 5 do
-		UF:UpdateRoleIconFrame(_G[("ElvUF_PartyUnitButton%d"):format(i)])
+		UF:UpdateRoleIconFrame(_G[("ElvUF_PartyGroup1UnitButton%d"):format(i)])
 	end
 	for r=10,40,15 do
-		for i=1, r do
-			UF:UpdateRoleIconFrame(_G[("ElvUF_Raid%dUnitButton%i"):format(r, i)])
+		for i=1, (r/5) do
+			for j=1, 5 do
+				UF:UpdateRoleIconFrame(_G[("ElvUF_Raid%dGroup%dUnitButton%i"):format(r, i, j)])
+			end
 		end
 	end
 	

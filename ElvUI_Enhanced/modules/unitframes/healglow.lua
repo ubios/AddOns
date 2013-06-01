@@ -62,7 +62,7 @@ function HG:SetupVariables()
 		23455,  -- Holy Nova
 		596,    -- Prayer of Healing
 		-- Shaman
-		1064,   -- Chain Heal
+		1064,   -- Chain Heal	
 	}) do
 		local name, _, icon = GetSpellInfo(spellID)
 		if name then
@@ -74,11 +74,13 @@ function HG:SetupVariables()
 	twipe(frameBuffers)
 	for _, index in ipairs(frameGroups) do
 		frameBuffers[index] = {}
-		for i = 1, index do
-			frame = (index == 5 and _G[("ElvUF_PartyUnitButton%d"):format(i)] or _G[("ElvUF_Raid%dUnitButton%i"):format(index, i)])
-			if frame then
-				frame.HealGlow = UF:Construct_HealGlow(frame, ((index == 5 and 'party%d' or 'raid%d')):format(i))
-				tinsert(frameBuffers[index], frame)		
+		for i=1, (index/5) do
+			for j=1, 5 do
+				frame = (index == 5 and _G[("ElvUF_PartyGroup%dUnitButton%i"):format(i, j)] or _G[("ElvUF_Raid%dGroup%dUnitButton%i"):format(index, i, j)])
+				if frame then
+					frame.HealGlow = UF:Construct_HealGlow(frame, ((index == 5 and 'party%d' or 'raid%d')):format(i))
+					tinsert(frameBuffers[index], frame)		
+				end
 			end
 		end
 	end
@@ -125,7 +127,7 @@ function HG:GroupRosterUpdate()
 	twipe(groupUnits)
 	
 	local unit
-	for index = 1, GetNumGroupMembers() - (IsInGroup() and 1 or 0) do
+	for index = 1, GetNumGroupMembers() +  (IsInGroup() and 1 or 0) do
 		unit = format("%s%d", (IsInRaid() and "raid" or (IsInGroup() and "party" or "solo")), index)
 		if not UnitIsUnit(unit, "player") then
 			groupUnits[UnitGUID(unit)] = { unit, 0 }
