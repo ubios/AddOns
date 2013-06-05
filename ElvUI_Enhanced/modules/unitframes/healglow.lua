@@ -124,15 +124,19 @@ function HG:UpdateSettings()
 end
 
 function HG:GroupRosterUpdate()
-	twipe(groupUnits)
-	
-	local unit
-	for index = 1, GetNumGroupMembers() +  (IsInGroup() and 1 or 0) do
-		unit = format("%s%d", (IsInRaid() and "raid" or (IsInGroup() and "party" or "solo")), index)
-		if not UnitIsUnit(unit, "player") then
-			groupUnits[UnitGUID(unit)] = { unit, 0 }
-		end
-	end
+    twipe(groupUnits)
+
+    local inRaid = IsInRaid()
+    local inParty = not inRaid and IsInGroup()
+    -- GetNumSubgroupMembers() automatically handles the 1-4 party convention, excluding 'player', GetNumGroupMembers() includes player
+    local numMembers = inRaid and GetNumGroupMembers() or inParty and GetNumSubgroupMembers() or 0
+    local unit
+    for index = 1, numMembers do
+        unit = format("%s%d", (inRaid and "raid" or inParty and "party"), index)
+        if not UnitIsUnit(unit, "player") then
+            groupUnits[UnitGUID(unit)] = { unit, 0 }
+        end
+    end
 end
 
 function HG:Initialize()
