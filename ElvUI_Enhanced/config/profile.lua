@@ -21,6 +21,13 @@ P['unitframe']['units']['target']['attackicon'] = {
 	['yOffset'] = 6,
 }
 
+P['unitframe']['units']['target']['classicon'] = {
+	['enable'] = true,
+	['size'] = 28,
+	['xOffset'] = -58,
+	['yOffset'] = -22,
+}
+
 P['unitframe']['units']['focus']['gps']= {
 	['enable'] = true,
 	['position'] = 'LEFT'

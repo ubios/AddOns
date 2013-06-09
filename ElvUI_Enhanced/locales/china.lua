@@ -58,6 +58,9 @@ L['Show the direction and distance to the selected party or raid member.'] = "�
 L['Attack Icon'] = true
 L['Show attack icon for units that are not tapped by you or your group, but still give kill credit when attacked.'] = true
 
+-- Class Icon
+L['Show class icon for units.'] = true
+
 -- Minimap Buttons
 L["Minimap Button Bar"] = "小地图按钮整合列"
 L['Skin Buttons'] = "美化按钮"

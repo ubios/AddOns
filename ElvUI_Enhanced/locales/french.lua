@@ -59,6 +59,9 @@ L['Show the direction and distance to the selected party or raid member.'] = "Af
 L['Attack Icon'] = "Icône d'Attaque"
 L['Show attack icon for units that are not tapped by you or your group, but still give kill credit when attacked.'] = "Affiche un icône d'attaque sur les unités que vous ou votre groupe n'avez pas encore tapé mais dont vous pouvez revendiquer la paternité."
 
+-- Class Icon
+L['Show class icon for units.'] = true
+
 -- Minimap Location
 L['Above Minimap'] = "Sous la minicarte"
 L['Location Digits'] = "Chiffres d'emplacement"

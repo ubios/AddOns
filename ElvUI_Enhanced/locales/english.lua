@@ -58,6 +58,9 @@ L['Show the direction and distance to the selected party or raid member.'] = tru
 L['Attack Icon'] = true
 L['Show attack icon for units that are not tapped by you or your group, but still give kill credit when attacked.'] = true
 
+-- Class Icon
+L['Show class icon for units.'] = true
+
 -- Minimap Location
 L['Above Minimap'] = true
 L['Location Digits'] = true

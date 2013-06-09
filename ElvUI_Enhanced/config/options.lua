@@ -213,6 +213,7 @@ function EO:EquipmentOptions()
 				order = 8,
 				get = function(info) return E.private.equipment.misc[ info[#info] ] end,
 				set = function(info, value) E.private.equipment.misc[ info[#info] ] = value end,
+				disabled = function() return not E.private.bags.enable end,
 				args = {
 					setoverlay = {
 						type = "toggle",
@@ -441,6 +442,7 @@ end
 function EO:UnitFramesOptions()
 	local UF = E:GetModule('UnitFrames')
 	local HG = E:GetModule('HealGlow')
+	local TC = E:GetModule('TargetClass')
 	
 	E.Options.args.unitframe.args.general.args.healglowGroup = {
 		order = 2,
@@ -530,6 +532,42 @@ function EO:UnitFramesOptions()
 			},
 		},
 	}	
+	
+	E.Options.args.unitframe.args.target.args.classicon = {
+		order = 1002,
+		type = 'group',
+		name = L["Class Icons"],
+		get = function(info) return E.db.unitframe.units['target']['classicon'][ info[#info] ] end,
+		set = function(info, value) E.db.unitframe.units['target']['classicon'][ info[#info] ] = value; TC:ToggleSettings() end,
+		args = {
+			enable = {
+				type = 'toggle',
+				order = 1,
+				name = L['Enable'],
+				desc = L['Show class icon for units.'],
+			},
+			size = {
+				order = 4,
+				type = 'range',
+				name = L['Size'],
+				desc = L['Size of the indicator icon.'],
+				min = 16, max = 40, step = 1,
+			},
+			xOffset = {
+				order = 5,
+				type = 'range',
+				name = L['xOffset'],
+				min = -100, max = 100, step = 1,
+			},
+			yOffset = {
+				order = 6,
+				type = 'range',
+				name = L['yOffset'],
+				min = -80, max = 40, step = 1,
+			},
+		},
+	}	
+
 	
 	--Focus
 	E.Options.args.unitframe.args.focus.args.gps = {
