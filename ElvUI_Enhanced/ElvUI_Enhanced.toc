@@ -1,7 +1,7 @@
 ## Interface: 50300
 ## Title: |cff1784d1ElvUI|r Enhanced
 ## Author: Tristimdorio (Omega1970)
-## X-Credits: Azilroka, Lockslap, Sortokk
+## X-Credits: Azilroka, Lockslap, Sortokk, Repooc
 ## Version: 1.86
 ## Notes: Plugin-Enhancements for |cff1784d1ElvUI|r.
 ## X-Category: Plugins
