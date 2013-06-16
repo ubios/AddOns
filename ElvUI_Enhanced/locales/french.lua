@@ -95,6 +95,13 @@ L['Automatically change your watched faction on the reputation bar to the factio
 L['Select Quest Reward'] = "Sélection de la récompense de quête"
 L['Automatically select the quest reward with the highest vendor sell value.'] = "Sélectionne automatiquement la récompense de quête qui vaut la plus chère chez le vendeur."
 
+-- Item Level Datatext
+L['Item Level'] = true
+
+-- Range Datatext
+L['Target Range'] = true
+L['Distance'] = true
+
 -- Extra Datatexts
 L['Actionbar1DataPanel'] = "Barre d'actions 1"
 L['Actionbar3DataPanel'] = "Barre d'actions 3"

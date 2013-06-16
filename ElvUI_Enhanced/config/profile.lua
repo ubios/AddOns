@@ -43,11 +43,11 @@ P['datatexts']['Actionbar5DataPanel'] = false
 
 P['datatexts']['panels']['Actionbar1DataPanel'] = {
 	['left'] = 'Crit Chance',
-	['middle'] = 'Target Range',
-	['right'] = 'Armor',
+	['middle'] = L['Target Range'],
+	['right'] = L["Item Level"],
 }
 
-P['datatexts']['panels']['Actionbar3DataPanel'] = 'Spec Switch'
+P['datatexts']['panels']['Actionbar3DataPanel'] = 'Talent/Loot Specialization'
 
 P['datatexts']['panels']['Actionbar5DataPanel'] = 'Call to Arms'
 

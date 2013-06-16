@@ -41,7 +41,6 @@ local heirlooms = {
 	[80] = {44102,42944,44096,42943,42950,48677,42946,42948,42947,42992,50255,44103,44107,44095,44098,44097,44105,42951,48683,48685,42949,48687,42984,44100,44101,44092,48718,44091,42952,48689,44099,42991,42985,48691,44094,44093,42945,48716},
 }
 
-
 function PD:UpdatePaperDoll()
 	if InCombatLockdown() then
 		PD:RegisterEvent("PLAYER_REGEN_ENABLED", "UpdatePaperDoll")	
@@ -51,8 +50,8 @@ function PD:UpdatePaperDoll()
  	end
 
 	local frame, slot, current, maximum, r, g, b
-	local itemLink, rarity, itemLevel, linkLevel, upgrade
 	local	avgItemLevel, avgEquipItemLevel = GetAverageItemLevel()
+	local itemLink, itemLevel
 	
 	for k, info in pairs(slots) do
 		frame = _G[("Character%s"):format(k)]
@@ -64,17 +63,10 @@ function PD:UpdatePaperDoll()
 				itemLink = GetInventoryItemLink("player", slot)
 				
         if itemLink then
-            rarity, itemLevel = select(3, GetItemInfo(itemLink))    
-            if rarity == 7 then -- heirloom adjust
-                itemLevel = self:HeirLoomLevel(itemLink)
-            end
-            upgrade = itemLink:match(":(%d+)\124h%[")
-            if itemLevel and upgrade and levelAdjust[upgrade] then
-                itemLevel = itemLevel + levelAdjust[upgrade]
-            end
-            if itemLevel and avgEquipItemLevel then
-                frame.ItemLevel:SetFormattedText("%s%d|r", levelColors[(itemLevel < avgEquipItemLevel-10 and 0 or (itemLevel > avgEquipItemLevel + 10 and 1 or (2)))], itemLevel)
-            end
+      		itemLevel = self:GetItemLevel(itemLink)
+          if itemLevel and avgEquipItemLevel then
+              frame.ItemLevel:SetFormattedText("%s%d|r", levelColors[(itemLevel < avgEquipItemLevel-10 and 0 or (itemLevel > avgEquipItemLevel + 10 and 1 or (2)))], itemLevel)
+          end
         end
 			end
 		end
@@ -90,6 +82,18 @@ function PD:UpdatePaperDoll()
 			end
 		end
 	end
+end
+
+function PD:GetItemLevel(itemLink)
+	local rarity, itemLevel = select(3, GetItemInfo(itemLink))    
+	if rarity == 7 then -- heirloom adjust
+	  itemLevel = self:HeirLoomLevel(itemLink)
+	end
+	local upgrade = itemLink:match(":(%d+)\124h%[")
+	if itemLevel and upgrade and levelAdjust[upgrade] then
+	  itemLevel = itemLevel + levelAdjust[upgrade]
+	end
+	return itemLevel
 end
 
 function PD:HeirLoomLevel(itemLink)

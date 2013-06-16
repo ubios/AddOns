@@ -94,7 +94,11 @@ L['Automatically change your watched faction on the reputation bar to the factio
 L['Select Quest Reward'] = 'Wähle Questbelohnung'
 L['Automatically select the quest reward with the highest vendor sell value.'] = 'Wählt automatisch die Questbelohnung mit dem höchsten Wiederverkaufswert beim Händler'
 
+-- Item Level Datatext
+L['Item Level'] = true
+
 -- Range Datatext
+L['Target Range'] = 'Zielabstand'
 L['Distance'] = 'Entfernung'
 
 -- Extra Datatexts
