@@ -59,7 +59,7 @@ L['Attack Icon'] = 'Angriffssymbol'
 L['Show attack icon for units that are not tapped by you or your group, but still give kill credit when attacked.'] = 'Zeige Angriffssymbol für Gegner, die noch nicht von Ihnen markiert, aber trotzdem Belohnungen gewähren, wenn sie von Ihnen angegriffen werden'
 
 -- Class Icon
-L['Show class icon for units.'] = true
+L['Show class icon for units.'] = 'Zeige Klassensymbol für Einheiten'
 
 -- Minimap Location
 L['Above Minimap'] = "Oberhalb der Minimap"
@@ -95,7 +95,7 @@ L['Select Quest Reward'] = 'Wähle Questbelohnung'
 L['Automatically select the quest reward with the highest vendor sell value.'] = 'Wählt automatisch die Questbelohnung mit dem höchsten Wiederverkaufswert beim Händler'
 
 -- Item Level Datatext
-L['Item Level'] = true
+L['Item Level'] = 'Gegenstandsstufe'
 
 -- Range Datatext
 L['Target Range'] = 'Zielabstand'
