@@ -139,7 +139,7 @@ function PD:InitialUpdatePaperDoll()
 end
 
 function PD:DelayedUpdatePaperDoll(inspect)
-	self:ScheduleTimer("UpdatePaperDoll", 2, inspect)
+	self:ScheduleTimer("UpdatePaperDoll", 1, inspect)
 end
 
 function PD:BuildInfoText(name)
