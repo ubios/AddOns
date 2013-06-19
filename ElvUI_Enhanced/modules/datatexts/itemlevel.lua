@@ -32,6 +32,14 @@ local levelColors = {
 }
 
 local function OnEvent(self, event)
+	if event == "PLAYER_ENTERING_WORLD" then
+		PD:ScheduleTimer("UpdateDataTextItemLevel", 5, self)
+		return
+	end
+	PD:UpdateDataTextItemLevel(self)
+end
+
+function PD:UpdateDataTextItemLevel(self)
 	local	avgItemLevel, avgEquipItemLevel = GetAverageItemLevel()
 	self.text:SetFormattedText(displayString, L["Item Level"], floor(avgItemLevel), floor(avgEquipItemLevel))
 end
