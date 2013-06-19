@@ -2,6 +2,7 @@ local E, L, V, P, G = unpack(ElvUI); --Inport: Engine, Locales, PrivateDB, Profi
 local PD = E:NewModule('PaperDoll', 'AceTimer-3.0', 'AceEvent-3.0');
 
 local find = string.find
+local initialized = false
 
 local slots = {
 	["HeadSlot"] = { true, true },
@@ -37,7 +38,9 @@ local levelColors = {
 	[2] = "|cffffff88",
 }
 
-function PD:UpdatePaperDoll()
+function PD:UpdatePaperDoll(inspect)
+	if not initialized then return end
+	
 	if InCombatLockdown() then
 		PD:RegisterEvent("PLAYER_REGEN_ENABLED", "UpdatePaperDoll")	
 		return
@@ -47,16 +50,23 @@ function PD:UpdatePaperDoll()
 
 	local frame, slot, current, maximum, r, g, b
 	local	avgItemLevel, avgEquipItemLevel = GetAverageItemLevel()
-	local itemLink, itemLevel
+	local baseName = inspect and "Inspect" or "Character"
+	local itemLink, itemLevel, unit
+	if (inspect and InspectFrame) then
+		unit = InspectFrame.unit
+	else
+		unit = "player"
+	end
+	if not unit then return end
 	
 	for k, info in pairs(slots) do
-		frame = _G[("Character%s"):format(k)]
+		frame = _G[("%s%s"):format(baseName, k)]
 
 		slot = GetInventorySlotInfo(k)	
 		if info[1] then
 			frame.ItemLevel:SetText()
 			if E.private.equipment.itemlevel.enable and info[1] then
-				itemLink = GetInventoryItemLink("player", slot)
+				itemLink = GetInventoryItemLink(unit, slot)
 				
         if itemLink then
       		itemLevel = self:GetItemLevel(itemLink)
@@ -67,7 +77,7 @@ function PD:UpdatePaperDoll()
 			end
 		end
 
-		if info[2] then
+		if not inspect and info[2] then
 			frame.DurabilityInfo:SetText()
 			if  E.private.equipment.durability.enable then
 				current, maximum = GetInventoryItemDurability(slot)
@@ -100,30 +110,41 @@ CAT rares: 272-333 = 61/5 = scales by 12.2 ilvl per player level
 MOP rares: 364-450 = 86/5 = scales by 17.2 ilvl per player level (guesswork)
 ]]
 function PD:HeirLoomLevel(itemLink)
-    local level = UnitLevel("player")
-    local linkLevel = itemLink:match(":(%d+):%d+:%d+\124h%[")
-    level = min(tonumber(linkLevel),level)
+  local level = UnitLevel("player")
+  local linkLevel = itemLink:match(":(%d+):%d+:%d+\124h%[")
+  level = min(tonumber(linkLevel),level)
 
-    if level > 80 then -- CAT heirloom scaling kicks in at 81
-        return (( level - 81) * 12.2) + 272;
-    elseif level > 67 then -- WLK heirloom scaling kicks in at 68
-        return (( level - 68) * 12) + 130;
-    elseif level > 59 then -- TBC heirloom scaling kicks in at 60
-        return (( level - 60) * 3) + 85;
-    else
-        return level;
-    end 
+  if level > 80 then -- CAT heirloom scaling kicks in at 81
+      return (( level - 81) * 12.2) + 272;
+  elseif level > 67 then -- WLK heirloom scaling kicks in at 68
+      return (( level - 68) * 12) + 130;
+  elseif level > 59 then -- TBC heirloom scaling kicks in at 60
+      return (( level - 60) * 3) + 85;
+  else
+      return level;
+  end 
 end
 
 function PD:InitialUpdatePaperDoll()
 	PD:UnregisterEvent("PLAYER_ENTERING_WORLD")
-	PD:ScheduleTimer("UpdatePaperDoll", 10)
+
+	LoadAddOn("Blizzard_InspectUI")
+
+	self:BuildInfoText("Character")
+	self:BuildInfoText("Inspect")
+	
+	initialized = true
+
+	self:ScheduleTimer("UpdatePaperDoll", 10)
 end
 
-function PD:Initialize()
-	local frame
+function PD:DelayedUpdatePaperDoll(inspect)
+	self:ScheduleTimer("UpdatePaperDoll", 2, inspect)
+end
+
+function PD:BuildInfoText(name)
 	for k, info in pairs(slots) do
-		frame = _G[("Character%s"):format(k)]
+		frame = _G[("%s%s"):format(name, k)]
 
 		if info[1] then
 			frame.ItemLevel = frame:CreateFontString(nil, "OVERLAY")
@@ -131,18 +152,23 @@ function PD:Initialize()
 			frame.ItemLevel:FontTemplate(E.media.font, 12, "THINOUTLINE")
 		end
 		
-		if info[2] then
+		if name == "Character" and info[2] then
 			frame.DurabilityInfo = frame:CreateFontString(nil, "OVERLAY")
 			frame.DurabilityInfo:SetPoint("TOP", frame, "TOP", 0, -4)
 			frame.DurabilityInfo:FontTemplate(E.media.font, 12, "THINOUTLINE")
 		end
-	end	
+	end
+end
+
+function PD:Initialize()
+	local frame
 	
-	PD:RegisterEvent("UPDATE_INVENTORY_DURABILITY", "UpdatePaperDoll")	
-	PD:RegisterEvent("PLAYER_EQUIPMENT_CHANGED", "UpdatePaperDoll")
-	PD:RegisterEvent("SOCKET_INFO_UPDATE", "UpdatePaperDoll")
-	PD:RegisterEvent("COMBAT_RATING_UPDATE", "UpdatePaperDoll")
-	PD:RegisterEvent("MASTERY_UPDATE", "UpdatePaperDoll")
+	PD:RegisterEvent("UPDATE_INVENTORY_DURABILITY", "UpdatePaperDoll", false)	
+	PD:RegisterEvent("PLAYER_EQUIPMENT_CHANGED", "UpdatePaperDoll", false)
+	PD:RegisterEvent("SOCKET_INFO_UPDATE", "UpdatePaperDoll", false)
+	PD:RegisterEvent("COMBAT_RATING_UPDATE", "UpdatePaperDoll", false)
+	PD:RegisterEvent("MASTERY_UPDATE", "UpdatePaperDoll", false)
+	PD:RegisterEvent("INSPECT_READY", "DelayedUpdatePaperDoll", true)
 	
 	PD:RegisterEvent("PLAYER_ENTERING_WORLD", "InitialUpdatePaperDoll")
 end
