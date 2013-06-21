@@ -1,7 +1,7 @@
 local E, L, V, P, G = unpack(ElvUI); --Inport: Engine, Locales, PrivateDB, ProfileDB, GlobalDB, Localize Underscore
 local PD = E:NewModule('PaperDoll', 'AceTimer-3.0', 'AceEvent-3.0');
 
-local find, min = string.find, math.min
+local find, string.find
 local initialized = false
 
 local slots = {
@@ -125,7 +125,7 @@ function PD:HeirLoomLevel(unit, itemLink)
 
   if level > 85 then level = 85 end 	
 	if level > 80 then
-		local _, _, _, _, itemId = string.find(itemLink, "|?c?f?f?(%x*)|?H?([^:]*):?(%d+):?(%d*):?(%d*):?(%d*):?(%d*):?(%d*):?(%-?%d*):?(%-?%d*):?(%d*):?(%d*)|?h?%[?([^%[%]]*)%]?|?h?|?r?")
+		local _, _, _, _, itemId = find(itemLink, "|?c?f?f?(%x*)|?H?([^:]*):?(%d+):?(%d*):?(%d*):?(%d*):?(%d*):?(%d*):?(%-?%d*):?(%-?%d*):?(%d*):?(%d*)|?h?%[?([^%[%]]*)%]?|?h?|?r?")
 		--print(itemId)
 		itemId = tonumber(itemId);
 		for _, id in pairs(heirlooms[80]) do
