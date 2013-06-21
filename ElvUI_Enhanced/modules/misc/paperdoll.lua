@@ -59,10 +59,7 @@ function PD:UpdatePaperDoll(inspect)
 		PD:UnregisterEvent("PLAYER_REGEN_ENABLED")
  	end
  	
-	local frame, slot, current, maximum, r, g, b
-	local	avgItemLevel, avgEquipItemLevel = GetAverageItemLevel()
-	local baseName = inspect and "Inspect" or "Character"
-	local itemLink, itemLevel, unit
+	local unit
 	if (inspect and InspectFrame) then
 		unit = InspectFrame.unit
 	else
@@ -70,6 +67,11 @@ function PD:UpdatePaperDoll(inspect)
 	end
 	if not unit then return end
 	if unit and not CanInspect(unit, false) then return end
+	
+	local frame, slot, current, maximum, r, g, b
+	local baseName = inspect and "Inspect" or "Character"
+	local itemLink, itemLevel
+	local	avgItemLevel, avgEquipItemLevel = GetAverageItemLevel()
 	
 	for k, info in pairs(slots) do
 		frame = _G[("%s%s"):format(baseName, k)]
@@ -155,10 +157,8 @@ function PD:InitialUpdatePaperDoll()
 
 	self:BuildInfoText("Character")
 	self:BuildInfoText("Inspect")
-	
-	initialized = true
 
-	self:ScheduleTimer("UpdatePaperDoll", 10)
+	initialized = true
 end
 
 function PD:DelayedUpdatePaperDoll(inspect)
