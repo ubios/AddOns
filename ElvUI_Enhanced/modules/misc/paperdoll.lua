@@ -1,7 +1,7 @@
 local E, L, V, P, G = unpack(ElvUI); --Inport: Engine, Locales, PrivateDB, ProfileDB, GlobalDB, Localize Underscore
 local PD = E:NewModule('PaperDoll', 'AceTimer-3.0', 'AceEvent-3.0');
 
-local find, string.find
+local find = string.find
 local initialized = false
 
 local slots = {
@@ -69,6 +69,7 @@ function PD:UpdatePaperDoll(inspect)
 		unit = "player"
 	end
 	if not unit then return end
+	if unit and not CanInspect(unit, false) then return end
 	
 	for k, info in pairs(slots) do
 		frame = _G[("%s%s"):format(baseName, k)]
