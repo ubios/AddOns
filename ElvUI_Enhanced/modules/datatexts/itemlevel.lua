@@ -55,7 +55,7 @@ local function OnEnter(self)
 	for i = 1, 16 do
 		itemLink = GetInventoryItemLink("player", GetInventorySlotInfo(slots[i][1]))
 		if itemLink then
-  		itemLevel = PD:GetItemLevel(itemLink)
+  		itemLevel = PD:GetItemLevel("player", itemLink)
       if itemLevel and avgEquipItemLevel then
       	color = levelColors[(itemLevel < avgEquipItemLevel - 10 and 0 or (itemLevel > avgEquipItemLevel + 10 and 1 or (2)))]
       	DT.tooltip:AddDoubleLine(slots[i][2], itemLevel, 1, 1, 1, color[1], color[2], color[3])
