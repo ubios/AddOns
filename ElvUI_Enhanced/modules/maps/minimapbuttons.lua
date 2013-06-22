@@ -127,7 +127,7 @@ function MB:SkinButton(frame)
 				end
 			end
 		end
-		frame:SetTemplate("Default")
+		frame:SetTemplate("Tranparent")
 
 		tinsert(moveButtons, name)
 		frame.isSkinned = true
