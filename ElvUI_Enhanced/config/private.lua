@@ -17,6 +17,14 @@ V.general.minimapbar = {
 	['mouseover'] = false,
 }
 
+V.general.raidmarkerbar = {
+	['enable'] = true,
+	['buttonSize'] = 22,
+	['spacing'] = 2,
+	['orientation'] = 'HORIZONTAL',
+	['modifier'] = 'shift-',
+}
+
 V.equipment = {
 	['specialization'] = {
 		['enable'] = false,

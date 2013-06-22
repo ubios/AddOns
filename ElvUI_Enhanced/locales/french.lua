@@ -138,6 +138,20 @@ L["Glow Duration"] = "Durée de la prédiction"
 L["The amount of time the unit frames of party / raid members will glow when affected by a direct AoE heal."] = "Le temps que les cadres d'unités du groupe / Raid seront affectés par la prédiction de soin."
 L["Glow Color"] = "Couleur de la prédiction"
 
+-- Raid Marker Bar
+L['Raid Marker Bar'] = true
+L['Display a quick action bar for raid targets and world markers.'] = true
+L['Modifier Key'] = true
+L['Set the modifier key for placing world markers.'] = true
+L['Shift Key'] = true
+L['Ctrl Key'] = true
+L['Alt Key'] = true
+L["Raid Markers"] = true
+L["Click to clear the mark."] = true
+L["Click to mark the target."] = true
+L["%sClick to remove all worldmarkers."] = true
+L["%sClick to place a worldmarker."] = true
+
 -- WatchFrame
 L['WatchFrame'] = "Fenêtre d'objectifs"
 L['WATCHFRAME_DESC'] = "Adjust the settings for the visibility of the watchframe (questlog) to your personal preference."

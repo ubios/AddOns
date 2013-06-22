@@ -137,6 +137,20 @@ L["Glow Duration"] = 'Richtung des Leuchtens'
 L["The amount of time the unit frames of party / raid members will glow when affected by a direct AoE heal."] = "Die Zeitdauer die Einheitenfenster von Gruppen- oder Schlachtzugsmitgliedern leuchten, wenn diese durch direkte AoE-Heilungen betroffen sind."
 L["Glow Color"] = 'Farbe des Leuchtens'
 
+-- Raid Marker Bar
+L['Raid Marker Bar'] = true
+L['Display a quick action bar for raid targets and world markers.'] = true
+L['Modifier Key'] = true
+L['Set the modifier key for placing world markers.'] = true
+L['Shift Key'] = true
+L['Ctrl Key'] = true
+L['Alt Key'] = true
+L["Raid Markers"] = true
+L["Click to clear the mark."] = true
+L["Click to mark the target."] = true
+L["%sClick to remove all worldmarkers."] = true
+L["%sClick to place a worldmarker."] = true
+
 -- WatchFrame
 L['WatchFrame'] = "Questlog"
 L['WATCHFRAME_DESC'] = 'Passen Sie die Einstellungen für die Sichtbarkeit des Questlogs ganz an ihre persönlichen Bedürfnisse an.'

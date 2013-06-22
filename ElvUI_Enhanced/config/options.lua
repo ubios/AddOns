@@ -439,6 +439,63 @@ function EO:NameplateOptions()
 	}
 end
 
+function EO:RaidMarkerOptions()
+	local RM = E:GetModule('RaidMarkerBar')
+	
+	E.Options.args.general.args.raidmarkerbar = {
+		order = 20,
+		get = function(info) return E.private.general.raidmarkerbar[ info[#info] ] end,	
+		set = function(info, value) E.private.general.raidmarkerbar[ info[#info] ] = value; RM:ToggleSettings() end,
+		type = "group",
+		name = L['Raid Marker Bar'],
+		guiInline = true,
+		args = {
+			enable = {
+				type = 'toggle',
+				order = 2,
+				name = L['Enable'],
+				desc = L['Display a quick action bar for raid targets and world markers.'],	
+			},
+			buttonSize = {
+				order = 3,
+				type = 'range',
+				name = L['Button Size'],
+				min = 16, max = 40, step = 1,
+				disabled = function() return not E.private.general.raidmarkerbar.enable end,
+			},
+			spacing = {
+				order = 4,
+				type = 'range',
+				name = L["Button Spacing"],
+				min = 0, max = 10, step = 1,
+				disabled = function() return not E.private.general.raidmarkerbar.enable end,
+			},
+			orientation = {
+				order = 5,
+				type = 'select',
+				name = L['Orientation'],
+				disabled = function() return not E.private.general.raidmarkerbar.enable end,
+				values = {
+					['HORIZONTAL'] = L['Horizontal'],
+					['VERTICAL'] = L['Vertical'],
+				},
+			},
+			modifier = {
+				order = 6,
+				type = 'select',
+				name = L['Modifier Key'],
+				desc = L['Set the modifier key for placing world markers.'],
+				disabled = function() return not E.private.general.raidmarkerbar.enable end,
+				values = {
+					['shift-'] = L['Shift Key'],
+					['ctrl-'] = L['Ctrl Key'],
+					['alt-'] = L['Alt Key'],
+				}
+			}
+		}
+	}
+end
+
 function EO:UnitFramesOptions()
 	local UF = E:GetModule('UnitFrames')
 	local HG = E:GetModule('HealGlow')
@@ -677,6 +734,7 @@ function EO:GetOptions()
 	EO:MapOptions()
 	EO:MiscOptions()
 	EO:NameplateOptions()
+	EO:RaidMarkerOptions()	
 	EO:UnitFramesOptions()
 	EO:WatchFrame()
 end

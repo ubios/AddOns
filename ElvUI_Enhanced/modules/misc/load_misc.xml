@@ -4,5 +4,6 @@
 	<Script file='questreward.lua'/>
 	<Script file='paperdoll.lua'/>
 	<Script file='movers.lua'/>
+	<Script file='raidmarkers.lua'/>
 	<Script file='targetclass.lua'/>
 </Ui>
