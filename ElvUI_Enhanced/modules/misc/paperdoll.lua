@@ -1,8 +1,9 @@
 local E, L, V, P, G = unpack(ElvUI); --Inport: Engine, Locales, PrivateDB, ProfileDB, GlobalDB, Localize Underscore
-local PD = E:NewModule('PaperDoll', 'AceTimer-3.0', 'AceEvent-3.0');
+local PD = E:NewModule('PaperDoll', 'AceEvent-3.0', 'AceTimer-3.0');
 
 local find = string.find
 local initialized = false
+local originalInspectFrameUpdateTabs
 
 local slots = {
 	["HeadSlot"] = { true, true },
@@ -48,23 +49,17 @@ local heirlooms = {
 	},
 }
 
-
 function PD:UpdatePaperDoll(inspect)
 	if not initialized then return end
 	
 	if InCombatLockdown() then
-		PD:RegisterEvent("PLAYER_REGEN_ENABLED", "UpdatePaperDoll")	
+		PD:RegisterEvent("PLAYER_REGEN_ENABLED", "UpdatePaperDoll", inspect)	
 		return
 	else
 		PD:UnregisterEvent("PLAYER_REGEN_ENABLED")
  	end
  	
-	local unit
-	if (inspect and InspectFrame) then
-		unit = InspectFrame.unit
-	else
-		unit = "player"
-	end
+	local unit = (inspect and InspectFrame) and InspectFrame.unit or "player"
 	if not unit then return end
 	if unit and not CanInspect(unit, false) then return end
 	
@@ -150,6 +145,11 @@ function PD:HeirLoomLevel(unit, itemLink)
 	end
 end
 
+function PD:InspectFrame_UpdateTabsComplete()
+	originalInspectFrameUpdateTabs()
+	PD:UpdatePaperDoll(true)
+end
+
 function PD:InitialUpdatePaperDoll()
 	PD:UnregisterEvent("PLAYER_ENTERING_WORLD")
 
@@ -158,17 +158,14 @@ function PD:InitialUpdatePaperDoll()
 	self:BuildInfoText("Character")
 	self:BuildInfoText("Inspect")
 
-	initialized = true
-end
+	-- hook to inspect frame update
+	originalInspectFrameUpdateTabs = _G.InspectFrame_UpdateTabs
+	_G.InspectFrame_UpdateTabs = PD.InspectFrame_UpdateTabsComplete
+	
+	-- update player info
+	self:ScheduleTimer("UpdatePaperDoll", 10, false)
 
-function PD:DelayedUpdatePaperDoll(inspect)
-	local baseName = inspect and "Inspect" or "Character"
-	local frame = _G[("%sMainHandSlot"):format(baseName)]
-	if not frame.hasItem then
-		self:ScheduleTimer("DelayedUpdatePaperDoll", .5, inspect)
-	else
-		self:ScheduleTimer("UpdatePaperDoll", .5, inspect)
-	end
+	initialized = true
 end
 
 function PD:BuildInfoText(name)
@@ -197,7 +194,6 @@ function PD:Initialize()
 	PD:RegisterEvent("SOCKET_INFO_UPDATE", "UpdatePaperDoll", false)
 	PD:RegisterEvent("COMBAT_RATING_UPDATE", "UpdatePaperDoll", false)
 	PD:RegisterEvent("MASTERY_UPDATE", "UpdatePaperDoll", false)
-	PD:RegisterEvent("INSPECT_READY", "DelayedUpdatePaperDoll", true)
 	
 	PD:RegisterEvent("PLAYER_ENTERING_WORLD", "InitialUpdatePaperDoll")
 end
