@@ -15,7 +15,7 @@ local layouts = {
 
 function RM:CreateButtons()
 	for k, layout in ipairs(layouts) do
-		local button = CreateFrame("Button", ("RaidMarkerBarlayout%d"):format(k), self.frame, "SecureActionButtonTemplate")
+		local button = CreateFrame("Button", ("RaidMarkerBarButton%d"):format(k), self.frame, "SecureActionButtonTemplate")
 		button:SetHeight(self.db.buttonSize)
 		button:SetWidth(self.db.buttonSize)
 		
