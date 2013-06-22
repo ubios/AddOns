@@ -31,7 +31,7 @@ local function CreateEnhancedMaplocation()
 	panel:Size(320, 22)
 
 	xMap = CreateFrame('Frame', "MapCoordinatesX", panel)
-	xMap:SetTemplate('Default')
+	xMap:SetTemplate('Transparent')
 	xMap:Point('LEFT', panel, 'LEFT', 2, 0)
 	xMap:Size(40, 22)
 	
@@ -40,7 +40,7 @@ local function CreateEnhancedMaplocation()
 	xMap.text:SetAllPoints(xMap)
 
 	location = CreateFrame('Frame', "EnhancedLocationText", panel)
-	location:SetTemplate('Default')
+	location:SetTemplate('Transparent')
 	location:Point('CENTER', panel, 'CENTER', 0, 0)
 	location:Size(200, 22)
 	
@@ -49,7 +49,7 @@ local function CreateEnhancedMaplocation()
 	location.text:SetAllPoints(location)
 
 	yMap = CreateFrame('Frame', "MapCoordinatesY", panel)
-	yMap:SetTemplate('Default')
+	yMap:SetTemplate('Transparent')
 	yMap:Point('RIGHT', panel, 'RIGHT', -2, 0)
 	yMap:Size(40, 22)
 
