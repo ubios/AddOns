@@ -35,6 +35,7 @@ P['unitframe']['units']['focus']['gps']= {
 
 -- Nameplates
 P['nameplate'].showthreat = true
+P['nameplate'].targetcount = true
 
 -- DataTexts
 P['datatexts']['Actionbar1DataPanel'] = false

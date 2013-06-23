@@ -431,9 +431,15 @@ function EO:MiscOptions()
 end
 
 function EO:NameplateOptions()
+	E.Options.args.nameplate.args.general.args.targetcount = {
+		type = "toggle",
+		order = 13,
+		name = L["Target Count"],
+		desc = L["Display the number of party / raid members targetting the nameplate unit."],
+	}
 	E.Options.args.nameplate.args.general.args.showthreat = {
 		type = "toggle",
-		order = 5,
+		order = 13,
 		name = L["Threat Text"],
 		desc = L["Display threat level as text on targeted, boss or mouseover nameplate."],
 	}

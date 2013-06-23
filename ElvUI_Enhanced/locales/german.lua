@@ -129,6 +129,8 @@ L['The direction of the seed bar buttons (Horizontal or Vertical).'] = 'Die Ausb
 -- Nameplates
 L["Threat Text"] = "Bedrohungstext"
 L["Display threat level as text on targeted, boss or mouseover nameplate."] = "Anzeigen der Bedrohung als Text auf der Namensplakette des Ziels."
+L["Target Count"] = true
+L["Display the number of party / raid members targetting the nameplate unit."] = true
 
 -- HealGlow
 L['Heal Glow'] = 'Heilungsleuchten'

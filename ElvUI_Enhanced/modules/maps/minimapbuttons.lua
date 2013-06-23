@@ -48,14 +48,20 @@ local whiteList = {
 local moveButtons = {}
 local minimapButtonBarAnchor, minimapButtonBar
 
-local function OnEnter()
+local function OnEnter(self)
 	if not E.private.general.minimapbar.mouseover or E.private.general.minimapbar.skinStyle == 'NOANCHOR' then return end
 	UIFrameFadeIn(MinimapButtonBar, 0.2, MinimapButtonBar:GetAlpha(), 1)
+	if self:GetName() ~= 'MinimapButtonBar' then
+		self:SetBackdropBorderColor(.7, .7, 0)
+	end
 end
 
-local function OnLeave()
+local function OnLeave(self)
 	if not E.private.general.minimapbar.mouseover or E.private.general.minimapbar.skinStyle == 'NOANCHOR' then return end
 	UIFrameFadeOut(MinimapButtonBar, 0.2, MinimapButtonBar:GetAlpha(), 0)
+	if self:GetName() ~= 'MinimapButtonBar' then
+		self:SetBackdropBorderColor(0, 0, 0)
+	end
 end
 
 function MB:SkinButton(frame)

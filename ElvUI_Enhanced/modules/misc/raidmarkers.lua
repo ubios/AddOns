@@ -18,18 +18,12 @@ function RM:CreateButtons()
 		local button = CreateFrame("Button", ("RaidMarkerBarButton%d"):format(k), self.frame, "SecureActionButtonTemplate")
 		button:SetHeight(self.db.buttonSize)
 		button:SetWidth(self.db.buttonSize)
+		button:SetTemplate('Transparent')
 		
-		local image = button:CreateTexture(nil, "BACKGROUND")
+		local image = button:CreateTexture(nil, "ARTWORK")
 		image:SetAllPoints()
 		image:SetTexture(k == 9 and "Interface\\BUTTONS\\UI-GroupLoot-Pass-Up" or ("Interface\\TargetingFrame\\UI-RaidTargetingIcon_%d"):format(k))
 	
-		-- layout highlight on mouseover
-		local highlight = button:CreateTexture(nil, "HIGHLIGHT")
-		highlight:SetAllPoints(image)
-		highlight:SetTexture("Interface\\PaperDollInfoFrame\\UI-Character-Tab-Highlight")
-		highlight:SetTexCoord(0, 1, 0.23, 0.77)
-		highlight:SetBlendMode("ADD")
-		
 		local target, worldmarker = layout.RT, layout.WM
 		-- target icons
 		if target then
@@ -50,6 +44,7 @@ function RM:UpdateWorldMarkersAndTooltips()
 		if target and not worldmarker then
 			-- tooltip
 			button:SetScript("OnEnter", function(self)
+				self:SetBackdropBorderColor(.7, .7, 0)
 				GameTooltip:SetOwner(self, "ANCHOR_BOTTOM")
 				GameTooltip:SetText(L["Raid Markers"])
 				GameTooltip:AddLine(k == 9 and L["Click to clear the mark."] or L["Click to mark the target."], 1, 1, 1)
@@ -63,6 +58,7 @@ function RM:UpdateWorldMarkersAndTooltips()
 			button:SetAttribute(("%smacrotext1"):format(modifier), worldmarker == 0 and "/cwm all" or ("/cwm %d\n/wm %d"):format(worldmarker, worldmarker))	
 			
 			button:SetScript("OnEnter", function(self)
+				self:SetBackdropBorderColor(.7, .7, 0)
 				GameTooltip:SetOwner(self, "ANCHOR_BOTTOM")
 				GameTooltip:SetText(L["Raid Markers"])
 				GameTooltip:AddLine(k == 9 and ("%s\n%s"):format(L["Click to clear the mark."], (L["%sClick to remove all worldmarkers."]):format(button.modifier:upper()))
@@ -72,7 +68,10 @@ function RM:UpdateWorldMarkersAndTooltips()
 		end
 		
 		-- tooltip
-		button:SetScript("OnLeave", function() GameTooltip:Hide() end)	
+		button:SetScript("OnLeave", function(self)
+			self:SetBackdropBorderColor(0, 0, 0)
+			GameTooltip:Hide() 
+		end)	
 	end
 end
 

@@ -130,6 +130,8 @@ L['The direction of the seed bar buttons (Horizontal or Vertical).'] = true
 -- Nameplates
 L["Threat Text"] = "威脅值文字"
 L["Display threat level as text on targeted, boss or mouseover nameplate."] = "在首領或鼠標懸停的血條上顯示威脅等級文字."
+L["Target Count"] = true
+L["Display the number of party / raid members targetting the nameplate unit."] = true
 
 -- HealGlow
 L['Heal Glow'] = true

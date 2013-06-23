@@ -125,6 +125,12 @@ L['Automatically drop tools from your bags when leaving the farming area.'] = tr
 L['Seed Bar Direction'] = true
 L['The direction of the seed bar buttons (Horizontal or Vertical).'] = true
 
+-- Nameplates
+L["Threat Text"] = true
+L["Display threat level as text on targeted, boss or mouseover nameplate."] = true
+L["Target Count"] = true
+L["Display the number of party / raid members targetting the nameplate unit."] = true
+
 -- HealGlow
 L['Heal Glow'] = true
 L['Direct AoE heals will let the unit frames of the affected party / raid members glow for the defined time period.'] = true

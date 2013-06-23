@@ -43,3 +43,24 @@ hooksecurefunc(NP, 'UpdateThreat', function(self, frame)
 		end
 	end
 end)
+
+hooksecurefunc(NP, 'Update_LevelText', function(self, frame)
+	if not self.db.targetcount then return end
+
+	if IsInGroup() and frame.guid then
+		local targetCount = 0
+		local target
+		for name, unitid in pairs(NP.GroupMembers) do
+			target = ("%starget"):format(unitid)
+			if UnitExists(target) and UnitGUID(target) == frame.guid then
+				targetCount = targetCount + 1
+			end
+		end
+		--Set the name text
+		if (targetCount == 0) then
+			frame.hp.name:SetText(frame.hp.oldname:GetText())
+		else
+			frame.hp.name:SetText(('%s [%d]'):format(frame.hp.oldname:GetText(), targetCount))
+		end
+	end	
+end)
