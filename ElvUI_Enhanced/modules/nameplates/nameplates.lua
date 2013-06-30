@@ -14,7 +14,12 @@ hooksecurefunc(NP, 'SkinPlate', function(self, frame, nameFrame)
 		frame.hp.threat = frame.hp:CreateFontString(nil, "OVERLAY")
 		frame.hp.threat:SetPoint("RIGHT", frame.hp, "RIGHT", -1, 1)
 	end
+	if not frame.hp.targetcount then
+		frame.hp.targetcount = frame.hp:CreateFontString(nil, "OVERLAY")
+	end
 	frame.hp.threat:FontTemplate(LSM:Fetch("font", self.db.font), self.db.fontSize, self.db.fontOutline)
+	frame.hp.targetcount:FontTemplate(LSM:Fetch("font", self.db.font), self.db.fontSize, self.db.fontOutline)
+	frame.hp.targetcount:SetPoint('BOTTOMRIGHT', frame.hp, 'TOPRIGHT', 0 + self.db.nameXOffset, 4 + self.db.nameYOffset)
 end)
 
 hooksecurefunc(NP, 'UpdateThreat', function(self, frame)
@@ -44,9 +49,10 @@ hooksecurefunc(NP, 'UpdateThreat', function(self, frame)
 	end
 end)
 
-hooksecurefunc(NP, 'Update_LevelText', function(self, frame)
+hooksecurefunc(NP, 'UpdateIsBeingTanked', function(self, frame)
 	if not self.db.targetcount then return end
 
+	frame.hp.targetcount:SetText()
 	if IsInGroup() and frame.guid then
 		local targetCount = 0
 		local target
@@ -57,10 +63,8 @@ hooksecurefunc(NP, 'Update_LevelText', function(self, frame)
 			end
 		end
 		--Set the name text
-		if (targetCount == 0) then
-			frame.hp.name:SetText(frame.hp.oldname:GetText())
-		else
-			frame.hp.name:SetText(('%s [%d]'):format(frame.hp.oldname:GetText(), targetCount))
+		if not (targetCount == 0) then
+			frame.hp.targetcount:SetText(('[%d]'):format(targetCount))
 		end
 	end	
 end)
