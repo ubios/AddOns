@@ -109,7 +109,7 @@ hooksecurefunc(M, 'UpdateSettings', function()
 
 	local holder = _G['MMHolder']
 	panel:SetPoint('BOTTOMLEFT', holder, 'TOPLEFT', -(E.PixelMode and 1 or 2), -(E.PixelMode and 1 or 2))
-	panel:Size(holder:GetWidth() + 2, 22)
+	panel:Size(holder:GetWidth() + (E.PixelMode and 2 or 5), 22)
 	panel:Show()
 	
 	location:Width(holder:GetWidth() - 82)
