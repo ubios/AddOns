@@ -122,7 +122,7 @@ function RM:ToggleSettings()
 	self:UpdateWorldMarkersAndTooltips()
 	
 	if self.db.enable then
-		RegisterStateDriver(self.frame, "visibility", "[noexists,nogroup]hide;show")
+		RegisterStateDriver(self.frame, "visibility", self.db.visibility == 'DEFAULT' and '[noexists,nogroup]hide;show' or '[group]show;hide')
 	else
 		UnregisterStateDriver(self.frame, "visibility")
 		self.frame:Hide()

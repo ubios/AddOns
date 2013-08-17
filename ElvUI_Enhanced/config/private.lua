@@ -19,6 +19,7 @@ V.general.minimapbar = {
 
 V.general.raidmarkerbar = {
 	['enable'] = true,
+	['visibility'] = 'DEFAULT',
 	['buttonSize'] = 22,
 	['spacing'] = 2,
 	['orientation'] = 'HORIZONTAL',

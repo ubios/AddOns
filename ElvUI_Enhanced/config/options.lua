@@ -17,6 +17,11 @@ local positionValues = {
 	BOTTOM = 'BOTTOM',
 }
 
+local raidmarkerVisibility = {
+	DEFAULT = L['Use Default'],
+	INPARTY = AGGRO_WARNING_IN_PARTY,
+}
+
 function EO:DataTextOptions()
 	local EDT = E:GetModule('ExtraDataTexts')
 
@@ -462,22 +467,29 @@ function EO:RaidMarkerOptions()
 				name = L['Enable'],
 				desc = L['Display a quick action bar for raid targets and world markers.'],	
 			},
-			buttonSize = {
+			visibility = {		
+				type = 'select',
 				order = 3,
+				name = L["Visibility"],
+				disabled = function() return not E.private.general.raidmarkerbar.enable end,
+				values = raidmarkerVisibility,
+			},
+			buttonSize = {
+				order = 4,
 				type = 'range',
 				name = L['Button Size'],
 				min = 16, max = 40, step = 1,
 				disabled = function() return not E.private.general.raidmarkerbar.enable end,
 			},
 			spacing = {
-				order = 4,
+				order = 5,
 				type = 'range',
 				name = L["Button Spacing"],
 				min = 0, max = 10, step = 1,
 				disabled = function() return not E.private.general.raidmarkerbar.enable end,
 			},
 			orientation = {
-				order = 5,
+				order = 6,
 				type = 'select',
 				name = L['Orientation'],
 				disabled = function() return not E.private.general.raidmarkerbar.enable end,
@@ -487,7 +499,7 @@ function EO:RaidMarkerOptions()
 				},
 			},
 			modifier = {
-				order = 6,
+				order = 7,
 				type = 'select',
 				name = L['Modifier Key'],
 				desc = L['Set the modifier key for placing world markers.'],
