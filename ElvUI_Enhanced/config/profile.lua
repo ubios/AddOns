@@ -36,6 +36,9 @@ P['unitframe']['units']['focus']['gps']= {
 -- Nameplates
 P['nameplate'].showthreat = true
 P['nameplate'].targetcount = true
+P['nameplate'].auras.stretchTexture = false
+P['nameplate'].auras.numAuras = 6
+
 
 -- DataTexts
 P['datatexts']['Actionbar1DataPanel'] = false
