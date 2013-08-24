@@ -7,7 +7,7 @@ if not L then return; end
 
 -- Init
 L["ENH_LOGIN_MSG"] = "Vous utilisez |cff1784d1ElvUI Enhanced|r version %s%s|r."
-L["Your version of ElvUI is to old (required v5.81 or higher). Please, download the latest version from tukui.org."] = "Votre version d'ElvUi est trop ancienne (requiert v5.81 ou plus). Merci de télécharger une version plus récente sur tukui.org."
+L["Your version of ElvUI is to old (required v6.22 or higher). Please, download the latest version from tukui.org."] = "Votre version d'ElvUi est trop ancienne (requiert v6.22 ou plus). Merci de télécharger une version plus récente sur tukui.org."
 
 -- Equipment
 L["Equipment"] = "Equipement"
