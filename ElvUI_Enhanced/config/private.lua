@@ -13,6 +13,7 @@ V.general.minimap.locationdigits = 1
 V.general.minimapbar = {
 	['skinButtons'] = true,
 	['skinStyle'] = 'HORIZONTAL',
+	['backdrop'] = false,
 	['buttonSize'] = 28,
 	['mouseover'] = false,
 }
@@ -20,6 +21,7 @@ V.general.minimapbar = {
 V.general.raidmarkerbar = {
 	['enable'] = true,
 	['visibility'] = 'DEFAULT',
+	['backdrop'] = false,
 	['buttonSize'] = 22,
 	['spacing'] = 2,
 	['orientation'] = 'HORIZONTAL',

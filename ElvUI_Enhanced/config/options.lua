@@ -365,8 +365,15 @@ function EO:MapOptions()
 					['VERTICAL'] = L['Vertical Anchor Bar'],
 				},
 			},
-			buttonSize = {
+			backdrop = {
+				type = 'toggle',
 				order = 3,
+				name = L["Backdrop"],
+				set = function(info, value) E.private.general.minimapbar.backdrop = value; MB:UpdateLayout() end,
+				disabled = function() return not E.private.general.minimapbar.skinButtons end,
+			},			
+			buttonSize = {
+				order = 4,
 				type = 'range',
 				name = L['Button Size'],
 				desc = L['The size of the minimap buttons.'],
@@ -375,7 +382,7 @@ function EO:MapOptions()
 				disabled = function() return not E.private.general.minimapbar.skinButtons or E.private.general.minimapbar.skinStyle == 'NOANCHOR' end,
 			},
 			mouseover = {
-				order = 4,
+				order = 5,
 				name = L['Mouse Over'],
 				desc = L['The frame is not shown unless you mouse over the frame.'],
 				type = "toggle",
@@ -474,22 +481,28 @@ function EO:RaidMarkerOptions()
 				disabled = function() return not E.private.general.raidmarkerbar.enable end,
 				values = raidmarkerVisibility,
 			},
-			buttonSize = {
+			backdrop = {
+				type = 'toggle',
 				order = 4,
+				name = L["Backdrop"],
+				disabled = function() return not E.private.general.raidmarkerbar.enable end,			
+			},
+			buttonSize = {
+				order = 5,
 				type = 'range',
 				name = L['Button Size'],
 				min = 16, max = 40, step = 1,
 				disabled = function() return not E.private.general.raidmarkerbar.enable end,
 			},
 			spacing = {
-				order = 5,
+				order = 6,
 				type = 'range',
 				name = L["Button Spacing"],
 				min = 0, max = 10, step = 1,
 				disabled = function() return not E.private.general.raidmarkerbar.enable end,
 			},
 			orientation = {
-				order = 6,
+				order = 7,
 				type = 'select',
 				name = L['Orientation'],
 				disabled = function() return not E.private.general.raidmarkerbar.enable end,
@@ -499,7 +512,7 @@ function EO:RaidMarkerOptions()
 				},
 			},
 			modifier = {
-				order = 7,
+				order = 8,
 				type = 'select',
 				name = L['Modifier Key'],
 				desc = L['Set the modifier key for placing world markers.'],

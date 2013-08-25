@@ -127,6 +127,11 @@ function RM:ToggleSettings()
 		UnregisterStateDriver(self.frame, "visibility")
 		self.frame:Hide()
 	end
+	if self.db.backdrop then
+		self.frame.backdrop:Show()
+	else
+		self.frame.backdrop:Hide()
+	end
 end
 
 function RM:Initialize()
@@ -135,18 +140,14 @@ function RM:Initialize()
 	self.frame = CreateFrame("Frame", "RaidMarkerBar", E.UIParent, "SecureHandlerStateTemplate")
 	self.frame:SetResizable(false)
 	self.frame:SetClampedToScreen(true)
-	self.frame:SetTemplate("Transparent")
-	self.frame:CreateShadow()
+	self.frame:SetFrameStrata('LOW')
+	self.frame:CreateBackdrop('Transparent')
 	self.frame:ClearAllPoints()
-	self.frame:SetPoint("CENTER")
+	self.frame:Point("BOTTOMRIGHT", RightChatPanel, "TOPRIGHT", -1, 3)
 	self.frame.buttons = {}
-
-	if E.db.auras.consolidatedBuffs.enable then
-		self.frame:Point("TOPRIGHT", ElvConfigToggle, "BOTTOMRIGHT", -2, -2)
-	else
-		self.frame:Point("TOPRIGHT", RightMiniPanel, "BOTTOMRIGHT", -2, -2)		
-	end
 	
+	self.frame.backdrop:SetAllPoints()
+
 	E:CreateMover(self.frame, "RaidMarkerBarAnchor", L['Raid Marker Bar'])
 	
 	self:CreateButtons()

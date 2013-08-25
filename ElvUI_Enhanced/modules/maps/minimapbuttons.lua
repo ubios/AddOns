@@ -49,7 +49,7 @@ local moveButtons = {}
 local minimapButtonBarAnchor, minimapButtonBar
 
 local function OnEnter(self)
-	if not E.private.general.minimapbar.mouseover or E.private.general.minimapbar.skinStyle == 'NOANCHOR' then return end
+	if not E.minimapbuttons.db.mouseover or E.minimapbuttons.db.skinStyle == 'NOANCHOR' then return end
 	UIFrameFadeIn(MinimapButtonBar, 0.2, MinimapButtonBar:GetAlpha(), 1)
 	if self:GetName() ~= 'MinimapButtonBar' then
 		self:SetBackdropBorderColor(.7, .7, 0)
@@ -57,7 +57,7 @@ local function OnEnter(self)
 end
 
 local function OnLeave(self)
-	if not E.private.general.minimapbar.mouseover or E.private.general.minimapbar.skinStyle == 'NOANCHOR' then return end
+	if not E.minimapbuttons.db.mouseover or E.minimapbuttons.db.skinStyle == 'NOANCHOR' then return end
 	UIFrameFadeOut(MinimapButtonBar, 0.2, MinimapButtonBar:GetAlpha(), 0)
 	if self:GetName() ~= 'MinimapButtonBar' then
 		self:SetBackdropBorderColor(0, 0, 0)
@@ -144,14 +144,14 @@ function MB:UpdateLayout()
 	if not E.minimapbuttons then return end
 	
 	minimapButtonBar:SetPoint("CENTER", minimapButtonBarAnchor, "CENTER", 0, 0)
-	minimapButtonBar:Height(E.private.general.minimapbar.buttonSize + 4)
-	minimapButtonBar:Width(E.private.general.minimapbar.buttonSize + 4)
+	minimapButtonBar:Height(self.db.buttonSize + 4)
+	minimapButtonBar:Width(self.db.buttonSize + 4)
 
 	local lastFrame, anchor1, anchor2, offsetX, offsetY
 	for i = 1, #moveButtons do
 		local frame =	_G[moveButtons[i]]
 		
-		if E.private.general.minimapbar.skinStyle == 'NOANCHOR' then
+		if self.db.skinStyle == 'NOANCHOR' then
 			frame:SetParent(frame.original.Parent)
 			if frame.original.DragStart then
 				frame:SetScript("OnDragStart", frame.original.DragStart)
@@ -176,8 +176,8 @@ function MB:UpdateLayout()
 			frame:ClearAllPoints()
 			frame:SetFrameStrata("LOW")
 			frame:SetFrameLevel(20)
-			frame:Size(E.private.general.minimapbar.buttonSize)
-			if E.private.general.minimapbar.skinStyle == 'HORIZONTAL' then
+			frame:Size(self.db.buttonSize)
+			if self.db.skinStyle == 'HORIZONTAL' then
 				anchor1 = 'RIGHT'
 				anchor2 = 'LEFT'
 				offsetX = -2
@@ -198,21 +198,27 @@ function MB:UpdateLayout()
 		lastFrame = frame	
 	end
 	
-	if E.private.general.minimapbar.skinStyle ~= 'NOANCHOR' and #moveButtons > 0 then
-		if E.private.general.minimapbar.skinStyle == "HORIZONTAL" then
-			minimapButtonBar:Width((E.private.general.minimapbar.buttonSize * #moveButtons) + (2 * #moveButtons + 1) + 1)
+	if self.db.skinStyle ~= 'NOANCHOR' and #moveButtons > 0 then
+		if self.db.skinStyle == "HORIZONTAL" then
+			minimapButtonBar:Width((self.db.buttonSize * #moveButtons) + (2 * #moveButtons + 1) + 1)
 		else
-			minimapButtonBar:Height((E.private.general.minimapbar.buttonSize * #moveButtons) + (2 * #moveButtons + 1) + 1)
+			minimapButtonBar:Height((self.db.buttonSize * #moveButtons) + (2 * #moveButtons + 1) + 1)
 		end
 		minimapButtonBarAnchor:SetSize(minimapButtonBar:GetSize())
 		minimapButtonBar:Show()
 	else
 		minimapButtonBar:Hide()
-	end	
+	end
+	
+	if self.db.backdrop then
+		minimapButtonBar.backdrop:Show()
+	else
+		minimapButtonBar.backdrop:Hide()
+	end
 end
 
 function MB:ChangeMouseOverSetting()
-	if E.private.general.minimapbar.mouseover then
+	if self.db.mouseover then
 		minimapButtonBar:SetAlpha(0)
 	else
 		minimapButtonBar:SetAlpha(1)
@@ -237,11 +243,10 @@ end
 function MB:CreateFrames()
 	minimapButtonBarAnchor = CreateFrame("Frame", "MinimapButtonBarAnchor", E.UIParent)
 	
-	local offset = E.private.general.raidmarkerbar.enable and E.private.general.raidmarkerbar.buttonSize + 4 or 0
 	if E.db.auras.consolidatedBuffs.enable then
-		minimapButtonBarAnchor:Point("TOPRIGHT", ElvConfigToggle, "BOTTOMRIGHT", -2, -(2 + offset))
+		minimapButtonBarAnchor:Point("TOPRIGHT", ElvConfigToggle, "BOTTOMRIGHT", -1, -2)
 	else
-		minimapButtonBarAnchor:Point("TOPRIGHT", RightMiniPanel, "BOTTOMRIGHT", -2, -(2 + offset))
+		minimapButtonBarAnchor:Point("TOPRIGHT", RightMiniPanel, "BOTTOMRIGHT", -1, -2)
 	end
 	minimapButtonBarAnchor:Size(200, 32)
 	minimapButtonBarAnchor:SetFrameStrata("BACKGROUND")
@@ -249,22 +254,25 @@ function MB:CreateFrames()
 	E:CreateMover(minimapButtonBarAnchor, "MinimapButtonAnchor", L["Minimap Button Bar"])
 
 	minimapButtonBar = CreateFrame("Frame", "MinimapButtonBar", E.UIParent)
-	minimapButtonBar:SetFrameStrata("BACKGROUND")
-	minimapButtonBar:SetTemplate("Transparent")
-	minimapButtonBar:CreateShadow()
+	minimapButtonBar:SetFrameStrata('LOW')
+	minimapButtonBar:CreateBackdrop('Transparent')
+	minimapButtonBar:ClearAllPoints()
 	minimapButtonBar:SetPoint("CENTER", minimapButtonBarAnchor, "CENTER", 0, 0)
 	minimapButtonBar:SetScript("OnEnter", OnEnter)
 	minimapButtonBar:SetScript("OnLeave", OnLeave)
+
+	minimapButtonBar.backdrop:SetAllPoints()
 
 	self:ChangeMouseOverSetting()
 	self:SkinMinimapButtons()
 end
 
 function MB:Initialize()
-	if not E.private.general.minimapbar.skinButtons then return end
+	self.db = E.private.general.minimapbar
+
+	if not self.db.skinButtons then return end
 
 	E.minimapbuttons = MB
-	
 	self:CreateFrames()
 end
 
