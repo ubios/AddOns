@@ -25,30 +25,28 @@ local extrapanel = {
 function EDT:UpdateSettings()
 	for k, v in pairs(extrapanel) do
 		local panel = _G[('Actionbar%dDataPanel'):format(k)]
-		local wasVisible = panel:IsShown()
-
-		panel:SetShown(E.db.actionbar[('bar%d'):format(k)].enabled and E.db.datatexts[("actionbar%d"):format(k)])
-
-		if (wasVisible ~= panel:IsShown()) then
+		local actionBarName = ('bar%d'):format(k)
+		local showPanel = E.db.datatexts[("actionbar%d"):format(k)]
+		
+		if (showPanel) then -- Ensure that the datatext panels are visible when actionbar is close to bottom of screen
 			local mover = _G[('ElvAB_%d'):format(k)]
-
 			if (mover) then
 				local point, relativeTo, relativePoint, xOfs, yOfs = mover:GetPoint()
-				local newYOfs = floor((wasVisible and (yOfs - PANEL_HEIGHT) or (yOfs + PANEL_HEIGHT)) + .5)
-				if (newYOfs >= 0) then
-					if k ~=1 and not E.db["movers"][mover:GetName()] then
-						point = "BOTTOM"
-						relativePoint = "BOTTOM"
-						local calcOfs = floor(((_G['ElvUI_Bar1']:GetWidth() / 2) + (mover:GetWidth() / 2) + (SPACING * 2)) + .5)
-						xOfs = k == 3 and calcOfs or -calcOfs
-					end
+				if (relativePoint == 'BOTTOM' and yOfs < 26) then
 					mover:ClearAllPoints()
-					mover:Point(point, E.UIParent, relativePoint, xOfs, newYOfs)
+					mover:Point(point, relativeTo, relativePoint, xOfs, 26)
 					E:SaveMoverPosition(mover.name)	
-					
+						
 					AB:UpdateButtonSettings()
 				end
 			end
+		end
+		
+		if (panel.db.enabled and showPanel) then
+			RegisterStateDriver(panel, "visibility", panel.db.visibility)
+		else
+			UnregisterStateDriver(panel, "visibility")
+			panel:Hide()
 		end
 	end
 end
@@ -57,7 +55,7 @@ function EDT:PositionDataPanel(panel, index)
 	if not panel then return end
 	
 	local actionbar = _G[("ElvUI_Bar%d"):format(index)]
-	local spacer = E.db.actionbar[("bar%d"):format(index)].backdrop and 0 or E.db.actionbar[("bar%d"):format(index)].buttonspacing
+	local spacer = panel.db.backdrop and 0 or panel.db.buttonspacing
 	
 	panel:ClearAllPoints()
 	panel:Point('TOPLEFT', actionbar, 'BOTTOMLEFT', spacer, 0)
@@ -146,19 +144,17 @@ function EDT:OnInitialize()
 	for k, v in pairs(extrapanel) do
 		local actionbar = _G[("ElvUI_Bar%d"):format(k)]
 		local panelname = ('Actionbar%dDataPanel'):format(k)
+
 		local panel = CreateFrame('Frame', panelname, E.UIParent)
-		local spacer = E.db.actionbar[("bar%d"):format(k)].backdrop and 0 or SPACING
+		panel.db = E.db.actionbar[("bar%d"):format(k)]
+
+		local spacer = panel.db.backdrop and 0 or SPACING
 
 		panel:SetTemplate(E.db.datatexts.panelTransparency and 'Transparent' or 'Default', true)
 		
-		-- Add DataPanel to FrameLock for hiding during Pet Battles
-		E.FrameLocks[panelname] = true;
-
 		DT:RegisterPanel(panel, v, 'ANCHOR_TOP', 0, -4)
 	end
 	
-	--DT:LoadDataTexts()
-	--DT:PanelLayoutOptions()
 	self:UpdateSettings()
 	
 	hooksecurefunc(AB,"PositionAndSizeBar",function(self, barName)
