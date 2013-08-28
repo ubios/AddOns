@@ -22,12 +22,16 @@ local raidmarkerVisibility = {
 	INPARTY = AGGRO_WARNING_IN_PARTY,
 }
 
+local function ColorizeSettingName(settingName)
+	return ("|cffE0B0FF%s|r"):format(settingName)
+end
+
 function EO:DataTextOptions()
 	local EDT = E:GetModule('ExtraDataTexts')
 
 	E.Options.args.datatexts.args.actionbar1 = {
 		order = 20,
-		name = L['Actionbar1DataPanel'],
+		name = ColorizeSettingName(L['Actionbar1DataPanel']),
 		type = 'toggle',
 		set = function(info, value) 
 			E.db.datatexts[ info[#info] ] = value
@@ -37,7 +41,7 @@ function EO:DataTextOptions()
 	
 	E.Options.args.datatexts.args.actionbar3 = {
 		order = 21,
-		name = L['Actionbar3DataPanel'],
+		name = ColorizeSettingName(L['Actionbar3DataPanel']),
 		type = 'toggle',
 		set = function(info, value) 
 			E.db.datatexts[ info[#info] ] = value
@@ -47,7 +51,7 @@ function EO:DataTextOptions()
 	
 	E.Options.args.datatexts.args.actionbar5 = {
 		order = 22,
-		name = L['Actionbar5DataPanel'],
+		name = ColorizeSettingName(L['Actionbar5DataPanel']),
 		type = 'toggle',
 		set = function(info, value) 
 			E.db.datatexts[ info[#info] ] = value
@@ -63,7 +67,8 @@ function EO:EquipmentOptions()
 
 	E.Options.args.equipment = {
 		type = 'group',
-		name = L['Equipment'],
+		order = 10,
+		name = ColorizeSettingName(L['Equipment']),
 		get = function(info) return E.private.equipment[ info[#info] ] end,
 		set = function(info, value) E.private.equipment[ info[#info] ] = value end,
 		args = {
@@ -240,7 +245,8 @@ function EO:FarmerOptions()
 
 	E.Options.args.farmer = {
 		type = 'group',
-		name = L['Farmer'],
+		order = 11,		
+		name = ColorizeSettingName(L['Farmer']),
 		get = function(info) return E.private.farmer[ info[#info] ] end,
 		set = function(info, value) E.private.farmer[ info[#info] ] = value end,
 		args = {
@@ -310,7 +316,7 @@ function EO:MapOptions()
 	E.Options.args.general.args.minimap.args.locationdigits = {
 		order = 4,
 		type = 'range',
-		name = L['Location Digits'],
+		name = ColorizeSettingName(L['Location Digits']),
 		desc = L['Number of digits for map location.'],
 		min = 0, max = 2, step = 1,
 		get = function(info) return E.private.general.minimap.locationdigits end,
@@ -321,7 +327,7 @@ function EO:MapOptions()
 	E.Options.args.general.args.minimap.args.hideincombat = {
 		order = 5,
 		type = 'toggle',
-		name = L["Combat Hide"],
+		name = ColorizeSettingName(L["Combat Hide"]),
 		desc = L["Hide minimap while in combat."],
 		get = function(info) return E.private.general.minimap.hideincombat end,
 		set = function(info, value) E.private.general.minimap.hideincombat = value; E:GetModule('Minimap'):UpdateSettings() end,					
@@ -330,7 +336,7 @@ function EO:MapOptions()
 	E.Options.args.general.args.minimap.args.fadeindelay = {
 		order = 6,
 		type = 'range',
-		name = L["FadeIn Delay"],
+		name = ColorizeSettingName(L["FadeIn Delay"]),
 		desc = L["The time to wait before fading the minimap back in after combat hide. (0 = Disabled)"],
 		min = 0, max = 20, step = 1,
 		get = function(info) return E.private.general.minimap.fadeindelay end,	
@@ -338,12 +344,11 @@ function EO:MapOptions()
 		disabled = function() return not E.private.general.minimap.hideincombat end,
 	}
 	
-	E.Options.args.general.args.minimap.args.minimapbar = {
-		order = 7,
+	E.Options.args.general.args.minimapbar = {
+		order = 4,
 		get = function(info) return E.private.general.minimapbar[ info[#info] ] end,	
 		type = "group",
-		name = L["Minimap Button Bar"],
-		guiInline = true,
+		name = ColorizeSettingName(L["Minimap Button Bar"]),
 		args = {
 			skinButtons = {
 				order = 1,
@@ -406,7 +411,7 @@ function EO:MiscOptions()
 	E.Options.args.general.args.general.args.pvpautorelease = {
 		order = 40,
 		type = "toggle",
-		name = L['PvP Autorelease'],
+		name = ColorizeSettingName(L['PvP Autorelease']),
 		desc = L['Automatically release body when killed inside a battleground.'],
 		get = function(info) return E.private.general.pvpautorelease end,
 		set = function(info, value) E.private.general.pvpautorelease = value; E:StaticPopup_Show("PRIVATE_RL") end,
@@ -415,7 +420,7 @@ function EO:MiscOptions()
 	E.Options.args.general.args.general.args.autorepchange = {
 		order = 41,
 		type = "toggle",
-		name = L['Track Reputation'],
+		name = ColorizeSettingName(L['Track Reputation']),
 		desc = L['Automatically change your watched faction on the reputation bar to the faction you got reputation points for.'],
 		get = function(info) return E.private.general.autorepchange end,
 		set = function(info, value) E.private.general.autorepchange = value; end,
@@ -424,7 +429,7 @@ function EO:MiscOptions()
 	E.Options.args.general.args.general.args.selectquestreward = {
 		order = 42,
 		type = "toggle",
-		name = L['Select Quest Reward'],
+		name = ColorizeSettingName(L['Select Quest Reward']),
 		desc = L['Automatically select the quest reward with the highest vendor sell value.'],
 		get = function(info) return E.private.general.selectquestreward end,
 		set = function(info, value) E.private.general.selectquestreward = value; end,
@@ -434,7 +439,7 @@ function EO:MiscOptions()
 		order = 4,
 		type = 'range',
     isPercent = true,
-    name = L["Mover Transparency"],
+    name = ColorizeSettingName(L["Mover Transparency"]),
     desc = L["Changes the transparency of all the movers."],
     min = 0, max = 1, step = 0.01,
     set = function(info, value) E.db.general.movertransparancy = value M:UpdateMoverTransparancy() end,
@@ -446,13 +451,13 @@ function EO:NameplateOptions()
 	E.Options.args.nameplate.args.general.args.targetcount = {
 		type = "toggle",
 		order = 13,
-		name = L["Target Count"],
+		name = ColorizeSettingName(L["Target Count"]),
 		desc = L["Display the number of party / raid members targetting the nameplate unit."],
 	}
 	E.Options.args.nameplate.args.general.args.showthreat = {
 		type = "toggle",
 		order = 13,
-		name = L["Threat Text"],
+		name = ColorizeSettingName(L["Threat Text"]),
 		desc = L["Display threat level as text on targeted, boss or mouseover nameplate."],
 	}
 end
@@ -461,11 +466,11 @@ function EO:RaidMarkerOptions()
 	local RM = E:GetModule('RaidMarkerBar')
 	
 	E.Options.args.general.args.raidmarkerbar = {
-		order = 20,
+		order = 7,
 		get = function(info) return E.private.general.raidmarkerbar[ info[#info] ] end,	
 		set = function(info, value) E.private.general.raidmarkerbar[ info[#info] ] = value; RM:ToggleSettings() end,
 		type = "group",
-		name = L['Raid Marker Bar'],
+		name = ColorizeSettingName(L['Raid Marker Bar']),
 		args = {
 			enable = {
 				type = 'toggle',
@@ -535,7 +540,7 @@ function EO:UnitFramesOptions()
 		order = 2,
 		type = 'group',
 		guiInline = true,
-		name = L['Heal Glow'],
+		name = ColorizeSettingName(L['Heal Glow']),
 		args = {
 			healglow = {
 				type = 'toggle',
@@ -573,7 +578,7 @@ function EO:UnitFramesOptions()
 	E.Options.args.unitframe.args.target.args.gps = {
 		order = 1000,
 		type = 'group',
-		name = L['GPS'],
+		name = ColorizeSettingName(L['GPS']),
 		get = function(info) return E.db.unitframe.units['target']['gps'][ info[#info] ] end,
 		set = function(info, value) E.db.unitframe.units['target']['gps'][ info[#info] ] = value; UF:CreateAndUpdateUF('target') end,
 		args = {
@@ -595,7 +600,7 @@ function EO:UnitFramesOptions()
 	E.Options.args.unitframe.args.target.args.attackicon = {
 		order = 1001,
 		type = 'group',
-		name = L['Attack Icon'],
+		name = ColorizeSettingName(L['Attack Icon']),
 		get = function(info) return E.db.unitframe.units['target']['attackicon'][ info[#info] ] end,
 		set = function(info, value) E.db.unitframe.units['target']['attackicon'][ info[#info] ] = value end,
 		args = {
@@ -623,7 +628,7 @@ function EO:UnitFramesOptions()
 	E.Options.args.unitframe.args.target.args.classicon = {
 		order = 1002,
 		type = 'group',
-		name = L["Class Icons"],
+		name = ColorizeSettingName(L["Class Icons"]),
 		get = function(info) return E.db.unitframe.units['target']['classicon'][ info[#info] ] end,
 		set = function(info, value) E.db.unitframe.units['target']['classicon'][ info[#info] ] = value; TC:ToggleSettings() end,
 		args = {
@@ -660,7 +665,7 @@ function EO:UnitFramesOptions()
 	E.Options.args.unitframe.args.focus.args.gps = {
 		order = 1000,
 		type = 'group',
-		name = L['GPS'],
+		name = ColorizeSettingName(L['GPS']),
 		get = function(info) return E.db.unitframe.units['focus']['gps'][ info[#info] ] end,
 		set = function(info, value) E.db.unitframe.units['focus']['gps'][ info[#info] ] = value; UF:CreateAndUpdateUF('focus') end,
 		args = {
@@ -681,7 +686,7 @@ function EO:UnitFramesOptions()
 
 	E.Options.args.unitframe.args.general.args.generalGroup.args.autoRoleSet = {
 		order = 6,
-		name = L['Automatic Role Assignment'],
+		name = ColorizeSettingName(L['Automatic Role Assignment']),
 		desc = L['Enables the automatic role assignment based on specialization for party / raid members (only work when you are group leader or group assist).'],
 		type = 'toggle',
 	}
@@ -698,7 +703,8 @@ function EO:WatchFrame()
 	
 	E.Options.args.watchframe = {
 		type = 'group',
-		name = L['WatchFrame'],
+		order = 12,
+		name = ColorizeSettingName(L['WatchFrame']),
 		get = function(info) return E.private.watchframe[ info[#info] ] end,
 		set = function(info, value) E.private.watchframe[ info[#info] ] = value; WF:UpdateSettings() end,
 		args = {
