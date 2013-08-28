@@ -308,7 +308,7 @@ function EO:MapOptions()
 	local MB = E:GetModule('MinimapButtons')
 
 	E.Options.args.general.args.minimap.args.locationdigits = {
-		order = 20,
+		order = 4,
 		type = 'range',
 		name = L['Location Digits'],
 		desc = L['Number of digits for map location.'],
@@ -319,7 +319,7 @@ function EO:MapOptions()
 	}
 
 	E.Options.args.general.args.minimap.args.hideincombat = {
-		order = 21,
+		order = 5,
 		type = 'toggle',
 		name = L["Combat Hide"],
 		desc = L["Hide minimap while in combat."],
@@ -328,7 +328,7 @@ function EO:MapOptions()
 	}
 	
 	E.Options.args.general.args.minimap.args.fadeindelay = {
-		order = 22,
+		order = 6,
 		type = 'range',
 		name = L["FadeIn Delay"],
 		desc = L["The time to wait before fading the minimap back in after combat hide. (0 = Disabled)"],
@@ -338,8 +338,8 @@ function EO:MapOptions()
 		disabled = function() return not E.private.general.minimap.hideincombat end,
 	}
 	
-	E.Options.args.general.args.minimapbar = {
-		order = 2,
+	E.Options.args.general.args.minimap.args.minimapbar = {
+		order = 7,
 		get = function(info) return E.private.general.minimapbar[ info[#info] ] end,	
 		type = "group",
 		name = L["Minimap Button Bar"],
@@ -466,7 +466,6 @@ function EO:RaidMarkerOptions()
 		set = function(info, value) E.private.general.raidmarkerbar[ info[#info] ] = value; RM:ToggleSettings() end,
 		type = "group",
 		name = L['Raid Marker Bar'],
-		guiInline = true,
 		args = {
 			enable = {
 				type = 'toggle',

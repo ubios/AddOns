@@ -144,14 +144,14 @@ function MB:UpdateLayout()
 	if not E.minimapbuttons then return end
 	
 	minimapButtonBar:SetPoint("CENTER", minimapButtonBarAnchor, "CENTER", 0, 0)
-	minimapButtonBar:Height(self.db.buttonSize + 4)
-	minimapButtonBar:Width(self.db.buttonSize + 4)
+	minimapButtonBar:Height(E.minimapbuttons.db.buttonSize + 4)
+	minimapButtonBar:Width(E.minimapbuttons.db.buttonSize + 4)
 
 	local lastFrame, anchor1, anchor2, offsetX, offsetY
 	for i = 1, #moveButtons do
 		local frame =	_G[moveButtons[i]]
 		
-		if self.db.skinStyle == 'NOANCHOR' then
+		if E.minimapbuttons.db.skinStyle == 'NOANCHOR' then
 			frame:SetParent(frame.original.Parent)
 			if frame.original.DragStart then
 				frame:SetScript("OnDragStart", frame.original.DragStart)
@@ -176,8 +176,8 @@ function MB:UpdateLayout()
 			frame:ClearAllPoints()
 			frame:SetFrameStrata("LOW")
 			frame:SetFrameLevel(20)
-			frame:Size(self.db.buttonSize)
-			if self.db.skinStyle == 'HORIZONTAL' then
+			frame:Size(E.minimapbuttons.db.buttonSize)
+			if E.minimapbuttons.db.skinStyle == 'HORIZONTAL' then
 				anchor1 = 'RIGHT'
 				anchor2 = 'LEFT'
 				offsetX = -2
@@ -198,11 +198,11 @@ function MB:UpdateLayout()
 		lastFrame = frame	
 	end
 	
-	if self.db.skinStyle ~= 'NOANCHOR' and #moveButtons > 0 then
-		if self.db.skinStyle == "HORIZONTAL" then
-			minimapButtonBar:Width((self.db.buttonSize * #moveButtons) + (2 * #moveButtons + 1) + 1)
+	if E.minimapbuttons.db.skinStyle ~= 'NOANCHOR' and #moveButtons > 0 then
+		if E.minimapbuttons.db.skinStyle == "HORIZONTAL" then
+			minimapButtonBar:Width((E.minimapbuttons.db.buttonSize * #moveButtons) + (2 * #moveButtons + 1) + 1)
 		else
-			minimapButtonBar:Height((self.db.buttonSize * #moveButtons) + (2 * #moveButtons + 1) + 1)
+			minimapButtonBar:Height((E.minimapbuttons.db.buttonSize * #moveButtons) + (2 * #moveButtons + 1) + 1)
 		end
 		minimapButtonBarAnchor:SetSize(minimapButtonBar:GetSize())
 		minimapButtonBar:Show()
@@ -210,7 +210,7 @@ function MB:UpdateLayout()
 		minimapButtonBar:Hide()
 	end
 	
-	if self.db.backdrop then
+	if E.minimapbuttons.db.backdrop then
 		minimapButtonBar.backdrop:Show()
 	else
 		minimapButtonBar.backdrop:Hide()
@@ -218,7 +218,7 @@ function MB:UpdateLayout()
 end
 
 function MB:ChangeMouseOverSetting()
-	if self.db.mouseover then
+	if E.minimapbuttons.db.mouseover then
 		minimapButtonBar:SetAlpha(0)
 	else
 		minimapButtonBar:SetAlpha(1)
@@ -268,11 +268,11 @@ function MB:CreateFrames()
 end
 
 function MB:Initialize()
-	self.db = E.private.general.minimapbar
-
-	if not self.db.skinButtons then return end
-
 	E.minimapbuttons = MB
+	E.minimapbuttons.db = E.private.general.minimapbar
+
+	if not E.minimapbuttons.db.skinButtons then return end
+
 	self:CreateFrames()
 end
 
