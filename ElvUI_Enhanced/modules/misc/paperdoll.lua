@@ -4,6 +4,7 @@ local PD = E:NewModule('PaperDoll', 'AceEvent-3.0', 'AceTimer-3.0');
 local find = string.find
 local initialized = false
 local originalInspectFrameUpdateTabs
+local updateTimer
 
 local slots = {
 	["HeadSlot"] = { true, true },
@@ -95,9 +96,16 @@ function PD:UpdatePaperDoll(inspect)
 					frame.DurabilityInfo:SetFormattedText("%s%.0f%%|r", E:RGBToHex(r, g, b), (current / maximum) * 100)
 				end
 			end
-		end
+		end	
+	end	
+end
+
+function PD:DelayUpdateInfo(inspect)
+	if (updateTimer == 0 or PD:TimeLeft(updateTimer) == 0) then
+		updateTimer = PD:ScheduleTimer("UpdatePaperDoll", .2, inspect)
 	end
 end
+
 
 function PD:GetItemLevel(unit, itemLink)
 	local rarity, itemLevel = select(3, GetItemInfo(itemLink))    
@@ -147,7 +155,7 @@ end
 
 function PD:InspectFrame_UpdateTabsComplete()
 	originalInspectFrameUpdateTabs()
-	PD:UpdatePaperDoll(true)
+	PD:DelayUpdateInfo(true)
 end
 
 function PD:InitialUpdatePaperDoll()
