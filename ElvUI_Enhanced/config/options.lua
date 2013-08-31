@@ -67,7 +67,6 @@ function EO:EquipmentOptions()
 
 	E.Options.args.equipment = {
 		type = 'group',
-		order = 10,
 		name = ColorizeSettingName(L['Equipment']),
 		get = function(info) return E.private.equipment[ info[#info] ] end,
 		set = function(info, value) E.private.equipment[ info[#info] ] = value end,
@@ -245,7 +244,6 @@ function EO:FarmerOptions()
 
 	E.Options.args.farmer = {
 		type = 'group',
-		order = 11,		
 		name = ColorizeSettingName(L['Farmer']),
 		get = function(info) return E.private.farmer[ info[#info] ] end,
 		set = function(info, value) E.private.farmer[ info[#info] ] = value end,
@@ -703,7 +701,6 @@ function EO:WatchFrame()
 	
 	E.Options.args.watchframe = {
 		type = 'group',
-		order = 12,
 		name = ColorizeSettingName(L['WatchFrame']),
 		get = function(info) return E.private.watchframe[ info[#info] ] end,
 		set = function(info, value) E.private.watchframe[ info[#info] ] = value; WF:UpdateSettings() end,
@@ -825,7 +822,6 @@ function EO:CheckIncompatible()
 		EO:IncompatibleAddOn2('ElvUI_TransparentMovers', 'Tranparent Movers')
 	end
 end
-
 
 function EO:Initialize()
   EP:RegisterPlugin(ElvUIEnhanced, EO.GetOptions)
