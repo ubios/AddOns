@@ -32,12 +32,10 @@ function EDT:UpdateSettings()
 			local mover = _G[('ElvAB_%d'):format(k)]
 			if (mover) then
 				local point, relativeTo, relativePoint, xOfs, yOfs = mover:GetPoint()
-				if (relativePoint == 'BOTTOM' and yOfs < 26) then
+				if (relativePoint == 'BOTTOM' and yOfs < 22) then
 					mover:ClearAllPoints()
-					mover:Point(point, relativeTo, relativePoint, xOfs, 26)
-					E:SaveMoverPosition(mover.name)	
-						
-					AB:UpdateButtonSettings()
+					mover:Point(point, relativeTo, relativePoint, xOfs, 22)
+					E:SaveMoverPosition(mover.name)
 				end
 			end
 		end
