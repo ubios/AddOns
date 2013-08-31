@@ -129,8 +129,8 @@ L['The direction of the seed bar buttons (Horizontal or Vertical).'] = 'Die Ausb
 -- Nameplates
 L["Threat Text"] = "Bedrohungstext"
 L["Display threat level as text on targeted, boss or mouseover nameplate."] = "Anzeigen der Bedrohung als Text auf der Namensplakette des Ziels."
-L["Target Count"] = true
-L["Display the number of party / raid members targetting the nameplate unit."] = true
+L["Target Count"] = "Angriffszähl"
+L["Display the number of party / raid members targetting the nameplate unit."] = "Anzahl der Gruppenmitglieder die den Gegner von der Namensplakette angreifen."
 
 -- HealGlow
 L['Heal Glow'] = 'Heilungsleuchten'
@@ -140,18 +140,18 @@ L["The amount of time the unit frames of party / raid members will glow when aff
 L["Glow Color"] = 'Farbe des Leuchtens'
 
 -- Raid Marker Bar
-L['Raid Marker Bar'] = true
-L['Display a quick action bar for raid targets and world markers.'] = true
+L['Raid Marker Bar'] = "Schlachtzugsymbolen Leiste"
+L['Display a quick action bar for raid targets and world markers.'] = "Anzeigen von der Aktionsleiste für Schlachtzugsymbolen und Welt Markierungen."
 L['Modifier Key'] = true
-L['Set the modifier key for placing world markers.'] = true
-L['Shift Key'] = true
-L['Ctrl Key'] = true
-L['Alt Key'] = true
-L["Raid Markers"] = true
-L["Click to clear the mark."] = true
-L["Click to mark the target."] = true
-L["%sClick to remove all worldmarkers."] = true
-L["%sClick to place a worldmarker."] = true
+L['Set the modifier key for placing world markers.'] = "Einstellen der Zusatztaste für die Platzierung von Welt Markierungen."
+L['Shift Key'] = "Shift Taste"
+L['Ctrl Key'] = "Steuerung Taste"
+L['Alt Key'] = "Alt Taste"
+L["Raid Markers"] = "Schlachtzugsymbolen"
+L["Click to clear the mark."] = "Drucken Sie die Maustaste um die Welt Markierung zu entfernen."
+L["Click to mark the target."] = "Drucken Sie die Maustaste um das Schlachtzugsymbool zu entfernen."
+L["%sClick to remove all worldmarkers."] = "Drucken Sie die %staste um alle Welt Markierungen zu entfernen."
+L["%sClick to place a worldmarker."] = "Drucken Sie die %staste um eine Welt Markierung zu platzieren."
 
 -- WatchFrame
 L['WatchFrame'] = "Questlog"
