@@ -2,6 +2,8 @@
 local HG = E:NewModule('HealGlow', 'AceEvent-3.0')
 local UF = E:GetModule('UnitFrames')
 
+local GetNumGroupMembers, GetNumSubgroupMembers = GetNumGroupMembers, GetNumSubgroupMembers
+local IsInRaid, IsInGroup, GetTime = IsInRaid, IsInGroup, GetTime
 local tinsert, twipe = table.insert, table.wipe
 
 local playerId
@@ -126,16 +128,18 @@ end
 function HG:GroupRosterUpdate()
     twipe(groupUnits)
 
-    local inRaid = IsInRaid()
-    local inParty = not inRaid and IsInGroup()
     -- GetNumSubgroupMembers() automatically handles the 1-4 party convention, excluding 'player', GetNumGroupMembers() includes player
-    local numMembers = inRaid and GetNumGroupMembers() or inParty and GetNumSubgroupMembers() or 0
+    local numMembers = IsInRaid() and GetNumGroupMembers() or IsInGroup() and GetNumSubgroupMembers() or 0
+    local groupName = IsInRaid() and "raid%d" or IsInGroup() and "party%d" or "solo"
     local unit
     for index = 1, numMembers do
-        unit = format("%s%d", (inRaid and "raid" or inParty and "party"), index)
+        unit = (groupName):format(index)
         if not UnitIsUnit(unit, "player") then
             groupUnits[UnitGUID(unit)] = { unit, 0 }
         end
+    end
+    if groupName == "solo" then
+    	groupUnits[UnitGUID('player')] = { 'player', 0 }
     end
 end
 

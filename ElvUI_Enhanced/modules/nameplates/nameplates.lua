@@ -3,7 +3,9 @@ local NP = E:GetModule('NamePlates')
 local LSM = LibStub("LibSharedMedia-3.0")
 
 local UnitCanAttack, UnitDetailedThreatSituation, GetThreatStatusColor = UnitCanAttack, UnitDetailedThreatSituation, GetThreatStatusColor
-local format = string.format
+local GetNumGroupMembers, GetNumSubgroupMembers = GetNumGroupMembers, GetNumSubgroupMembers
+local IsInRaid, IsInGroup, UnitGUID, UnitName = IsInRaid, IsInGroup, UnitGUID, UnitName
+local format, twipe = string.format, table.wipe
 local rosterTimer
 
 function Hex(r, g, b)
@@ -85,22 +87,11 @@ function NP:AddToRoster(unitId)
 end
 
 function NP:UpdateRoster()
-	local groupType, groupSize, unitId, unitName
-	wipe(self.GroupMembers)
-	rosterTimer = nil
+	twipe(self.GroupMembers)
 	
-	local inGroup = IsInGroup()
-	if IsInRaid() then 
-		groupType = "raid"
-		groupSize = GetNumGroupMembers()
-	elseif inGroup then 
-		groupType = "party"
-		groupSize = GetNumGroupMembers() - 1
-	else 
-		groupType = "solo"
-		groupSize = 1
-	end
-
+	local groupSize = IsInRaid() and GetNumGroupMembers() or IsInGroup() and GetNumSubgroupMembers() or 0
+  local groupType = IsInRaid() and "raid" or IsInGroup() and "party" or "solo"
+	
 	-- Cycle through Group
 	for index = 1, groupSize do
 		self:AddToRoster(groupType..index)
@@ -112,7 +103,7 @@ function NP:UpdateRoster()
 end
 
 function NP:StartRosterUpdate()
-	if not rosterTimer then
+	if not rosterTimer or NP:TimeLeft(rosterTimer) == 0 then
 		rosterTimer = NP:ScheduleTimer('UpdateRoster', 1)
 	end
 end

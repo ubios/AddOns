@@ -148,9 +148,8 @@ end
 local CF = CreateFrame('Frame')
 CF:RegisterEvent("PLAYER_ENTERING_WORLD")
 CF:SetScript("OnEvent", function(self, event)
+	self:UnregisterEvent("PLAYER_ENTERING_WORLD")
 	if not E.private["unitframe"].enable then return end
 
 	UF:ScheduleTimer("ApplyUnitFrameEnhancements", 5)
-	
-	self:UnregisterEvent("PLAYER_ENTERING_WORLD")
 end)
