@@ -22,6 +22,8 @@ local extrapanel = {
 	[5] = 1,
 }
 
+local autosizebars = { 2, 3, 5 }
+
 -- Change bar 2 default position
 AB.barDefaults.bar2.position = "BOTTOM,ElvUI_Bar1,TOP,0,0"
 AB.barDefaults.bar3.position = "BOTTOMLEFT,ElvUI_Bar1,BOTTOMRIGHT,4,0"
@@ -39,11 +41,7 @@ function EDT:UpdateSettings()
 				local point, relativeTo, relativePoint, xOfs, yOfs = mover:GetPoint()
 				if (k == 1) then
 					if (relativePoint == 'BOTTOM' and yOfs < 26) then
-						EDT:PositionActionBar(mover, point, relativeTo, relativePoint, xOfs, 26)
-					end
-					-- make sure actionbars are perfectly aligned
-					for index, value in ipairs({2 , 3, 5 }) do
-						E:ResetMovers(_G[('ElvAB_%d'):format(value)].textString)
+						EDT:PositionActionBar(mover, point, relativeTo, relativePoint, xOfs, 26)					
 					end
 				elseif (relativePoint == 'LEFT' or relativePoint == 'RIGHT') then
 					if (yOfs < 16) then
@@ -53,7 +51,26 @@ function EDT:UpdateSettings()
 					EDT:PositionActionBar(mover, point, relativeTo, relativePoint, xOfs, 26)
 				end
 			end
+		end	
+	end
+end
+
+function EDT:ToggleSettings()
+	EDT:UpdateSettings()
+	EDT:RegisterDrivers()
+	-- make sure actionbars are perfectly aligned
+	for index, value in ipairs(autosizebars) do
+		local bar = _G[('ElvAB_%d'):format(value)]
+		if (bar and bar.textString) then
+			E:ResetMovers(bar.textString)
 		end
+	end
+end
+
+function EDT:RegisterDrivers()
+	for k, v in pairs(extrapanel) do	
+		local panel = _G[('Actionbar%dDataPanel'):format(k)]
+		local showPanel = E.db.datatexts[("actionbar%d"):format(k)]
 		
 		if (panel.db.enabled and showPanel) then
 			RegisterStateDriver(panel, "visibility", panel.db.visibility)
@@ -177,10 +194,10 @@ function EDT:OnInitialize()
 		DT:RegisterPanel(panel, v, 'ANCHOR_TOP', 0, -4)
 	end
 	
-	self:UpdateSettings()
+	EDT:RegisterDrivers()
 	
 	hooksecurefunc(AB,"PositionAndSizeBar",function(self, barName)
-		local barnumber = tonumber(string.match(barName, "%d+"))
+	local barnumber = tonumber(string.match(barName, "%d+"))
 		if extrapanel[barnumber] then
 			EDT:PositionDataPanel(_G[('Actionbar%dDataPanel'):format(barnumber)], barnumber)
 		end

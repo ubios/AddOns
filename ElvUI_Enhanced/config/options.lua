@@ -35,7 +35,7 @@ function EO:DataTextOptions()
 		type = 'toggle',
 		set = function(info, value) 
 			E.db.datatexts[ info[#info] ] = value
-			EDT:UpdateSettings()
+			EDT:ToggleSettings()
 		end,
 	}
 	
@@ -45,7 +45,7 @@ function EO:DataTextOptions()
 		type = 'toggle',
 		set = function(info, value) 
 			E.db.datatexts[ info[#info] ] = value
-			EDT:UpdateSettings()
+			EDT:ToggleSettings()
 		end,
 	}
 	
@@ -55,7 +55,7 @@ function EO:DataTextOptions()
 		type = 'toggle',
 		set = function(info, value) 
 			E.db.datatexts[ info[#info] ] = value
-			EDT:UpdateSettings()
+			EDT:ToggleSettings()
 		end,
 	}
 end
