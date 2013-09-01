@@ -24,6 +24,8 @@ local extrapanel = {
 
 -- Change bar 2 default position
 AB.barDefaults.bar2.position = "BOTTOM,ElvUI_Bar1,TOP,0,0"
+AB.barDefaults.bar3.position = "BOTTOMLEFT,ElvUI_Bar1,BOTTOMRIGHT,4,0"
+AB.barDefaults.bar5.position = "BOTTOMRIGHT,ElvUI_Bar1,BOTTOMLEFT,-4,0"
 
 function EDT:UpdateSettings()
 	for k, v in pairs(extrapanel) do
@@ -39,7 +41,10 @@ function EDT:UpdateSettings()
 					if (relativePoint == 'BOTTOM' and yOfs < 26) then
 						EDT:PositionActionBar(mover, point, relativeTo, relativePoint, xOfs, 26)
 					end
-					E:ResetMovers(_G['ElvAB_2'].textString) -- make sure actionbar 2 is perfectly matched with actionbar 1 again
+					-- make sure actionbars are perfectly aligned
+					for index, value in ipairs({2 , 3, 5 }) do
+						E:ResetMovers(_G[('ElvAB_%d'):format(value)].textString)
+					end
 				elseif (relativePoint == 'LEFT' or relativePoint == 'RIGHT') then
 					if (yOfs < 16) then
 						EDT:PositionActionBar(mover, point, relativeTo, relativePoint, xOfs, 16)
