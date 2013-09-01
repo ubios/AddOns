@@ -22,6 +22,9 @@ local extrapanel = {
 	[5] = 1,
 }
 
+-- Change bar 2 default position
+AB.barDefaults.bar2.position = "BOTTOM,ElvUI_Bar1,TOP,0,0"
+
 function EDT:UpdateSettings()
 	for k, v in pairs(extrapanel) do
 		local panel = _G[('Actionbar%dDataPanel'):format(k)]
@@ -30,12 +33,19 @@ function EDT:UpdateSettings()
 		
 		if (showPanel) then -- Ensure that the datatext panels are visible when actionbar is close to bottom of screen
 			local mover = _G[('ElvAB_%d'):format(k)]
-			if (mover) then
+			if (mover) then		
 				local point, relativeTo, relativePoint, xOfs, yOfs = mover:GetPoint()
-				if (relativePoint == 'BOTTOM' and yOfs < 22) then
-					mover:ClearAllPoints()
-					mover:Point(point, relativeTo, relativePoint, xOfs, 22)
-					E:SaveMoverPosition(mover.name)
+				if (k == 1) then
+					if (relativePoint == 'BOTTOM' and yOfs < 26) then
+						EDT:PositionActionBar(mover, point, relativeTo, relativePoint, xOfs, 26)
+					end
+					E:ResetMovers(_G['ElvAB_2'].textString) -- make sure actionbar 2 is perfectly matched with actionbar 1 again
+				elseif (relativePoint == 'LEFT' or relativePoint == 'RIGHT') then
+					if (yOfs < 16) then
+						EDT:PositionActionBar(mover, point, relativeTo, relativePoint, xOfs, 16)
+					end
+				elseif (relativePoint == 'BOTTOM') then
+					EDT:PositionActionBar(mover, point, relativeTo, relativePoint, xOfs, 26)
 				end
 			end
 		end
@@ -47,6 +57,15 @@ function EDT:UpdateSettings()
 			panel:Hide()
 		end
 	end
+end
+
+function EDT:PositionActionBar(mover, point, relativeTo, relativePoint, xOfs, yOfs)
+	mover:ClearAllPoints()
+	mover:Point(point, relativeTo, relativePoint, xOfs, yOfs)
+	E:SaveMoverPosition(mover.name)
+	
+	mover.parent:ClearAllPoints()
+	mover.parent:SetPoint(relativePoint, mover, 0, 0)
 end
 
 function EDT:PositionDataPanel(panel, index)
