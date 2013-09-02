@@ -22,49 +22,77 @@ local extrapanel = {
 	[5] = 1,
 }
 
-local autosizebars = { 2, 3, 5 }
+local visibility = {}
 
 -- Change bar 2 default position
 AB.barDefaults.bar2.position = "BOTTOM,ElvUI_Bar1,TOP,0,0"
 AB.barDefaults.bar3.position = "BOTTOMLEFT,ElvUI_Bar1,BOTTOMRIGHT,4,0"
 AB.barDefaults.bar5.position = "BOTTOMRIGHT,ElvUI_Bar1,BOTTOMLEFT,-4,0"
 
-function EDT:UpdateSettings()
+function EDT:ToggleSettings(barnumber)
+	EDT:RegisterDrivers()
+	
+	twipe(visibility)
+	
 	for k, v in pairs(extrapanel) do
-		local panel = _G[('Actionbar%dDataPanel'):format(k)]
+		-- actionbarName, enabled, showPanel
 		local actionBarName = ('bar%d'):format(k)
-		local showPanel = E.db.datatexts[("actionbar%d"):format(k)]
-		
-		if (showPanel) then -- Ensure that the datatext panels are visible when actionbar is close to bottom of screen
-			local mover = _G[('ElvAB_%d'):format(k)]
-			if (mover) then		
-				local point, relativeTo, relativePoint, xOfs, yOfs = mover:GetPoint()
-				if (k == 1) then
-					if (relativePoint == 'BOTTOM' and yOfs < 26) then
-						EDT:PositionActionBar(mover, point, relativeTo, relativePoint, xOfs, 26)					
-					end
-				elseif (relativePoint == 'LEFT' or relativePoint == 'RIGHT') then
-					if (yOfs < 16) then
-						EDT:PositionActionBar(mover, point, relativeTo, relativePoint, xOfs, 16)
-					end
-				elseif (relativePoint == 'BOTTOM') then
-					EDT:PositionActionBar(mover, point, relativeTo, relativePoint, xOfs, 26)
-				end
-			end
+		local showPanel = E.db.actionbar[actionBarName].enabled and E.db.datatexts[("actionbar%d"):format(k)]
+		local mover = _G[('ElvAB_%d'):format(k)]
+		if mover then
+			visibility[k] = { showPanel, mover }
+		end
+	end
+	
+	if visibility[1][1] then
+		EDT:ResetMover(2)
+		EDT:CheckForMoveUp(visibility[1][2])
+	end
+	
+	if visibility[1][1] then
+		if visibility[3][1] then
+			EDT:ResetMover(3)
+		else
+			EDT:ForceMover(visibility[3][2], -22)
+		end
+		if visibility[5][1] then
+			EDT:ResetMover(5)
+		else
+			EDT:ForceMover(visibility[5][2], -22)
 		end	
+	else
+		EDT:ResetMover(1)
+		if visibility[3][1] then
+			EDT:ForceMover(visibility[3][2], 22)
+		else
+			EDT:ResetMover(3)
+		end
+		if visibility[5][1] then
+			EDT:ForceMover(visibility[5][2], 22)
+		else
+			EDT:ResetMover(5)
+		end
 	end
 end
 
-function EDT:ToggleSettings()
-	EDT:UpdateSettings()
-	EDT:RegisterDrivers()
-	-- make sure actionbars are perfectly aligned
-	for index, value in ipairs(autosizebars) do
-		local bar = _G[('ElvAB_%d'):format(value)]
-		if (bar and bar.textString) then
-			E:ResetMovers(bar.textString)
-		end
+function EDT:CheckForMoveUp(mover)
+	local point, relativeTo, relativePoint, xOfs, yOfs = mover:GetPoint()
+	
+	if (relativePoint == 'BOTTOM' and yOfs < 26) then
+		EDT:PositionActionBar(mover, point, relativeTo, relativePoint, xOfs, 26)
 	end
+end
+
+function EDT:ForceMover(mover, offSet)
+	local point, relativeTo, relativePoint, xOfs, yOfs = mover:GetPoint()
+	EDT:PositionActionBar(mover, point, relativeTo, relativePoint, xOfs, offSet)
+end
+
+function EDT:ResetMover(barnumber)
+	local bar = _G[('ElvAB_%d'):format(barnumber)]
+	if (bar and bar.textString) then
+		E:ResetMovers(bar.textString)
+	end	
 end
 
 function EDT:RegisterDrivers()
@@ -100,7 +128,7 @@ function EDT:PositionDataPanel(panel, index)
 	panel:Point('TOPLEFT', actionbar, 'BOTTOMLEFT', spacer, 0)
 	panel:Point('BOTTOMRIGHT', actionbar, 'BOTTOMRIGHT', -spacer, -PANEL_HEIGHT)
 	
-	EDT:UpdateSettings()
+	EDT:RegisterDrivers()
 end
 
 function EDT:GetPanelDatatextName()
