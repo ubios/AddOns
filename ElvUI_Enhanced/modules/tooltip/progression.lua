@@ -52,7 +52,10 @@ local function GetProgression(guid)
 			end	
 		end
 		if complete then break end
-	end	
+	end
+	if not complete then
+		progressCache[guid].timer = 0
+	end
 end
 
 local function UpdateProgression(guid)
@@ -101,7 +104,7 @@ function TT:INSPECT_ACHIEVEMENT_READY(event, GUID)
 		UpdateProgression(GUID)
 		GameTooltip:SetUnit(unit)
 	end
-	ClearAchievementComparisonUnit()	
+	ClearAchievementComparisonUnit()
 	self:UnregisterEvent("INSPECT_ACHIEVEMENT_READY")
 end
 
@@ -110,15 +113,16 @@ hooksecurefunc(TT, 'ShowInspectInfo', function(self, tt, unit, level, r, g, b, n
 	if not level or level < MAX_PLAYER_LEVEL then return end
 	if not (unit and CanInspect(unit)) then return end
 	
-	ClearAchievementComparisonUnit()
 	local guid = UnitGUID(unit)
 	
-	if not progressCache[guid] or (GetTime() - progressCache[guid].timer > 300) then
+	if not progressCache[guid] or (GetTime() - progressCache[guid].timer) > 600 then
 		if guid == playerGUID then
 			UpdateProgression(guid)
 		else
-			SetAchievementComparisonUnit(unit)
-			self:RegisterEvent("INSPECT_ACHIEVEMENT_READY")
+			ClearAchievementComparisonUnit()
+			if (SetAchievementComparisonUnit(unit)) then
+				self:RegisterEvent("INSPECT_ACHIEVEMENT_READY")
+			end
 			return
 		end
 	end
