@@ -1,5 +1,6 @@
 .ssh/
-?Sw*/
+?Bug*/
+?Swat*/
 _NPCScan/
 AckisRecipeList/
 ACP/
@@ -9,10 +10,12 @@ Auc*/
 Bad*/
 Batt*/
 Blizz*/
+Cool*/
 DBM*/
 Ensi*/
 Fish*/
 Gath*/
+Handy*/
 Hea*/
 Mac*/
 Over*/
@@ -22,7 +25,7 @@ shPer*/
 Sli*/
 Ska*/
 Sma*/
-T*/
-x*/
-Zy*/
+Tom*/
+xCT*/
+Zygo*/
 *.zip
