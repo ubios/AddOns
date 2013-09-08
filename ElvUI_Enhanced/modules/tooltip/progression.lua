@@ -97,7 +97,7 @@ local function HasInspectionInformation(tt)
 end
 
 function TT:INSPECT_ACHIEVEMENT_READY(event, GUID)
-	if(self.lastGUID ~= GUID) then return end
+	if(self.compareGUID ~= GUID) then return end
 
 	local unit = "mouseover"
 	if(UnitExists(unit)) then
@@ -120,6 +120,7 @@ hooksecurefunc(TT, 'ShowInspectInfo', function(self, tt, unit, level, r, g, b, n
 			UpdateProgression(guid)
 		else
 			ClearAchievementComparisonUnit()
+			self.compareGUID = guid
 			if (SetAchievementComparisonUnit(unit)) then
 				self:RegisterEvent("INSPECT_ACHIEVEMENT_READY")
 			end
