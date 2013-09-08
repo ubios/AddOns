@@ -163,3 +163,7 @@ L['PvP'] = true
 L['Arena'] = true
 L['Party'] = true
 L['Raid'] = true
+
+-- Tooltips
+L['Progression Info'] = true
+L['Display the players raid progression in the tooltip, this may not immediately update when mousing over a unit.'] = true

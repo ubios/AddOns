@@ -529,6 +529,15 @@ function EO:RaidMarkerOptions()
 	}
 end
 
+function EO:TooltipOptions()
+	E.Options.args.tooltip.args.general.args.progressInfo = {
+		order = 8,
+		type = 'toggle',
+		name = ColorizeSettingName(L['Progression Info']),
+		desc = L['Display the players raid progression in the tooltip, this may not immediately update when mousing over a unit.'],
+	}
+end
+
 function EO:UnitFramesOptions()
 	local UF = E:GetModule('UnitFrames')
 	local HG = E:GetModule('HealGlow')
@@ -767,7 +776,8 @@ function EO:GetOptions()
 	EO:MapOptions()
 	EO:MiscOptions()
 	EO:NameplateOptions()
-	EO:RaidMarkerOptions()	
+	EO:RaidMarkerOptions()
+	EO:TooltipOptions()		
 	EO:UnitFramesOptions()
 	EO:WatchFrame()
 end

@@ -165,3 +165,6 @@ L['Arena'] = 'Arena'
 L['Party'] = 'Gruppe'
 L['Raid'] = 'Schlachtzug'
 
+-- Tooltips
+L['Progression Info'] = true
+L['Display the players raid progression in the tooltip, this may not immediately update when mousing over a unit.'] = true

@@ -4,6 +4,9 @@
 P['general']['minimap']['locationText'] = 'ABOVE'
 P['general']['movertransparancy'] = .8
 
+--Tooltip
+P['tooltip']['progressInfo'] = true
+
 --Unitframes
 P['unitframe']['healglow'] = true
 P['unitframe']['glowtime'] = .8
