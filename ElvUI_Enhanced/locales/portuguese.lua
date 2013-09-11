@@ -5,7 +5,7 @@ if not L then return end
 -- Translation by: ubios
 
 L["ENH_LOGIN_MSG"] = "Você está a usar |cff1784d1ElvUI Enhanced|r versão %s%s|r."
-L["Your version of ElvUI is to old (required v6.22 or higher). Please, download the latest version from tukui.org."] = "A sua versão do ElvUI é muita antiga (requerida v6.22 ou superior). Por favor, descarregue a versão mais recente em tukui.org."
+L["Your version of ElvUI is to old (required v6.44 or higher). Please, download the latest version from tukui.org."] = "A sua versão do ElvUI é muita antiga (requerida v6.44 ou superior). Por favor, descarregue a versão mais recente em tukui.org."
 
 -- Equipment
 L["Equipment"] = "Equipamento"
