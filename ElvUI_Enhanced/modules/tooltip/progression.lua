@@ -65,42 +65,30 @@ local function UpdateProgression(guid)
 	GetProgression(guid)	
 end
 
-local function HideText(text)
-	text:SetText()
-	text:Hide()
-end
-
 local function SetProgressionInfo(guid, tt)
 	if progressCache[guid] then
 		for i=1, tt:NumLines() do
-			local tipText = _G["GameTooltipTextLeft"..i]
+			local leftTipText = _G["GameTooltipTextLeft"..i]
 			for diff, _ in pairs(bosses) do
-				if (tipText:GetText() and tipText:GetText():find(diff)) then
-					HideText(tipText)
-					HideText(_G["GameTooltipTextRight"..i])
-					break
+				if (leftTipText:GetText() and leftTipText:GetText():find(diff)) then
+					-- update found tooltip text line
+					local rightTipText = _G["GameTooltipTextRight"..i]
+					leftTipText:SetText(progressCache[guid].header)
+					rightTipText:SetText(progressCache[guid].info)
+					return
 				end
 			end
 		end
+		-- add progression tooltip line
 		tt:AddDoubleLine(progressCache[guid].header, progressCache[guid].info, nil, nil, nil, 1, 1, 1)
 	end
 end
 
-local function HasInspectionInformation(tt)
-	for i=1, tt:NumLines() do
-		local tipText = _G["GameTooltipTextLeft"..i]
-		if(tipText:GetText() and tipText:GetText():find(L["Talent Specialization:"])) then
-			return true
-		end
-	end
-	return false
-end
-
 function TT:INSPECT_ACHIEVEMENT_READY(event, GUID)
-	if(self.compareGUID ~= GUID) then return end
+	if (self.compareGUID ~= GUID) then return end
 
 	local unit = "mouseover"
-	if(UnitExists(unit)) then
+	if UnitExists(unit) then
 		UpdateProgression(GUID)
 		GameTooltip:SetUnit(unit)
 	end
@@ -121,7 +109,7 @@ hooksecurefunc(TT, 'ShowInspectInfo', function(self, tt, unit, level, r, g, b, n
 		else
 			ClearAchievementComparisonUnit()
 			self.compareGUID = guid
-			if (SetAchievementComparisonUnit(unit)) then
+			if SetAchievementComparisonUnit(unit) then
 				self:RegisterEvent("INSPECT_ACHIEVEMENT_READY")
 			end
 			return
@@ -130,4 +118,3 @@ hooksecurefunc(TT, 'ShowInspectInfo', function(self, tt, unit, level, r, g, b, n
 
 	SetProgressionInfo(guid, tt)
 end)
-
