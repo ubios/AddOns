@@ -51,6 +51,10 @@ L["Changes the transparency of all the movers."] = "Konfiguriere die Einstellung
 L['Automatic Role Assignment'] = 'Automatische Rollenzuweisung'
 L['Enables the automatic role assignment based on specialization for party / raid members (only work when you are group leader or group assist).'] = 'Aktiviert die automatische Rollenzuweisung basierend auf der Talentspezialisierung der Gruppen- oder Schlachtzugsmitglieder. Funktioniert nur, wenn Sie Gruppenleiter oder -assistent sind.'
 
+-- Auto Hide Role Icons in combat
+L['Hide Role Icon in combat'] = true
+L['All role icons (Damage/Healer/Tank) on the unit frames are hidden when you go into combat.'] = true
+
 -- GPS module
 L['Show the direction and distance to the selected party or raid member.'] = "Zeige die Richtung und Entfernung zum ausgewählten Gruppen- oder Schlachtzugsmitglied an."
 

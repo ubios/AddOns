@@ -134,7 +134,11 @@ function UF:UpdateRoleIconFrame(frame)
 	frame:UnregisterEvent("UNIT_CONNECTION")
 	frame:RegisterEvent("UNIT_CONNECTION", UF.UpdateRoleIconEnhanced)
 	
-	frame.LFDRole.Override = UF.UpdateRoleIconEnhanced	
+	frame.LFDRole.Override = UF.UpdateRoleIconEnhanced
+	
+	if E.db.unitframe.hideroleincombat then
+		RegisterStateDriver(frame.LFDRole:GetParent(), 'visibility', '[combat]hide;show')
+	end
 end
 
 function UF:ApplyUnitFrameEnhancements()

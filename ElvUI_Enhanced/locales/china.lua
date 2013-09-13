@@ -50,6 +50,10 @@ L["Changes the transparency of all the movers."] = true
 L['Automatic Role Assignment'] = true
 L['Enables the automatic role assignment based on specialization for party / raid members (only work when you are group leader or group assist).'] = true
 
+-- Auto Hide Role Icons in combat
+L['Hide Role Icon in combat'] = true
+L['All role icons (Damage/Healer/Tank) on the unit frames are hidden when you go into combat.'] = true
+
 -- GPS module
 L['GPS'] = "GPS定位"
 L['Show the direction and distance to the selected party or raid member.'] = "显示你与当前队伍或团队成员的方向与距离."

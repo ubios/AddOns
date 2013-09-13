@@ -580,7 +580,7 @@ function EO:UnitFramesOptions()
 			}
 		},
 	}
-	
+
 	--Target
 	E.Options.args.unitframe.args.target.args.gps = {
 		order = 1000,
@@ -697,6 +697,15 @@ function EO:UnitFramesOptions()
 		desc = L['Enables the automatic role assignment based on specialization for party / raid members (only work when you are group leader or group assist).'],
 		type = 'toggle',
 	}
+	
+	E.Options.args.unitframe.args.general.args.generalGroup.args.hideroleincombat = {
+		order = 7,
+		name = ColorizeSettingName(L['Hide Role Icon in combat']),
+		desc = L['All role icons (Damage/Healer/Tank) on the unit frames are hidden when you go into combat.'],
+		type = 'toggle',
+		set = function(info, value) E.db.unitframe[ info[#info] ] = value; E:StaticPopup_Show("PRIVATE_RL") end,
+	}
+
 end
 
 function EO:WatchFrame()
