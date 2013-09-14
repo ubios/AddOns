@@ -52,8 +52,8 @@ L['Automatic Role Assignment'] = 'Automatische Rollenzuweisung'
 L['Enables the automatic role assignment based on specialization for party / raid members (only work when you are group leader or group assist).'] = 'Aktiviert die automatische Rollenzuweisung basierend auf der Talentspezialisierung der Gruppen- oder Schlachtzugsmitglieder. Funktioniert nur, wenn Sie Gruppenleiter oder -assistent sind.'
 
 -- Auto Hide Role Icons in combat
-L['Hide Role Icon in combat'] = true
-L['All role icons (Damage/Healer/Tank) on the unit frames are hidden when you go into combat.'] = true
+L['Hide Role Icon in combat'] = 'Verstecke Rollensymbol im Kampf'
+L['All role icons (Damage/Healer/Tank) on the unit frames are hidden when you go into combat.'] = 'Alle Rollensymbole (Schaden/Heiler/Tank) auf den Einheitenfenstern werden versteckt, wenn der Charakter sich im Kampf befindet.'
 
 -- GPS module
 L['Show the direction and distance to the selected party or raid member.'] = "Zeige die Richtung und Entfernung zum ausgewählten Gruppen- oder Schlachtzugsmitglied an."
@@ -170,5 +170,5 @@ L['Party'] = 'Gruppe'
 L['Raid'] = 'Schlachtzug'
 
 -- Tooltips
-L['Progression Info'] = true
-L['Display the players raid progression in the tooltip, this may not immediately update when mousing over a unit.'] = true
+L['Progression Info'] = 'Schlachtzugfortschritt'
+L['Display the players raid progression in the tooltip, this may not immediately update when mousing over a unit.'] = 'Zeigt den Schlachtzugfortschritt eines Charakters im Tooltip an. Es kann einen kurzen Moement dauern, bis diese Information agezeigt / aktualisiert wird.'
