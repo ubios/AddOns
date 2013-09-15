@@ -9,7 +9,7 @@ P['tooltip']['progressInfo'] = true
 
 --Unitframes
 P['unitframe']['healglow'] = true
-P['unitframe']['hideroleincombat'] = true
+P['unitframe']['hideroleincombat'] = false
 P['unitframe']['glowtime'] = .8
 P['unitframe']['glowcolor'] = { r = 1, g = 1, b = 0}
 P['unitframe']['autoRoleSet'] = false
