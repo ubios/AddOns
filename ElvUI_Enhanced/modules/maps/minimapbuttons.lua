@@ -19,6 +19,7 @@ local ignoreButtons = {
 	"DroodFocusMinimapButton",
 	"QueueStatusMinimapButton",
 	"TimeManagerClockButton",
+	"MinimapZoneTextButton",
 }
 
 -- list of frames that are ignored when they start with this text

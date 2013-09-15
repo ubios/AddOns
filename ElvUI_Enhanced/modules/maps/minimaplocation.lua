@@ -94,6 +94,8 @@ hooksecurefunc(M, 'Update_ZoneText', function()
 end)
 
 hooksecurefunc(M, 'UpdateSettings', function()
+	if not E.private.general.minimap.enable then return end
+
 	if not init then
 		init = true
 		CreateEnhancedMaplocation()

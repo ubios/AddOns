@@ -344,7 +344,7 @@ function EO:MapOptions()
 	
 	E.Options.args.general.args.minimapbar = {
 		order = 4,
-		get = function(info) return E.private.general.minimapbar[ info[#info] ] end,	
+		get = function(info) return E.private.general.minimapbar[ info[#info] ] end,
 		type = "group",
 		name = ColorizeSettingName(L["Minimap Button Bar"]),
 		args = {
