@@ -206,8 +206,9 @@ function MB:UpdateLayout()
 			minimapButtonBar:Height((E.minimapbuttons.db.buttonSize * #moveButtons) + (2 * #moveButtons + 1) + 1)
 		end
 		minimapButtonBarAnchor:SetSize(minimapButtonBar:GetSize())
-		minimapButtonBar:Show()
+		RegisterStateDriver(minimapButtonBarAnchor, "visibility", '[petbattle]hide;show')
 	else
+		UnregisterStateDriver(minimapButtonBarAnchor, "visibility")
 		minimapButtonBar:Hide()
 	end
 	
