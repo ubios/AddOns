@@ -77,6 +77,11 @@ L['No Anchor Bar'] = "没有锚点"
 L['Horizontal Anchor Bar'] = "水平状"
 L['Vertical Anchor Bar'] = "垂直状"
 
+L['Layout Direction'] = true
+L['Normal is right to left or top to bottom, or select reversed to switch directions.'] = true
+L['Normal'] = true
+L['Reversed'] = true
+
 -- Minimap Location
 L['Above Minimap'] = true
 L['Location Digits'] = true

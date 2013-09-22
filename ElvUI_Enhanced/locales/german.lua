@@ -86,6 +86,11 @@ L['No Anchor Bar'] = "Keine Ankerleiste"
 L['Horizontal Anchor Bar'] = "Horizontale Ankerleiste"
 L['Vertical Anchor Bar'] = "Vertikale Ankerleiste"
 
+L['Layout Direction'] = true
+L['Normal is right to left or top to bottom, or select reversed to switch directions.'] = true
+L['Normal'] = true
+L['Reversed'] = true
+
 -- PvP Autorelease
 L['PvP Autorelease'] = "Automatische Freigabe im PvP"
 L['Automatically release body when killed inside a battleground.'] = "Gibt automatisch Ihren Geist frei, wenn Sie auf dem Schlachtfeld getötet wurden."

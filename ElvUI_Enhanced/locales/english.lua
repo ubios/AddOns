@@ -87,6 +87,11 @@ L['No Anchor Bar'] = true
 L['Horizontal Anchor Bar'] = true
 L['Vertical Anchor Bar'] = true
 
+L['Layout Direction'] = true
+L['Normal is right to left or top to bottom, or select reversed to switch directions.'] = true
+L['Normal'] = true
+L['Reversed'] = true
+
 -- PvP Autorelease
 L['PvP Autorelease'] = true
 L['Automatically release body when killed inside a battleground.'] = true

@@ -87,6 +87,11 @@ L['No Anchor Bar'] = "沒有錨點"
 L['Horizontal Anchor Bar'] = "水平狀"
 L['Vertical Anchor Bar'] = "垂直狀"
 
+L['Layout Direction'] = true
+L['Normal is right to left or top to bottom, or select reversed to switch directions.'] = true
+L['Normal'] = true
+L['Reversed'] = true
+
 -- PvP Autorelease
 L['PvP Autorelease'] = "PVP自動釋放靈魂"
 L['Automatically release body when killed inside a battleground.'] = "在戰場死亡後自動釋放靈魂."
