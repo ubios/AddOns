@@ -214,9 +214,9 @@ function MB:UpdateLayout()
 		end
 		minimapButtonBarAnchor:SetSize(minimapButtonBar:GetSize())
 		minimapButtonBar:Show()
-		RegisterStateDriver(minimapButtonBarAnchor, "visibility", '[petbattle]hide;show')
+		RegisterStateDriver(minimapButtonBar, "visibility", '[petbattle]hide;show')
 	else
-		UnregisterStateDriver(minimapButtonBarAnchor, "visibility")
+		UnregisterStateDriver(minimapButtonBar, "visibility")
 		minimapButtonBar:Hide()
 	end
 	
