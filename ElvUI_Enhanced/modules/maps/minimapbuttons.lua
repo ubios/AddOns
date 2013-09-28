@@ -143,6 +143,12 @@ end
 
 function MB:UpdateLayout()
 	if not E.minimapbuttons then return end
+	if InCombatLockdown() then
+		MB:RegisterEvent("PLAYER_REGEN_ENABLED", "UpdateLayout")	
+		return
+	else
+		MB:UnregisterEvent("PLAYER_REGEN_ENABLED")
+ 	end
 	
 	local direction = E.minimapbuttons.db.layoutDirection == 'NORMAL'
 	local offset = direction and -2 or 2
